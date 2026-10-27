@@ -6,7 +6,7 @@
 
 
 
-This document provides information about the design, implementation, and intended usage of command messages in Axon Framework.
+This document provides information about the design, implementation, and intended usage of command messages in Sophon.
 
 == Design considerations
 
@@ -20,7 +20,7 @@ In addition to the generic messages, command messages have the following charact
 
 == Implementation
 
-In Axon Framework, a command message is an immutable, serializable Java object implementing the `CommandMessage` interface.
+In Sophon, a command message is an immutable, serializable Java object implementing the `CommandMessage` interface.
 
 
 [plantuml, svg, title="Command messaging class diagram"]

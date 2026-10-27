@@ -10,16 +10,12 @@ updates:
     labels:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
-    milestone: 116
     groups:
       github-dependencies:
         update-types:
           - "patch"
           - "minor"
           - "major"
-    ignore:
-      - dependency-name: "slackapi/slack-github-action"
-        versions: [ "> 1.27.0" ]
 
   - package-ecosystem: maven
     directory: "/"
@@ -30,7 +26,6 @@ updates:
     labels:
       - "Type: Dependency Upgrade"
       - "Priority 1: Must"
-    milestone: 116
     groups:
       maven-dependencies:
         update-types:

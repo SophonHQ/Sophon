@@ -3,7 +3,7 @@
 
 The xref:command-handlers.adoc[Command Handlers] pages provide the background on how to handle command messages in your application.
 The dispatching process is the starting point of such a command message.
-Axon provides two interfaces you can use to send the commands to your command handlers, being the <<command-bus,CommandBus>> and the <<command-gateway,CommandGateway>>.
+Sophon provides two interfaces you can use to send the commands to your command handlers, being the <<command-bus,CommandBus>> and the <<command-gateway,CommandGateway>>.
 
 This page will show how and when to use the command gateway and bus.
 How to configure and specifics on the command gateway and bus implementations are discussed in the xref:infrastructure.adoc[infrastructure section].
@@ -76,7 +76,7 @@ Otherwise, the `CommandResultMessage#getPayload` method _may_ provide you with a
 ====
 In the case that `dispatch(CommandMessage, CommandCallback)` is used, the calling component may _not_ assume that the callback is invoked in the same thread that dispatched the command.
 If the calling thread depends on the result before continuing, you can use the `FutureCallback`.
-The `FutureCallback` is a combination of a `Future` (as defined in the java.concurrent package) and Axon's `CommandCallback`.
+The `FutureCallback` is a combination of a `Future` (as defined in the java.concurrent package) and Sophon's `CommandCallback`.
 Alternatively, consider using a `CommandGateway`.
 ====
 
@@ -167,4 +167,4 @@ Exceptions to this would be the identifier of the Aggregate Root, or identifiers
 The framework has one such exception build in, on the `@CommandHandler` annotated constructor of an Aggregate.
 In case the 'command handling constructor' has executed successfully, instead of the Aggregate itself, the value of the `@AggregateIdentifier` annotated field will be returned.
 
-site:https://youtu.be/lxonQnu1txQ[Axon Coding Tutorial #5: - Connecting the UI]
+site:https://youtu.be/lxonQnu1txQ[Sophon Coding Tutorial #5: - Connecting the UI]

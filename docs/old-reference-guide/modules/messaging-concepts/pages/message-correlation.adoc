@@ -1,16 +1,16 @@
 = Message Correlation
 
 In messaging systems it is common to group messages together or correlate them.
-In Axon Framework a `Command` message might result in one or several `Event` messages and a `Query` message might result in one or several `QueryResponse` messages.
+In Sophon a `Command` message might result in one or several `Event` messages and a `Query` message might result in one or several `QueryResponse` messages.
 Usually, correlation is implemented using a specific message property, a so-called correlation identifier.
 
 == Correlation data provider
 
-Messages in Axon Framework use the xref:anatomy-message.adoc#meta-data[`MetaData`] property to transport meta-information about the message.
+Messages in Sophon use the xref:anatomy-message.adoc#meta-data[`MetaData`] property to transport meta-information about the message.
 The `MetaData` object is of type `Map<String, Object>` and is passed around with the message.
 To fill the `MetaData` of a new message produced within a xref:unit-of-work.adoc[Unit of Work], a so called `CorrelationDataProvider` can be used.
 It is the Unit of Work that is in charge of populating the `MetaData` of a new message based on this `CorrelationDataProvider`.
-Axon Framework currently provides a couple of implementations of this functional interface:
+Sophon currently provides a couple of implementations of this functional interface:
 
 [[MessageOriginProvider]]
 === `MessageOriginProvider`
@@ -97,7 +97,7 @@ public class AuthCorrelationDataProvider implements CorrelationDataProvider {
 == Configuration
 
 When the default `MessageOriginProvider` isn't sufficient for your use case, the (custom) correlation data providers need to be registered inside you application.
-If you are using the Axon Configuration API, make sure to call `Configuration#configureCorrelationDataProviders` method to register the correlated data providers.
+If you are using the Sophon Configuration API, make sure to call `Configuration#configureCorrelationDataProviders` method to register the correlated data providers.
 If you are relying on Spring Boot Autoconfiguration, just provide a factory method exposing the Spring Bean, or multiple if you need more than one provider.
 The following snippets show some possible approaches of registration:
 

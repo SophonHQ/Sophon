@@ -9,10 +9,10 @@ The structure of a state-stored Aggregate is a little different from an Event So
 
 [source,java]
 ----
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.eventhandling.EventHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateMember;
+import io.github.sophonhq.sophon.commandhandling.CommandHandler;
+import io.github.sophonhq.sophon.eventhandling.EventHandler;
+import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import io.github.sophonhq.sophon.modelling.command.AggregateMember;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -78,13 +78,13 @@ public class GiftCard {
 ----
 
 The above code shows a state-stored Aggregate from a 'Gift Card Service'.
-The numbered comments in the snippet point out Axon specifics which are explained here:
+The numbered comments in the snippet point out Sophon specifics which are explained here:
 
 <1> As the Aggregate is stored in a JPA repository, it is required to annotated the class with `@Entity`.
 <2> An Aggregate Root must declare a field that contains the Aggregate Identifier.
 This identifier must be initialized at the latest when the first event is published.
 This identifier field must be annotated by the `@AggregateIdentifier` annotation.
-When using JPA to store the Aggregate, Axon knows to use the `@Id` annotation provided by JPA.
+When using JPA to store the Aggregate, Sophon knows to use the `@Id` annotation provided by JPA.
 Since the Aggregate is an entity, the `@Id` annotation is a hard requirement.
 
 <3> This Aggregate has several 'xref:modeling/multi-entity-aggregates.adoc[Aggregate Members]'.

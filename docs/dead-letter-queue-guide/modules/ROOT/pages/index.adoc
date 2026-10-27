@@ -1,4 +1,4 @@
-= Dead Letter Queues in Axon Framework
+= Dead Letter Queues in Sophon
 :navtitle: Dead Letter Queues
 
 == Introduction

@@ -13,7 +13,7 @@ that is currently being handled.
 For instance, you could use this to store the command that triggered the event in the metadata of the event itself,
 allowing you to track the cause of it.
 
-Axon Framework provides a `MessageOriginProvider` provider out of the box,
+Sophon provides a `MessageOriginProvider` provider out of the box,
 which adds a `trace-id` and `correlation-id` to all messages.
 The `trace-id` is the same over all messages that are triggered because of the same origin,
 while `correlation-id` contains the message identifier of the previous message.

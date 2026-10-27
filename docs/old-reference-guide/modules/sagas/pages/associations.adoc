@@ -55,7 +55,7 @@ public class OrderManagementSaga {
     // ...
 }
 ----
-And here is the same code for when you use the Axon Configuration API:
+And here is the same code for when you use the Sophon Configuration API:
 
 [source,java]
 ----

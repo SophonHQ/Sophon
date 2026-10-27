@@ -59,7 +59,6 @@ ____
 *Caveats for the JobRunr implementation.*
 
 Since the non-Pro version of JobRunr has no way to search for deadlines, besides by id, all of the `cancelAll` methods are not implemented for the `JobRunrDeadlineManager`.
-The xref:jobrunr-pro-extension-reference:ROOT:index.adoc[JobRunr Pro extension] does support those but requires the Pro version of JobRunr.
 
 *Caveats for the DbScheduler implementation.*
 
@@ -89,7 +88,7 @@ class DeadlineSchedulingWithPayloadComponent {
 
 We have now seen how to schedule a deadline.
 When the scheduled time is met, the corresponding `@DeadlineHandler` is invoked.
-A `@DeadlineHandler` is a message handler like any other in Axon - it is possible to inject parameters for which `ParameterResolver`s exist.
+A `@DeadlineHandler` is a message handler like any other in Sophon - it is possible to inject parameters for which `ParameterResolver`s exist.
 
 ____
 
@@ -99,7 +98,7 @@ When scheduling a deadline, the context from where it was scheduled is taken int
 This means a scheduled deadline will only be triggered in its originating context.
 Thus, any `@DeadlineHandler` annotated function you wish to be called on a met deadline, must be in the same Aggregate/Saga from which it was scheduled.
 
-Axon calls this context a `Scope`.
+Sophon calls this context a `Scope`.
 If necessary, implementing and providing your own `Scope` will allow you to schedule deadlines in your custom, 'scoped' components.
 
 A Saga can end its lifecycle when `@EndSaga` is added on a deadline handler.

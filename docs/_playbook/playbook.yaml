@@ -1,6 +1,6 @@
 site:
-  title: Axon Framework docs PREVIEW
-  start_page: axon-framework-reference::index.adoc
+  title: Sophon docs PREVIEW
+  start_page: sophon-reference::index.adoc
 
 content:
   sources:
@@ -12,24 +12,16 @@ asciidoc:
     experimental: true
     page-pagination: true
     kroki-fetch-diagram: true
-    primary-site-manifest-url: https://library.axoniq.io/site-manifest.json
   extensions:
   - asciidoctor-kroki
   - '@asciidoctor/tabs'
 
 antora:
   extensions:
-  - id: prose-linting
-    require: '@axoniq/antora-vale-extension'
-    enabled: true
-    vale_config: .vale.ini
-    update_styles: true
   - id: lunr
     require: '@antora/lunr-extension'
     enabled: true
     index_latest_only: true
-  - id: atlas
-    require: '@antora/atlas-extension'
 
 runtime:
   fetch: true # fetch remote repos
@@ -39,4 +31,5 @@ runtime:
 
 ui:
   bundle:
-    url: https://github.com/AxonIQ/axoniq-library-ui/releases/download/v.0.1.10/ui-bundle.zip
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true

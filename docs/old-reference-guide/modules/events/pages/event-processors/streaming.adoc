@@ -1,12 +1,12 @@
 = Streaming Event Processor
 
 The `StreamingEventProcessor`, or Streaming Processor for short, is a type of xref:event-processors/index.adoc[Event Processor].
-As any Event Processor, it serves as the technical aspect to handle events by invoking the event handlers written in an Axon application.
+As any Event Processor, it serves as the technical aspect to handle events by invoking the event handlers written in a Sophon application.
 
 The Streaming Processor defines itself by receiving the events from a `StreamableMessageSource`.
 The `StreamableMessageSource` is an infrastructure component through which we can open a stream of events.
 The source can also specify positions on the event stream, so-called <<tracking-tokens,Tracking Tokens>>, used as start positions when opening an event stream.
-An example of a `StreamableMessageSource` is the xref:event-bus-and-event-store.adoc#event-store[`EventStore`], like for example Axon Server or an xref:event-bus-and-event-store.adoc#embedded-event-store[RDBMS].
+An example of a `StreamableMessageSource` is the xref:event-bus-and-event-store.adoc#event-store[`EventStore`], for example one backed by an xref:event-bus-and-event-store.adoc#embedded-event-store[RDBMS].
 
 Furthermore, Streaming Processors use separate threads to process the events retrieved from the `StreamableMessageSource`.
 Using separate threads decouples the `StreamingEventProcessor` from other operations (for example, event publication or command handling), allowing for cleaner separation within any application. +
@@ -47,7 +47,7 @@ It will fall back to the xref:event-processors/subscribing.adoc[Subscribing Even
 This implementation will use the configured `EventBus` as its `SubscribableMessageSource`.
 ====
 
-There are two implementations of Streaming Processor available in Axon Framework:
+There are two implementations of Streaming Processor available in Sophon:
 
 . the Tracking Event Processor (TEP for short), and
 . the Pooled Streaming Event Processor (PSEP for short).
@@ -74,7 +74,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureProcessorDefault(EventProcessingConfigurer processingConfigurer) {
         processingConfigurer.usingTrackingEventProcessors();
@@ -89,7 +89,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule processorDefaultConfigurerModule() {
@@ -111,7 +111,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureTrackingProcessors(EventProcessingConfigurer processingConfigurer) {
         // This configuration object allows for fine-grained control over the Tracking Processor
@@ -144,7 +144,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule trackingProcessorConfigurerModule() {
@@ -185,16 +185,16 @@ Do note that the Java configuration provides more degrees of freedom.
 
 [source,properties]
 ----
-axon.eventhandling.processors.my-processor.mode=tracking
-axon.eventhandling.processors.my-processor.source=eventStore
+sophon.eventhandling.processors.my-processor.mode=tracking
+sophon.eventhandling.processors.my-processor.source=eventStore
 ----
 
 If the name of an event processor contains periods `.`, use the map notation:
 
 [source,properties]
 ----
-axon.eventhandling.processors[my.processor].mode=tracking
-axon.eventhandling.processors[my.processor].source=eventStore
+sophon.eventhandling.processors[my.processor].mode=tracking
+sophon.eventhandling.processors[my.processor].source=eventStore
 ----
 --
 ====
@@ -211,7 +211,7 @@ Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void registerTrackingProcessorConfig(EventProcessingConfigurer processingConfigurer) {
         TrackingEventProcessorConfiguration tepConfig =
@@ -233,7 +233,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule trackingProcessorConfigurerModule() {
@@ -260,13 +260,13 @@ Firstly, to specify that every new processor should default to a `PooledStreamin
 
 [tabs]
 ====
-Axon Configuration API::
+Sophon Configuration API::
 +
 --
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureProcessorDefault(EventProcessingConfigurer processingConfigurer) {
         processingConfigurer.usingPooledStreamingEventProcessors();
@@ -282,7 +282,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule processorDefaultConfigurerModule() {
@@ -302,7 +302,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configurePooledStreamingProcessors(EventProcessingConfigurer processingConfigurer) {
           // This configuration object allows for fine-grained control over the Pooled Streaming Processor
@@ -331,7 +331,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule pooledStreamingProcessorConfigurerModule() {
@@ -368,16 +368,16 @@ Do note that the Java configuration provides more degrees of freedom.
 
 [source,properties]
 ----
-axon.eventhandling.processors.my-processor.mode=pooled
-axon.eventhandling.processors.my-processor.source=eventStore
+sophon.eventhandling.processors.my-processor.mode=pooled
+sophon.eventhandling.processors.my-processor.source=eventStore
 ----
 
 If the name of an event processor contains periods `.`, use the map notation:
 
 [source,properties]
 ----
-axon.eventhandling.processors[my.processor].mode=pooled
-axon.eventhandling.processors[my.processor].source=eventStore
+sophon.eventhandling.processors[my.processor].mode=pooled
+sophon.eventhandling.processors[my.processor].source=eventStore
 ----
 --
 ====
@@ -392,7 +392,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void registerPooledStreamingProcessorConfig(EventProcessingConfigurer processingConfigurer) {
         EventProcessingConfigurer.PooledStreamingProcessorConfiguration psepConfig =
@@ -413,7 +413,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule pooledStreamingProcessorConfigurerModule() {
@@ -552,7 +552,7 @@ Tracking: Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureInitialTrackingToken(EventProcessingConfigurer processingConfigurer) {
         TrackingEventProcessorConfiguration tepConfig =
@@ -571,7 +571,7 @@ Tracking: Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule initialTrackingTokenConfigurerModule() {
@@ -595,7 +595,7 @@ Pooled streaming: Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureInitialTrackingToken(EventProcessingConfigurer processingConfigurer) {
         EventProcessingConfigurer.PooledStreamingProcessorConfiguration psepConfig =
@@ -616,7 +616,7 @@ Pooled streaming: Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule initialTrackingTokenConfigurerModule() {
@@ -665,7 +665,7 @@ Tracking: Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureTokenClaimValues(EventProcessingConfigurer processingConfigurer) {
         TrackingEventProcessorConfiguration tepConfig =
@@ -686,7 +686,7 @@ Tracking: Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule tokenClaimValuesConfigurerModule() {
@@ -710,7 +710,7 @@ Pooled streaming: Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureTokenClaimValues(EventProcessingConfigurer processingConfigurer) {
         EventProcessingConfigurer.PooledStreamingProcessorConfiguration psepConfig =
@@ -730,7 +730,7 @@ Pooled streaming: Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule tokenClaimValuesConfigurerModule() {
@@ -770,7 +770,7 @@ In practical terms, a token is stolen whenever the _claim timeout_ is exceeded.
 This timeout is met whenever the token's timestamp (for example, the `timestamp` column of your `token_entry` table) exceeds the `claimTimeout` of the `TokenStore`.
 By default, the `claimTimeout` value equals 10 seconds.
 To adjust it, you must configure a `TokenStore` instance through its builder, as shown in the <<token-store,Token Store>> section.
-If you use Spring Boot, you can alternatively set the `axon.eventhandling.tokenstore.claim-timeout` for example to `30s` to increase it to 30 seconds.
+If you use Spring Boot, you can alternatively set the `sophon.eventhandling.tokenstore.claim-timeout` for example to `30s` to increase it to 30 seconds.
 
 The token's timestamp is equally crucial in deciding when the timeout is met.
 The streaming processor thread holding the claim is in charge of updating the token timestamp.
@@ -789,7 +789,7 @@ Examples of when a thread may get its token stolen are:
 The consequence of token stealing is that an event may be handled twice (or more).
 
 When a thread steals a token, the original thread was _already_ processing events from the token's position.
-To protect against doubling event handling, Axon Framework will combine committing the event handling task with updating the token.
+To protect against doubling event handling, Sophon will combine committing the event handling task with updating the token.
 As the token claim is required to update the token, the original thread will fail the update.
 Following this, a rollback occurs on the xref:messaging-concepts:unit-of-work.adoc[Unit of Work], resolving most issues arising from token stealing.
 
@@ -834,12 +834,11 @@ The framework provides a couple of `TokenStore` implementations:
 * `InMemoryTokenStore` - A `TokenStore` implementation that keeps the tokens in memory.
 This implementation does not suffice as a production-ready store in most applications.
 * `JpaTokenStore` - A `TokenStore` implementation using JPA to store the tokens with.
-Expects that a table is constructed based on the `org.axonframework.eventhandling.tokenstore.jpa.TokenEntry`.
+Expects that a table is constructed based on the `io.github.sophonhq.sophon.eventhandling.tokenstore.jpa.TokenEntry`.
 It is easily auto-configurable with, for example, Spring Boot.
 * `JdbcTokenStore` - A `TokenStore` implementation using JDBC to store the tokens with.
 Expects that the schema is constructed through the `JdbcTokenStore#createSchema(TokenTableFactory)` method.
 Several `TokenTableFactory` can be chosen here, like the `GenericTokenTableFactory`, `PostgresTokenTableFactory` or `Oracle11TokenTableFactory` implementation.
-* `MongoTokenStore`- A `TokenStore` implementation using Mongo to store the tokens with.
 
 [NOTE]
 .Keep your tokens close
@@ -860,7 +859,7 @@ To configure a `TokenStore` for all processors:
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void registerTokenStore(EventProcessingConfigurer processingConfigurer) {
         TokenStore tokenStore = JpaTokenStore.builder()
@@ -876,7 +875,7 @@ Alternatively, to configure a `TokenStore` for a specific processor, use:
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void registerTokenStore(EventProcessingConfigurer processingConfigurer, String processorName) {
         TokenStore tokenStore = JdbcTokenStore.builder()
@@ -903,7 +902,7 @@ To override the TokenStore, either define a bean in a Spring `@Configuration` cl
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public TokenStore myTokenStore() {
@@ -919,7 +918,7 @@ Alternatively, inject the `EventProcessingConfigurer`, which allows more fine-gr
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule tokenStoreConfigurerModule() {
@@ -980,7 +979,7 @@ The default number of segments of a `TrackingEventProcessor` is one.
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureSegmentCount(EventProcessingConfigurer processingConfigurer) {
         TrackingEventProcessorConfiguration tepConfig =
@@ -1001,7 +1000,7 @@ The default number of segments for the `TrackingEventProcessor` is one.
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule segmentCountConfigurerModule() {
@@ -1027,7 +1026,7 @@ The default number of segments for the `PooledStreamingEventProcessor` is sixtee
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureSegmentCount(EventProcessingConfigurer processingConfigurer) {
         EventProcessingConfigurer.PooledStreamingProcessorConfiguration psepConfig =
@@ -1048,7 +1047,7 @@ The default number of segments for the `PooledStreamingEventProcessor` is sixtee
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule segmentCountConfigurerModule() {
@@ -1073,9 +1072,9 @@ The default number of segments for a `TrackingEventProcessor` and `PooledStreami
 
 [source,properties]
 ----
-axon.eventhandling.processors.my-processor.mode=pooled
+sophon.eventhandling.processors.my-processor.mode=pooled
 # Sets the initial number of segments
-axon.eventhandling.processors.my-processor.initialSegmentCount=32
+sophon.eventhandling.processors.my-processor.initialSegmentCount=32
 ----
 --
 ====
@@ -1094,10 +1093,10 @@ The ordering is guaranteed when only a single thread is processing events.
 Maintaining the ordering requires additional work when the stream is segmented for parallel processing, however.
 When this is the case, the processor must ensure it sends the events to these handlers in that specific order.
 
-Axon uses the `SequencingPolicy` for this.
+Sophon uses the `SequencingPolicy` for this.
 The `SequencingPolicy` is a function that returns a value for any given message.
 If the return value of the `SequencingPolicy` function is equal for two distinct event messages, it means that those messages must be processed sequentially.
-By default, Axon components will use the `SequentialPerAggregatePolicy`, making it so that events published by the same aggregate instance will be handled sequentially.
+By default, Sophon components will use the `SequentialPerAggregatePolicy`, making it so that events published by the same aggregate instance will be handled sequentially.
 Check out <<sequential-processing,this>> section to understand how to influence the sequencing policy.
 
 Each node running a streaming processor will attempt to start its configured amount of threads to start processing events.
@@ -1109,7 +1108,7 @@ These approaches provide different pros and cons for each implementation, which 
 === Sequential processing
 
 Even though events are processed asynchronously from their publisher, it is often desirable to process certain events in their publishing order.
-In Axon, the `SequencingPolicy` controls this order.
+In Sophon, the `SequencingPolicy` controls this order.
 The `SequencingPolicy` defines whether events must be handled sequentially, in parallel, or a combination of both.
 Policies return a sequence identifier of a given event.
 
@@ -1122,12 +1121,12 @@ Note that if the policy returns a `null` sequence identifier, the event may be p
 ====
 A xref:sagas:index.adoc[saga] instance is *never* invoked concurrently by multiple threads.
 Therefore, the `SequencingPolicy` is irrelevant for a saga.
-Axon will ensure each saga instance receives the events it needs to process in the order they have been published on the event bus.
+Sophon will ensure each saga instance receives the events it needs to process in the order they have been published on the event bus.
 ====
 
 [[sequencing-policies]]
 Conceptually, the `SequencingPolicy` decides whether an event belongs to a given <<parallel-processing,segment>>.
-Furthermore, Axon guarantees that Events that are part of the same segment are processed sequentially.
+Furthermore, Sophon guarantees that Events that are part of the same segment are processed sequentially.
 
 The framework provides several policies you can use out of the box:
 
@@ -1135,9 +1134,9 @@ The framework provides several policies you can use out of the box:
 It will force domain events that were raised from the same aggregate to be handled sequentially.
 Thus, events from different aggregates may be handled concurrently.
 This policy is typically suitable for Event Handling Components that update details from aggregates in databases.
-* `FullConcurrencyPolicy`: This policy will tell Axon that this Event Processor may handle all events concurrently.
+* `FullConcurrencyPolicy`: This policy will tell Sophon that this Event Processor may handle all events concurrently.
 This means that there is no relationship between the events that require them to be processed in a particular order.
-* `SequentialPolicy`: This policy tells Axon that it can process all events sequentially.
+* `SequentialPolicy`: This policy tells Sophon that it can process all events sequentially.
 Handling of an event will start when the handling of a previous event has finished.
 * `PropertySequencingPolicy`: When configuring this policy, the user is required to provide a property name or property extractor function.
 This implementation provides a flexible solution to set up a custom sequencing policy based on a standard value present in your events.
@@ -1154,7 +1153,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureSequencingPolicy(EventProcessingConfigurer processingConfigurer) {
           PropertySequencingPolicy<SomeEvent, String> mySequencingPolicy =
@@ -1177,7 +1176,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule sequencingPolicyConfigurerModule(SequencingPolicy<EventMessage<?>> mySequencingPolicy) {
@@ -1203,8 +1202,8 @@ When we want to configure the `SequencingPolicy` in a properties file, we should
 
 [source,properties]
 ----
-axon.eventhandling.processors.my-processor.mode=tracking
-axon.eventhandling.processors.my-processor.sequencing-policy=mySequencingPolicy
+sophon.eventhandling.processors.my-processor.mode=tracking
+sophon.eventhandling.processors.my-processor.sequencing-policy=mySequencingPolicy
 ----
 
 This approach does require the bean name to be present in the Application Context of course:
@@ -1212,7 +1211,7 @@ This approach does require the bean name to be present in the Application Contex
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public SequencingPolicy<EventMessage<?>> mySequencingPolicy() {
@@ -1271,7 +1270,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureThreadCount(EventProcessingConfigurer processingConfigurer) {
         TrackingEventProcessorConfiguration tepConfig =
@@ -1290,7 +1289,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule threadCountConfigurerModule() {
@@ -1313,9 +1312,9 @@ Spring Boot properties::
 --
 [source,properties]
 ----
-axon.eventhandling.processors.my-processor.mode=tracking
-axon.eventhandling.processors.my-processor.thread-count=4
-axon.eventhandling.processors.my-processor.initial-segment-count=4
+sophon.eventhandling.processors.my-processor.mode=tracking
+sophon.eventhandling.processors.my-processor.thread-count=4
+sophon.eventhandling.processors.my-processor.initial-segment-count=4
 ----
 --
 ====
@@ -1347,15 +1346,15 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureThreadCount(EventProcessingConfigurer processingConfigurer) {
         // the "name" is the name of the processor, which can be used to define the thread factory name
         Function<String, ScheduledExecutorService> coordinatorExecutorBuilder =
-                name -> Executors.newScheduledThreadPool(1, new AxonThreadFactory("Coordinator - " + name));
+                name -> Executors.newScheduledThreadPool(1, new SophonThreadFactory("Coordinator - " + name));
 
         Function<String, ScheduledExecutorService> workerExecutorBuilder =
-                name -> Executors.newScheduledThreadPool(16, new AxonThreadFactory("Worker - " + name));
+                name -> Executors.newScheduledThreadPool(16, new SophonThreadFactory("Worker - " + name));
 
         EventProcessingConfigurer.PooledStreamingProcessorConfiguration psepConfig =
                 (config, builder) -> builder.coordinatorExecutor(coordinatorExecutorBuilder)
@@ -1375,16 +1374,16 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule threadCountConfigurerModule() {
         // the "name" is the name of the processor, which can be used to define the thread factory name
         Function<String, ScheduledExecutorService> coordinatorExecutorBuilder =
-              name -> Executors.newScheduledThreadPool(1, new AxonThreadFactory("Coordinator - " + name));
+              name -> Executors.newScheduledThreadPool(1, new SophonThreadFactory("Coordinator - " + name));
 
         Function<String, ScheduledExecutorService> workerExecutorBuilder =
-              name -> Executors.newScheduledThreadPool(16, new AxonThreadFactory("Worker - " + name));
+              name -> Executors.newScheduledThreadPool(16, new SophonThreadFactory("Worker - " + name));
 
         EventProcessingConfigurer.PooledStreamingProcessorConfiguration psepConfig =
               (config, builder) -> builder.coordinatorExecutor(coordinatorExecutorBuilder)
@@ -1407,10 +1406,10 @@ Spring Boot properties::
 
 [source,properties]
 ----
-axon.eventhandling.processors.my-processor.mode=pooled
+sophon.eventhandling.processors.my-processor.mode=pooled
 # Only the thread count of the Worker can be influenced through a properties file!
-axon.eventhandling.processors.my-processor.thread-count=16
-axon.eventhandling.processors.my-processor.initial-segment-count=32
+sophon.eventhandling.processors.my-processor.thread-count=16
+sophon.eventhandling.processors.my-processor.initial-segment-count=32
 ----
 --
 ====
@@ -1462,29 +1461,7 @@ By default, it will use the JVM's name (usually a combination of the hostname an
 
 In a multi-node scenario, a fair distribution of the segments is often desired.
 Otherwise, the event processing load could be distributed unequally over the active instances.
-There are roughly three approaches to balancing the number of segments claimed per node:
-
-. Through the xref:axon-server-reference:ROOT:index.adoc[Axon Server] Dashboard's load balancing feature.
-. For Axon Server and Spring Boot users, you can use the `axon.axonserver.eventhandling.processors.[processor-name].load-balancing-strategy` application property.
-. Directly on a `StreamingEventProcessor`, with the `releaseSegment(int segmentId)` or `releaseSegment(int segmentId, long releaseDuration, TimeUnit unit)` method.
-
-When Axon Server is in place, we recommend using either option one or two.
-Where option one requires access to the dashboard before load balancing is activated, option two works from within your framework application's properties file.
-
-For those looking to configure load balancing through option 2, please consider the following `application.properties` file example:
-
-[source,properties]
-----
-# Enables automatic balancing for event processor "my-processor."
-# Setting automatic balancing to true causes Axon Server to periodically check whether the segments are balanced.
-# Note that automatic balancing is an Enterprise feature of Axon Server.
-axon.axonserver.eventhandling.processors.my-processor.automatic-balancing=true
-# Set the load balancing strategy to, for example, "threadNumber."
-# Note that this task is executed only once, on the start up of the Axon Framework application.
-axon.axonserver.eventhandling.processors.my-processor.load-balancing-strategy=threadNumber
-----
-
-Whenever Axon Server is not used, we can achieve load balancing by having a streaming processor release its segments.
+Balancing can be achieved by having a streaming processor release its segments.
 Releasing segments is done by calling the `releaseSegment` method.
 When invoking `releaseSegment`, the `StreamingEventProcessor` will "let go of" the segment for some time.
 
@@ -1515,16 +1492,7 @@ When there is a high event load, ideally, we increase the number of segments.
 In turn, we can reduce the number of segments again if the load on the streaming processor decreases.
 To change the number of segments at runtime, the _split and merge_ operations should be used.
 Splitting and merging allow you to control the number of segments dynamically.
-There are roughly three approaches to do this.
-
-==== 1. Axoniq Platform
-Through xref:axoniq-platform-reference:ROOT:index.adoc[Axoniq Platform]'s processor detail page, where you can scale the segments manually, or configure your segments to scale automatically with the number of your application's replicas. It's the easiest to set up and use.
-
-==== 2. Axon Server
-The xref:axon-server-reference:ROOT:index.adoc[Axon Server] Dashboard contains split and merge buttons to adjust the number of segments. While it's straightforward to use as well, it does not support automatic scaling based on the number of replicas.
-
-==== 3. Manual programming
-If none of the other two options are available, you can adjust the number of segments through the Axon Framework API. The `StreamingEventProcessor` exposes the `splitSegment(int segmentId)` and `mergeSegment(int segmentId)` methods. To obtain the `StreamingEventProcessor`, you can use the `EventProcessingConfiguration` to retrieve the processor by name.
+This is done through the Sophon API. The `StreamingEventProcessor` exposes the `splitSegment(int segmentId)` and `mergeSegment(int segmentId)` methods. To obtain the `StreamingEventProcessor`, you can use the `EventProcessingConfiguration` to retrieve the processor by name.
 
 For those taking this approach, consider the following snippet as a form of guidance:
 
@@ -1573,8 +1541,7 @@ We can calculate the segment identifier the provided `segmentId will be merged w
 [NOTE]
 .Segment Selection Considerations
 ====
-When splitting or merging through Axoniq Platform and Axon Server, it chooses the most appropriate segment to split or merge for you.
-When using the Axon Framework API directly, the developer should deduce the segment to split or segments to merge by themselves:
+When using the Sophon API, the developer should deduce the segment to split or segments to merge by themselves:
 
 * Split: for fair balancing, a split is ideally performed on the largest segment
 * Merge: for fair balancing, a merge is ideally performed on the smallest segment
@@ -1586,34 +1553,11 @@ When using the Axon Framework API directly, the developer should deduce the segm
 A benefit of streaming events is that we can reopen the stream at any point in time.
 Whenever some event handling components misbehaved, and the view models they update or actions they triggered should happen again, starting anew can be useful.
 Handling events again by adjusting the position on the stream is what's called "a replay," a feature supported by the `StreamingEventProcessor`.
-You can trigger a reset using xref:axoniq-platform-reference:ROOT:index.adoc[Axoniq Platform], or programmatically through the Axon Framework API.
+You can trigger a reset programmatically through the Sophon API.
 
-[#reset-console]
-=== Triggering a reset with Console
-
-Triggering a reset through the xref:axoniq-platform-reference:ROOT:index.adoc[Axoniq Platform] is straightforward.
-It will make sure all processors are stopped, the tokens reset, and the replay is started, without any need for manual intervention.
-
-Go to the detail page of the processor you would like to reset. On the left side, under the configuration details, is a "Reset Processor" button.
-
-image::console-processor-detail-page-reset.png[alt="Axoniq Platform processor detail page with underlined 'Reset Processor' button"]
-
-Clicking this button will open a dialog in which you can choose the desired position in the event store to replay from. You can choose of resetting to the tail, head, or a custom date.
-
-image::console-processor-reset-dialog.png[alt="Axoniq Platform reset dialog", width=65%, align="center"]
-
-After resetting the processor, the replay will start immediately. You can track its progress under the "Segments" tab. During a replay, each segment has its own pace.
-
-image::console-processor-replaying-segments.png[alt="Axoniq Platform segments view during a replay"]
-
-During this time, it's normal to see the latency of the processor at a high value, because it's processing events from a long time ago. This will slowly decrease until it's back at the head position.
-
-
-
-[#reset-programmatically]
 === Triggering a reset programmatically
 
-You can also trigger a reset using the Axon Framework API.
+You can also trigger a reset using Sophon API.
 This API revolves around the `resetTokens()` method and provides a couple of options:
 
 * `resetTokens()`: Simple reset, adjusting the `TrackingToken` to the configured <<Initial tracking token,initial tracking token>>
@@ -1695,10 +1639,7 @@ class StreamingProcessorController {
 If you are in a <<Multi-node processing,multi-node>> scenario, that means _all_ nodes should shut down the `StreamingEventProcessor`.
 Otherwise, another node will pick up the segments released by the inactive processor instance.
 
-Being able to shut down or start up all streaming processor instances is most easily achieved through the xref:axon-server-reference:ROOT:index.adoc[Axon Server] Dashboard or xref:axoniq-platform-reference:ROOT:index.adoc[Axoniq Platform].
-They both provide a "start" and "stop" button, which will start/stop the processor on every node. With Axoniq Platform you can also reset the processor.
-
-When Axon Server is not used, you should construct a custom endpoint in your application.
+To start or stop the processor on every node, construct a custom endpoint in your application.
 The `StreamingProcessorService` sample shared above would be ideal for adding a start and stop method.
 ====
 
@@ -1798,8 +1739,7 @@ You can configure a Streaming Event Processor to use multiple sources to process
 When required to process events from several sources, we can configure a specific type of `StreamableMessageSource`: the `MultiStreamableMessageSource`.
 The `MultiStreamableMessageSource` is useful when a streaming processor should act on the events from:
 
-* several event stores,
-* xref:axon-server-reference:ROOT:axon-server/administration/multi-context.adoc[multiple-contexts], or
+* several event stores, or
 * from different storage types (for example, an Event Store and a Kafka Stream)
 
 Having multiple sources means that there might be a choice of multiple events that the processor could consume at any given instant.
@@ -1816,7 +1756,7 @@ Consider the following sample when constructing a `MultiStreamableMessageSource`
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public MultiStreamableMessageSource buildMultiStreamableMessageSource(
             StreamableMessageSource<TrackedEventMessage<?>> eventSourceA,
@@ -1843,7 +1783,7 @@ Tracking: Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureTrackingProcessor(EventProcessingConfigurer processingConfigurer) {
         processingConfigurer.registerTrackingEventProcessor(
@@ -1860,7 +1800,7 @@ Tracking: Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule trackingProcessorConfigurerModule() {
@@ -1880,7 +1820,7 @@ Pooled streaming: Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configurePooledStreamingProcessor(EventProcessingConfigurer processingConfigurer) {
         processingConfigurer.registerPooledStreamingEventProcessor(
@@ -1898,7 +1838,7 @@ Pooled streaming: Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule pooledStreamingProcessorConfigurerModule() {
@@ -1920,8 +1860,8 @@ When we want to configure the `StreamableMessageSource` in a properties file, we
 
 [source,properties]
 ----
-axon.eventhandling.processors.my-processor.mode=pooled
-axon.eventhandling.processors.my-processor.source=multiStreamableMessageSource
+sophon.eventhandling.processors.my-processor.mode=pooled
+sophon.eventhandling.processors.my-processor.source=multiStreamableMessageSource
 ----
 
 This approach does require the bean name to be present in the Application Context of course:
@@ -1929,7 +1869,7 @@ This approach does require the bean name to be present in the Application Contex
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public MultiStreamableMessageSource multiStreamableMessageSource(

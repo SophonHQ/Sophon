@@ -4,12 +4,6 @@ When configuring xref:events:event-processors/index.adoc#error-handling[error ha
 
 Instead of either logging the error and continuing, or infinitely retrying the current event, a Dead-Letter Queue will park the event in the queue so you can decide to try and handle it again later. In addition, it will prevent handling of later events in the same sequence until the failed event is successfully processed.
 
-[TIP]
-.Insight and Management
-xref:axoniq-platform-reference:ROOT:index.adoc[Axoniq Platform] provides insight into the Dead-Letter Queue and tools for its management.
-It's straightforward to see the dead letters in the queue and decide to retry them or remove them from the queue.
-You can find more information on the xref:axoniq-platform-reference:ROOT:features/dlq.adoc[Dead-Letter Queue page of Axoniq Platform].
-
 Note that you _cannot_ share a dead-letter queue between different processing groups.
 Hence, each processing group you want to enable this behavior for should receive a unique dead-letter queue instance.
 
@@ -26,7 +20,7 @@ Hence, there's no way of knowing whether a next event in the stream does or does
 
 == Event ordering
 
-Axon Framework's event processors maintain the ordering of events within the same sequence, even when you configure xref:event-processors/streaming.adoc#parallel-processing[parallel processing].
+Sophon's event processors maintain the ordering of events within the same sequence, even when you configure xref:event-processors/streaming.adoc#parallel-processing[parallel processing].
 A perfect example when this is a requirement is the need to handle events of the same aggregate in their publishing order.
 Simply dead lettering one failed event would cause later events in the sequence to be applied to inconsistent state.
 
@@ -50,9 +44,6 @@ The JPA dead-letter queue is a suitable option for production environments by pe
 * `JdbcSequencedDeadLetterQueue` - JDBC variant of the dead-letter queue.
 It constructs a `dead_letter_entry` table where it persists failed-events in.
 The JDBC dead-letter queue is a suitable option for production environments by persisting the dead letters.
-
-* `MongoSequencedDeadLetterQueue` - Mongo variant of the dead-letter queue, available via the xref:mongodb-extension-reference::index.adoc[Mongo Extension]. It constructs a `deadletters` collection where it persists failed-events in.
-The MongoDB dead-letter queue is a suitable option for production environments by persisting the dead letters.
 
 == Idempotency
 
@@ -78,7 +69,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureDeadLetterQueue(EventProcessingConfigurer processingConfigurer) {
         // Replace "my-processing-group" for the processing group you want to configure the DLQ on. 
@@ -104,7 +95,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule deadLetterQueueConfigurerModule() {
@@ -145,7 +136,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureDeadLetterQueue(EventProcessingConfigurer processingConfigurer) {
         processingConfigurer.registerDeadLetterQueueProvider(
@@ -178,7 +169,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule deadLetterQueueConfigurerModule () {
@@ -207,9 +198,9 @@ public class AxonConfig {
 --
 ====
 
-If you are using Spring Boot, a default dead-letter queue provider will be set if using JPA, JDBC, or Mongo.
-The default dead-letter queue provider will use the `axon.eventhandling.processors.my-processor.dlq.enabled` property to determine whether to return `null` or a dead-letter queue factory method.
-For example, by setting the `axon.eventhandling.processors.my-processing-group.dlq.enabled` to true you would enable the dead-letter queue for the `my-processing-group` processing group.
+If you are using Spring Boot, a default dead-letter queue provider will be set if using JPA or JDBC.
+The default dead-letter queue provider will use the `sophon.eventhandling.processors.my-processor.dlq.enabled` property to determine whether to return `null` or a dead-letter queue factory method.
+For example, by setting the `sophon.eventhandling.processors.my-processing-group.dlq.enabled` to true you would enable the dead-letter queue for the `my-processing-group` processing group.
 
 == Processing sequences
 
@@ -361,7 +352,7 @@ It's also possible to change the exception, for example to be sure that it will 
 
 You can customize the dead-letter policy to exclude some events when handling fails.
 As a consequence, these events will be skipped.
-Note that Axon Framework invokes the policy on initial event handling _and_ on <<Processing dead-letter sequences,dead-letter processing>>.
+Note that Sophon invokes the policy on initial event handling _and_ on <<Processing dead-letter sequences,dead-letter processing>>.
 
 Reevaluating the policy after processing failed may be essential to ensure a dead letter isn't stuck in the queue forever.
 To deal with this scenario, you can attach additional diagnostic information to the dead letter through the policy.
@@ -408,7 +399,7 @@ Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureEnqueuePolicy(EventProcessingConfigurer configurer) {
         // Replace "my-processing-group" for the processing group you want to configure the policy on.
@@ -423,7 +414,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule enqueuePolicyConfigurerModule() {

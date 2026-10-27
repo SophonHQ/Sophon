@@ -21,14 +21,14 @@ Configurer configurer = DefaultConfigurer.defaultConfiguration()
 Spring Boot::
 +
 --
-The `@Aggregate` annotation (in the `org.axonframework.spring.stereotype` package) triggers auto configuration to set up the necessary components to use the annotated type as an aggregate. Note that only the aggregate root needs to be annotated.
+The `@Aggregate` annotation (in the `io.github.sophonhq.sophon.spring.stereotype` package) triggers auto configuration to set up the necessary components to use the annotated type as an aggregate. Note that only the aggregate root needs to be annotated.
 
-Axon will automatically register all the `@CommandHandler` annotated methods with the command bus and set up a repository if none is present.
+Sophon will automatically register all the `@CommandHandler` annotated methods with the command bus and set up a repository if none is present.
 
 [source,java]
 ----
 // ...
-import org.axonframework.spring.stereotype.Aggregate;
+import io.github.sophonhq.sophon.spring.stereotype.Aggregate;
 // ...
 @Aggregate
 public class GiftCard {
@@ -78,7 +78,7 @@ The following is needed to register a `GiftCardCommandHandler` as being a Comman
 
 [source,java]
 ----
-Configurer axonConfigurer = DefaultConfigurer.defaultConfiguration()
+Configurer sophonConfigurer = DefaultConfigurer.defaultConfiguration()
     .registerCommandHandler(conf -> new GiftCardCommandHandler());
 ----
 
@@ -86,7 +86,7 @@ Or, a more general approach to registering _all_ types of message handlers in a 
 
 [source,java]
 ----
-Configurer axonConfigurer = DefaultConfigurer.defaultConfiguration()
+Configurer sophonConfigurer = DefaultConfigurer.defaultConfiguration()
     .registerMessageHandler(conf -> new GiftCardCommandHandler());
 ----
 --
@@ -127,9 +127,9 @@ By default, when a duplicate Command Handler method is registered, the last regi
 
 The repository is the mechanism that provides access to aggregates. The repository acts as a gateway to the actual storage mechanism used to persist the data. In CQRS, repositories only need to be able to find aggregates based on their unique identifier. Any other types of queries should be performed against the query database.
 
-In Axon Framework, all repositories must implement the `Repository` interface. This interface prescribes three methods: `load(identifier, version)`, `load(identifier)` and `newInstance(factoryMethod)`. The `load` methods allows you to load aggregates from the repository. The optional `version` parameter is used to detect concurrent modifications (see xref:modeling/conflict-resolution.adoc[Conflict resolution]). `newInstance` is used to register newly created aggregates in the repository.
+In Sophon, all repositories must implement the `Repository` interface. This interface prescribes three methods: `load(identifier, version)`, `load(identifier)` and `newInstance(factoryMethod)`. The `load` methods allows you to load aggregates from the repository. The optional `version` parameter is used to detect concurrent modifications (see xref:modeling/conflict-resolution.adoc[Conflict resolution]). `newInstance` is used to register newly created aggregates in the repository.
 
-Depending on your underlying persistence storage and auditing needs, there are a number of base implementations that provide basic functionality needed by most repositories. Axon Framework makes a distinction between repositories that save the current state of the aggregate (see <<standard-repositories, Standard repositories>>), and those that store the events of an aggregate (see <<event-sourcing-repositories, Event Sourcing repositories>>).
+Depending on your underlying persistence storage and auditing needs, there are a number of base implementations that provide basic functionality needed by most repositories. Sophon makes a distinction between repositories that save the current state of the aggregate (see <<standard-repositories, Standard repositories>>), and those that store the events of an aggregate (see <<event-sourcing-repositories, Event Sourcing repositories>>).
 
 Note that the Repository interface does not prescribe a `delete(identifier)` method. Deleting aggregates is done by invoking the `AggregateLifecycle.markDeleted()` method from within an aggregate. Deleting an aggregate is a state migration like any other, with the only difference that it is irreversible in many cases. You should create your own meaningful method on your aggregate which sets the aggregate's state to "deleted". This also allows you to register any events that you would like to have published.
 
@@ -155,7 +155,7 @@ Configurer configurer = DefaultConfigurer.defaultConfiguration()
 Spring Boot::
 +
 --
-To fully customize the repository used, you can define one in the application context. For Axon Framework to use this repository for the intended aggregate, define the bean name of the repository in the `repository` attribute on `@Aggregate` Annotation. Alternatively, specify the bean name of the repository to be the aggregate's name, (first character lowercase), suffixed with `Repository`. So on a class of type `GiftCard`, the default repository name is `giftCardRepository`. If no bean with that name is found, Axon will define an `EventSourcingRepository` (which fails if no `EventStore` is available).
+To fully customize the repository used, you can define one in the application context. For Sophon to use this repository for the intended aggregate, define the bean name of the repository in the `repository` attribute on `@Aggregate` Annotation. Alternatively, specify the bean name of the repository to be the aggregate's name, (first character lowercase), suffixed with `Repository`. So on a class of type `GiftCard`, the default repository name is `giftCardRepository`. If no bean with that name is found, Sophon will define an `EventSourcingRepository` (which fails if no `EventStore` is available).
 
 [source,java]
 ----
@@ -175,9 +175,9 @@ Note that this requires full configuration of the Repository, including any `Sna
 [[standard-repositories]]
 === Standard repositories
 
-Standard repositories store the actual state of an aggregate. Upon each change, the new state will overwrite the old. This makes it possible for the query components of the application to use the same information the command component also uses. This could, depending on the type of application you are creating, be the simplest solution. If that is the case, Axon provides some building blocks that help you implement such a repository.
+Standard repositories store the actual state of an aggregate. Upon each change, the new state will overwrite the old. This makes it possible for the query components of the application to use the same information the command component also uses. This could, depending on the type of application you are creating, be the simplest solution. If that is the case, Sophon provides some building blocks that help you implement such a repository.
 
-Axon provides one out-of-the-box implementation for a standard Repository: the `GenericJpaRepository`. It expects the Aggregate to be a valid JPA Entity. It is configured with an `EntityManagerProvider` which provides the `EntityManager` to manage the actual persistence, and a class specifying the actual type of aggregate stored in the repository. You also pass in the `EventBus` to which events are to be published when the aggregate invokes the static `AggregateLifecycle.apply()` method.
+Sophon provides one out-of-the-box implementation for a standard Repository: the `GenericJpaRepository`. It expects the Aggregate to be a valid JPA Entity. It is configured with an `EntityManagerProvider` which provides the `EntityManager` to manage the actual persistence, and a class specifying the actual type of aggregate stored in the repository. You also pass in the `EventBus` to which events are to be published when the aggregate invokes the static `AggregateLifecycle.apply()` method.
 
 You can also easily implement your own repository. In that case, it is best to extend from the abstract `LockingRepository`. As aggregate wrapper type, it is recommended to use the `AnnotatedAggregate`. See the sources of `GenericJpaRepository` for an example.
 
@@ -188,7 +188,7 @@ Aggregate roots that are able to reconstruct their state based on events may als
 Those repositories do not store the aggregate itself, but the series of events generated by the aggregate.
 Based on these events, the state of an aggregate can be restored at any time.
 
-The `EventSourcingRepository` implementation provides the basic functionality needed by any event sourcing repository in the Axon Framework.
+The `EventSourcingRepository` implementation provides the basic functionality needed by any event sourcing repository in Sophon.
 It depends on an `EventStore` (see xref:events:event-bus-and-event-store.adoc[Event store implementations]), which abstracts the actual storage mechanism for the events.
 
 == Aggregate factories
@@ -199,7 +199,7 @@ This makes the `AggregateFactory` a configurable component for the `EventSourcin
 Furthermore, it is only invoked for existing aggregate event streams, as an event stream is required.
 Hence, the command constructing the aggregate will not trigger an `AggregateFactory` invocation.
 
-Axon Framework comes with two `AggregateFactory` implementations that you may use.
+Sophon comes with two `AggregateFactory` implementations that you may use.
 If they do not suffice, it is really easy to create your own implementation.
 
 === `GenericAggregateFactory`
@@ -220,7 +220,7 @@ Instead of creating regular instances of using a constructor, it uses the Spring
 This will also inject any dependencies in your aggregate.
 
 Note that although you can inject dependencies as global fields of an aggregate, you can also inject them as parameters.
-When it comes to parameters added to message handling methods, Axon uses the so-called xref:messaging-concepts:supported-parameters-annotated-handlers.adoc[Parameter Resolver] support to inject your beans.
+When it comes to parameters added to message handling methods, Sophon uses the so-called xref:messaging-concepts:supported-parameters-annotated-handlers.adoc[Parameter Resolver] support to inject your beans.
 As such, the `SpringPrototypeAggregateFactory` _does not_ play any role to inject dependencies to message handling methods.
 
 === Implementing your own `AggregateFactory`

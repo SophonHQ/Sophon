@@ -1,7 +1,7 @@
 :navtitle: Relational Databases
 = Relational Database Tuning
 
-When using Axon Framework with a relational database, there are several considerations to take into account when tuning the database for optimal performance:
+When using Sophon with a relational database, there are several considerations to take into account when tuning the database for optimal performance:
 
 . Using the xref:#important_indices[correct indices] for the different types of queries used.
 . Configuring the xref:#auto_increment_and_sequences[right auto-increment configuration] when using JPA.
@@ -66,27 +66,27 @@ Here, again, a shorter (but variable) length field should suffice.
 [#auto_increment_and_sequences]
 :navtitle: Auto-Increment and Sequences
 
-When using a relational database as an event store, Axon Framework relies on an auto-increment value to allow xref:events:event-processors/streaming.adoc[streaming event processors] to read all events roughly in the order they were inserted.
+When using a relational database as an event store, Sophon relies on an auto-increment value to allow xref:events:event-processors/streaming.adoc[streaming event processors] to read all events roughly in the order they were inserted.
 We say "roughly", because "insert-order" and "commit-order" are different things.
 
 While auto-increment values are (generally) generated at insert-time, these values only become visible at commit-time.
 This means another process may observe these sequence numbers arriving in a different order.
-While Axon Framework has mechanisms to ensure that eventually all events are handled, even when they become visible in a different order, there are limitations and performance aspects to consider.
+While Sophon has mechanisms to ensure that eventually all events are handled, even when they become visible in a different order, there are limitations and performance aspects to consider.
 
 When a xref:events:event-processors/streaming.adoc[streaming event processor] reads events, it uses the "global sequence" to track its progress.
-When events become available in a different order than they were inserted, Axon Framework will encounter a "gap." Axon Framework will remember these "gaps" to verify that data has become available since the last read.
+When events become available in a different order than they were inserted, Sophon will encounter a "gap." Sophon will remember these "gaps" to verify that data has become available since the last read.
 These gaps may be the result of events becoming visible in a different order, but also because a transaction was rolled back.
 It is highly recommended to ensure that no gaps exist because of over eagerly increasing the sequence number.
 The mechanism for checking gaps is convenient, but comes with a performance impact.
 
-When using a `JpaEventStorageEngine`, Axon Framework relies on the JPA implementation to create the table structure.
+When using a `JpaEventStorageEngine`, Sophon relies on the JPA implementation to create the table structure.
 While this will work, it is unlikely to provide the configuration that has the best performance for the database engine in use.
-That is because Axon Framework uses default settings for the `@GeneratedValue` annotation.
+That is because Sophon uses default settings for the `@GeneratedValue` annotation.
 
 [WARNING]
 ====
 When using the `@GeneratedValue` annotation as-is in Hibernate 6, the default increment value jumped to 50.
-This change, in combination with, for example, the xref:multitenancy-extension-reference::index.adoc[multitenancy] extension, may lead to uniqueness issues.
+This change, in combination with, for example, a multitenancy solution, may lead to uniqueness issues.
 Hence, it is strongly recommended to define a custom sequence generator, as described below.
 
 Furthermore, if you use Hibernate's link:https://vladmihalcea.com/hibernate-hidden-gem-the-pooled-lo-optimizer/[pooled optimizer], we suggest to set the `allocation-size` to **1**.
@@ -100,7 +100,7 @@ To override these settings, create a file called `/META-INF/orm.xml` on the clas
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-mappings version="1.0" xmlns="http://java.sun.com/xml/ns/persistence/orm">
-    <mapped-superclass access="FIELD" metadata-complete="false" class="org.axonframework.eventhandling.AbstractSequencedDomainEventEntry">
+    <mapped-superclass access="FIELD" metadata-complete="false" class="io.github.sophonhq.sophon.eventhandling.AbstractSequencedDomainEventEntry">
         <attributes>
             <id name="globalIndex">
                 <generated-value strategy="SEQUENCE" generator="myGenerator"/>
@@ -137,9 +137,9 @@ Although the Large Object Storage is a useful feature from PostgreSQL to help wi
 2. Removing an object that has an OID column *does not* automatically remove it from the large object table.
 3. Manually querying the table will result in an OID column instead of the actual data being shown.
 
-Let us look how this behavior from PostgreSQL combines with Axon Framework when combined with JPA and Hibernate.
+Let us look how this behavior from PostgreSQL combines with Sophon when combined with JPA and Hibernate.
 
-Axon Framework uses the `@Lob` in several columns and tables for its JPA-based support, being:
+Sophon uses the `@Lob` in several columns and tables for its JPA-based support, being:
 
 * The `payload` and `meta_data` columns in the `domain_event_entry` table.
 * The `payload` and `meta_data` columns in the `snapshot_event_entry` table.
@@ -153,12 +153,12 @@ Thus, the dedicate large object storage solution will be used if you are using P
 As events and snapshots are frequently read, the overhead predicament discussed earlier will be hit.
 Arguably more problematic is issue two, especially for the `token_entry` table.
 
-The "claim" on a token is frequently updated to allow correct collaboration in a distributed Axon setup (please read our xref:events:event-processors/streaming.adoc#tracking-tokens[Tracking Tokens] section for more details).
+The "claim" on a token is frequently updated to allow correct collaboration in a distributed Sophon setup (please read our xref:events:event-processors/streaming.adoc#tracking-tokens[Tracking Tokens] section for more details).
 As the large object table is **not** automatically cleared, it will eventually overflow through all the updates.
 
 Hence, it would be best to avoid the Large Object Storage behavior and instead opt for the transparent TOAST feature.
 We can achieve this by adjusting Hibernate's settings, to map the `@Lob` annotated fields to the `BYTEA` type.
-Since Axon Framework stores a byte array in each of the `@Lob` annotated columns, changing it to the `BYTEA` type makes sense.
+Since Sophon stores a byte array in each of the `@Lob` annotated columns, changing it to the `BYTEA` type makes sense.
 
 Luckily, changing these settings can be done with three easy steps:
 
@@ -219,12 +219,12 @@ Below is an example of overriding the `serializedSaga` and `token` columns from 
 [source,xml]
 ----
 <entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" version="2.0">
-    <entity class="org.axonframework.modelling.saga.repository.jpa.SagaEntry">
+    <entity class="io.github.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry">
         <attribute-override name="serializedSaga">
             <column name="serializedSaga" column-definition="BYTEA"></column>
         </attribute-override>
     </entity>
-    <entity class="org.axonframework.eventhandling.tokenstore.jpa.TokenEntry">
+    <entity class="io.github.sophonhq.sophon.eventhandling.tokenstore.jpa.TokenEntry">
         <attribute-override name="token">
             <column name="token" column-definition="BYTEA"></column>
         </attribute-override>
@@ -234,7 +234,7 @@ Below is an example of overriding the `serializedSaga` and `token` columns from 
 
 === OID to BYTEA column migration
 
-If you already have Axon-specific tables using the OID type, you need to migrate them to BYTEA.
+If you already have Sophon-specific tables using the OID type, you need to migrate them to BYTEA.
 The following SQL script can get the job done for the `token_entry` table:
 
 [source,sql]
@@ -252,15 +252,15 @@ After making all the changes and running the SQL script, the data-affected colum
 Liquibase is a database-independent library for tracking, managing, and applying database schema changes.
 It is a popular choice for managing database changes in a structured and automated way.
 
-You can use the Liquibase changelog below to bootstrap the table of Axon Framework.
+You can use the Liquibase changelog below to bootstrap the table of Sophon.
 Note that this has been generated for PostgreSQL, so you may need to adjust it for other database systems.
 
 [source, yaml]
 ----
 databaseChangeLog:
   - changeSet:
-      id: axon-framework-bootstrap
-      author: AxonIQ
+      id: sophon-bootstrap
+      author: sophon
       changes:
         - createTable:
             columns:

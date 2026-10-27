@@ -1,21 +1,21 @@
 = Aggregates
 
-Aggregates are an important concept in link:https://www.axoniq.io/concepts/domain-driven-design[Domain-Driven Design].
+Aggregates are an important concept in link:https://martinfowler.com/bliki/DomainDrivenDesign.html[Domain-Driven Design].
 They are clusters of related entities and value objects acting as a single unit.
 They help maintain consistency and encapsulate domain logic within specific boundaries,
 ensuring changes to one part don’t mess up others.
 
-Aggregates are commonly used to model the core business entities in a system based on link:https://www.axoniq.io/concepts/domain-driven-design[Domain-Driven Design] and link:https://www.axoniq.io/concepts/cqrs-and-event-sourcing[CQRS].
-This chapter will cover the basics on how to implement one in Axon Framework.
+Aggregates are commonly used to model the core business entities in a system based on link:https://martinfowler.com/bliki/DomainDrivenDesign.html[Domain-Driven Design] and link:https://martinfowler.com/bliki/CQRS.html[CQRS].
+This chapter will cover the basics on how to implement one in Sophon.
 
 == Aggregate identifiers
 
 Each aggregate has an identifier that uniquely identifies it within the context.
 Events published from this aggregate will contain this identifier,
-so that Axon Framework can later load the aggregate from its event stream.
+so that Sophon can later load the aggregate from its event stream.
 
 Commands that target aggregates contain a reference to this identifier.
-Axon Framework will load the events for the aggregate with this identifier,
+Sophon will load the events for the aggregate with this identifier,
 replay the events on an empty instance, and invoke the command. This is how the aggregate's state is reconstructed to support Event-Sourcing.
 
 [TIP]
@@ -23,7 +23,7 @@ replay the events on an empty instance, and invoke the command. This is how the 
 The aggregate identifier has to be globally unique in your event store.
 This means that events are loaded based only on the identifier, and nothing else.
 Henceforth, the aggregate's type does not influence uniqueness at all.
-This means that if you have two aggregate types with the same identifier, Axon will
+This means that if you have two aggregate types with the same identifier, Sophon will
 load the events for both aggregates when handling a command.
 Mixing these events might lead to unexpected behavior, so we strongly recommend to design
 your aggregate identifiers with uniqueness in mind.
@@ -31,23 +31,23 @@ your aggregate identifiers with uniqueness in mind.
 
 Note that commands that construct a new aggregate (via a constructor) do not need an identifier.
 However, your `@AggregateIdentifier` field needs to have a value after the first command,
-or Axon Framework will not know which aggregate identifier to publish the events for.
+or Sophon will not know which aggregate identifier to publish the events for.
 
 == Basic aggregate structure
 
 An Aggregate is a regular Java object, which contains state and methods to alter that state.
 When creating the Aggregate object, you are effectively creating the 'Aggregate Root', typically carrying the name of the entire Aggregate.
 For the purpose of this description the 'Gift Card' domain will be used, which brings us the `GiftCard` as the Aggregate (Root).
-By default, Axon will configure your Aggregate as an 'Event Sourced' Aggregate. You can read more about Event-Sourcing link:https://www.axoniq.io/concepts/cqrs-and-event-sourcing[here].
+By default, Sophon will configure your Aggregate as an 'Event Sourced' Aggregate. You can read more about Event-Sourcing link:https://martinfowler.com/eaaDev/EventSourcing.html[here].
 Henceforth, our basic `GiftCard` Aggregate structure will focus on the Event Sourcing approach:
 
 [source,java]
 ----
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.eventsourcing.EventSourcingHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
+import io.github.sophonhq.sophon.commandhandling.CommandHandler;
+import io.github.sophonhq.sophon.eventsourcing.EventSourcingHandler;
+import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
 
-import static org.axonframework.modelling.command.AggregateLifecycle.apply;
+import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 public class GiftCard {
 
@@ -74,7 +74,7 @@ public class GiftCard {
 There are a couple of noteworthy concepts from the given code snippets, marked with numbered Java comments referring to the following bullets:
 
 <1> The `@AggregateIdentifier` is the external reference point to into the `GiftCard` Aggregate.
-This field is a hard requirement, as without it Axon will not know to which Aggregate a given Command is targeted.
+This field is a hard requirement, as without it Sophon will not know to which Aggregate a given Command is targeted.
 Note that this annotation can be placed on a field and a method.
 
 <2> A `@CommandHandler` annotated constructor, or differently put the 'command handling constructor'.
@@ -91,14 +91,14 @@ This is usually the creation event.
 Lastly, `@EventSourcingHandler` annotated functions are resolved using specific rules.
 These rules are the same for the `@EventHandler` annotated methods, and are thoroughly explained in xref:events:event-handlers.adoc[Annotated Event Handler.]
 
-<5> A no-arg constructor, which is required by Axon.
-Axon Framework uses this constructor to create an empty aggregate instance before initializing it using past Events.
+<5> A no-arg constructor, which is required by Sophon.
+Sophon uses this constructor to create an empty aggregate instance before initializing it using past Events.
 Failure to provide this constructor will result in an exception when loading the Aggregate.
 
 [NOTE]
 .Modifiers for Message Handling functions
 ====
-Event Handler methods may be private, as long as the security settings of the JVM allow the Axon Framework to change the accessibility of the method.
+Event Handler methods may be private, as long as the security settings of the JVM allow Sophon to change the accessibility of the method.
 This allows you to clearly separate the public API of your Aggregate, which exposes the methods that generate events, from the internal logic, which processes the events.
 
 Most IDE's have an option to ignore "unused private method" warnings for methods with a specific annotation.
@@ -108,7 +108,7 @@ Alternatively, you can add an `@SuppressWarnings("UnusedDeclaration")` annotatio
 == Aggregate lifecycle operations
 
 There are a couple of operations which are desirable to be performed whilst in the life cycle of an Aggregate.
-To that end, the `AggregateLifecycle` class in Axon provides a couple of static functions:
+To that end, the `AggregateLifecycle` class in Sophon provides a couple of static functions:
 
 . `apply(Object)` and `apply(Object, MetaData)`: The `AggregateLifecycle#apply` will publish an Event message on an `EventBus` such that it is known to have originated from the Aggregate executing the operation.
 There is the possibility to provide just the Event `Object` or both the Event and some specific xref:messaging-concepts:anatomy-message.adoc#meta-data[MetaData].

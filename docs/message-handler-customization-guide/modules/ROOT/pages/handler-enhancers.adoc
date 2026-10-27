@@ -1,13 +1,13 @@
 :navtitle: Handler Enhancers
 = Handler Enhancers
 
-Handler Enhancers allow you to wrap handlers and add custom logic to the execution or eligibility of handlers for a specific message. Handler enhancers differ from xref:1.0@axon-framework-reference:messaging-concepts:message-intercepting.adoc[message handler interceptors] by the access they provide to the message handling component (for example, the aggregate member) at the resolution time. Hence, handler enhancers allow for more fine-grained control. You can use handler enhancers to intercept and perform checks on groups of `@MessageHandler` annotated methods, like a command, event, or query handler.
+Handler Enhancers allow you to wrap handlers and add custom logic to the execution or eligibility of handlers for a specific message. Handler enhancers differ from xref:sophon-reference:messaging-concepts:message-intercepting.adoc[message handler interceptors] by the access they provide to the message handling component (for example, the aggregate member) at the resolution time. Hence, handler enhancers allow for more fine-grained control. You can use handler enhancers to intercept and perform checks on groups of `@MessageHandler` annotated methods, like a command, event, or query handler.
 
 To create a handler enhancer, you implement the `HandlerEnhancerDefinition` interface and override the `wrapHandler()` method. All this method does is give you access to the `MessageHandlingMember<T>`, which is an object representing any handler specified in the system.
 
 You can then filter these handlers based on the type of `Message` they handle by using the `MessageHandlingMember.canHandleMessageType(Class<? extends Message>)` method. Doing so, you can specifically enhance message handlers dealing with, for example, the `CommandMessage`.
 
-For your handler enhancer to run, you'll need to create a `META-INF/services/org.axonframework.messaging.annotation.HandlerEnhancerDefinition` file containing the fully qualified class name of the handler enhancer you have created or register the enhancer explicitly in the `Configurer`. Here's an example of a `HandlerEnhancerDefinition` that filters messages based on an expected `MetaData` key and value.
+For your handler enhancer to run, you'll need to create a `META-INF/services/io.github.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition` file containing the fully qualified class name of the handler enhancer you have created or register the enhancer explicitly in the `Configurer`. Here's an example of a `HandlerEnhancerDefinition` that filters messages based on an expected `MetaData` key and value.
 
 [source,java]
 ----
@@ -70,11 +70,11 @@ To configure your `HandlerEnhancerDefintion`, you can (1) register it directly w
 
 [tabs]
 ====
-Axon Configuration API::
+Sophon Configuration API::
 +
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void registerExampleHandlerDefinition(Configurer configurer) {
         configurer.registerHandlerEnhancerDefinition(config -> new ExampleHandlerDefinition());
@@ -86,7 +86,7 @@ SpringBoot AutoConfiguration::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ExampleHandlerDefinition exampleHandlerDefinition() {

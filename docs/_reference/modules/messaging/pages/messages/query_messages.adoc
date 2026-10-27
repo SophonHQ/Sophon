@@ -5,7 +5,7 @@
 :page-needs-ref: Reference section need more links to samples, source code, etc.
 
 
-This document provides information about the design, implementation, and intended usage of query messages in Axon Framework.
+This document provides information about the design, implementation, and intended usage of query messages in Sophon.
 
 == Design considerations
 
@@ -17,7 +17,7 @@ Queries are specific type of messages, used to request information. To distingui
 
 == Implementation
 
-In Axon Framework, a query message is an immutable, serializable Java object implementing the `QueryMessage` interface.
+In Sophon, a query message is an immutable, serializable Java object implementing the `QueryMessage` interface.
 
 [plantuml, svg, title="Query messaging class diagram"]
 ....

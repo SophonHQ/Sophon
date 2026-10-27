@@ -3,8 +3,8 @@ target/
 # ...but keep the wrapper jar
 !.mvn/wrapper/maven-wrapper.jar
 
-axon.ipr
-axon.iws
+sophon.ipr
+sophon.iws
 
 # IntelliJ project files
 *.iml

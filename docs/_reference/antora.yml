@@ -1,11 +1,11 @@
-name: axon-framework-reference
-title: Axon Framework New Reference Guide (WIP-Draft)
+name: sophon-reference
+title: Sophon New Reference Guide (WIP-Draft)
 version: true
 prerelease: true
 
 asciidoc:
   attributes:
-    component_description: The Axon Framework reference documentation
+    component_description: The Sophon reference documentation
     type: reference
     group: product
 

@@ -1,7 +1,7 @@
 :navtitle: Meta Annotations
 = Meta Annotations
 
-Most annotations in Axon can be placed on other annotations as meta-annotations. When Axon scans for annotations, it will automatically scan meta-annotations as well. Annotations can override the properties defined on the meta-annotations, if desired.
+Most annotations in Sophon can be placed on other annotations as meta-annotations. When Sophon scans for annotations, it will automatically scan meta-annotations as well. Annotations can override the properties defined on the meta-annotations, if desired.
 
 For example, if you have a practice in your development team that payloads are always represented as JSON and you want the command name to be explicitly configured, you could create your own annotation:
 
@@ -18,7 +18,7 @@ public @interface JsonCommandHandler {
 }
 ----
 
-By specifying the `payloadType` on the `@CommandHandler` meta-annotation, this becomes the value used for all Command Handlers annotated with `JsonCommandHandler`. These command handlers may (and should) still provide a parameter for the payload, but Axon will complain if it isn't a subclass of `JsonNode`.
+By specifying the `payloadType` on the `@CommandHandler` meta-annotation, this becomes the value used for all Command Handlers annotated with `JsonCommandHandler`. These command handlers may (and should) still provide a parameter for the payload, but Sophon will complain if it isn't a subclass of `JsonNode`.
 
 The `commandName` attribute on the `JsonCommandHandler` annotation does not have a default value, and will therefore force developers to specify the name of the command. Note that to override values the attribute name must identical to the name on the `@CommandHandler` meta-annotation.
 

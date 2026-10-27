@@ -1,9 +1,9 @@
 * xref::index.adoc[]
-* xref::upgrading-to-4-7.adoc[]
+* link:https://github.com/SophonHQ/Sophon/blob/main/MIGRATING.md[Migrating from Axon Framework 4]
 
 include::messaging-concepts:partial$nav.adoc[]
 
-include::axon-framework-commands:partial$nav.adoc[]
+include::commands:partial$nav.adoc[]
 
 include::events:partial$nav.adoc[]
 
@@ -24,7 +24,5 @@ include::monitoring:partial$nav.adoc[]
 * xref::spring-boot-integration.adoc[]
 
 * xref::modules.adoc[]
-
-include::release-notes:partial$nav.adoc[]
 
 * xref::known-issues-and-workarounds.adoc[]

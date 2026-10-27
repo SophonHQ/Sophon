@@ -1,11 +1,10 @@
-name: Axon Framework
+name: Sophon
 
 on:
   push:
     branches:
       - main
-      - master
-      - axon-*.*.x
+      - sophon-*.*.x
     paths-ignore:
       - 'docs/**'
 
@@ -19,10 +18,8 @@ jobs:
       matrix:
         include:
           - java-version: 17
-            sonar-enabled: true
             deploy-enabled: false
           - java-version: 21
-            sonar-enabled: false
             deploy-enabled: false
 
     steps:
@@ -38,53 +35,18 @@ jobs:
           server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Regular Build
-        if: ${{ !matrix.sonar-enabled }}
+      - name: Build
         run: |
-          ./mvnw -B -U -Dstyle.color=always -Possrh -Pintegration-test -Djacoco.skip=true -Dsurefire.rerunFailingTestsCount=5 clean verify
+          ./mvnw -B -U -Dstyle.color=always -Pintegration-test -Djacoco.skip=true -Dsurefire.rerunFailingTestsCount=5 clean verify
 
-      - name: Build with Coverage reports
-        if: matrix.sonar-enabled
-        run: |
-          ./mvnw -B -U -Dstyle.color=always -Dcoverage -Dsurefire.rerunFailingTestsCount=5 clean verify
-
-      - name: Sonar Analysis
-        if: matrix.sonar-enabled
-        run: |
-          ./mvnw -B -Dstyle.color=always org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=AxonFramework_AxonFramework \
-          -Dsonar.organization=axonframework \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Deploy to Sonatype
+      - name: Deploy to Maven Central
         if: success() && matrix.deploy-enabled
         run: |
-          ./mvnw -B -U -Dstyle.color=always -Possrh deploy -DskipTests=true
+          ./mvnw -B -U -Dstyle.color=always -Psources,javadoc,sign deploy -DskipTests=true
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAVEN_USERNAME: ${{ secrets.SONATYPE_TOKEN_ID }}
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASS }}
-
-      - name: Notify success to Slack
-        if: success()
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        uses: voxmedia/github-action-slack-notify-build@v2
-        with:
-          channel_id: CAGSEC92A
-          status: SUCCESS
-          color: good
-
-      - name: Notify failure to Slack
-        if: failure()
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        uses: voxmedia/github-action-slack-notify-build@v2
-        with:
-          channel_id: CAGSEC92A
-          status: FAILED
-          color: danger
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}

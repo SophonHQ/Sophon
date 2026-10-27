@@ -12,9 +12,9 @@ Within the 'Gift Card' domain, the `GiftCard` aggregate root was defined in xref
 
 [source,java]
 ----
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateMember;
-import org.axonframework.modelling.command.EntityId;
+import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import io.github.sophonhq.sophon.modelling.command.AggregateMember;
+import io.github.sophonhq.sophon.modelling.command.EntityId;
 
 public class GiftCard {
 
@@ -54,7 +54,7 @@ public class GiftCardTransaction {
 Entities are, just like the aggregate root, simple objects, as is shown with the new `GiftCardTransaction` entity. The snippet above shows two important concepts of multi-entity aggregates:
 
 <1> The field that declares the child entity/entities must be annotated with `@AggregateMember`.
- This annotation tells Axon that the annotated field contains a class that should be inspected for message handlers.
+ This annotation tells Sophon that the annotated field contains a class that should be inspected for message handlers.
  This example shows the annotation on an implementation of `Iterable`, but it can also be placed on a single Object or a `Map`.
  In the latter case, the values of the `Map` are expected to contain the entities, while the key contains a value that is used as their reference.
  Note that this annotation can be placed on a field and a method.
@@ -70,23 +70,23 @@ Entities are, just like the aggregate root, simple objects, as is shown with the
 [NOTE]
 .Defining the Entity type
 ====
-The field declaration for both the `Collection` or `Map` should contain proper generics to allow Axon to identify the type of Entity contained in the collection or map. If it is not possible to add the generics in the declaration (for example, because you're using a custom implementation which already defines generic types), you must specify the entity type by specifying the `type` field in the `@AggregateMember` annotation:
+The field declaration for both the `Collection` or `Map` should contain proper generics to allow Sophon to identify the type of Entity contained in the collection or map. If it is not possible to add the generics in the declaration (for example, because you're using a custom implementation which already defines generic types), you must specify the entity type by specifying the `type` field in the `@AggregateMember` annotation:
 
 `@AggregateMember(type = GiftCardTransaction.class)`
 ====
 
 == Command handling in entities
 
-`@CommandHandler` annotations are not limited to the aggregate root. Placing all command handlers in the root will sometimes lead to a large number of methods on the aggregate root, while many of them simply forward the invocation to one of the underlying entities. If that is the case, you may place the `@CommandHandler` annotation on one of the underlying entities' methods. For Axon to find these annotated methods, the field declaring the entity in the aggregate root must be marked with `@AggregateMember`:
+`@CommandHandler` annotations are not limited to the aggregate root. Placing all command handlers in the root will sometimes lead to a large number of methods on the aggregate root, while many of them simply forward the invocation to one of the underlying entities. If that is the case, you may place the `@CommandHandler` annotation on one of the underlying entities' methods. For Sophon to find these annotated methods, the field declaring the entity in the aggregate root must be marked with `@AggregateMember`:
 
 [source,java]
 ----
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateMember;
-import org.axonframework.modelling.command.EntityId;
+import io.github.sophonhq.sophon.commandhandling.CommandHandler;
+import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import io.github.sophonhq.sophon.modelling.command.AggregateMember;
+import io.github.sophonhq.sophon.modelling.command.EntityId;
 
-import static org.axonframework.modelling.command.AggregateLifecycle.apply;
+import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 public class GiftCard {
 
@@ -127,7 +127,7 @@ public class GiftCardTransaction {
 }
 ----
 
-Note that only the declared type of the annotated field is inspected for command handlers. If a field value is null at the time an incoming command arrives for that entity, an exception is thrown. If there is a `Collection` or `Map` of child entities and none entity can be found which matches the routing key of the command, Axon throws an `IllegalStateException` as apparently the aggregate is not capable of processing the command at that point in time.
+Note that only the declared type of the annotated field is inspected for command handlers. If a field value is null at the time an incoming command arrives for that entity, an exception is thrown. If there is a `Collection` or `Map` of child entities and none entity can be found which matches the routing key of the command, Sophon throws an `IllegalStateException` as apparently the aggregate is not capable of processing the command at that point in time.
 
 [NOTE]
 .Command Handler considerations
@@ -139,18 +139,18 @@ The runtime type of the field does not have to be exactly the declared type. How
 
 == Event Sourcing handlers in entities
 
-When using event sourcing as the mechanism to store the aggregates, not only the aggregate root needs to use events to trigger state transitions, but so does each of the entities within that aggregate. Axon provides support for event sourcing complex aggregate structures like these out of the box.
+When using event sourcing as the mechanism to store the aggregates, not only the aggregate root needs to use events to trigger state transitions, but so does each of the entities within that aggregate. Sophon provides support for event sourcing complex aggregate structures like these out of the box.
 
 When an entity (including the aggregate root) applies an event, it is handled by the aggregate root first, and then bubbles down through every `@AggregateMember` annotated field to *all* its containing child entities:
 
 [source,java]
 ----
-import org.axonframework.commandhandling.CommandHandler;
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateMember;
-import org.axonframework.modelling.command.EntityId;
+import io.github.sophonhq.sophon.commandhandling.CommandHandler;
+import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import io.github.sophonhq.sophon.modelling.command.AggregateMember;
+import io.github.sophonhq.sophon.modelling.command.EntityId;
 
-import static org.axonframework.modelling.command.AggregateLifecycle.apply;
+import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 public class GiftCard {
 
@@ -218,9 +218,9 @@ Two specifics are worth mentioning from the above snippet, pointed out with numb
 
 [source,java]
 ----
-import org.axonframework.modelling.command.AggregateIdentifier;
-import org.axonframework.modelling.command.AggregateMember;
-import org.axonframework.modelling.command.ForwardMatchingInstances;
+import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import io.github.sophonhq.sophon.modelling.command.AggregateMember;
+import io.github.sophonhq.sophon.modelling.command.ForwardMatchingInstances;
 
 public class GiftCard {
 

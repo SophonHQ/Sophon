@@ -2,7 +2,7 @@
 
 One of the benefits of CQRS, and especially that of event sourcing, is that it is possible to express tests purely in terms of events and commands. Both being functional components, events and commands have clear meaning to the domain expert or business owner. Not only does this mean that tests expressed in terms of events and commands have a clear functional meaning, it also means that they hardly depend on any implementation choices.
 
-The features described in this chapter require the `axon-test` module, which can be obtained by configuring a maven dependency (use `&lt;artifactId&gt;axon-test&lt;/artifactId&gt;` and `&lt;scope&gt;test&lt;/scope&gt;`) or from the full package download.
+The features described in this chapter require the `sophon-test` module, which can be obtained by configuring a maven dependency (use `&lt;artifactId&gt;sophon-test&lt;/artifactId&gt;` and `&lt;scope&gt;test&lt;/scope&gt;`) or from the full package download.
 
 The fixtures described in this chapter work with any testing framework, such as JUnit and TestNG.
 
@@ -16,7 +16,7 @@ Although being more complex, the API of a command handling component is fairly e
 * When executing this command,
 * Expect these events to be published and/or stored
 
-Axon Framework provides a test fixture that allows you to do exactly that. The `AggregateTestFixture` allows you to configure a certain infrastructure, composed of the necessary command handler and repository, and express your scenario in terms of "given-when-then" events and commands.
+Sophon provides a test fixture that allows you to do exactly that. The `AggregateTestFixture` allows you to configure a certain infrastructure, composed of the necessary command handler and repository, and express your scenario in terms of "given-when-then" events and commands.
 
 ____
 
@@ -26,12 +26,12 @@ Since the unit of testing here is the aggregate, `AggregateTestFixture` is meant
 
 ____
 
-The following example shows the usage of the "given-when-then" test fixture with JUnit 4 on the `GiftCard` aggregate (as defined xref:axon-framework-commands:modeling/aggregate.adoc#_basic_aggregate_structure[earlier]):
+The following example shows the usage of the "given-when-then" test fixture with JUnit 4 on the `GiftCard` aggregate (as defined xref:commands:modeling/aggregate.adoc#_basic_aggregate_structure[earlier]):
 
 [source,java]
 ----
-import org.axonframework.test.aggregate.AggregateTestFixture;
-import org.axonframework.test.aggregate.FixtureConfiguration;
+import io.github.sophonhq.sophon.test.aggregate.AggregateTestFixture;
+import io.github.sophonhq.sophon.test.aggregate.FixtureConfiguration;
 
 public class GiftCardTest {
 
@@ -115,7 +115,7 @@ Registers a custom Aggregate `Repository`.
 
 * `registerRepositoryProvider`:
 
-Registers a `RepositoryProvider` used to xref:axon-framework-commands:modeling/aggregate-creation-from-another-aggregate.adoc[spawn new Aggregates].
+Registers a `RepositoryProvider` used to xref:commands:modeling/aggregate-creation-from-another-aggregate.adoc[spawn new Aggregates].
 
 * `registerAggregateFactory`:
 
@@ -123,7 +123,7 @@ Registers a custom `AggregateFactory`.
 
 * `registerAnnotatedCommandHandler`:
 
-Registers a xref:axon-framework-commands:command-handlers.adoc#external_command_handlers[Annotated Command Handler object] that interacts with the aggregate.
+Registers a xref:commands:command-handlers.adoc#external_command_handlers[Annotated Command Handler object] that interacts with the aggregate.
  Use this method to register components containing `@CommandHandler` annotated methods that invoke the `Repository` to execute operation on an aggregate.
  You may end up in such a scenario when you prefer that command handlers and/or command messages are not contained inside the domain model (that is, the aggregate).
 
@@ -183,7 +183,7 @@ Registers a `CommandTargetResolver` to the test fixture.
 === Given phase
 
 Once you have configured the fixture, you can start the given phase.
-Axon's test fixtures provide several given methods aligning with the modeling options of an aggregate.
+Sophon's test fixtures provide several given methods aligning with the modeling options of an aggregate.
 Below is a list of all the operations of the given phase:
 
 * `givenNoPriorActivity`:
@@ -205,7 +205,7 @@ Below is a list of all the operations of the given phase:
  The fixture uses the given `Instant` as the timestamp for generated events in the <<test-execution-phase,when-phase>>.
  Additionally, the fixtures will use the given current time to validate when to trigger xref:deadlines:deadline-managers.adoc[deadlines] within the aggregate.
 * `givenState(Supplier&lt;T&gt;)`:
- Use the `givenState` method to provide the aggregate instance in its entirety when testing a xref:axon-framework-commands:modeling/state-stored-aggregates.adoc[State-Stored Aggregate].
+ Use the `givenState` method to provide the aggregate instance in its entirety when testing a xref:commands:modeling/state-stored-aggregates.adoc[State-Stored Aggregate].
  Note that it is _not_ recommended to use this operation when you are testing an event-sourced aggregate.
 
 [[test-execution-phase]]
@@ -219,7 +219,7 @@ ____
 
 *Illegal State Change Detection*
 
-During the execution of the test, Axon attempts to detect any illegal state changes in the aggregate under test.
+During the execution of the test, Sophon attempts to detect any illegal state changes in the aggregate under test.
 It does so by comparing the aggregate's state after command execution to the aggregate's state when event sourced from all given and stored events.
 If that state is not identical, a state change occurred outside an aggregate's event handler method.
 Static and transient fields are ignored in the comparison, as they typically contain references to resources.
@@ -327,7 +327,7 @@ The first is to pass in event instances that need to be literally compared with 
 
 The other way of expressing expectancies is using "Matchers" (provided by the Hamcrest library). `Matcher` is an interface prescribing two methods: `matches(Object)` and `describeTo(Description)`. The first returns a boolean to indicate whether the matcher matches or not. The second allows you to express your expectation. For example, a "GreaterThanTwoMatcher" could append "any event with value greater than two" to the description. Descriptions allow expressive error messages to be created about why a test case fails.
 
-Creating matchers for a list of events can be tedious and error-prone work. To simplify things, Axon provides a set of matchers that allow you to provide a set of event specific matchers and tell Axon how they should match against the list. These matchers are statically available through the abstract `Matchers` utility class.
+Creating matchers for a list of events can be tedious and error-prone work. To simplify things, Sophon provides a set of matchers that allow you to provide a set of event specific matchers and tell Sophon how they should match against the list. These matchers are statically available through the abstract `Matchers` utility class.
 
 Below is an overview of the available event list matchers and their purpose:
 
@@ -401,13 +401,13 @@ Below is a small code sample displaying the usage of these matchers. In this exa
 
 [source,java]
 ----
-import org.axonframework.test.aggregate.FixtureConfiguration;
+import io.github.sophonhq.sophon.test.aggregate.FixtureConfiguration;
 
-import static org.axonframework.test.matchers.Matchers.andNoMore;
-import static org.axonframework.test.matchers.Matchers.equalTo;
-import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
-import static org.axonframework.test.matchers.Matchers.messageWithPayload;
-import static org.axonframework.test.matchers.Matchers.payloadsMatching;
+import static io.github.sophonhq.sophon.test.matchers.Matchers.andNoMore;
+import static io.github.sophonhq.sophon.test.matchers.Matchers.equalTo;
+import static io.github.sophonhq.sophon.test.matchers.Matchers.exactSequenceOf;
+import static io.github.sophonhq.sophon.test.matchers.Matchers.messageWithPayload;
+import static io.github.sophonhq.sophon.test.matchers.Matchers.payloadsMatching;
 
 class MyCommandModelTest {
 
@@ -442,7 +442,7 @@ class MyCommandModelTest {
 
 ==== Validating aggregate state
 
-In certain circumstances, it may be desirable to validate the state in which an Aggregate was left after a test. This is especially the case in given-when-then scenario's where the _given_ represents an initial state as well, as is regular when using a xref:axon-framework-commands:modeling/state-stored-aggregates.adoc[State-Stored Aggregate].
+In certain circumstances, it may be desirable to validate the state in which an Aggregate was left after a test. This is especially the case in given-when-then scenario's where the _given_ represents an initial state as well, as is regular when using a xref:commands:modeling/state-stored-aggregates.adoc[State-Stored Aggregate].
 
 The fixture provides a method that allows verification of the state of the aggregate, as it is left after the <<test-execution-phase,Execution Phase>> (for example, the _when_ state), to be validated.
 

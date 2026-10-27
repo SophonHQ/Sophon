@@ -1,15 +1,15 @@
 = Implementing Deadlines
 :navtitle: Add a handler
 
-The `SimpleDeadlineManager` is part of the messaging module of Axon Framework and uses Java's `ScheduledExecutorService`, therefore, it requires no additional dependencies.
-You can configure the `SimpleDeadlineManager` either as an Axon Configuration component or as a Spring Bean.
+The `SimpleDeadlineManager` is part of the messaging module of Sophon and uses Java's `ScheduledExecutorService`, therefore, it requires no additional dependencies.
+You can configure the `SimpleDeadlineManager` either as a Sophon Configuration component or as a Spring Bean.
 For this how-to, it's configured as a Spring Bean.
 
 [source,java]
 ----
 @Bean
 public DeadlineManager deadlineManager(
-        org.axonframework.config.Configuration configuration
+        io.github.sophonhq.sophon.config.Configuration configuration
 ) {
     var provider = new ConfigurationScopeAwareProvider(configuration);
     return SimpleDeadlineManager
@@ -64,13 +64,13 @@ public class ExpiringGiftCard {
     // More handlers are needed to make it useful, left out for brevity.
 
     public ExpiringGiftCard() {
-        // Required by Axon to construct an empty instance to initiate Event Sourcing.
+        // Required by Sophon to construct an empty instance to initiate Event Sourcing.
     }
 }
 ----
 
 <1> Adding the deadline manager to the method makes it easily testable compared to other ways of accessing it from the aggregate.
-You can inject this way any component registered in the Axon Configuration, or when using Spring, any bean in the Spring Context.
+You can inject this way any component registered in the Sophon Configuration, or when using Spring, any bean in the Spring Context.
 <2> Schedule the deadline, so it triggers at midnight.
 <3> It's important to use the same in the annotation as when calling the schedule method.
 <4> An idempotency check, so even if there is some problem with the deadline manager, the application sends only one `ExpiringCardExpiredEvent` event.

@@ -10,7 +10,7 @@ The image below depicts a representation of the organization of Event Processors
 
 image::event-processors.png[Organization of Event Processors and Event Handlers]
 
-Axon has a layered approach towards organizing event handlers.
+Sophon has a layered approach towards organizing event handlers.
 First, an event handler is positioned in a _Processing Group_.
 Each event handler, or "Event Handling Component," will only ever belong to a single Processing Group.
 The Processing Group provides a level of configurable non-functional requirements, like <<listener-invocation-error-handler,error handling>> and the xref:event-processors/streaming.adoc#sequential-processing[sequencing policy].
@@ -28,7 +28,7 @@ Streaming Event Processors, on the other hand, pull their messages from a source
 For more specifics on either type, consult their respective sections xref:event-processors/subscribing.adoc[here] and xref:event-processors/streaming.adoc[here].
 The rest of this page dedicates itself to describing the Event Processor's common concepts and configuration options.
 Note that throughout, the `EventProcessingConfigurer` is used.
-The `EventProcessingConfigurer` is part of Axon's Configuration API, dedicated to configuring Event Processors.
+The `EventProcessingConfigurer` is part of Sophon's Configuration API, dedicated to configuring Event Processors.
 
 == Assigning handlers to processors
 
@@ -36,7 +36,7 @@ All processors have a name, which identifies a processor instance across JVM ins
 Two processors with the same name are considered as two instances of the same processor.
 
 All event handlers are attached to a processor whose name by default is the package name of the event handler's class.
-Furthermore, the default processor implementation used by Axon is the xref:event-processors/streaming.adoc[Tracking Event Processor].
+Furthermore, the default processor implementation used by Sophon is the xref:event-processors/streaming.adoc[Tracking Event Processor].
 The (default) event processor used can be adjusted, as is shown in the xref:event-processors/subscribing.adoc#configuring[subscribing] and xref:event-processors/streaming.adoc#configuring[streaming] sections.
 
 Event handlers, or Event Handling Components, come in roughly two flavors: "regular" (singleton, stateless) event handlers and xref:sagas:index.adoc[sagas].
@@ -44,14 +44,14 @@ xref:event-handlers.adoc#registering-event-handlers[This] section describes the 
 
 Now let us consider that the following event handlers have been registered:
 
-* `org.axonframework.example.eventhandling.MyHandler`
-* `org.axonframework.example.eventhandling.MyOtherHandler`
-* `org.axonframework.example.eventhandling.module.ModuleHandler`
+* `io.github.sophonhq.sophon.example.eventhandling.MyHandler`
+* `io.github.sophonhq.sophon.example.eventhandling.MyOtherHandler`
+* `io.github.sophonhq.sophon.example.eventhandling.module.ModuleHandler`
 
 Without any intervention, this will trigger the creation of two processors, namely:
 
-. `org.axonframework.example.eventhandling` with two handlers called `MyHandler` and `MyOtherHandler`
-. `org.axonframework.example.eventhandling.module` with the single handler `ModuleHandler`
+. `io.github.sophonhq.sophon.example.eventhandling` with two handlers called `MyHandler` and `MyOtherHandler`
+. `io.github.sophonhq.sophon.example.eventhandling.module` with the single handler `ModuleHandler`
 
 Using the package name serves as a suitable default, but using dedicated names for an Event Processor and/or the Processing Group is recommended.
 The most straightforward approach to reaching a transparent naming scheme of your event handlers is by using the `ProcessingGroup` annotation.
@@ -175,7 +175,7 @@ Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureProcessingGroupErrorHandling(EventProcessingConfigurer processingConfigurer) {
         // To configure a default ...
@@ -197,7 +197,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public ConfigurerModule processingGroupErrorHandlingConfigurerModule() {
@@ -256,7 +256,7 @@ Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     public void configure(EventProcessingConfigurer configurer) {
         configurer
             // To configure a default ...
@@ -279,7 +279,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     @Bean
     public ConfigurerModule processorErrorHandlingConfigurerModule() {
         return configurer -> configurer.eventProcessing(processing ->
@@ -351,7 +351,7 @@ interface EventProcessorBuilder {
 ----
 
 The `EventProcessorBuilder` functional interface provides the event processor's name, the `Configuration` and the `EventHandlerInvoker`, and requires returning an `EventProcessor` instance.
-Note that any Axon component that an Event Processor requires (for example, an `EventStore`) is retrievable from the `Configuration`.
+Note that any Sophon component that an Event Processor requires (for example, an `EventStore`) is retrievable from the `Configuration`.
 
 The `EventProcessingConfigurer` provides two methods to configure an `EventProcessorBuilder`:
 
@@ -372,7 +372,7 @@ The `EventProcessingConfigurer` provides two methods to configure `MessageHandle
 === Message monitors
 
 Any Event Processor instance provides the means to contain a Message Monitor.
-Message Monitors (discussed in more detail xref:monitoring:metrics.adoc[here]) allow for monitoring the flow of messages throughout an Axon application.
+Message Monitors (discussed in more detail xref:monitoring:metrics.adoc[here]) allow for monitoring the flow of messages throughout a Sophon application.
 For Event Processors, the message monitor deals explicitly with the events flowing through the Event Processor towards the event handling functions.
 
 The `EventProcessingConfigurer` provides two approaches towards configuring a `MessageMonitor`:
@@ -405,7 +405,7 @@ Note that in the majority of the scenarios, the defaults will suffice.
 This section simply serves to show these options to allow adjustment if the application requires it.
 
 The first of these is the `TransactionManager`.
-Axon uses the `TransactionManager` to attach a transaction to every xref:messaging-concepts:unit-of-work.adoc[Unit of Work].
+Sophon uses the `TransactionManager` to attach a transaction to every xref:messaging-concepts:unit-of-work.adoc[Unit of Work].
 Within a Spring environment, the `TransactionManager` defaults to a `SpringTransactionManager`, which uses Spring's `PlatformTransactionManager` under the hood.
 In non Spring environments, it would be wise to build a `TransactionManager` implement if transaction management is required, of course.
 Such an implementation only requires the definition of the `TransactionManager#startTransaction()` method.

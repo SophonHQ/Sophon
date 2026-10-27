@@ -1,16 +1,7 @@
 = Introduction
 :page-aliases: introduction.adoc
 
-This section of the reference guide intends to cover in detail the capabilities that the Axon Framework provides to help build applications based on link:https://www.axoniq.io/concepts/domain-driven-design[Domain-Driven Design], link:https://www.axoniq.io/concepts/cqrs-and-event-sourcing[CQRS, and Event-Sourcing].
-
-[[console]]
-== New: Easy monitoring and management
-Axoniq Platform makes it easy to monitor and manage your Axon Framework applications. It provides insights into the performance and behavior of your application, and allows you to manage your application's event processors.
-You can also get scalable xref:axon-server-reference::index.adoc[Axon Server] licenses with scalable pricing, and manage your Axon Server instances.
-
-image::axoniq-console-teaser.png[alt="Statistics measured on Axoniq Platform"]
-
-For more information, see the xref:axoniq-platform-reference:ROOT:index.adoc[Axoniq Platform Reference] or link:https://platform.axoniq.io[sign up directly].
+This section of the reference guide intends to cover in detail the capabilities that Sophon provides to help build applications based on link:https://martinfowler.com/bliki/DomainDrivenDesign.html[Domain-Driven Design], link:https://martinfowler.com/bliki/CQRS.html[CQRS], and link:https://martinfowler.com/eaaDev/EventSourcing.html[Event-Sourcing].
 
 == Reference sections
 A summary of the various subsections is given below.
@@ -19,16 +10,16 @@ A summary of the various subsections is given below.
 |===
 |Sub-Section |Purpose
 
-|xref:messaging-concepts:index.adoc[Messaging Concepts] |Conceptual overview of "Messages" within the Axon Framework
-|xref:axon-framework-commands:index.adoc[Commands] |Command Message Development using the Axon Framework
-|xref:events:index.adoc[Events] |Event Message Development using the Axon Framework
-|xref:queries:index.adoc[Queries] |Query Message Development using the Axon Framework
-|xref:sagas:index.adoc[Sagas] |Long Running Transaction development using the Axon Framework
-|xref:testing:index.adoc[Testing] |Testing capabilities provided by the Axon Framework
-|xref:serialization.adoc[Serialization] |Details on the serialization capabilities provided by the Axon Framework
-|xref:tuning:index.adoc[Tuning] |Tuning capabilities provided by the Axon Framework
-|xref:monitoring:index.adoc[Monitoring and Metrics] |Monitoring and Metric capabilities provided by the Axon Framework
-|xref:spring-boot-integration.adoc[Spring Boot Integration] |Axon Framework integration with Spring Boot
-|xref:upgrading-to-4-7.adoc[Upgrading to 4.7] |Step-by-step plan explaining how to upgrade to Axon Framework 4.7 from 4.6
-|xref:modules.adoc[Modules] |Modules provided by the Axon Framework
+|xref:messaging-concepts:index.adoc[Messaging Concepts] |Conceptual overview of "Messages" within Sophon
+|xref:commands:index.adoc[Commands] |Command Message Development using Sophon
+|xref:events:index.adoc[Events] |Event Message Development using Sophon
+|xref:queries:index.adoc[Queries] |Query Message Development using Sophon
+|xref:sagas:index.adoc[Sagas] |Long Running Transaction development using Sophon
+|xref:testing:index.adoc[Testing] |Testing capabilities provided by Sophon
+|xref:serialization.adoc[Serialization] |Details on the serialization capabilities provided by Sophon
+|xref:tuning:index.adoc[Tuning] |Tuning capabilities provided by Sophon
+|xref:monitoring:index.adoc[Monitoring and Metrics] |Monitoring and Metric capabilities provided by Sophon
+|xref:spring-boot-integration.adoc[Spring Boot Integration] |Sophon integration with Spring Boot
+|link:https://github.com/SophonHQ/Sophon/blob/main/MIGRATING.md[Migrating from Axon Framework 4] |How to migrate an Axon Framework 4 application to Sophon
+|xref:modules.adoc[Modules] |Modules provided by Sophon
 |===

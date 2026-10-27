@@ -6,12 +6,12 @@
 == Event bus
 
 The `EventBus` is the mechanism that dispatches events to the subscribed event handlers.
-Axon provides three implementations of the Event Bus: `AxonServerEventStore`, `EmbeddedEventStore` and `SimpleEventBus`.
-All three implementations support subscribing and tracking processors (see xref:event-processors/index.adoc[]).
-However, the `AxonServerEventStore` and `EmbeddedEventStore` persist events (see <<event-store,Event Store>>), which allows you to replay them at a later stage.
+Sophon provides two implementations of the Event Bus: `EmbeddedEventStore` and `SimpleEventBus`.
+Both implementations support subscribing and tracking processors (see xref:event-processors/index.adoc[]).
+However, the `EmbeddedEventStore` persists events (see <<event-store,Event Store>>), which allows you to replay them at a later stage.
 The `SimpleEventBus` has a volatile storage and 'forgets' events as soon as they have been published to subscribed components.
 
-An `AxonServerEventStore` event bus/store is configured by default.
+A `SimpleEventBus` is configured by default, unless an event storage engine is configured, in which case an `EmbeddedEventStore` is used.
 
 [[event-store]]
 == Event store
@@ -20,77 +20,9 @@ Event sourcing repositories need an event store to store and load events from ag
 An event store offers the functionality of an event bus.
 Additionally, it persists published events and is able to retrieve previous events based on a given aggregate identifier.
 
-=== Axon Server as an event store
-
-Axon provides an event store out of the box, the `AxonServerEventStore`.
-It connects to the link:https://www.axoniq.io/products/axon-server[AxonIQ AxonServer Server,window=_blank,role=external] to store and retrieve Events.
-
-[tabs]
-======
-Configuration API::
-+
---
-
-Declare dependencies:
-
-[source,xml]
-----
-<!--somewhere in the POM file-->
-<dependency>
-    <groupId>org.axonframework</groupId>
-    <artifactId>axon-server-connector</artifactId>
-    <version>${axon.version}</version>
-</dependency>
-<dependency>
-    <groupId>org.axonframework</groupId>
-    <artifactId>axon-configuration</artifactId>
-    <version>${axon.version}</version>
-</dependency>
-
-----
-
-Configure your application:
-
-[source,java]
-----
-// Returns a Configurer instance with default components configured. 
-// `AxonServerEventStore` is configured as Event Store by default.
-Configurer configurer = DefaultConfigurer.defaultConfiguration();
-
-----
---
-
-Spring Boot::
-+
---
-
-By simply declaring a dependency on `axon-spring-boot-starter`, Axon will automatically configure the event bus/event store:
-
-[source,xml]
-----
-<!--somewhere in the POM file-->
-<dependency>
-    <groupId>org.axonframework</groupId>
-    <artifactId>axon-spring-boot-starter</artifactId>
-    <version>${axon.version}</version>
-</dependency>
-----
-
-[NOTE]
-.Excluding the Axon Server Connector
-====
-
-If you exclude the `axon-server-connector` dependency from `axon-spring-boot-starter` the `EmbeddedEventStore` will be auto-configured for you, if a concrete implementation of `EventStorageEngine` is available.
-If JPA or JDBC is detected on the classpath, a `JpaEventStorageEngine` or `JdbcEventStorageEngine` will respectively be auto-configured as the `EventStorageEngine`.
-In absence of either, the auto configuration falls back to the `SimpleEventBus`.
-====
---
-======
-
-[[embedded-event-store]]
 === Embedded event store
 
-Alternatively, Axon provides a non-axon-server option, the `EmbeddedEventStore`.
+Sophon provides an event store out of the box, the `EmbeddedEventStore`.
 It delegates the actual storage and retrieval of events to an `EventStorageEngine`.
 
 There are multiple `EventStorageEngine` implementations available:
@@ -105,7 +37,7 @@ To use the `JpaEventStorageEngine`, you must have the JPA (`jakarta.persistence`
 The old, javax JPA (`javax.persistence`) annotations are also still supported.
 This will use an instance of the `JpaEventStorageEngine` using the `legacyjpa` namespace.
 
-By default, the event store needs you to configure your persistence context (for example, as defined in the `META-INF/persistence.xml` file) to contain the classes `DomainEventEntry` and `SnapshotEventEntry` (both of these classes are located in the `org.axonframework.eventsourcing.eventstore.jpa` package).
+By default, the event store needs you to configure your persistence context (for example, as defined in the `META-INF/persistence.xml` file) to contain the classes `DomainEventEntry` and `SnapshotEventEntry` (both of these classes are located in the `io.github.sophonhq.sophon.eventsourcing.eventstore.jpa` package).
 
 Below is an example configuration of a persistence context configuration:
 
@@ -113,8 +45,8 @@ Below is an example configuration of a persistence context configuration:
 ----
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
     <persistence-unit name="eventStore" transaction-type="RESOURCE_LOCAL"> <1>
-        <class>org.axonframework.eventsourcing.eventstore.jpa.DomainEventEntry</class> <2>
-        <class>org.axonframework.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
+        <class>io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.DomainEventEntry</class> <2>
+        <class>io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
     </persistence-unit>
 </persistence>
 ----
@@ -127,7 +59,7 @@ You may, however, choose to add the third line to any other persistence unit con
 [NOTE]
 .Unique Key Constraint Consideration
 ====
-Axon uses locking to prevent two threads from accessing the same aggregate.
+Sophon uses locking to prevent two threads from accessing the same aggregate.
 However, if you have multiple JVMs using the same database, this won't help you.
 In that case, you'd have to rely on the database to detect conflicts.
 Concurrent access to the event store will result in a Key Constraint Violation, as the table only allows a single event for a given aggregate and sequence number.
@@ -208,7 +140,7 @@ Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public Configurer jpaEventStorageConfigurer(
             EntityManagerProvider entityManagerProvider,
@@ -227,7 +159,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
    
     // The EmbeddedEventStore delegates actual storage and retrieval of events to an EventStorageEngine.
@@ -281,7 +213,7 @@ The storage engine uses one table for events and another for snapshots.
 
 The `JdbcEventStorageEngine` uses a `ConnectionProvider` to obtain connections.
 Typically, the engine can obtain these connections directly from a `DataSource`.
-However, Axon will bind these connections to a `UnitOfWork` to use a single connection within a unit of work.
+However, Sophon will bind these connections to a `UnitOfWork` to use a single connection within a unit of work.
 This approach ensures that the framework uses a single transaction to store all events, even when multiple units of work are nested in the same thread.
 
 [tabs]
@@ -292,7 +224,7 @@ Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureJdbcEventStorage(
             Configurer configurer,
@@ -320,15 +252,15 @@ public class AxonConfig {
 Spring Boot::
 +
 --
-By having JDBC on the classpath, Axon's `JdbcAutoConfiguration` will automatically generate the `JdbcEventStorageEngine` for you.
+By having JDBC on the classpath, Sophon's `JdbcAutoConfiguration` will automatically generate the `JdbcEventStorageEngine` for you.
 
 All that might be left is the creation of the schema.
-Axon can help you here with the `createSchema` operation:
+Sophon can help you here with the `createSchema` operation:
 
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
    
     // The EmbeddedEventStore delegates actual storage and retrieval of events to an EventStorageEngine.
@@ -386,96 +318,10 @@ Databases have slight deviations from what's the optimal SQL statement to perfor
 Since optimizing for all possibilities out there is beyond the framework's scope, you can adjust the default statements used by the storage engine.
 
 Check the `JdbcEventStorageEngineStatements` utility class for the default statements used by the `JdbcEventStorageEngine`.
-Furthermore, the `org.axonframework.eventsourcing.eventstore.jdbc.statements` package contains the set of adjustable statements.
+Furthermore, the `io.github.sophonhq.sophon.eventsourcing.eventstore.jdbc.statements` package contains the set of adjustable statements.
 Each of these statement-builders can be customized through the `JdbcEventStorageEngine.Builder`.
 ====
 
-[[MongoEventStorageEngine]]
-==== `MongoEventStorageEngine`
-
-https://www.mongodb.com/[MongoDB] is a document based NoSQL store.
-Its scalability characteristics make it suitable for use as an event store.
-Axon provides the `MongoEventStorageEngine`, which uses MongoDB as a backing database.
-It is contained in the Axon Mongo module (Maven artifactId `axon-mongo`).
-
-Events are stored in two separate collections: one for the event streams and one for snapshots.
-
-By default, the `MongoEventStorageEngine` stores each event in a separate document.
-It is, however, possible to change the `StorageStrategy` used.
-The alternative provided by Axon is the `DocumentPerCommitStorageStrategy`, which creates a single document for all events that have been stored in a single commit (that is, in the same `DomainEventStream`).
-
-The advantage of storing an entire commit in a single document is that commit is stored atomically.
-Furthermore, it requires only a single roundtrip for any number of events.
-The disadvantage is that it becomes harder to query events directly in the database.
-For example, when refactoring the domain model it is harder to "transfer" events from one aggregate to another if they are included in a "commit document".
-
-The `MongoEventStorageEngine` does not require a lot of configuration.
-All it needs is a reference to the collections to store the events in, and you're set to go.
-For production environments, you may want to double check the indexes on your collections.
-If you want transactions to be handled correctly, it's important to set a `TransactionManager`.
-Please note that there are several other optional configuration properties, like the serializers and an (optional) upcaster chain.
-
-[tabs]
-====
-Configuration API::
-+
---
-
-[source,java]
-----
-public class AxonConfig {
-    // omitting other configuration methods...
-    public void configureMongoEventStorage(Configurer configurer, MongoTemplate mongoTemplate) {
-        configurer.configureEmbeddedEventStore(config -> MongoEventStorageEngine
-            .builder()
-            .mongoTemplate(mongoTemplate)
-            // ...
-            .build()
-        );
-    }
-}
-----
---
-Spring Boot::
-+
---
-
-[source,java]
-----
-@Configuration
-public class AxonConfig {
-    // omitting other configuration methods...
-   
-    // The EmbeddedEventStore delegates actual storage and retrieval of events to an EventStorageEngine.
-    @Bean
-    public EventStore eventStore(EventStorageEngine storageEngine,
-                                 GlobalMetricRegistry metricRegistry) {
-       return EmbeddedEventStore
-           .builder()
-           .storageEngine(storageEngine)
-           .messageMonitor(metricRegistry.registerEventBus("eventStore"))
-           .spanFactory(spanFactory)
-           // ...
-           .build();
-    }
-
-    // The MongoEventStorageEngine stores each event in a separate MongoDB document.
-    @Bean
-    public EventStorageEngine storageEngine(MongoClient client) {
-        return MongoEventStorageEngine
-            .builder()
-            .mongoTemplate(DefaultMongoTemplate.builder()
-                                               .mongoDatabase(client)
-                                               .build())
-            // ...
-            .build();
-    }
-}
-----
---
-====
-
-[[embedded-event-store-spring-boot-configuration]]
 ==== Spring Boot configuration
 
 When using the Spring Boot auto-configuration, the `EmbeddedEventStore` can be tuned through `application.properties` without requiring a custom bean definition.
@@ -486,21 +332,21 @@ When using the Spring Boot auto-configuration, the `EmbeddedEventStore` can be t
 # Only relevant when optimize-event-consumption is true.
 # Note: this is a count-based limit, not a byte-based one. Large events can still cause
 # significant memory pressure at the default value. Reduce this if your events are large.
-axon.eventstore.cached-events=10000
+sophon.eventstore.cached-events=10000
 
 # Whether to share a single tail cache between all tailing TrackingEventProcessors.
 # When enabled, processors at the head of the stream share a cache, which reduces
 # database load. When disabled, each processor reads from the store independently.
 # Disable if you experience memory pressure during replay or migration.
-axon.eventstore.optimize-event-consumption=true
+sophon.eventstore.optimize-event-consumption=true
 
 # How long the producer thread waits before polling for new events from the backing store
 # when no local commit has woken it up. Mainly affects cross-node event latency.
-axon.eventstore.fetch-delay=1000ms
+sophon.eventstore.fetch-delay=1000ms
 
 # How often the store checks whether any tailing consumers have fallen behind the shared
 # cache and need to be switched to a dedicated database connection.
-axon.eventstore.cleanup-delay=10000ms
+sophon.eventstore.cleanup-delay=10000ms
 ----
 
 [NOTE]
@@ -516,7 +362,7 @@ The JVM system property `optimize-event-consumption` (for example `-Doptimize-ev
 
 === Event store utilities
 
-Axon provides a number of Event Storage Engines that may be useful in certain circumstances.
+Sophon provides a number of Event Storage Engines that may be useful in certain circumstances.
 
 ==== In-Memory event storage
 
@@ -532,7 +378,7 @@ Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureInMemoryEventStorage(Configurer configurer) {
         configurer.configureEmbeddedEventStore(config -> new InMemoryEventStorageEngine());
@@ -547,7 +393,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
    
     // The EmbeddedEventStore delegates actual storage and retrieval of events to an EventStorageEngine.
@@ -589,7 +435,7 @@ Note that event processors that use the event store as a source of events may no
 === Influencing the serialization process
 
 Event stores need a way to serialize the event to prepare it for storage.
-By default, Axon uses the `XStreamSerializer`, which uses http://x-stream.github.io/[XStream] to serialize events into XML.
+By default, Sophon uses the `XStreamSerializer`, which uses http://x-stream.github.io/[XStream] to serialize events into XML.
 XStream is reasonably fast and is more flexible than Java Serialization.
 Furthermore, the result of XStream serialization is human-readable.
 This makes it quite useful for logging and debugging purposes.
@@ -599,7 +445,7 @@ You can define aliases it should use for certain packages, classes or even field
 Besides being a nice way to shorten potentially long names, aliases can also be used when class definitions of events change.
 For more information about aliases, visit the http://x-stream.github.io/[XStream website].
 
-Alternatively, Axon also provides the `JacksonSerializer`, which uses https://github.com/FasterXML/jackson[Jackson] to serialize events into JSON.
+Alternatively, Sophon also provides the `JacksonSerializer`, which uses https://github.com/FasterXML/jackson[Jackson] to serialize events into JSON.
 While it produces a more compact serialized form, it does require that classes stick to the conventions (or configuration) required by Jackson.
 
 You may also implement your own serializer, simply by creating a class that implements `Serializer`, and configuring the event store to use that implementation instead of the default.
@@ -628,7 +474,7 @@ You can specify a serializer in your `application.properties`:
 ----
 # somewhere in your `application.properties`
 
-axon.serializer.events=jackson
+sophon.serializer.events=jackson
 # possible values: java, xstream, jackson
 ----
 
@@ -648,7 +494,7 @@ public Serializer eventSerializer() {
 
 ==== Serializing events vs 'the others'
 
-It is possible to use a different serializer for the storage of events, than all other objects that Axon needs to serialize (such as commands, snapshots, sagas, etc).
+It is possible to use a different serializer for the storage of events, than all other objects that Sophon needs to serialize (such as commands, snapshots, sagas, etc).
 While the `XStreamSerializer`'s capability to serialize virtually anything makes it a  decent default, its output is not always a form that makes it nice to share with other applications. The `JacksonSerializer` creates much nicer output, but requires a certain structure in the objects to serialize.
 This structure is typically present in events, making it a suitable event serializer.
 
@@ -656,29 +502,21 @@ If no explicit `eventSerializer` is configured, events are serialized using the 
 
 == Distributing events
 
-To distribute events between applications, it is important to know whether the applications belong to the same bounded context. If you don't recognize this concept, we recommend reading the link:https://www.axoniq.io/concepts/domain-driven-design[Bounded Context] section first.
+To distribute events between applications, it is important to know whether the applications belong to the same bounded context. If you don't recognize this concept, we recommend reading the link:https://martinfowler.com/bliki/BoundedContext.html[Bounded Context] section first.
 Applications within the same context "speak the same language." In other words, they communicate using the same set of messages and thus events.
 
 As such, we can share the `EventStore's` data source between these applications.
 We may thus achieve distribution by utilizing the source itself.
-You can use both the <<Embedded event store,`EmbeddedEventStore`>> and link:https://www.axoniq.io/products/axon-server[Axon Server,window=_blank,role=external] for this.
-The former would require the applications to point to the same data source, whereas the latter would require the applications to partake in the same context.
+You can use the <<Embedded event store,`EmbeddedEventStore`>> for this, by pointing the applications to the same data source.
 
 However, sharing the entire event API is not recommended whenever the applications do not belong to the same context.
 Instead, we should protect the boundary of the contexts, except for some clearly defined cross-boundary messages.
 Since accessing the same source isn't an option, we require a different solution to share events.
 
-To distribute events between bounded contexts, you can use Axon Server's xref:axon-server-reference:ROOT:axon-server/administration/multi-context.adoc[] solution, for example.
-The multi-context support requires application registration to specific contexts.
-Then, you can open a stream to another context through the `AxonServerEventStore#createStreamableMessageSourceForContext(String)` operation.
-With this source in hand, you can configure a xref:event-processors/streaming.adoc[Streaming Processor] to start reading from it.
-
-Alternatively, you can use a message broker to distribute events between contexts.
-Axon provides a good bunch of these as extension modules, for example xref:amqp-extension-reference::index.adoc[Spring AMQP] or  xref:kafka-extension-reference::index.adoc[Kafka].
+To distribute events between bounded contexts, you can use a message broker, such as RabbitMQ or Kafka.
 
 Although this allows further event distribution, we still recommend consciously sharing _the correct_ events.
 Ideally, we add a form of context mapping, like an anti-corruption layer, between the contexts.
 In other words, we recommend using a separate component that maps the events from the local context to a shared language right before distribution.
 
 For example, this mapper would publish the messages on the AMQP queue or Kafka topic.
-When it comes to Axon Server, we could, for example, use a distinct shared/global context to contain the shared language.

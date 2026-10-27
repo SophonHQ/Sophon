@@ -1,6 +1,6 @@
 ---
 name: 'Bug report'
-about: 'Report a bug in Axon Framework'
+about: 'Report a bug in Sophon'
 title:
 labels: 'Type: Bug'
 ---
@@ -9,7 +9,7 @@ labels: 'Type: Bug'
 
 ### Basic information
 
-* Axon Framework version:
+* Sophon version:
 * JDK version:  
 * Complete executable reproducer if available (e.g. GitHub Repo):
 

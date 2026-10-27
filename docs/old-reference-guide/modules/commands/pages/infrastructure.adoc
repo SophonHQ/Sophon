@@ -10,9 +10,9 @@ You could define test scripts by just defining the starting situation (given), c
 
 The last major advantage is that it is really easy to switch between synchronous and asynchronous, as well as local versus distributed command processing.
 
-This does not mean command dispatching using explicit command objects is the only way to do it. The goal of Axon is not to prescribe a specific way of working, but to support you doing it your way, while providing best practices as the default behavior. It is still possible to use a service layer that you can invoke to execute commands. The method will just need to start a unit of work (see xref:messaging-concepts:unit-of-work.adoc[Unit of Work]) and perform a commit or rollback on it when the method is finished.
+This does not mean command dispatching using explicit command objects is the only way to do it. The goal of Sophon is not to prescribe a specific way of working, but to support you doing it your way, while providing best practices as the default behavior. It is still possible to use a service layer that you can invoke to execute commands. The method will just need to start a unit of work (see xref:messaging-concepts:unit-of-work.adoc[Unit of Work]) and perform a commit or rollback on it when the method is finished.
 
-The next sections provide an overview of the tasks related to setting up a command dispatching infrastructure with the Axon Framework.
+The next sections provide an overview of the tasks related to setting up a command dispatching infrastructure with Sophon.
 The API-friendlier <<the-command-gateway,`CommandGateway`>> is mentioned, as well as the `CommandBus` in both a <<the-command-bus-local,local>> and <<the-command-bus-distributed,distributed>> environment.
 
 [[the-command-gateway]]
@@ -21,18 +21,18 @@ The API-friendlier <<the-command-gateway,`CommandGateway`>> is mentioned, as wel
 The `CommandGateway` is a convenient interface towards the command dispatching mechanism.
 While you are not required to use a gateway to dispatch commands, it is generally the easiest option to do so.
 
-There are two ways to use a Command Gateway. The first is to use the `CommandGateway` interface and the `DefaultCommandGateway` implementation provided by Axon.
+There are two ways to use a Command Gateway. The first is to use the `CommandGateway` interface and the `DefaultCommandGateway` implementation provided by Sophon.
 The command gateway provides a number of methods that allow you to send a command and wait for a result either synchronously, with a timeout or asynchronously.
 
 The other option is perhaps the most flexible of all.
 You can turn almost any interface into a command gateway using the `CommandGatewayFactory`.
 This allows you to define your application's interface using strong typing and declaring your own (checked) business exceptions.
-Axon will automatically generate an implementation for that interface at runtime.
+Sophon will automatically generate an implementation for that interface at runtime.
 
 [#_configuring_the_commandgateway]
 === Configuring the `CommandGateway`
 
-Both your custom Command Gateway and the one provided by Axon need to at least be configured with a Command Bus.
+Both your custom Command Gateway and the one provided by Sophon need to at least be configured with a Command Bus.
 In addition, the Command Gateway can be configured with a `RetryScheduler`, `CommandDispatchInterceptor`s, and `CommandCallback`s.
 
 ==== `RetryScheduler`
@@ -63,7 +63,7 @@ It works with the `CommandMessage` and `CommandResultMessage` classes, thus allo
 
 === Creating a custom command gateway - `CommandGatewayFactory`
 
-Axon allows a custom interface to be used as a `CommandGateway`.
+Sophon allows a custom interface to be used as a `CommandGateway`.
 The behavior of each method declared in the interface is based on the parameter types, return type and declared exception.
 Using this gateway is not only convenient, it makes testing a lot easier by allowing you to mock your interface where needed.
 
@@ -135,7 +135,7 @@ public interface MyGateway {
 }
 
 // To configure a gateway:
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public MyGateway customCommandGateway(CommandBus commandBus) {
           CommandGatewayFactory factory = CommandGatewayFactory.builder()
@@ -150,7 +150,7 @@ public class AxonConfig {
 [[the-command-bus-local]]
 == The command bus - local
 
-The local command bus is the mechanism that dispatches commands to their respective command handlers within an Axon application.
+The local command bus is the mechanism that dispatches commands to their respective command handlers within a Sophon application.
 Suggestions on how to use the `CommandBus` can be found xref:command-dispatchers.adoc#command-bus[here].
 Several flavors of the command bus, with differing characteristics, exist within the framework.
 
@@ -178,7 +178,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureSimpleCommandBus(Configurer configurer) {
         configurer.configureCommandBus(config -> {
@@ -204,7 +204,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public CommandBus simpleCommandBus(TransactionManager transactionManager,
@@ -255,7 +255,7 @@ Configuration API::
 --
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureAsynchronousCommandBus(Configurer configurer) {
         configurer.configureCommandBus(config -> {
@@ -283,7 +283,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public CommandBus asynchronousCommandBus(TransactionManager transactionManager,
@@ -394,7 +394,7 @@ Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureDisruptorCommandBus(Configurer configurer) {
         configurer.configureCommandBus(config -> {
@@ -422,7 +422,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public CommandBus disruptorCommandBus(TransactionManager transactionManager,
@@ -469,7 +469,7 @@ The details of how to configure the local segment are shown in the implementatio
 
 === Load factor
 
-The load factor defines the amount of load an Axon application would carry compared to other instances.
+The load factor defines the amount of load a Sophon application would carry compared to other instances.
 For example, if you have a two machine set up, each with a load factor of 100, they will both carry an equal amount of load.
 
 Increasing the load factor to 200 on both would still mean that both machines receive the same amount of load.
@@ -484,7 +484,7 @@ The configuration changes slightly per distributed implementation and as such wi
 
 Commands should be routed consistently to the same application, especially those targeted towards a specific Aggregate.
 This ensures a single instance is in charge of the targeted aggregate, resolving the concurrent access issue and allowing for optimization like caching to work as designed.
-The component dealing with the consistent routing in an Axon application is the `RoutingStrategy`.
+The component dealing with the consistent routing in a Sophon application is the `RoutingStrategy`.
 
 The `RoutingStrategy` receives a `CommandMessage` and based on the message returns the routing key to use.
 Two commands with the same routing key will *always* be routed to the same segment, as long as there is no topology change in the distributed set-up.
@@ -517,7 +517,7 @@ To get a grasp how these are constructed, consider the following sample:
 @interface CustomRoutingAnnotation {
 }
 
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public RoutingStrategy routingStrategy() {
       return AnnotationRoutingStrategy
@@ -536,7 +536,7 @@ public class AxonConfig {
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public RoutingStrategy routingStrategy() {
         return MetaDataRoutingStrategy
@@ -561,7 +561,7 @@ Configuration API::
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...  
     public void configureRoutingStrategy(Configurer configurer, YourRoutingStrategy yourRoutingStrategy) {
         configurer.registerComponent(RoutingStrategy.class, config -> yourRoutingStrategy);
@@ -575,7 +575,7 @@ Spring Boot::
 [source,java]
 ----
 @Configuration
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public RoutingStrategy routingStrategy() {
@@ -586,158 +586,9 @@ public class AxonConfig {
 --
 ====
 
-[[AxonServerCommandBus]]
-=== `AxonServerCommandBus`
-
-The `AxonServerCommandBus` is the _default_ distributed `CommandBus` implementation that is set by the framework.
-It connects to link:https://www.axoniq.io/products/axon-server[AxonServer,window=_blank,role=external], with which it can send and receive commands.
-
-As it is the default, configuring it is relatively straightforward:
-
-[tabs]
-====
-Configuration API::
-+
---
-
-Declare dependencies:
-
-[source,xml]
-----
-<!-- somewhere in the POM file... -->
-<dependencyManagement>
-    <!-- amongst the dependencies... -->
-    <dependencies>
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-bom</artifactId>
-            <version>${version.axon}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
-    <!-- ... -->
-</dependencyManagement>
-<!-- ... -->
-<dependencies>
-    <!-- amongst the dependencies... -->
-    <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-server-connector</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon-configuration</artifactId>
-    </dependency>
-    <!-- ... -->
-</dependencies>
-----
-
-Configure your application:
-
-[source,java]
-----
-public class AxonConfig {
-    public void configure() {
-        // The AxonServerCommandBus is configured as Command Bus by default when constructing a DefaultConfigurer.
-        Configurer configurer = DefaultConfigurer.defaultConfiguration();
-        // ...
-    }  
-}
-
-----
---
-
-Spring Boot::
-+
---
-By simply including the `axon-spring-boot-starter` dependency, Axon will automatically configure the `AxonServerCommandBus`:
-
-[source,xml]
-----
-<!--somewhere in the POM file-->
-<dependency>
-    <groupId>org.axonframework</groupId>
-    <artifactId>axon-spring-boot-starter</artifactId>
-    <version>${axon.version}</version>
-</dependency>
-----
---
-====
-
-
-[NOTE]
-====
-.Disabling Axon Server
-There are two options to disable Axon Framework's default of using the `AxonServerCommandBus`:
-
-. By setting `axon.server.enabled` to `false` when Spring Boot is used.
-. By excluding the `axon-server-connector` dependency.
-
-When doing any of these, Axon will fall back to the <<SimpleCommandBus,`SimpleCommandBus`>> that dispatches commands in the local instance, unless configured otherwise.
-====
-
-==== Local segment and load factor configuration
-
-The <<Load factor,load factor>> for the `AxonServerCommandBus` is defined through the `CommandLoadFactorProvider`.
-This interface allows us to distinguish between commands to, for example, use a different load factor per command message.
-This might be useful if some commands are routed more often towards one instance in favour of the other.
-
-The following should be done to configure a custom <<Local segment,local segment>> and/or load factor:
-
-[tabs]
-====
-Configuration API::
-+
---
-
-[source,java]
-----
-public class AxonConfig {
-    // omitting other configuration methods...
-    public CommandBus axonServerCommandBus(
-        CommandBus localSegment,
-        CommandLoadFactorProvider loadFactorProvider
-    ) {
-        return AxonServerCommandBus
-            .builder()
-            .localSegment(localSegment)
-            .targetContextResolver(targetContextResolver)
-            // All required configuration components are specified in the JavaDoc of the Builder
-            .build();
-    }
-}
-----
---
-
-Spring Boot::
-+
---
-
-[source,java]
-----
-@Configuration
-public class AxonConfig {
-    // The Qualifier annotation specifying "localSegment" will make this CommandBus the local segment 
-    @Bean
-    @Qualifier("localSegment")
-    public CommandBus localSegment() {
-        return /* construct your local segment */;
-    }
-    
-    @Bean
-    public CommandLoadFactorProvider loadFactorProvider() {
-      return /* construct your load factor provider */;
-    }
-}
-----
---
-====
-
-[[DistributedCommandBus]]
 === `DistributedCommandBus`
 
-The alternative to the <<AxonServerCommandBus,`AxonServerCommandBus`>> is the `DistributedCommandBus`.
+The `DistributedCommandBus` is the distributed `CommandBus` implementation.
 Each instance of the `DistributedCommandBus` on each JVM is referred to as a "Segment".
 
 image:distributed-command-bus.png[Structure of the Distributed Command Bus]
@@ -748,19 +599,5 @@ The `DistributedCommandBus` relies on two components:
 . The `CommandRouter` - chooses the destination for each incoming command.
 It defines which segment of the `DistributedCommandBus` should be given a command, based on a routing key calculated by the <<routing-strategy,routing strategy>>.
 
-You can choose different flavors of these components that are available as extension modules.
-Currently, Axon provides two extensions to that end, which are:
-
-. The xref:spring-cloud-extension-reference::index.adoc[SpringCloud] extension
-. The xref:jgroups-extension-reference::index.adoc[JGroups] extension
-
-Configuring a distributed command bus can (mostly) be done without any modifications in configuration files.
-The most straightforward approach to this is to include the Spring Boot starter dependency of either the Spring Cloud or JGroups extension.
-With that in place, a single property needs to be added to the application context, to enable the `DistributedCommandBus`:
-
-[source,properties]
-----
-axon.distributed.enabled=true
-----
-
-It is recommended to visit the respective extension pages on how to configure xref:jgroups-extension-reference:ROOT:index.adoc[JGroups] or xref:spring-cloud-extension-reference:ROOT:index.adoc[Spring Cloud] for the `DistributedCommandBus`.
+Sophon provides the `DistributedCommandBus` and the `CommandBusConnector` and `CommandRouter` interfaces, but no implementations of these components.
+To distribute commands, configure the `DistributedCommandBus` with implementations of both components that suit your infrastructure.

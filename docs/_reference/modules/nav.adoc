@@ -20,11 +20,9 @@ include::eventsourcing:partial$nav.adoc[]
 +
 --
 include::test:partial$nav.adoc[]
-include::axon-server-connector:partial$nav.adoc[]
 include::spring:partial$nav.adoc[]
 include::disruptor:partial$nav.adoc[]
 include::metrics:partial$nav.adoc[]
 include::micrometer:partial$nav.adoc[]
 include::tracing-open-telemetry:partial$nav.adoc[]
-include::legacy:partial$nav.adoc[]
 --

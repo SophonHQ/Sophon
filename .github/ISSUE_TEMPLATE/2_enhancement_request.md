@@ -1,6 +1,6 @@
 ---
 name: 'Enhancement request'
-about: 'Suggest an enhancement/change to an existing feature for Axon Framework'
+about: 'Suggest an enhancement/change to an existing feature for Sophon'
 title:
 labels: 'Type: Enhancement'
 ---
@@ -13,11 +13,11 @@ labels: 'Type: Enhancement'
 
 ### Current Behaviour
 
-<!-- Please share the current behaviour of Axon Framework around this topic, if applicable. -->
+<!-- Please share the current behaviour of Sophon around this topic, if applicable. -->
 
 ### Wanted Behaviour
 
-<!-- Please describe the desired outcome through Axon Framework around the suggested enhancement. -->
+<!-- Please describe the desired outcome through Sophon around the suggested enhancement. -->
 
 ### Possible Workarounds
 

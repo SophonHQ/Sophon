@@ -29,7 +29,7 @@ While modeling a polymorphic aggregate hierarchy it is important to keep these c
 * It is not allowed to have a constructor annotated with `@CommandHandler` on abstract aggregate.
 The rationale for this is that an abstract aggregate can never be created.
 
-* Having creational command handlers of the same command name on different aggregates in the same hierarchy is forbidden too, since Axon cannot derive which one to invoke.
+* Having creational command handlers of the same command name on different aggregates in the same hierarchy is forbidden too, since Sophon cannot derive which one to invoke.
 
 * In a polymorphic aggregate hierarchy it is not allowed to have multiple `@AggregateIdentifier`
 and `@AggregateVersion` annotated fields.
@@ -46,7 +46,7 @@ However, if there is a `LimitedRechargeableGiftCard extends RechargeableGiftCard
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public AggregateConfigurer<GiftCard> giftCardConfigurer() {
         Set<Class<? extends GiftCard>> subtypes = new HashSet<>();
@@ -76,6 +76,6 @@ class RechargeableGiftCard extends GiftCard {
 [TIP]
 .Polymorphic Aggregates in Spring
 ====
-If you are using Spring, Axon will automatically detect polymorphic aggregates based on the `@Aggregate` annotations and class hierarchy.
+If you are using Spring, Sophon will automatically detect polymorphic aggregates based on the `@Aggregate` annotations and class hierarchy.
 The `@Aggregate` annotation needs to be put on the shared parent class that contains the aggregate identifier, as well as every subclass that is a potential instance type of that shared parent class.
 ====

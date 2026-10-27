@@ -1,6 +1,6 @@
 = Anatomy of a Message
 
-In Axon, all communication between components is done with explicit messages, represented by the `Message` interface.
+In Sophon, all communication between components is done with explicit messages, represented by the `Message` interface.
 A `Message` consists of a Payload, which is an application-specific object that represents the actual functional message, and Meta Data, which is a key-value pair describing the context of the message.
 
 Each of `Message's` sub-interfaces represent a specific type of message, and defines additional information that describes that Message.
@@ -17,11 +17,11 @@ Changing the Meta Data of a message will not change this identifier.
 Meta Data of messages typically describe the context in which a Message was generated.
 For example, Meta Data might contain information about the message that caused this Message to be generated (for example, Command handlers generate Events based on an incoming Command).
 
-In Axon, Meta Data is represented as a Map of String to Object.
+In Sophon, Meta Data is represented as a Map of String to Object.
 While you are free to add any type of object as the Meta Data value, we strongly recommend sticking to primitives and Strings (or at most simple objects).
 Meta Data does not come with the same flexibility as the payload when it comes to structural changes.
 
-Unlike a regular `Map<String,Object>`, `MetaData` in Axon is immutable.
+Unlike a regular `Map<String,Object>`, `MetaData` in Sophon is immutable.
 Mutating methods will create and return a new instance, instead of modifying an existing one.
 
 [source,java]

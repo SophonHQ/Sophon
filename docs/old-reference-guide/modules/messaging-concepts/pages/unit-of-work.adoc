@@ -1,13 +1,13 @@
 = Unit of Work
 
-The `UnitOfWork` is an important concept in the Axon Framework.
+The `UnitOfWork` is an important concept in Sophon.
 Although, in most cases you are unlikely to interact with it directly.
 The processing of a message is seen as a single unit.
 The purpose of the unit of work is to coordinate actions performed during the processing of a message (command, event or query).
 Components can register actions to be performed during each of the stages of a `UnitOfWork`, such as `onPrepareCommit` or `onCleanup`.
 
 You are unlikely to need direct access to the `UnitOfWork`.
-It is mainly used by the building blocks that the Axon Framework provides.
+It is mainly used by the building blocks that Sophon provides.
 If you do need access to it, for whatever reason, there are a few ways to obtain it.
 A handler receives the unit of work through a parameter in the handle method.
 If you use annotation support, you may add a parameter of type `UnitOfWork` to your annotated method.
@@ -35,7 +35,7 @@ Your handlers may throw an Exception as a result of processing a message.
 By default, unchecked exceptions will cause the `UnitOfWork` to roll back all changes.
 As a result, scheduled side effects are cancelled.
 
-Axon Framework provides a few rollback strategies out-of-the-box:
+Sophon provides a few rollback strategies out-of-the-box:
 
 * `RollbackConfigurationType.NEVER` - will always commit the `UnitOfWork`
 * `RollbackConfigurationType.ANY_THROWABLE`- will always roll back when an exception occurs
@@ -93,8 +93,8 @@ The message handler result is contained in the `ExecutionResult` of the unit of 
 If multiple units of work are nested, the cleanup phase is postponed until the outer unit of work is ready to clean up.
 
 The message handling process can be considered an atomic procedure; it should either be processed entirely, or not at all.
-Axon Framework uses the unit of work to track actions performed by message handlers.
-After the handler has completed, Axon will try to commit the actions registered with the unit of work.
+Sophon uses the unit of work to track actions performed by message handlers.
+After the handler has completed, Sophon will try to commit the actions registered with the unit of work.
 
 It is possible to bind a transaction to a unit of work.
 Many components, such as the `CommandBus` and `QueryBus` implementations and all asynchronously processing `EventProcessor` s, allow you to configure a `TransactionManager`.

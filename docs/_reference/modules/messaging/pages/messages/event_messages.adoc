@@ -5,7 +5,7 @@
 :page-needs-ref: Reference section need more links to samples, source code, etc.
 
 
-This document provides information about the design, implementation, and intended usage of event messages in Axon Framework.
+This document provides information about the design, implementation, and intended usage of event messages in Sophon.
 
 == Design considerations
 
@@ -18,7 +18,7 @@ In addition to the generic messages, event messages have the following character
 
 == Implementation
 
-In Axon Framework, an event message is an immutable, serializable Java object implementing the `EventMessage` interface.
+In Sophon, an event message is an immutable, serializable Java object implementing the `EventMessage` interface.
 
 
 [plantuml, svg, title="Event messaging class diagram"]

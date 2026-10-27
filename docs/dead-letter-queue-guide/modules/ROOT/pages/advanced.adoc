@@ -50,7 +50,7 @@ You can set the policy for a specific group with something like:
 
 [source,java]
 ----
-public class AxonConfig {
+public class SophonConfig {
     // omitting other configuration methods...
     public void configureEnqueuePolicy(EventProcessingConfigurer configurer) {
         // Replace "my-processing-group" for the processing group you want to configure the policy on.

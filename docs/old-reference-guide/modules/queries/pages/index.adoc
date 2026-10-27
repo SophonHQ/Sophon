@@ -1,7 +1,7 @@
 = Queries
 :page-aliases: README.adoc,query-processing.adoc
 
-The third type of Message that an Axon application is associated with is the Query Message, or simply Queries.
+The third type of Message that a Sophon application is associated with is the Query Message, or simply Queries.
 These are messages that request information in a certain format. Any application can declare it's able to handle a query message, and provide a response to it.
 
 == Types of queries
@@ -27,9 +27,9 @@ A summary of the various sections is given below.
 |===
 |Subsection |Purpose
 
-|xref:query-dispatchers.adoc[Query Dispatchers] / xref:query-handlers.adoc[Query Handlers] |Functional Development concerns for Query Messages using the Axon Framework
-|xref:implementations.adoc[Implementations] |Non-Functional Development concerns for Query Messages using the Axon Framework
-|xref:configuration.adoc[Configuration] |Configuration concerns for Query Messages using the Axon Framework
+|xref:query-dispatchers.adoc[Query Dispatchers] / xref:query-handlers.adoc[Query Handlers] |Functional Development concerns for Query Messages using Sophon
+|xref:implementations.adoc[Implementations] |Non-Functional Development concerns for Query Messages using Sophon
+|xref:configuration.adoc[Configuration] |Configuration concerns for Query Messages using Sophon
 |===
 
-This guide is complemented by a video tutorial which gives a practical demonstration of the concepts explained in this section. The tutorial is available at -&gt; link:https://www.youtube.com/watch?v=jS1vfc5EohM&feature=youtu.be[Axon Coding Tutorial - Query Messages]
+This guide is complemented by a video tutorial which gives a practical demonstration of the concepts explained in this section. The tutorial is available at -&gt; link:https://www.youtube.com/watch?v=jS1vfc5EohM&feature=youtu.be[Sophon Coding Tutorial - Query Messages]

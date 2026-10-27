@@ -1,7 +1,7 @@
 = Messaging Concepts
 :page-aliases: README.adoc
 
-One of the core concepts in Axon is messaging.
+One of the core concepts in Sophon is messaging.
 All communication between components is done using message objects.
 This gives these components the location transparency needed to be able to scale and distribute these components when necessary.
 
@@ -36,10 +36,10 @@ That is why command messages sent over the command bus allow for a result to be 
 Events are objects that describe something that has occurred in the application.
 A typical source of events is the aggregate.
 When something important has occurred within the aggregate, it will raise an event.
-In Axon Framework, events can be any object.
+In Sophon, events can be any object.
 You are highly encouraged to make sure all events are serializable.
 
-When Events are dispatched, Axon wraps them in an `EventMessage`.
+When Events are dispatched, Sophon wraps them in an `EventMessage`.
 The actual type of Message used depends on the origin of the event.
 When an event is raised by an aggregate, it is wrapped in a `DomainEventMessage` (which extends `EventMessage`).
 All other events are wrapped in an `EventMessage` . Aside from common `Message` attributes like the unique Identifier an `EventMessage` also contains a timestamp.
@@ -92,7 +92,7 @@ The `GenericEventMessage` is an implementation that allows you to wrap your Even
 You can use the constructor, or the static `asEventMessage()` method.
 The latter checks whether the given parameter doesn't already implement the `Message` interface.
 If so, it is either returned directly (if it implements `EventMessage`,) or it returns a new `GenericEventMessage` using the given `Message's` payload and Metadata.
-If an Event is applied (published) by an Aggregate Axon will automatically wrap the Event in a `DomainEventMessage` containing the Aggregate's Identifier, Type and Sequence Number.
+If an Event is applied (published) by an Aggregate Sophon will automatically wrap the Event in a `DomainEventMessage` containing the Aggregate's Identifier, Type and Sequence Number.
 
 == Queries
 
@@ -102,14 +102,7 @@ When dispatching queries, the client indicates whether he wants a result from on
 
 == Message flow
 
-When building Axon Framework applications, you will typically see a flow of messages.
+When building Sophon applications, you will typically see a flow of messages.
 Commands are sent to the Command Bus, which dispatches them to the appropriate Command Handler.
 The command handler will apply events that will be published and handled by Event Handlers.
 These handlers can update the read model, which can be queried using Query Messages.
-
-Using xref:axoniq-platform-reference:ROOT:index.adoc[Axoniq Platform],
-you can monitor the flow of messages in your application as you can see in the image below.
-
-image::axoniq-console-flow.gif[alt="Animated graphic of message flow in Axoniq Platform"]
-
-Besides seeing the flow, every message handler is individually monitored, providing deep insight into the performance and behavior of your application. For more information, see the xref:axoniq-platform-reference:ROOT:index.adoc[Axoniq Platform Reference Guide] or link:https://console.axoniq.io[sign up directly].
