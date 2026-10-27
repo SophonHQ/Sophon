@@ -16,6 +16,7 @@
 
 package io.github.sophonhq.sophon.springboot;
 
+import com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper;
 import io.github.sophonhq.sophon.commandhandling.CommandBus;
 import io.github.sophonhq.sophon.commandhandling.CommandHandler;
 import io.github.sophonhq.sophon.commandhandling.SimpleCommandBus;
@@ -49,6 +50,7 @@ import io.github.sophonhq.sophon.modelling.command.Repository;
 import io.github.sophonhq.sophon.modelling.saga.SagaEventHandler;
 import io.github.sophonhq.sophon.queryhandling.QueryBus;
 import io.github.sophonhq.sophon.serialization.Serializer;
+import io.github.sophonhq.sophon.serialization.json.JacksonSerializer;
 import io.github.sophonhq.sophon.serialization.xml.XStreamSerializer;
 import io.github.sophonhq.sophon.spring.stereotype.Aggregate;
 import io.github.sophonhq.sophon.spring.stereotype.Saga;
@@ -223,6 +225,22 @@ class AxonAutoConfigurationTest {
                     java.lang.reflect.Field field = EmbeddedEventStore.class.getDeclaredField("optimizeEventConsumption");
                     field.setAccessible(true);
                     assertFalse((boolean) field.get(eventStore));
+                });
+    }
+
+    @Test
+    void cborSerializerUsesDefaultCborMapperBeanWhenMultipleCborMappersExist() {
+        CBORMapper defaultCborMapper = new CBORMapper();
+        new ApplicationContextRunner()
+                .withUserConfiguration(Context.class)
+                .withPropertyValues("axon.serializer.general=cbor")
+                .withBean("otherCborMapper", CBORMapper.class, CBORMapper::new)
+                .withBean("defaultAxonCborMapper", CBORMapper.class, () -> defaultCborMapper)
+                .run(context -> {
+                    Serializer serializer = context.getBean(Serializer.class);
+
+                    assertTrue(serializer instanceof JacksonSerializer);
+                    assertSame(defaultCborMapper, ((JacksonSerializer) serializer).getObjectMapper());
                 });
     }
 

@@ -152,10 +152,10 @@ public class AxonTracingAutoConfiguration {
     @ConditionalOnMissingBean(RepositorySpanFactory.class)
     public RepositorySpanFactory repositorySpanFactory(SpanFactory spanFactory,
                                                        TracingProperties properties) {
-        TracingProperties.DeadlineManagerProperties repositoryProps = properties.getDeadlineManager();
+        TracingProperties.RepositoryProperties repositoryProps = properties.getRepository();
         return DefaultRepositorySpanFactory.builder()
                                            .spanFactory(spanFactory)
-                                           .aggregateIdAttribute(repositoryProps.getDeadlineScopeAttributeName())
+                                           .aggregateIdAttribute(repositoryProps.getAggregateIdAttributeName())
                                            .build();
     }
 

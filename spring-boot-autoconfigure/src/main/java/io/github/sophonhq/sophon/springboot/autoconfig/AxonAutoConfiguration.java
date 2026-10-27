@@ -255,8 +255,8 @@ public class AxonAutoConfiguration implements BeanClassLoaderAware {
             case CBOR:
                 Map<String, CBORMapper> cborMapperBeans = beansOfTypeIncludingAncestors(applicationContext,
                                                                                         CBORMapper.class);
-                ObjectMapper cborMapper = cborMapperBeans.containsKey("defaultAxonCborObjectMapper")
-                        ? cborMapperBeans.get("defaultAxonCborObjectMapper")
+                ObjectMapper cborMapper = cborMapperBeans.containsKey("defaultAxonCborMapper")
+                        ? cborMapperBeans.get("defaultAxonCborMapper")
                         : cborMapperBeans.values().stream().findFirst()
                                          .orElseThrow(() -> new NoSuchBeanDefinitionException(CBORMapper.class));
                 ChainingConverter cborConverter = new ChainingConverter(beanClassLoader);

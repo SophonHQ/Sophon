@@ -26,6 +26,7 @@ import io.github.sophonhq.sophon.eventhandling.EventBusSpanFactory;
 import io.github.sophonhq.sophon.eventhandling.EventProcessorSpanFactory;
 import io.github.sophonhq.sophon.eventsourcing.DefaultSnapshotterSpanFactory;
 import io.github.sophonhq.sophon.eventsourcing.SnapshotterSpanFactory;
+import io.github.sophonhq.sophon.messaging.ScopeDescriptor;
 import io.github.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
 import io.github.sophonhq.sophon.modelling.command.DefaultRepositorySpanFactory;
 import io.github.sophonhq.sophon.modelling.command.RepositorySpanFactory;
@@ -39,6 +40,7 @@ import io.github.sophonhq.sophon.springboot.autoconfig.AxonTimeoutAutoConfigurat
 import io.github.sophonhq.sophon.springboot.autoconfig.OpenTelemetryAutoConfiguration;
 import io.github.sophonhq.sophon.springboot.autoconfig.SecurityAutoConfiguration;
 import io.github.sophonhq.sophon.tracing.NoOpSpanFactory;
+import io.github.sophonhq.sophon.tracing.Span;
 import io.github.sophonhq.sophon.tracing.SpanAttributesProvider;
 import io.github.sophonhq.sophon.tracing.SpanFactory;
 import io.github.sophonhq.sophon.tracing.TracingHandlerEnhancerDefinition;
@@ -424,6 +426,24 @@ class AxonAutoConfigurationWithTracingTest {
     }
 
     @Test
+    void deadlineManagerSpanFactoryUsesDefaultDeadlineScopeAttributeName() {
+        Span span = Mockito.mock(Span.class);
+        SpanFactory spanFactory = Mockito.mock(SpanFactory.class);
+        Mockito.when(spanFactory.createInternalSpan(any())).thenReturn(span);
+        ScopeDescriptor scope = Mockito.mock(ScopeDescriptor.class);
+        Mockito.when(scope.scopeDescription()).thenReturn("scopeDescription");
+        new ApplicationContextRunner()
+                .withUserConfiguration(Context.class)
+                .withBean(SpanFactory.class, () -> spanFactory)
+                .run(context -> {
+                    context.getBean(DeadlineManagerSpanFactory.class)
+                           .createCancelAllWithinScopeSpan("deadlineName", scope);
+
+                    Mockito.verify(span).addAttribute("axon.deadlineScope", "scopeDescription");
+                });
+    }
+
+    @Test
     void sagaManagerSpanFactoryDefaultsToDefaultSagaManagerSpanFactory() {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
@@ -478,6 +498,37 @@ class AxonAutoConfigurationWithTracingTest {
                     assertTrue(context.containsBean("repositorySpanFactory"));
                     assertNotNull(context.getBean(RepositorySpanFactory.class));
                     assertSame(context.getBean(RepositorySpanFactory.class), mock);
+                });
+    }
+
+    @Test
+    void repositorySpanFactoryUsesDefaultAggregateIdAttributeName() {
+        Span span = Mockito.mock(Span.class);
+        SpanFactory spanFactory = Mockito.mock(SpanFactory.class);
+        Mockito.when(spanFactory.createInternalSpan(any())).thenReturn(span);
+        new ApplicationContextRunner()
+                .withUserConfiguration(Context.class)
+                .withBean(SpanFactory.class, () -> spanFactory)
+                .run(context -> {
+                    context.getBean(RepositorySpanFactory.class).createLoadSpan("aggregateId");
+
+                    Mockito.verify(span).addAttribute("axon.aggregateId", "aggregateId");
+                });
+    }
+
+    @Test
+    void repositorySpanFactoryUsesConfiguredAggregateIdAttributeName() {
+        Span span = Mockito.mock(Span.class);
+        SpanFactory spanFactory = Mockito.mock(SpanFactory.class);
+        Mockito.when(spanFactory.createInternalSpan(any())).thenReturn(span);
+        new ApplicationContextRunner()
+                .withUserConfiguration(Context.class)
+                .withBean(SpanFactory.class, () -> spanFactory)
+                .withPropertyValues("axon.tracing.repository.aggregate-id-attribute-name=customAggregateId")
+                .run(context -> {
+                    context.getBean(RepositorySpanFactory.class).createLoadSpan("aggregateId");
+
+                    Mockito.verify(span).addAttribute("customAggregateId", "aggregateId");
                 });
     }
 

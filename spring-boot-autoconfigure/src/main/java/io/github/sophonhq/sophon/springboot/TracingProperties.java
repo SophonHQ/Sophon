@@ -567,9 +567,10 @@ public class TracingProperties {
          */
         private String deadlineIdAttributeName = "axon.deadlineId";
         /**
-         * The name of the attribute used to store the deadline scope in the span.
+         * The name of the attribute used to store the deadline scope in the span. Defaults to
+         * {@code axon.deadlineScope}.
          */
-        private String deadlineScopeAttributeName = "axon.scope";
+        private String deadlineScopeAttributeName = "axon.deadlineScope";
 
         /**
          * The name of the attribute used to store the deadline id in the span. Defaults to {@code axon.deadlineId}.
@@ -590,7 +591,7 @@ public class TracingProperties {
         }
 
         /**
-         * The name of the attribute used to store the deadline scope in the span. Defaults to {@code axon.scope}.
+         * The name of the attribute used to store the deadline scope in the span. Defaults to {@code axon.deadlineScope}.
          *
          * @return The name of the attribute used to store the deadline scope in the span.
          */
@@ -599,7 +600,7 @@ public class TracingProperties {
         }
 
         /**
-         * The name of the attribute used to store the deadline scope in the span. Defaults to {@code axon.scope}.
+         * The name of the attribute used to store the deadline scope in the span. Defaults to {@code axon.deadlineScope}.
          *
          * @param deadlineScopeAttributeName The name of the attribute used to store the deadline scope in the span.
          */
@@ -619,7 +620,7 @@ public class TracingProperties {
         /**
          * The name of the attribute used to store the aggregate id in the span. Defaults to {@code axon.aggregateId}.
          */
-        private String aggregateIdAttributeName = "axon.deadlineId";
+        private String aggregateIdAttributeName = "axon.aggregateId";
 
         /**
          * The name of the attribute used to store the aggregate id in the span. Defaults to {@code axon.aggregateId}.
