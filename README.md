@@ -5,6 +5,9 @@ Sophon is a Java framework for building monoliths and microservices alike using 
 This project is a fork of Axon Framework 4, originally developed by AxonIQ B.V. and contributors. Not affiliated
 with or endorsed by AxonIQ.
 
+"Axon", "Axon Framework", "Axon Server" and "AxonIQ" may be trademarks of AxonIQ B.V. They are used here only to
+describe the origin of this project. See [NOTICE](NOTICE) for attribution.
+
 ## Why a fork
 
 Developers of Axon 5 made some questionable choices that created the need for a maintained fork of Axon 4.
@@ -13,7 +16,7 @@ These decisions include:
 * Dropped support for Axon 4
 * No ability to opt-out from Event Sourcing
 * Futures and reactive streams as first-class citizens in a world where virtual threads are already generally available
-* General greedy corporate practices of moving open source features into proprietary AxonIq Framework (Sagas to
+* General greedy corporate practices of moving open source features into proprietary AxonIQ Framework (Sagas to
   Workflows etc.)
 
 ## Versioning
@@ -23,7 +26,7 @@ modifications included:
 
 1. Changed `groupId`, `artifactId` and packages to reflect new name.
 2. Removed code associated with proprietary products (Axon Server, AxonIQ Console, Update Checker)
-3. Migrated to jsr305 and JetBrains annotations to JSpecify
+3. Migrated from jsr305 and JetBrains annotations to JSpecify
 4. `legacy` module deleted
 
 ## Feature requests and issue reporting

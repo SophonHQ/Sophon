@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (c) 2010-2025. Axon Framework
+  ~ Modifications Copyright (c) 2026. SophonHQ
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -546,6 +547,21 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${felix.maven-bundle-plugin.version}</version>
+                    <configuration>
+                        <instructions>
+                            <!-- bundles only contain the declared resources, so add the license and notice explicitly -->
+                            <Include-Resource>
+                                {maven-resources},
+                                META-INF/LICENSE.txt=${project.basedir}/../LICENSE.txt,
+                                META-INF/NOTICE=${project.basedir}/../NOTICE
+                            </Include-Resource>
+                        </instructions>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>org.eclipse.transformer</groupId>
                     <artifactId>transformer-maven-plugin</artifactId>
                     <version>${eclipse.transformer-maven-plugin.version}</version>
@@ -699,6 +715,28 @@
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
+                <executions>
+                    <execution>
+                        <!-- ship the license and notice with every jar, as required by the Apache License -->
+                        <id>copy-license-and-notice</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/..</directory>
+                                    <includes>
+                                        <include>LICENSE.txt</include>
+                                        <include>NOTICE</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

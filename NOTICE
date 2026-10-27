@@ -1,0 +1,17 @@
+Sophon
+Copyright (c) 2026. SophonHQ
+
+This product is derived from Axon Framework 4.13.2
+(https://github.com/AxonFramework/AxonFramework),
+Copyright (c) 2010-2026. Axon Framework, developed by AxonIQ B.V. and contributors,
+licensed under the Apache License, Version 2.0.
+
+The files derived from Axon Framework have been modified. Among other changes, packages, Maven
+coordinates, type names, configuration properties and other identifiers were renamed, and the
+Axon Server connector, the AxonIQ Console integration, the update checker, the legacy module and
+the examples were removed. Modified files carry a "Modifications Copyright (c) 2026. SophonHQ"
+notice below their original copyright notice, which is retained.
+
+"Axon", "Axon Framework", "Axon Server" and "AxonIQ" may be trademarks of AxonIQ B.V. They are
+used only to identify the origin of this product. Sophon is an independent project and is not
+affiliated with, sponsored by or endorsed by AxonIQ B.V.

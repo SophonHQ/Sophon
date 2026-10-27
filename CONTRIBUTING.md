@@ -21,6 +21,19 @@ If you're contributing code, please take care of the following:
 Sophon is licensed under the [Apache License, Version 2.0](LICENSE.txt). By submitting a contribution, you agree that it
 is licensed under the same terms, as described in section 5 of the license.
 
+### Copyright Headers
+
+Every source file must start with a license header:
+
+* New files get the Sophon header, `Copyright (c) <year>. SophonHQ`, followed by the Apache License notice.
+* Files derived from Axon Framework keep their original `Copyright (c) <years>. Axon Framework` line. Never change or
+  remove it. The `Modifications Copyright (c) 2026. SophonHQ` line below it marks the file as modified, as
+  required by section 4 of the license; it doesn't need updating.
+
+If you're using IntelliJ IDEA, import [copyright-template.xml](copyright-template.xml) under "Settings -> Editor ->
+Copyright -> Copyright Profiles" and make it the default profile. It only replaces headers that belong solely to Sophon,
+so "Update Copyright" leaves the headers of files derived from Axon Framework untouched.
+
 ### Code Style
 
 We're trying very hard to maintain a consistent style of coding throughout the code base. Think of things like indenting

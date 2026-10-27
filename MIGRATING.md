@@ -15,9 +15,9 @@ Framework 4 and how to migrate.
   replace Axon Server based routing with a different solution.
 * **AxonIQ Console and the AxonIQ update checker were removed.** Nothing replaces them.
 * **Axon Framework extensions do not work with Sophon.** Extensions such as Kafka, AMQP, Mongo, JGroups, Spring Cloud,
-  multitenancy, Reactor and Kotlin are built against `org.axonframework` and cannot be combined with Sophon.
+  multitenancy, Reactor and Kotlin are built against `org.axonframework` and cannot be combined with Sophon. This might
+  change in the future when we start gradually porting those extensions to Sophon.
 * **The `axon-legacy` module was removed.** Data written by Axon Framework 2 or 3 is no longer supported.
-* Sophon requires Java 17.
 
 ## 1. Run the migration recipe
 
@@ -76,7 +76,8 @@ Without Spring Boot, enable `translateLegacyClassNames()` on the builder of the 
 `JacksonSerializer` (including CBOR), `Jackson3Serializer` or `JavaSerializer`. For the `AvroSerializer`, enable it on
 its serializer delegate. The translation covers the serialized type as well as class names inside the serialized data,
 such as the token inside a `ReplayToken` or the type ids written by Jackson. With the `JavaSerializer`, only classes
-declaring a `serialVersionUID`, which includes the tracking tokens and `MetaData`, can be read this way. Data written by Sophon uses
+declaring a `serialVersionUID`, which includes the tracking tokens and `MetaData`, can be read this way. Data written by
+Sophon uses
 the new names; keep the translation enabled while stored data may still contain the old ones.
 
 The following is **not** covered and needs to be handled before switching:
@@ -94,22 +95,22 @@ The following is **not** covered and needs to be handled before switching:
 The group id changes from `org.axonframework` to `io.github.sophonhq.sophon`; artifact ids change from `axon-*` to
 `sophon-*`:
 
-| Axon Framework 4                  | Sophon                              |
-|-----------------------------------|-------------------------------------|
-| `axon-messaging`                  | `sophon-messaging`                  |
-| `axon-modelling`                  | `sophon-modelling`                  |
-| `axon-eventsourcing`              | `sophon-eventsourcing`              |
-| `axon-configuration`              | `sophon-configuration`              |
-| `axon-disruptor`                  | `sophon-disruptor`                  |
-| `axon-spring`                     | `sophon-spring`                     |
-| `axon-spring-boot-autoconfigure`  | `sophon-spring-boot-autoconfigure`  |
-| `axon-spring-boot-starter`        | `sophon-spring-boot-starter`        |
-| `axon-test`                       | `sophon-test`                       |
-| `axon-metrics`                    | `sophon-metrics`                    |
-| `axon-micrometer`                 | `sophon-micrometer`                 |
-| `axon-tracing-opentelemetry`      | `sophon-tracing-opentelemetry`      |
-| `axon-server-connector`           | removed                             |
-| `axon-legacy`                     | removed                             |
+| Axon Framework 4                 | Sophon                             |
+|----------------------------------|------------------------------------|
+| `axon-messaging`                 | `sophon-messaging`                 |
+| `axon-modelling`                 | `sophon-modelling`                 |
+| `axon-eventsourcing`             | `sophon-eventsourcing`             |
+| `axon-configuration`             | `sophon-configuration`             |
+| `axon-disruptor`                 | `sophon-disruptor`                 |
+| `axon-spring`                    | `sophon-spring`                    |
+| `axon-spring-boot-autoconfigure` | `sophon-spring-boot-autoconfigure` |
+| `axon-spring-boot-starter`       | `sophon-spring-boot-starter`       |
+| `axon-test`                      | `sophon-test`                      |
+| `axon-metrics`                   | `sophon-metrics`                   |
+| `axon-micrometer`                | `sophon-micrometer`                |
+| `axon-tracing-opentelemetry`     | `sophon-tracing-opentelemetry`     |
+| `axon-server-connector`          | removed                            |
+| `axon-legacy`                    | removed                            |
 
 ### Packages
 
@@ -118,31 +119,31 @@ All classes moved from `org.axonframework` to `io.github.sophonhq.sophon`, keepi
 
 ### Renamed types and members
 
-| Axon Framework 4                                                 | Sophon                                                 |
-|------------------------------------------------------------------|--------------------------------------------------------|
-| `common.AxonException`                                           | `common.SophonException`                               |
-| `common.AxonTransientException`                                  | `common.SophonTransientException`                      |
-| `common.AxonNonTransientException`                               | `common.SophonNonTransientException`                   |
-| `common.AxonConfigurationException`                              | `common.SophonConfigurationException`                  |
-| `common.AxonThreadFactory`                                       | `common.SophonThreadFactory`                           |
+| Axon Framework 4                                                    | Sophon                                                                |
+|---------------------------------------------------------------------|-----------------------------------------------------------------------|
+| `common.AxonException`                                              | `common.SophonException`                                              |
+| `common.AxonTransientException`                                     | `common.SophonTransientException`                                     |
+| `common.AxonNonTransientException`                                  | `common.SophonNonTransientException`                                  |
+| `common.AxonConfigurationException`                                 | `common.SophonConfigurationException`                                 |
+| `common.AxonThreadFactory`                                          | `common.SophonThreadFactory`                                          |
 | `commandhandling.gateway.AxonNonTransientExceptionClassesPredicate` | `commandhandling.gateway.SophonNonTransientExceptionClassesPredicate` |
-| `messaging.timeout.AxonTaskJanitor`                              | `messaging.timeout.SophonTaskJanitor`                  |
-| `messaging.timeout.AxonTimeLimitedTask`                          | `messaging.timeout.SophonTimeLimitedTask`              |
-| `messaging.timeout.AxonTimeoutException`                         | `messaging.timeout.SophonTimeoutException`             |
-| `config.AxonTaskJanitorShutdownConfigurerModule`                 | `config.SophonTaskJanitorShutdownConfigurerModule`     |
-| `spring.config.AxonConfiguration`                                | `spring.config.SophonConfiguration`                    |
-| `spring.config.SpringAxonConfiguration`                          | `spring.config.SpringSophonConfiguration`              |
-| `spring.config.SpringAxonAutoConfigurer`                         | `spring.config.SpringSophonAutoConfigurer`             |
-| `spring.event.AxonStartedEvent`                                  | `spring.event.SophonStartedEvent`                      |
-| `springboot.autoconfig.AxonAutoConfiguration`                    | `springboot.autoconfig.SophonAutoConfiguration`        |
-| `springboot.autoconfig.AxonDbSchedulerAutoConfiguration`         | `springboot.autoconfig.SophonDbSchedulerAutoConfiguration` |
-| `springboot.autoconfig.AxonJobRunrAutoConfiguration`             | `springboot.autoconfig.SophonJobRunrAutoConfiguration` |
-| `springboot.autoconfig.AxonTimeoutAutoConfiguration`             | `springboot.autoconfig.SophonTimeoutAutoConfiguration` |
-| `springboot.autoconfig.AxonTracingAutoConfiguration`             | `springboot.autoconfig.SophonTracingAutoConfiguration` |
-| `test.AxonAssertionError`                                        | `test.SophonAssertionError`                            |
-| `XStreamSerializer.Builder#disableAxonTypeSecurity()`            | `XStreamSerializer.Builder#disableSophonTypeSecurity()` |
-| `SpringAxonAutoConfigurer.AXON_CONFIGURATION_BEAN`               | `SpringSophonAutoConfigurer.SOPHON_CONFIGURATION_BEAN` |
-| `SpringAxonAutoConfigurer.AXON_CONFIGURER_BEAN`                  | `SpringSophonAutoConfigurer.SOPHON_CONFIGURER_BEAN`    |
+| `messaging.timeout.AxonTaskJanitor`                                 | `messaging.timeout.SophonTaskJanitor`                                 |
+| `messaging.timeout.AxonTimeLimitedTask`                             | `messaging.timeout.SophonTimeLimitedTask`                             |
+| `messaging.timeout.AxonTimeoutException`                            | `messaging.timeout.SophonTimeoutException`                            |
+| `config.AxonTaskJanitorShutdownConfigurerModule`                    | `config.SophonTaskJanitorShutdownConfigurerModule`                    |
+| `spring.config.AxonConfiguration`                                   | `spring.config.SophonConfiguration`                                   |
+| `spring.config.SpringAxonConfiguration`                             | `spring.config.SpringSophonConfiguration`                             |
+| `spring.config.SpringAxonAutoConfigurer`                            | `spring.config.SpringSophonAutoConfigurer`                            |
+| `spring.event.AxonStartedEvent`                                     | `spring.event.SophonStartedEvent`                                     |
+| `springboot.autoconfig.AxonAutoConfiguration`                       | `springboot.autoconfig.SophonAutoConfiguration`                       |
+| `springboot.autoconfig.AxonDbSchedulerAutoConfiguration`            | `springboot.autoconfig.SophonDbSchedulerAutoConfiguration`            |
+| `springboot.autoconfig.AxonJobRunrAutoConfiguration`                | `springboot.autoconfig.SophonJobRunrAutoConfiguration`                |
+| `springboot.autoconfig.AxonTimeoutAutoConfiguration`                | `springboot.autoconfig.SophonTimeoutAutoConfiguration`                |
+| `springboot.autoconfig.AxonTracingAutoConfiguration`                | `springboot.autoconfig.SophonTracingAutoConfiguration`                |
+| `test.AxonAssertionError`                                           | `test.SophonAssertionError`                                           |
+| `XStreamSerializer.Builder#disableAxonTypeSecurity()`               | `XStreamSerializer.Builder#disableSophonTypeSecurity()`               |
+| `SpringAxonAutoConfigurer.AXON_CONFIGURATION_BEAN`                  | `SpringSophonAutoConfigurer.SOPHON_CONFIGURATION_BEAN`                |
+| `SpringAxonAutoConfigurer.AXON_CONFIGURER_BEAN`                     | `SpringSophonAutoConfigurer.SOPHON_CONFIGURER_BEAN`                   |
 
 ### Configuration properties
 
@@ -158,30 +159,30 @@ recorded both as `axon.scope` and ignored `axon.tracing.repository.aggregate-id-
 
 ### Spring bean names
 
-| Axon Framework 4                                     | Sophon                                                      |
-|------------------------------------------------------|-------------------------------------------------------------|
-| `defaultAxonObjectMapper`                            | `defaultSophonObjectMapper`                                 |
-| `defaultAxonCborMapper`                              | `defaultSophonCborMapper`                                   |
-| `defaultAxonXStream`                                 | `defaultSophonXStream`                                      |
-| `defaultAxonSchemaStore`                             | `defaultSophonSchemaStore`                                  |
-| `springAxonConfiguration`                            | `springSophonConfiguration`                                 |
-| `springAxonConfigurer`                               | `springSophonConfigurer`                                    |
-| `axonTransactionManager`                             | `sophonTransactionManager`                                  |
-| `axonTimeoutConfigurerModule`                        | `sophonTimeoutConfigurerModule`                             |
-| `org.axonframework.spring.config.AxonConfiguration`  | `io.github.sophonhq.sophon.spring.config.SophonConfiguration` |
+| Axon Framework 4                                    | Sophon                                                        |
+|-----------------------------------------------------|---------------------------------------------------------------|
+| `defaultAxonObjectMapper`                           | `defaultSophonObjectMapper`                                   |
+| `defaultAxonCborMapper`                             | `defaultSophonCborMapper`                                     |
+| `defaultAxonXStream`                                | `defaultSophonXStream`                                        |
+| `defaultAxonSchemaStore`                            | `defaultSophonSchemaStore`                                    |
+| `springAxonConfiguration`                           | `springSophonConfiguration`                                   |
+| `springAxonConfigurer`                              | `springSophonConfigurer`                                      |
+| `axonTransactionManager`                            | `sophonTransactionManager`                                    |
+| `axonTimeoutConfigurerModule`                       | `sophonTimeoutConfigurerModule`                               |
+| `org.axonframework.spring.config.AxonConfiguration` | `io.github.sophonhq.sophon.spring.config.SophonConfiguration` |
 
 ### Runtime identifiers
 
-| Purpose                                    | Axon Framework 4                          | Sophon                                      |
-|--------------------------------------------|-------------------------------------------|---------------------------------------------|
-| Message headers (`Headers`)                | `axon-message-id`, `axon-metadata`, ...   | `sophon-message-id`, `sophon-metadata`, ... |
-| Spring Messaging header prefix             | `axon-message-`                           | `sophon-message-`                           |
-| Tracing span attributes                    | `axon_message_id`, `axon_payload_type`, ... | `sophon_message_id`, `sophon_payload_type`, ... |
-| Tracing attributes of deadlines, sagas and repositories | `axon.deadlineId`, `axon.aggregateId`, ... | `sophon.deadlineId`, `sophon.aggregateId`, ... |
-| OpenTelemetry tracer name                  | `AxonFramework-OpenTelemetry`             | `Sophon-OpenTelemetry`                      |
-| Quartz event scheduler job group           | `AxonFramework-Events`                    | `Sophon-Events`                             |
-| db-scheduler and JobRunr event task name   | `AxonScheduledEvent`                      | `SophonScheduledEvent`                      |
-| db-scheduler deadline task name            | `AxonDeadline`                            | `SophonDeadline`                            |
-| JGroups cluster name default               | `Axon`                                    | `Sophon`                                    |
-| Timeout janitor thread and logger          | `axon-janitor`                            | `sophon-janitor`                            |
-| Jackson module names                       | `Axon-Jackson Module`, `Axon-Jackson3 Module` | `Sophon-Jackson Module`, `Sophon-Jackson3 Module` |
+| Purpose                                                 | Axon Framework 4                              | Sophon                                            |
+|---------------------------------------------------------|-----------------------------------------------|---------------------------------------------------|
+| Message headers (`Headers`)                             | `axon-message-id`, `axon-metadata`, ...       | `sophon-message-id`, `sophon-metadata`, ...       |
+| Spring Messaging header prefix                          | `axon-message-`                               | `sophon-message-`                                 |
+| Tracing span attributes                                 | `axon_message_id`, `axon_payload_type`, ...   | `sophon_message_id`, `sophon_payload_type`, ...   |
+| Tracing attributes of deadlines, sagas and repositories | `axon.deadlineId`, `axon.aggregateId`, ...    | `sophon.deadlineId`, `sophon.aggregateId`, ...    |
+| OpenTelemetry tracer name                               | `AxonFramework-OpenTelemetry`                 | `Sophon-OpenTelemetry`                            |
+| Quartz event scheduler job group                        | `AxonFramework-Events`                        | `Sophon-Events`                                   |
+| db-scheduler and JobRunr event task name                | `AxonScheduledEvent`                          | `SophonScheduledEvent`                            |
+| db-scheduler deadline task name                         | `AxonDeadline`                                | `SophonDeadline`                                  |
+| JGroups cluster name default                            | `Axon`                                        | `Sophon`                                          |
+| Timeout janitor thread and logger                       | `axon-janitor`                                | `sophon-janitor`                                  |
+| Jackson module names                                    | `Axon-Jackson Module`, `Axon-Jackson3 Module` | `Sophon-Jackson Module`, `Sophon-Jackson3 Module` |
