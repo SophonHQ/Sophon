@@ -17,7 +17,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <groupId>org.axonframework</groupId>
+    <groupId>io.github.sophonhq.sophon</groupId>
     <artifactId>sophon</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <modules>
@@ -44,14 +44,14 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>Axon Framework</name>
+    <name>Sophon</name>
     <description>
-        The Axon framework supports developers with the plumbing and wiring required to build a CQRS architecture, by
-        providing (abstract) implementations of common CQRS building blocks.
+        Sophon is a Java framework for building monoliths and microservices alike using tactical DDD, CQRS and Event
+        Sourcing.
     </description>
 
     <inceptionYear>2010</inceptionYear>
-    <url>https://axoniq.io/</url>
+    <url>https://github.com/SophonHQ/Sophon</url>
     <licenses>
         <license>
             <name>Apache 2.0</name>
@@ -60,7 +60,7 @@
     </licenses>
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/AxonFramework/AxonFramework/issues</url>
+        <url>https://github.com/SophonHQ/Sophon/issues</url>
     </issueManagement>
 
     <properties>
@@ -652,7 +652,7 @@
                 <configuration>
                     <publishingServerId>central</publishingServerId>
                     <excludeArtifacts>
-                        axon-integrationtests,axon-reactorless-test,axon-hibernate-6-integrationtests,axon-spring-boot-3-integrationtests,axon-spring-boot-4-integrationtests
+                        sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-3-integrationtests,sophon-spring-boot-4-integrationtests
                     </excludeArtifacts>
                 </configuration>
             </plugin>
@@ -851,7 +851,7 @@
                         <configuration>
                             <doclint>none</doclint>
                             <legacyMode>true</legacyMode>
-                            <skippedModules>axon-integrationtests,axon-reactorless-test,axon-hibernate-6-integrationtests,axon-spring-boot-3-integrationtests,axon-spring-boot-4-integrationtests</skippedModules>
+                            <skippedModules>sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-3-integrationtests,sophon-spring-boot-4-integrationtests</skippedModules>
                             <!-- These parameters are in preparation for resolution of this issue: -->
                             <!-- https://bugs.openjdk.java.net/browse/JDK-8068562 -->
                             <tags>
@@ -908,48 +908,9 @@
     </profiles>
 
     <scm>
-        <connection>scm:git:git://github.com/AxonFramework/AxonFramework.git</connection>
-        <developerConnection>scm:git:git@github.com:AxonFramework/AxonFramework.git</developerConnection>
-        <url>https://github.com/AxonFramework/AxonFramework</url>
+        <connection>scm:git:https://github.com/SophonHQ/Sophon.git</connection>
+        <developerConnection>scm:git:git@github.com:SophonHQ/Sophon.git</developerConnection>
+        <url>https://github.com/SophonHQ/Sophon</url>
         <tag>HEAD</tag>
     </scm>
-
-    <developers>
-        <developer>
-            <name>Allard Buijze</name>
-            <email>allard.buijze@axoniq.io</email>
-            <organization>AxonIQ</organization>
-            <organizationUrl>https://axoniq.io</organizationUrl>
-            <roles>
-                <role>Project Owner</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Steven van Beelen</name>
-            <email>steven.vanbeelen@axoniq.io</email>
-            <organization>AxonIQ</organization>
-            <organizationUrl>https://axoniq.io</organizationUrl>
-            <roles>
-                <role>Lead Developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Mitchell Herrijgers</name>
-            <email>mitchell.herrijgers@axoniq.io</email>
-            <organization>AxonIQ</organization>
-            <organizationUrl>https://axoniq.io</organizationUrl>
-            <roles>
-                <role>Developer</role>
-            </roles>
-        </developer>
-        <developer>
-            <name>Mateusz Nowak</name>
-            <email>mateusz.nowak@axoniq.io</email>
-            <organization>AxonIQ</organization>
-            <organizationUrl>https://axoniq.io</organizationUrl>
-            <roles>
-                <role>Developer</role>
-            </roles>
-        </developer>
-    </developers>
 </project>

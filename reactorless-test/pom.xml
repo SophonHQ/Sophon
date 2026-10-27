@@ -18,15 +18,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>sophon</artifactId>
-        <groupId>org.axonframework</groupId>
+        <groupId>io.github.sophonhq.sophon</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>axon-reactorless-test</artifactId>
-    <name>Axon Framework - Reactor-less Tests</name>
+    <artifactId>sophon-reactorless-test</artifactId>
+    <name>Sophon - Reactor-less Tests</name>
     <description>
-        Module containing Axon Framework tests without Project Reactor present on the classpath. Does not contain any
+        Module containing Sophon tests without Project Reactor present on the classpath. Does not contain any
         production code.
     </description>
 
@@ -37,8 +37,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-spring-boot-starter</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-spring-boot-starter</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

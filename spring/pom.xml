@@ -17,39 +17,39 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>org.axonframework</groupId>
+        <groupId>io.github.sophonhq.sophon</groupId>
         <artifactId>sophon</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>axon-spring</artifactId>
+    <artifactId>sophon-spring</artifactId>
 
-    <name>Axon Framework - Spring Support</name>
+    <name>Sophon - Spring Support</name>
     <description>
-        Module providing Spring specific helper functionality to ease configuration / set-up of an Axon application, as
+        Module providing Spring specific helper functionality to ease configuration / set-up of a Sophon application, as
         well as some Spring specific infrastructure components.
     </description>
 
     <packaging>bundle</packaging>
 
     <dependencies>
-        <!-- Axon -->
+        <!-- Sophon -->
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-configuration</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-configuration</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-messaging</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-eventsourcing</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-eventsourcing</artifactId>
             <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
@@ -57,23 +57,23 @@
         <!-- explicitly define transitive dependencies to increase version priority -->
         <!-- see https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Transitive_Dependencies -->
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-eventsourcing</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-eventsourcing</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-modelling</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-modelling</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-messaging</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-test</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-test</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

@@ -18,14 +18,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.axonframework</groupId>
+        <groupId>io.github.sophonhq.sophon</groupId>
         <artifactId>sophon</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>axon-eventsourcing</artifactId>
+    <artifactId>sophon-eventsourcing</artifactId>
 
-    <name>Axon Framework - Event Sourcing</name>
+    <name>Sophon - Event Sourcing</name>
     <description>
         Module containing all necessary infrastructure components to support Event Sourcing Command and Query models.
     </description>
@@ -33,22 +33,22 @@
     <packaging>bundle</packaging>
 
     <dependencies>
-        <!-- Axon -->
+        <!-- Sophon -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-modelling</artifactId>
+            <artifactId>sophon-modelling</artifactId>
             <version>${project.version}</version>
         </dependency>
         <!-- explicitly define transitive dependencies to increase version priority -->
         <!-- see https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Transitive_Dependencies -->
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-messaging</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-messaging</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>

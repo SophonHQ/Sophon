@@ -28,11 +28,12 @@
                 <include>io.github.sophonhq.sophon:*</include>
             </includes>
             <excludes>
-                <exclude>*:axon-integrationtests</exclude>
-                <exclude>*:axon-integrationtests-jakarta</exclude>
-                <exclude>*:axon-spring-boot-3-integrationtests</exclude>
-                <exclude>*:axon-spring-boot-starter</exclude>
-                <exclude>*:axon-reactorless-test</exclude>
+                <exclude>*:sophon-integrationtests</exclude>
+                <exclude>*:sophon-hibernate-6-integrationtests</exclude>
+                <exclude>*:sophon-spring-boot-3-integrationtests</exclude>
+                <exclude>*:sophon-spring-boot-4-integrationtests</exclude>
+                <exclude>*:sophon-spring-boot-starter</exclude>
+                <exclude>*:sophon-reactorless-test</exclude>
             </excludes>
             <binaries>
                 <outputDirectory>dist</outputDirectory>
@@ -56,7 +57,7 @@
             <outputDirectory />
             <includes>
                 <include>LICENSE.txt</include>
-                <include>README.txt</include>
+                <include>README.md</include>
             </includes>
         </fileSet>
         <fileSet>

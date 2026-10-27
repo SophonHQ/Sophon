@@ -17,17 +17,17 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>org.axonframework</groupId>
+        <groupId>io.github.sophonhq.sophon</groupId>
         <artifactId>sophon</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>axon-spring-boot-autoconfigure</artifactId>
+    <artifactId>sophon-spring-boot-autoconfigure</artifactId>
 
-    <name>Axon Framework - Spring Boot Support</name>
+    <name>Sophon - Spring Boot Support</name>
     <description>
-        Module providing support for auto-configuration of Axon Framework through Spring Boot.
+        Module providing support for auto-configuration of Sophon through Spring Boot.
     </description>
 
     <properties>
@@ -35,30 +35,30 @@
     </properties>
 
     <dependencies>
-        <!-- Axon dependencies -->
+        <!-- Sophon dependencies -->
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-spring</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-spring</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-metrics</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-tracing-opentelemetry</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-metrics</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-micrometer</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-tracing-opentelemetry</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-micrometer</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
@@ -125,8 +125,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-test</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-test</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>

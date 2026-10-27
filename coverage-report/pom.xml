@@ -18,98 +18,98 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.axonframework</groupId>
-        <artifactId>axon</artifactId>
+        <groupId>io.github.sophonhq.sophon</groupId>
+        <artifactId>sophon</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>axon-coverage-report</artifactId>
+    <artifactId>sophon-coverage-report</artifactId>
 
-    <name>Axon Framework - Coverage Report</name>
+    <name>Sophon - Coverage Report</name>
     <description>Project depending on all modules to construct a combined coverage report</description>
 
     <dependencies>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-configuration</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-configuration</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-disruptor</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-disruptor</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-eventsourcing</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-eventsourcing</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-integrationtests</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-integrationtests</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-hibernate-6-integrationtests</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-hibernate-6-integrationtests</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-messaging</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-metrics</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-metrics</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-micrometer</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-micrometer</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-modelling</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-modelling</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-spring</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-spring</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-spring-boot-autoconfigure</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-spring-boot-autoconfigure</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-tracing-opentelemetry</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-tracing-opentelemetry</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-test</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-test</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.axonframework</groupId>
-            <artifactId>axon-spring-boot-3-integrationtests</artifactId>
+            <groupId>io.github.sophonhq.sophon</groupId>
+            <artifactId>sophon-spring-boot-3-integrationtests</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

@@ -18,14 +18,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.axonframework</groupId>
+        <groupId>io.github.sophonhq.sophon</groupId>
         <artifactId>sophon</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>axon-tracing-opentelemetry</artifactId>
+    <artifactId>sophon-tracing-opentelemetry</artifactId>
 
-    <name>Axon Framework - OpenTelemetry Tracing</name>
+    <name>Sophon - OpenTelemetry Tracing</name>
     <description>
         This module contains components that provide tracing support specifically for OpenTelemetry.
     </description>
@@ -39,12 +39,12 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-messaging</artifactId>
+            <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-configuration</artifactId>
+            <artifactId>sophon-configuration</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

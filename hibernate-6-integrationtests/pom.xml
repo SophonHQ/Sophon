@@ -18,53 +18,53 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>sophon</artifactId>
-        <groupId>org.axonframework</groupId>
+        <groupId>io.github.sophonhq.sophon</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>axon-hibernate-6-integrationtests</artifactId>
+    <artifactId>sophon-hibernate-6-integrationtests</artifactId>
 
-    <name>Axon Framework - Hibernate 6 Integration Tests</name>
+    <name>Sophon - Hibernate 6 Integration Tests</name>
     <description>
         Module containing integration tests using Hibernate 6. Does not contain any production code.
     </description>
 
     <dependencies>
-        <!-- Axon -->
+        <!-- Sophon -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-messaging</artifactId>
+            <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-messaging</artifactId>
-            <version>${project.version}</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>axon-modelling</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>axon-modelling</artifactId>
+            <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-eventsourcing</artifactId>
+            <artifactId>sophon-modelling</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sophon-modelling</artifactId>
+            <version>${project.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sophon-eventsourcing</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>axon-eventsourcing</artifactId>
+            <artifactId>sophon-eventsourcing</artifactId>
             <version>${project.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
