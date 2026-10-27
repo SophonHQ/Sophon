@@ -51,7 +51,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * contains the last modifications. To override this behavior, see {@link #setUseExplicitFlush(boolean)}
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  * @deprecated in favor of using {@link org.axonframework.modelling.saga.repository.jpa.JpaSagaStore} which moved to
  * jakarta.
  */

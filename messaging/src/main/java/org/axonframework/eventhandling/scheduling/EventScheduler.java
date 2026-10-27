@@ -24,7 +24,7 @@ import java.time.Instant;
  * depends on the exact implementation used.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public interface EventScheduler {
 

@@ -25,7 +25,7 @@ import java.util.Map;
  * entries.
  *
  * @author Steven van Beelen
- * @since 4.5
+ * @since axon-4.5
  */
 public interface HandlerAttributes {
 

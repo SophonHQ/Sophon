@@ -22,7 +22,7 @@ package org.axonframework.queryhandling.registration;
  * query handling function.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public abstract class DuplicateQueryHandlerResolution {
     private DuplicateQueryHandlerResolution() {

@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * Counts the number of ingested, successful, failed and processed messages
  *
  * @author Marijn van Zelst
- * @since 3.0
+ * @since axon-3.0
  */
 public class MessageCountingMonitor implements MessageMonitor<Message<?>>, MetricSet {
 

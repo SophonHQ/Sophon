@@ -28,7 +28,7 @@ import static org.axonframework.common.ReflectionUtils.ensureAccessible;
  * @param <T> The type of object defining this property
  * @author Maxim Fedorov
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class MethodAccessedProperty<T> implements Property<T> {
 

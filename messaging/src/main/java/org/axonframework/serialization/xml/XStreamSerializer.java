@@ -49,7 +49,7 @@ import javax.annotation.Nonnull;
  *
  * @author Allard Buijze
  * @see com.thoughtworks.xstream.XStream
- * @since 1.2
+ * @since axon-1.2
  */
 public class XStreamSerializer extends AbstractXStreamSerializer {
 

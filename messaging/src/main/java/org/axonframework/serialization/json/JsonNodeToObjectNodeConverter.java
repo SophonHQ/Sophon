@@ -30,7 +30,7 @@ import org.axonframework.serialization.SerializationException;
  * Will succeed if the {@code JsonNode} has a node type of {@link JsonNodeType#OBJECT}.
  *
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class JsonNodeToObjectNodeConverter implements ContentTypeConverter<JsonNode, ObjectNode> {
 

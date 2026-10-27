@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * Adds the {@link Message#getPayloadType payload type} as an attribute to the {@link Span}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class PayloadTypeSpanAttributesProvider implements SpanAttributesProvider {
 

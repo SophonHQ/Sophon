@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  *
  * @param <R> The type of payload contained in this Message
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 public interface CommandResultMessage<R> extends ResultMessage<R> {
 

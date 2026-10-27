@@ -29,7 +29,7 @@ import static org.axonframework.common.io.IOUtils.closeQuietly;
  * 'META-INF/maven/&lt;groupId&gt;/&lt;artifactId&gt;/'.
  *
  * @author Sara Pellegrini
- * @since 4.2.1
+ * @since axon-4.2.1
  */
 public class MavenArtifactVersionResolver {
 

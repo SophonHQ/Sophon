@@ -29,7 +29,7 @@ import static java.time.temporal.ChronoField.*;
  * Some utility methods regarding Date and Time.
  *
  * @author Allard Buijze
- * @since 3.1
+ * @since axon-3.1
  */
 public abstract class DateTimeUtils {
 

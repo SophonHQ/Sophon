@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * {@link org.axonframework.tracing.SpanFactory#propagateContext(Message)} method for the message.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MetadataContextGetter implements TextMapGetter<Message<?>> {
 

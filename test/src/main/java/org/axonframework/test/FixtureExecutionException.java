@@ -22,7 +22,7 @@ import org.axonframework.common.AxonNonTransientException;
  * Exception indicating that an error occurred that prevented successful execution of a test fixture.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class FixtureExecutionException extends AxonNonTransientException {
 

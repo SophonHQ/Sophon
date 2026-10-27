@@ -27,7 +27,7 @@ import org.springframework.transaction.PlatformTransactionManager;
  * TransactionManager
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  * @deprecated Use Spring Boot autoconfiguration or register the individual beans explicitly.
  */
 @Deprecated

@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * when a duplicate registration is detected.
  *
  * @author Allard Buijze
- * @since 4.2
+ * @since axon-4.2
  */
 public class FailingDuplicateCommandHandlerResolver implements DuplicateCommandHandlerResolver {
 

@@ -24,7 +24,7 @@ import org.axonframework.messaging.SubscribableMessageSource;
  *
  * @param <M> {@link Message} type of the subscribable message source.
  * @author Marc Gathier
- * @since 4.10.0
+ * @since axon-4.10.0
  */
 public interface SubscribableMessageSourceDefinition<M extends Message<?>> {
 

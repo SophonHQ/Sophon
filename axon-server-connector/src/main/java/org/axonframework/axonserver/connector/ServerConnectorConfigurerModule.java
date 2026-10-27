@@ -56,7 +56,7 @@ import javax.annotation.Nonnull;
  * default to use when the AxonServer connector is available on the classpath.
  *
  * @author Allard Buijze
- * @since 4.0
+ * @since axon-4.0
  */
 public class ServerConnectorConfigurerModule implements ConfigurerModule {
 

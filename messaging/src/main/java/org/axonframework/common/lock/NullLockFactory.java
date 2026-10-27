@@ -22,7 +22,7 @@ package org.axonframework.common.lock;
  * the necessary locking.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public enum NullLockFactory implements LockFactory {
 

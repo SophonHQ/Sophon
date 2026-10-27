@@ -22,7 +22,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * Properties describing the settings for Metrics.
  *
  * @author Steven van Beelen
- * @since 3.2
+ * @since axon-3.2
  */
 @ConfigurationProperties("axon.metrics")
 public class MetricsProperties {

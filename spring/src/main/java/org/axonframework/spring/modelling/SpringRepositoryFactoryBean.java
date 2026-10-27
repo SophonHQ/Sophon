@@ -29,7 +29,7 @@ import org.springframework.beans.factory.FactoryBean;
  * @param <T> The aggregate type
  *
  * @author Mitchell Herrijgers
- * @since 4.6.1
+ * @since axon-4.6.1
  * @deprecated Instead of using a factory bean, consider retrieving the Repository directly from the Axon Configuration.
  * Alternatively, when building a BeanDefinition, use the {@link BeanHelper} factory methods to retrieve it.
  */

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * resulted in an exception.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface RetryScheduler {
 

@@ -22,7 +22,7 @@ import org.axonframework.commandhandling.CommandMessage;
  * Calculate the priority of {@link CommandMessage} based on its content. Higher value means higher priority.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 @FunctionalInterface
 public interface CommandPriorityCalculator {

@@ -38,7 +38,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @param <T> The saga type
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class CachingSagaStore<T> implements SagaStore<T> {
 

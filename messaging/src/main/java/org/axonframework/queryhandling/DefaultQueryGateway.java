@@ -44,7 +44,7 @@ import static org.axonframework.queryhandling.GenericQueryResponseMessage.asResp
  * @author Marc Gathier
  * @author Allard Buijze
  * @author Steven van Beelen
- * @since 3.1
+ * @since axon-3.1
  */
 public class DefaultQueryGateway implements QueryGateway {
 

@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  * @author Allard Buijze
  * @see org.axonframework.commandhandling.CommandMessage {@code CommandMessage}
  * @see EventMessage
- * @since 2.0
+ * @since axon-2.0
  */
 public interface Message<T> extends Serializable {
 

@@ -25,7 +25,7 @@ import java.util.List;
  * A matcher that will match if all the given {@code matchers} match against at least one item in a given List.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class ListWithAnyOfMatcher<T> extends ListMatcher<T> {
 

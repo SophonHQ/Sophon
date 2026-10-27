@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * schedules a Message which needs to happen on order with the other messages published throughout the system.
  *
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public abstract class AbstractDeadlineManager implements DeadlineManager {
 

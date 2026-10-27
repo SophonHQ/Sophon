@@ -54,7 +54,7 @@ import javax.annotation.Nonnull;
  *
  * @author Allard Buijze
  * @see DefaultConfigurer
- * @since 3.0
+ * @since axon-3.0
  */
 public interface Configurer extends LifecycleOperations {
 

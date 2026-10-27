@@ -25,6 +25,6 @@ import java.util.function.Consumer;
  * for customizing {@link Jackson3Serializer}.
  *
  * @author John Hendrikx
- * @since 4.13.0
+ * @since axon-4.13.0
  */
 public interface Jackson3SerializerCustomizer extends Consumer<JsonMapper.Builder> {}

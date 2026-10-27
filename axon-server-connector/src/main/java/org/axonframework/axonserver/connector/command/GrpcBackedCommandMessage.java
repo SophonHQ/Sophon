@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  *
  * @param <C> a generic specifying the payload type of the wrapped {@link CommandMessage}
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class GrpcBackedCommandMessage<C> implements CommandMessage<C> {
 

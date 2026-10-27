@@ -30,7 +30,7 @@ import java.beans.ConstructorProperties;
  * ScheduleToken implementation representing a scheduled Quartz Job.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class QuartzScheduleToken implements ScheduleToken {
 

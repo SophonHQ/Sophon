@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * Miscellaneous object utility methods.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class ObjectUtils {
 

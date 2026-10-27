@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
  * Handlers can be notified about the state of the processing of the Message by registering with this Unit of Work.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public interface UnitOfWork<T extends Message<?>> {
 

@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * A {@link CommandMessageFilter} that denies all {@link CommandMessage}s.
  *
  * @author Koen Lavooij
- * @since 3.0
+ * @since axon-3.0
  */
 public enum DenyAll implements CommandMessageFilter {
 

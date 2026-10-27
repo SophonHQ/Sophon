@@ -95,7 +95,7 @@ import static org.axonframework.common.jdbc.JdbcUtils.*;
  * tables can be constructed through the {@link JdbcEventStorageEngine#createSchema(EventTableFactory)} operation.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class JdbcEventStorageEngine extends BatchingEventStorageEngine {
 

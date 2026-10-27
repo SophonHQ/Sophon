@@ -25,7 +25,7 @@ import java.time.Duration;
  * Properties describing the settings for tracing.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @ConfigurationProperties("axon.tracing")
 public class TracingProperties {
@@ -494,7 +494,7 @@ public class TracingProperties {
      * Configuration properties for the behavior of creating tracing spans for the
      * {@link org.axonframework.commandhandling.CommandBus}.
      *
-     * @since 4.9.0
+     * @since axon-4.9.0
      */
     public static class CommandBusProperties {
 
@@ -526,7 +526,7 @@ public class TracingProperties {
      * Configuration properties for the behavior of creating tracing spans for the
      * {@link org.axonframework.queryhandling.QueryBus}.
      *
-     * @since 4.9.0
+     * @since axon-4.9.0
      */
     public static class QueryBusProperties {
 
@@ -558,7 +558,7 @@ public class TracingProperties {
      * Configuration properties for the behavior of creating tracing spans for the
      * {@link org.axonframework.deadline.DeadlineManager}.
      *
-     * @since 4.9.0
+     * @since axon-4.9.0
      */
     public static class DeadlineManagerProperties {
 
@@ -612,7 +612,7 @@ public class TracingProperties {
      * Configuration properties for the behavior of creating tracing spans for the
      * {@link org.axonframework.modelling.command.Repository}.
      *
-     * @since 4.9.0
+     * @since axon-4.9.0
      */
     public static class RepositoryProperties {
 
@@ -644,7 +644,7 @@ public class TracingProperties {
      * Configuration properties for the behavior of creating tracing spans for the
      * {@link org.axonframework.modelling.saga.AbstractSagaManager}.
      *
-     * @since 4.9.0
+     * @since axon-4.9.0
      */
     public static class SagaManagerProperties {
 
@@ -676,7 +676,7 @@ public class TracingProperties {
      * Configuration properties for the behavior of creating tracing spans for the
      * {@link org.axonframework.eventhandling.EventProcessor} implementations.
      *
-     * @since 4.9.0
+     * @since axon-4.9.0
      */
     public static class EventProcessorProperties {
 

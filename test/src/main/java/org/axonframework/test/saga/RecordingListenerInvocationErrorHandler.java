@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * handling will be handed off to the wrapped ListenerInvocationErrorHandler.
  *
  * @author Christian Vermorken
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class RecordingListenerInvocationErrorHandler implements ListenerInvocationErrorHandler {
 

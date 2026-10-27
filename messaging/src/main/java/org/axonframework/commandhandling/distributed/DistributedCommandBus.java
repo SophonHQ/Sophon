@@ -64,7 +64,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * segments of the CommandBus. Depending on the implementation used, each segment may run in a different JVM.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class DistributedCommandBus implements CommandBus, Distributed<CommandBus>, Lifecycle {
 

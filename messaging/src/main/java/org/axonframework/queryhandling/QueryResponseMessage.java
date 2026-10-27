@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> The type of object resulting from the query
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 public interface QueryResponseMessage<T> extends ResultMessage<T> {
 

@@ -43,7 +43,7 @@ import static java.util.stream.StreamSupport.stream;
  * Utility class for dealing with event streams.
  *
  * @author Steven van Beelen
- * @since 4.0
+ * @since axon-4.0
  */
 public abstract class EventStreamUtils {
 

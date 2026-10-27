@@ -51,7 +51,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * @param <T> The type of aggregate this repository stores
  * @author Allard Buijze
  * @see org.axonframework.eventsourcing.eventstore.EventStore
- * @since 0.1
+ * @since axon-0.1
  */
 public class EventSourcingRepository<T> extends LockingRepository<T, EventSourcedAggregate<T>> {
 

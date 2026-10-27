@@ -27,7 +27,7 @@ import java.util.function.Function;
  * Mapping that translates a {@link MetaData} into a map of GRPC {@link MetaDataValue}.
  *
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  */
 public class GrpcMetadataSerializer implements Function<MetaData, Map<String, MetaDataValue>> {
 

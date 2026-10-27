@@ -27,7 +27,7 @@ import jakarta.persistence.EntityManager;
  * the case when using application-managed EntityManagers.
  *
  * @author Allard Buijze
- * @since 1.3
+ * @since axon-1.3
  */
 public interface EntityManagerProvider {
 

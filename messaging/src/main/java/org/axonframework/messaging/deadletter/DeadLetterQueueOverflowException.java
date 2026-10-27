@@ -22,7 +22,7 @@ import org.axonframework.common.AxonException;
  * Exception signaling a {@link SequencedDeadLetterQueue} is overflowing.
  *
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class DeadLetterQueueOverflowException extends AxonException {
 

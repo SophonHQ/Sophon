@@ -26,7 +26,7 @@ import org.axonframework.common.AxonException;
  * handled.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class CommandDispatchException extends AxonException {
 

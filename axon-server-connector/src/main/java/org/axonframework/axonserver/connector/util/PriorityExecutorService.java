@@ -46,7 +46,7 @@ import javax.annotation.Nonnull;
  *
  * @author Mitchell Herrijgers
  * @author Milan Savic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class PriorityExecutorService implements ExecutorService {
 

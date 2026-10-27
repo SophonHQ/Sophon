@@ -40,7 +40,7 @@ import java.util.TreeSet;
  * would use the {@link com.thoughtworks.xstream.converters.reflection.ReflectionConverter} for this.
  *
  * @author Steven van Beelen
- * @since 4.7.0
+ * @since axon-4.7.0
  */
 public final class GapAwareTrackingTokenConverter extends CollectionConverter {
 

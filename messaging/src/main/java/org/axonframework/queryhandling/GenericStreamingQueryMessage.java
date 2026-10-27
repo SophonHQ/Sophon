@@ -33,7 +33,7 @@ import java.util.Map;
  * @param <R> the type of the result streamed via {@link Flux}
  * @author Milan Savic
  * @author Stefan Dragisic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class GenericStreamingQueryMessage<Q, R> extends GenericQueryMessage<Q, Publisher<R>>
         implements StreamingQueryMessage<Q, R> {

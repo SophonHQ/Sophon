@@ -39,7 +39,7 @@ import java.util.function.Supplier;
  * @param <T> The query result type.
  * @param <R> The mapped result type.
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class PagingJpaQueryIterable<T, R> implements Iterable<R> {
 

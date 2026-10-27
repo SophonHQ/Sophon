@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  *
  * @param <T> The type of Aggregate under test
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public interface TestExecutor<T> {
 

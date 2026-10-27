@@ -22,7 +22,7 @@ import java.util.function.Function;
  * Schema of an event entry to be stored using Jdbc.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class EventSchema {
 

@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  *
  * @param <U> a generic specifying the type of the updates contained in the {@link SubscriptionQueryUpdateMessage}
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  */
 class GrpcBackedQueryUpdateMessage<U> implements SubscriptionQueryUpdateMessage<U> {
 

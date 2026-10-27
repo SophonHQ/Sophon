@@ -37,7 +37,7 @@ import java.lang.reflect.Parameter;
  * The parameter resolver matches for any type of {@link Message}.
  *
  * @author Steven van Beelen
- * @since 4.7.0
+ * @since axon-4.7.0
  */
 public class DeadLetterParameterResolverFactory implements ParameterResolverFactory {
 

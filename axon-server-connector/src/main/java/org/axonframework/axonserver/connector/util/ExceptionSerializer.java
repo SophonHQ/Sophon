@@ -24,7 +24,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * Utility class used to serializer {@link Throwable}s into {@link ErrorMessage}s.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public abstract class ExceptionSerializer {
 

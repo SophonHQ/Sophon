@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * #routingKey()} property matches the value of the annotated field.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

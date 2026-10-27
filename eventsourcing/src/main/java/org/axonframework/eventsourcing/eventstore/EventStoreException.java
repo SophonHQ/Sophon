@@ -22,7 +22,7 @@ import org.axonframework.common.AxonNonTransientException;
  * Indicates that the given events stream could not be stored or read due to an underlying exception.
  *
  * @author Allard Buijze
- * @since 0.1
+ * @since axon-0.1
  */
 public class EventStoreException extends AxonNonTransientException {
 

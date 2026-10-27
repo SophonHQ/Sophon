@@ -63,7 +63,7 @@ import static org.quartz.JobKey.jobKey;
  * @author Allard Buijze
  * @see EventJobDataBinder
  * @see FireEventJob
- * @since 0.7
+ * @since axon-0.7
  */
 public class QuartzEventScheduler implements EventScheduler, Lifecycle {
 

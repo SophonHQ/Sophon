@@ -126,7 +126,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * Delegates incoming queries to the provided {@code localSegment}.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class AxonServerQueryBus implements QueryBus, Distributed<QueryBus>, Lifecycle {
 

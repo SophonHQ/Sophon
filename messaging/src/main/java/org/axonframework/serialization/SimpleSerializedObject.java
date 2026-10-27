@@ -27,7 +27,7 @@ import static java.lang.String.format;
  *
  * @param <T> The data type representing the serialized object
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class SimpleSerializedObject<T> implements SerializedObject<T> {
 

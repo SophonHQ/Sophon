@@ -145,7 +145,7 @@ import static org.axonframework.util.HandlerTypeResolver.*;
  * Note that this Configurer implementation is not thread-safe.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class DefaultConfigurer implements Configurer {
 

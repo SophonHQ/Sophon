@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  * information regarding the message being handled as well.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class LoggingSpanFactory implements SpanFactory {
 

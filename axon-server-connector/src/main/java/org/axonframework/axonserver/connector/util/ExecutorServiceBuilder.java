@@ -33,7 +33,7 @@ import java.util.function.BiFunction;
  * prioritization when building the executor.
  *
  * @author Steven van Beelen
- * @since 4.2
+ * @since axon-4.2
  */
 @FunctionalInterface
 public interface ExecutorServiceBuilder extends

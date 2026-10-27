@@ -24,7 +24,7 @@ import static java.lang.String.format;
  * TaskInstanceId implementation representing a scheduled Deadline task.
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 @SuppressWarnings("Duplicates")
 public class DbSchedulerDeadlineToken implements TaskInstanceId {

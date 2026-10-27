@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Bean;
  * Autoconfiguration class for Spring Boot Actuator monitoring tools around Axon Server.
  *
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @AutoConfiguration
 @AutoConfigureAfter(AxonServerAutoConfiguration.class)

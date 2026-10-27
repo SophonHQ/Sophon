@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  *
  * @param <V> the type of values passed through the stream
  * @author Milan Savic
- * @since 4.1.2
+ * @since axon-4.1.2
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

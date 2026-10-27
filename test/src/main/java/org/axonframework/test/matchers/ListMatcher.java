@@ -29,7 +29,7 @@ import java.util.List;
  * Abstract implementation for matchers that use event-specific matchers to match against a list of items.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public abstract class ListMatcher<T> extends BaseMatcher<List<T>>  {
 

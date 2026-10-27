@@ -48,7 +48,7 @@ import javax.annotation.Nonnull;
  * {@link org.axonframework.config.Configuration}.
  *
  * @author Allard Buijze
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MessageHandlerLookup implements BeanDefinitionRegistryPostProcessor {
 

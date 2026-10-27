@@ -40,7 +40,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * EventMessageHandler}.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class SimpleEventHandlerInvoker implements EventHandlerInvoker {
 

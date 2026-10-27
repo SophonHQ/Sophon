@@ -24,7 +24,7 @@ import java.util.OptionalLong;
  * provide additional functionality to the delegate.
  *
  * @author Steven van Beelen
- * @since 4.4
+ * @since axon-4.4
  */
 public abstract class WrappedTrackerStatus implements EventTrackerStatus {
 

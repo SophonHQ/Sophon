@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * {@link #packages()} with the {@link DefaultEntityRegistrar}.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

@@ -23,7 +23,7 @@ import java.util.Set;
  * This container tracks changes made to its contents between commits (see {@link #commit()}).
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public interface AssociationValues extends Iterable<AssociationValue> {
 

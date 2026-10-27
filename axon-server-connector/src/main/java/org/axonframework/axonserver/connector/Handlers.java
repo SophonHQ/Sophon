@@ -27,7 +27,7 @@ import java.util.function.BiPredicate;
  * @param <Handler> the type of the handler
  * @author Sara Pellegrini
  * @author Milan Savic
- * @since 4.2.1
+ * @since axon-4.2.1
  */
 public interface Handlers<Case, Handler> {
 

@@ -38,7 +38,7 @@ import java.util.function.Predicate;
  * should be based on the {@link DomainEventData#getPayload()}, which contains the entire aggregate state.
  *
  * @author Steven van Beelen
- * @since 4.4
+ * @since axon-4.4
  */
 @FunctionalInterface
 public interface SnapshotFilter extends Predicate<DomainEventData<?>> {

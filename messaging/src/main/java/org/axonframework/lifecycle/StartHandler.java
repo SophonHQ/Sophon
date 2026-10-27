@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * This annotation is only allowed on methods and as a meta-annotation.
  *
  * @author Steven van Beelen
- * @since 4.3
+ * @since axon-4.3
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -52,4 +52,3 @@ public @interface StartHandler {
      */
     int phase();
 }
-

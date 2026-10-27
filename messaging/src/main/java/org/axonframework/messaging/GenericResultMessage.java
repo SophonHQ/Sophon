@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * Generic implementation of {@link ResultMessage}.
  *
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 public class GenericResultMessage<R> extends MessageDecorator<R> implements ResultMessage<R> {
 

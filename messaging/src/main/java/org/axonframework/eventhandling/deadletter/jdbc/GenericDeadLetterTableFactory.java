@@ -24,7 +24,7 @@ import java.sql.Statement;
  * A {@link DeadLetterTableFactory} implementation compatible with most databases.
  *
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
 public class GenericDeadLetterTableFactory implements DeadLetterTableFactory {

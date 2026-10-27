@@ -30,7 +30,7 @@ import static org.axonframework.common.annotation.AnnotationUtils.isAnnotationPr
  * Uses reflection to know if a handler handles a certain type of messages.
  *
  * @author Gerard Klijs
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class HandlerTypeResolver {
 

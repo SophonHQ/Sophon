@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  * intermediate representations.
  *
  * @author Steven van Beelen
- * @since 3.0.6
+ * @since axon-3.0.6
  */
 public abstract class SingleEntryMultiUpcaster<T> implements Upcaster<T> {
 

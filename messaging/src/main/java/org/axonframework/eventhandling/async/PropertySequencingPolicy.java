@@ -34,7 +34,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * @param <T> The type of the supported event payloads.
  * @param <K> The type of the extracted property.
  * @author Nils Christian Ehmke
- * @since 4.5.2
+ * @since axon-4.5.2
  */
 @SuppressWarnings("rawtypes")
 public class PropertySequencingPolicy<T, K> implements SequencingPolicy<EventMessage> {

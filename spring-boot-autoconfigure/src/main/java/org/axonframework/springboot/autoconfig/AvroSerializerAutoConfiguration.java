@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  *
  * @author Simon Zambrovski
  * @author Jan Galinski
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 @AutoConfiguration
 @AutoConfigureBefore(AxonAutoConfiguration.class)

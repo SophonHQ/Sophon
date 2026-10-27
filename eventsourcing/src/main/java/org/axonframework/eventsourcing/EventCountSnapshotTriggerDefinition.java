@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
  * successfully.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class EventCountSnapshotTriggerDefinition implements SnapshotTriggerDefinition {
 

@@ -29,7 +29,7 @@ import org.axonframework.messaging.Message;
  *            on through this policy.
  * @author Steven van Beelen
  * @see Decisions
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @FunctionalInterface
 public interface EnqueuePolicy<M extends Message<?>> {

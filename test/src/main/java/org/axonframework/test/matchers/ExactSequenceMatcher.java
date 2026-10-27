@@ -32,7 +32,7 @@ import java.util.List;
  * than Events, the remainder of matchers is evaluated against a {@code null} value.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class ExactSequenceMatcher<T> extends ListMatcher<T> {
 

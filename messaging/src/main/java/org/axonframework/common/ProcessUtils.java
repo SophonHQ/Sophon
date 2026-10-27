@@ -25,7 +25,7 @@ import java.util.function.Predicate;
  * Processing utilities.
  *
  * @author Marc Gathier
- * @since 4.2
+ * @since axon-4.2
  */
 public abstract class ProcessUtils {
 

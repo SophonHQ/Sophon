@@ -27,7 +27,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * This factory is used to construct message sources for persistent streams with specific configurations.
  *
  * @author Marc Gathier
- * @since 4.10.0
+ * @since axon-4.10.0
  */
 @FunctionalInterface
 public interface PersistentStreamMessageSourceFactory {

@@ -40,7 +40,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @author Allard Buijze
  * @see CommandHandler
- * @since 0.5
+ * @since axon-0.5
  */
 public class AnnotationCommandHandlerAdapter<T> implements CommandMessageHandler {
 

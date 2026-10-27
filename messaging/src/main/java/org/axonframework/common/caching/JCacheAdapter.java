@@ -35,7 +35,7 @@ import javax.cache.event.CacheEntryUpdatedListener;
  * Cache adapter implementation that allows providers implementing the JCache abstraction to be used.
  *
  * @author Allard Buijze
- * @since 2.1.2
+ * @since axon-2.1.2
  */
 public class JCacheAdapter extends AbstractCacheAdapter<CacheEntryListenerConfiguration<Object, Object>> {
 

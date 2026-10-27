@@ -26,7 +26,7 @@ import static java.lang.String.format;
  * Default implementation of the {@link EventBusSpanFactory}.
  *
  * @author Mitchell Herrijgers
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class DefaultEventBusSpanFactory implements EventBusSpanFactory {
 

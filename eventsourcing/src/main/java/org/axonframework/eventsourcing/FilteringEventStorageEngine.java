@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
  * events as they are appended. This prevents certain events to be stored in the Event Store.
  *
  * @author Allard Buijze
- * @since 3.1
+ * @since axon-3.1
  */
 public class FilteringEventStorageEngine implements EventStorageEngine {
 

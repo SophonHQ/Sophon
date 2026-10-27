@@ -40,7 +40,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * {@link UsagePropertyProvider} to determine the URL to send the data to.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class UpdateCheckerHttpClient {
 

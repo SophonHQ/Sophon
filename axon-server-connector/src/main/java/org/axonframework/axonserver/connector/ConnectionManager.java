@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Steven van Beelen
  * @author Milan Savic
  * @author Sara Pelligrini
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface ConnectionManager {
 

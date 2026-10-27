@@ -25,7 +25,7 @@ import java.util.Map;
  * of the processing of that message.
  *
  * @author Allard Buijze
- * @since 2.3
+ * @since axon-2.3
  */
 @FunctionalInterface
 public interface CorrelationDataProvider {

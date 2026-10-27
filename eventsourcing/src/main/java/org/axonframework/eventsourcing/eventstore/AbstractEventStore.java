@@ -40,7 +40,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * Abstract implementation of an {@link EventStore} that uses a {@link EventStorageEngine} to store and load events.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class AbstractEventStore extends AbstractEventBus implements EventStore {
 

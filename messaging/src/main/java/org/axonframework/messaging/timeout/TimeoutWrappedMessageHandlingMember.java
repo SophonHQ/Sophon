@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> The type of the target object
  * @author Mitchell Herrijgers
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 class TimeoutWrappedMessageHandlingMember<T> extends WrappedMessageHandlingMember<T> {
 

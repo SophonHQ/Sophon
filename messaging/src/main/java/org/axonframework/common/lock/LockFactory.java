@@ -20,7 +20,7 @@ package org.axonframework.common.lock;
  * Interface to the lock factory. A lock factory produces locks on resources that are shared between threads.
  *
  * @author Allard Buijze
- * @since 0.3
+ * @since axon-0.3
  */
 @FunctionalInterface
 public interface LockFactory {

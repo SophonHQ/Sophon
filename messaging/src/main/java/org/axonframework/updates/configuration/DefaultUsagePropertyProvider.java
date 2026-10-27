@@ -24,7 +24,7 @@ package org.axonframework.updates.configuration;
  * instance using {@link #INSTANCE}.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class DefaultUsagePropertyProvider implements UsagePropertyProvider {
 

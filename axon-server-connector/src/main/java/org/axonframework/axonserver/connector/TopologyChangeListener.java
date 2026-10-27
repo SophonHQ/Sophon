@@ -71,7 +71,7 @@ import java.util.function.Consumer;
  * Note that Axon Server 2025.1.2 or up is required to use this feature!
  *
  * @author Steven van Beelen
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 @FunctionalInterface
 public interface TopologyChangeListener extends Consumer<io.axoniq.axonserver.grpc.control.TopologyChange> {

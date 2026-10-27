@@ -25,7 +25,7 @@ import java.sql.SQLException;
  * This implementation uses the appropriate PostgreSQL data types (serial, bytea).
  *
  * @author Jochen Munz
- * @since 2.4
+ * @since axon-2.4
  */
 @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
 public class PostgresSagaSqlSchema extends GenericSagaSqlSchema {

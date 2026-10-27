@@ -27,7 +27,7 @@ import java.util.function.UnaryOperator;
  * api is final.
  *
  * @author Allard Buijze
- * @since 2.1.2
+ * @since axon-2.1.2
  */
 public interface Cache {
 

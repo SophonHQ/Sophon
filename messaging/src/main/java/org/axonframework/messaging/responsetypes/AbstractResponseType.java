@@ -40,7 +40,7 @@ import java.util.stream.Stream;
  *
  * @param <R> The response type which will be matched against and converted to
  * @author Steven van Beelen
- * @since 3.2
+ * @since axon-3.2
  */
 public abstract class AbstractResponseType<R> implements ResponseType<R> {
 

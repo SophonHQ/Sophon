@@ -28,7 +28,7 @@ import org.springframework.boot.docker.compose.service.connection.DockerComposeC
  * container.
  *
  * @author Allard Buijze
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class AxonServerDockerComposeConnectionDetailsFactory extends DockerComposeConnectionDetailsFactory<AxonServerConnectionDetails> {
 

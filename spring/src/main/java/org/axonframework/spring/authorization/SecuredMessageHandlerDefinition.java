@@ -34,7 +34,7 @@ import java.util.Set;
  * {@link org.springframework.security.access.annotation.Secured} annotations on the message handler.
  *
  * @author Roald Bankras
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class SecuredMessageHandlerDefinition implements HandlerEnhancerDefinition {
 

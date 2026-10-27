@@ -26,7 +26,7 @@ import java.lang.reflect.Type;
  * Exception indicating a duplicate Query Handler was subscribed whilst this behavior is purposefully guarded against.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class DuplicateQueryHandlerSubscriptionException extends AxonNonTransientException {
     private static final long serialVersionUID = -3275563671982758910L;

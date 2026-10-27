@@ -26,7 +26,7 @@ import java.util.Optional;
  * Utility class contain helper methods to extract information from {@link ProcessingInstruction}s.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public abstract class ProcessingInstructionHelper {
 

@@ -36,7 +36,7 @@ import java.util.List;
  * </pre>
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  * @deprecated Replaced by the {@link MessageHandlerLookup} and {@link MessageHandlerConfigurer}.
  */
 @Deprecated

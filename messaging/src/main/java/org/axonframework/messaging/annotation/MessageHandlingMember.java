@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  *
  * @param <T> The type of entity to which the message handler will delegate the actual handling of the message
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public interface MessageHandlingMember<T> {
 

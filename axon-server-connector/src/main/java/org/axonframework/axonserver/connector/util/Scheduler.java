@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * Schedules tasks to be executed in future.
  *
  * @author Sara Pellegrini
- * @since 4.2.1
+ * @since axon-4.2.1
  */
 public interface Scheduler {
 

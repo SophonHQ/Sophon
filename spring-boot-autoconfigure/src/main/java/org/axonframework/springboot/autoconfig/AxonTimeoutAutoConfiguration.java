@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Bean;
 /**
  * Configures the timeout settings for message handlers.
  *
- * @since 4.11.0
+ * @since axon-4.11.0
  * @author Mitchell Herrijgers
  */
 @AutoConfiguration

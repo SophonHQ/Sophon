@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * for the results of a command.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 @Target({ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

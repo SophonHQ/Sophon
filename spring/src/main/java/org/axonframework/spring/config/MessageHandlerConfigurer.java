@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  * register.
  *
  * @author Allard Buijze
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MessageHandlerConfigurer implements ConfigurerModule, ApplicationContextAware {
 

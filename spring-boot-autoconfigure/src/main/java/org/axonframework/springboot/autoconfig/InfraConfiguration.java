@@ -55,7 +55,7 @@ import java.util.List;
  * {@link MessageHandlerLookup} to find Axon components and register them with the {@link SpringConfigurer}.
  *
  * @author Allard Buijze
- * @since 3.0.4
+ * @since axon-3.0.4
  */
 @AutoConfiguration
 @ConditionalOnClass(SpringConfigurer.class)

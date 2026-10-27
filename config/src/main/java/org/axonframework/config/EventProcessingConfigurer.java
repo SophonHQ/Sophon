@@ -53,7 +53,7 @@ import javax.annotation.Nonnull;
  * Defines a contract for configuring event processing.
  *
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 public interface EventProcessingConfigurer {
 

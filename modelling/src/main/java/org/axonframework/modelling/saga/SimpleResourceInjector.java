@@ -29,7 +29,7 @@ import java.util.stream.StreamSupport;
  * present.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class SimpleResourceInjector extends AbstractResourceInjector {
 

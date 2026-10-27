@@ -20,7 +20,7 @@ package org.axonframework.tracing;
  * Factory that creates spans for the spans representing handlers.
  *
  * @author Mitchell Herrijgers
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public interface HandlerSpanFactory {
 

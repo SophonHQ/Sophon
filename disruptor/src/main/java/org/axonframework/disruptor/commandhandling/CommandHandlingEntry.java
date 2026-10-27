@@ -31,7 +31,7 @@ import java.util.concurrent.Callable;
  * by the command handling process.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class CommandHandlingEntry extends DisruptorUnitOfWork<CommandMessage<?>> {
 

@@ -23,7 +23,7 @@ import java.util.Optional;
  * Tokens that wrap another must provide a means to retrieve the original token.
  *
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 public interface WrappedToken extends TrackingToken {
 

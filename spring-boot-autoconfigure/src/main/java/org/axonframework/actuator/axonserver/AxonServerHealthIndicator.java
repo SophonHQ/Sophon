@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * context under {@code "{context-name}.connection.active"}.
  *
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class AxonServerHealthIndicator extends AbstractHealthIndicator {
 

@@ -41,7 +41,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * @author Mitchell Herrijgers
  * @see Coordinator
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 class ClaimTask extends CoordinatorTask {
 

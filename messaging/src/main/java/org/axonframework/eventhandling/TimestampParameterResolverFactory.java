@@ -29,7 +29,7 @@ import java.time.Instant;
  * with the {@link Timestamp} annotation and assigns the timestamp of the EventMessage.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 @Priority(Priority.HIGH)
 public final class TimestampParameterResolverFactory

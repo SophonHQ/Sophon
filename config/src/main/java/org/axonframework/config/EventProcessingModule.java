@@ -87,7 +87,7 @@ import static org.axonframework.config.EventProcessingConfigurer.PooledStreaming
  * {@link EventProcessingConfiguration} and takes care of module lifecycle.
  *
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 public class EventProcessingModule
         implements ModuleConfiguration, EventProcessingConfiguration, EventProcessingConfigurer {

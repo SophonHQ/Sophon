@@ -26,7 +26,7 @@ import org.axonframework.messaging.Message;
  * annotation and assigns the aggregate identifier of the DomainEventMessage.
  *
  * @author Thomas van Putten (delta11)
- * @since 4.1
+ * @since axon-4.1
  */
 @Priority(Priority.HIGH)
 public final class SourceIdParameterResolverFactory extends AbstractAnnotatedParameterResolverFactory<SourceId, String> {

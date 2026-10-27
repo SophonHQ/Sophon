@@ -28,7 +28,7 @@ import java.util.concurrent.Callable;
  * Describes functionality off processes which can be 'in scope', like an Aggregate or Saga.
  *
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public abstract class Scope {
 

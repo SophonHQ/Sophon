@@ -23,7 +23,7 @@ import java.util.Iterator;
 /**
  * DomainEventStream implementation that gets its messages from an Iterator.
  *
- * @since 3.0.3
+ * @since axon-3.0.3
  */
 public class IteratorBackedDomainEventStream implements DomainEventStream {
     private final Iterator<? extends DomainEventMessage<?>> iterator;

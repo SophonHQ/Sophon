@@ -45,7 +45,7 @@ import javax.annotation.Nonnull;
  * @param <T> The type of Aggregate to configure
  *
  * @author Allard Buijze
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class SpringAggregateConfigurer<T> implements ConfigurerModule, ApplicationContextAware {
 

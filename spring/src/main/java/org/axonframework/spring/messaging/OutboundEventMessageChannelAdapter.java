@@ -33,7 +33,7 @@ import java.util.function.Predicate;
  * Optionally, this adapter can be configured with a filter, which can block or accept messages based on their type.
  *
  * @author Allard Buijze
- * @since 2.3.1
+ * @since axon-2.3.1
  */
 public class OutboundEventMessageChannelAdapter implements InitializingBean {
 

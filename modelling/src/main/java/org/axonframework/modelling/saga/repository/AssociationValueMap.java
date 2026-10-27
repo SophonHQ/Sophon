@@ -33,7 +33,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * This implementation is thread safe and has an expected average time cost of {@code log(n)}.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class AssociationValueMap {
 

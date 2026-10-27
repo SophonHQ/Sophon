@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * lifecycle.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class UpdateCheckerConfigurerModule implements ConfigurerModule {
 

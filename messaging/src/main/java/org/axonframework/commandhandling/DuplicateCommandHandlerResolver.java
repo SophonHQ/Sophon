@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * ingests two {@link MessageHandler} instances and returns another one as the resolution.
  *
  * @author Steven van Beelen
- * @since 4.2
+ * @since axon-4.2
  */
 @FunctionalInterface
 public interface DuplicateCommandHandlerResolver {

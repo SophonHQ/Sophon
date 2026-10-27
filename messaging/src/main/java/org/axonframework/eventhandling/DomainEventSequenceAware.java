@@ -23,7 +23,7 @@ import java.util.Optional;
  * providing the last known sequence number for a given Aggregate identifier.
  *
  * @author Steven van Beelen
- * @since 4.0
+ * @since axon-4.0
  */
 public interface DomainEventSequenceAware {
 

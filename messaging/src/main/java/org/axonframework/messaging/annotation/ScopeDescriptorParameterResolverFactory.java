@@ -31,7 +31,7 @@ import static org.axonframework.messaging.NoScopeDescriptor.INSTANCE;
  * will be returned.
  *
  * @author Steven van Beelen
- * @since 4.5
+ * @since axon-4.5
  */
 public class ScopeDescriptorParameterResolverFactory implements ParameterResolverFactory {
 

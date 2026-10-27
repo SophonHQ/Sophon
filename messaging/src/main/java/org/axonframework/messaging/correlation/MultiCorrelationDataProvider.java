@@ -28,7 +28,7 @@ import java.util.Map;
  * provide the same keys, a delegate will override the entries provided by previously resolved delegates.
  *
  * @author Allard Buijze
- * @since 2.3
+ * @since axon-2.3
  */
 public class MultiCorrelationDataProvider<T extends Message> implements CorrelationDataProvider {
 

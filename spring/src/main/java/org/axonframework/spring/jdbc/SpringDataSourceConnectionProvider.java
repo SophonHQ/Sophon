@@ -30,7 +30,7 @@ import javax.sql.DataSource;
  * active transaction manager, instead of asking a Data Source directly.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public class SpringDataSourceConnectionProvider implements ConnectionProvider {
 

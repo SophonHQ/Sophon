@@ -31,7 +31,7 @@ import java.util.Map;
  * over the correlation data of the UnitOfWork to the created message.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class GenericMessage<T> extends AbstractMessage<T> {
 

@@ -26,7 +26,7 @@ import java.util.Map;
  * Spring Configuration properties for {@link TagsConfiguration}.
  *
  * @author Milan Savic
- * @since 4.2
+ * @since axon-4.2
  */
 @ConfigurationProperties(prefix = "axon")
 public class TagsConfigurationProperties {

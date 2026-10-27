@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  *
  * @param <M> the message type
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public interface SubscribableMessageSource<M extends Message<?>> {
 

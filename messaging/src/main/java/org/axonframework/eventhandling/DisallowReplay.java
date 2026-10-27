@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * handler method). Messages that would otherwise be handled by such handler are simply ignored.
  *
  * @author Tom Briers
- * @since 4.2
+ * @since axon-4.2
  */
 @Documented
 @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE, ElementType.METHOD})

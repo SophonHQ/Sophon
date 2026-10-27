@@ -43,7 +43,7 @@ import javax.annotation.Nonnull;
  * org.axonframework.eventhandling.scheduling.quartz.QuartzEventScheduler}.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class SimpleEventSchedulerFactoryBean implements FactoryBean<SimpleEventScheduler>, InitializingBean,
         DisposableBean, ApplicationContextAware {

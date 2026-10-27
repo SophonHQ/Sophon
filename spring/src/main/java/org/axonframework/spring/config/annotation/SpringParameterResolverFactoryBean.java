@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
  * @see SpringBeanParameterResolverFactory
  * @see SpringBeanDependencyResolverFactory
  * @see ClasspathParameterResolverFactory
- * @since 2.3.1
+ * @since axon-2.3.1
  */
 public class SpringParameterResolverFactoryBean implements FactoryBean<ParameterResolverFactory>,
         BeanClassLoaderAware, InitializingBean, ApplicationContextAware {

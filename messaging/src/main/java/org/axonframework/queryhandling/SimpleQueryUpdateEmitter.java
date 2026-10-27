@@ -56,7 +56,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @author Milan Savic
  * @author Stefan Dragisic
- * @since 4.0
+ * @since axon-4.0
  */
 public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
 

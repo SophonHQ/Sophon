@@ -66,7 +66,7 @@ import static org.axonframework.common.jdbc.JdbcUtils.*;
  * JdbcTokenStore#createSchema(TokenTableFactory)} operation.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class JdbcTokenStore implements TokenStore {
 

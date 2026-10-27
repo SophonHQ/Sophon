@@ -33,7 +33,7 @@ import java.lang.reflect.Parameter;
  * {@link ReplayStatus#REGULAR} parameter.
  *
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 public class ReplayParameterResolverFactory implements ParameterResolverFactory {
 

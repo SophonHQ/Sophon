@@ -43,7 +43,7 @@ import java.util.function.Function;
  *
  * @author Steven van Beelen
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 class DeadLetteredEventProcessingTask
         implements Function<DeadLetter<EventMessage<?>>, EnqueueDecision<EventMessage<?>>> {

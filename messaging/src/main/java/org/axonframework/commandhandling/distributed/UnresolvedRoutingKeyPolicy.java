@@ -28,7 +28,7 @@ import static java.lang.String.format;
  * {@code RoutingStrategy} is unable to resolve the routing key.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public enum UnresolvedRoutingKeyPolicy implements RoutingStrategy {
 

@@ -61,7 +61,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @param <T> The type of aggregate the repository provides access to
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class GenericJpaRepository<T> extends LockingRepository<T, AnnotatedAggregate<T>> {
 

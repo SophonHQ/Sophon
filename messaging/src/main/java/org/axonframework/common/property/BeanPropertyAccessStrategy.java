@@ -25,7 +25,7 @@ import static java.util.Locale.ENGLISH;
  *
  * @author Maxim Fedorov
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class BeanPropertyAccessStrategy extends AbstractMethodPropertyAccessStrategy {
 

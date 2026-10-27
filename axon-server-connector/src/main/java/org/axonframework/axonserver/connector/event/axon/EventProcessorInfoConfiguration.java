@@ -33,7 +33,7 @@ import java.util.function.Function;
  * EventProcessor}s with AxonServer.
  *
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  */
 public class EventProcessorInfoConfiguration implements ModuleConfiguration {
 

@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  * Implementation of {@link ConnectionSanityChecker} which verifies that heartbeats are properly received.
  *
  * @author Sara Pellegrini
- * @since 4.2.1
+ * @since axon-4.2.1
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

@@ -21,7 +21,7 @@ package org.axonframework.common.transaction;
  * special transaction management is required.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public enum NoTransactionManager implements TransactionManager {
 

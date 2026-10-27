@@ -43,7 +43,7 @@ import static java.util.Arrays.stream;
  * Converts an Axon Server Error to the relevant Axon framework exception.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public enum ErrorCode {
 

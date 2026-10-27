@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * a cluster.
  *
  * @author Allard Buijze
- * @since 4.0
+ * @since axon-4.0
  */
 @FunctionalInterface
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "className")

@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> The type of entity to which the message handler will delegate the actual handling of the message
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public class AnnotatedCommandHandlerInterceptor<T> implements MessageHandlerInterceptor<CommandMessage<?>> {
 

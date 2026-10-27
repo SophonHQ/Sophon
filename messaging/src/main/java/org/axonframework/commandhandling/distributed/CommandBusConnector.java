@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * Interface describing the component that remotely connects multiple CommandBus instances.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface CommandBusConnector extends MessageHandlerInterceptorSupport<CommandMessage<?>> {
 

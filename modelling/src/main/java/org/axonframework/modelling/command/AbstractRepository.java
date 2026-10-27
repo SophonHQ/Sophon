@@ -56,7 +56,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * @param <T> The type of aggregate this repository stores
  * @author Allard Buijze
  * @see LockingRepository
- * @since 0.1
+ * @since axon-0.1
  */
 public abstract class AbstractRepository<T, A extends Aggregate<T>> implements Repository<T> {
 

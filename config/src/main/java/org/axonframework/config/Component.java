@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  *
  * @param <B> The type of Component contained
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class Component<B> {
 

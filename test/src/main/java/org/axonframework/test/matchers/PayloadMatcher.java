@@ -26,7 +26,7 @@ import org.hamcrest.Matcher;
  *
  * @param <T> The type of Message the matcher can match against
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class PayloadMatcher<T extends Message> extends BaseMatcher<T> {
 

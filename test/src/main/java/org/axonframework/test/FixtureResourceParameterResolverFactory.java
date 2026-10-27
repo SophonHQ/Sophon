@@ -35,7 +35,7 @@ import static org.axonframework.common.Priority.LAST;
  * this instance.
  *
  * @author Allard Buijze
- * @since 2.1
+ * @since axon-2.1
  */
 @Priority(LAST)
 public final class FixtureResourceParameterResolverFactory implements ParameterResolverFactory {

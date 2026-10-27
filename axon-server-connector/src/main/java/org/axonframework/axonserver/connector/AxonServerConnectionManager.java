@@ -51,7 +51,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * so by creating {@link Channel}s per context and providing them as the means to dispatch/receive messages.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class AxonServerConnectionManager implements Lifecycle, ConnectionManager {
 

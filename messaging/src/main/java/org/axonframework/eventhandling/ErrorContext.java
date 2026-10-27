@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Describes the context of an error.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class ErrorContext {
 

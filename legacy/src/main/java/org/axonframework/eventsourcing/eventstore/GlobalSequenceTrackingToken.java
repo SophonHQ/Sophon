@@ -28,7 +28,7 @@ import java.io.Serializable;
  * versions of this descriptor when migrating from Axon 3.x to Axon 4.x.
  *
  * @author Steven van Beelen
- * @since 4.0.1
+ * @since axon-4.0.1
  * @deprecated in favor of the {@link org.axonframework.eventhandling.GlobalSequenceTrackingToken}
  */
 @Deprecated

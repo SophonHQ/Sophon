@@ -43,7 +43,7 @@ import javax.annotation.Nonnull;
  * that messages will have to wait to be processed.
  *
  * @author Marijn van Zelst
- * @since 3.0
+ * @since axon-3.0
  */
 public class CapacityMonitor implements MessageMonitor<Message<?>>, MetricSet {
 

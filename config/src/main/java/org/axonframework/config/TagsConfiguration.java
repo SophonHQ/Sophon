@@ -23,7 +23,7 @@ import java.util.Map;
  * Tags configuration labeling Axon Node represented by key-value pairs.
  *
  * @author Milan Savic
- * @since 4.2
+ * @since axon-4.2
  */
 public class TagsConfiguration {
 

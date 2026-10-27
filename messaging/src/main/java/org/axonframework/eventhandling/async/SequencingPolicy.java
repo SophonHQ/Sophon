@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> The type of object representing the processing instruction for the event.
  * @author Allard Buijze
- * @since 0.3
+ * @since axon-0.3
  */
 public interface SequencingPolicy<T> {
 

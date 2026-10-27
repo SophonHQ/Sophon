@@ -28,7 +28,7 @@ import static java.lang.String.format;
  * @author Steven van Beelen
  * @see StartHandler
  * @see ShutdownHandler
- * @since 4.3
+ * @since axon-4.3
  */
 public class LifecycleHandlerInvocationException extends AxonNonTransientException {
 

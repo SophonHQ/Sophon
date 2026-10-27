@@ -28,7 +28,7 @@ import java.io.Serializable;
  * the Unit of Work. Actual logic when to schedule a snapshot should be provided by a subclass.
  *
  * @author Yvonne Ceelie
- * @since 4.4.4
+ * @since axon-4.4.4
  */
 public abstract class AbstractSnapshotTrigger implements SnapshotTrigger, Serializable {
 

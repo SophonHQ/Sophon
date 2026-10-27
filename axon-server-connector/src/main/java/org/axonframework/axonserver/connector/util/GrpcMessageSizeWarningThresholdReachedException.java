@@ -25,7 +25,7 @@ package org.axonframework.axonserver.connector.util;
  *
  * @author Mitchell Herrijgers
  * @see GrpcMessageSizeInterceptor
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class GrpcMessageSizeWarningThresholdReachedException extends RuntimeException {
     /**

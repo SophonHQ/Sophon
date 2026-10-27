@@ -31,7 +31,7 @@ import java.nio.charset.Charset;
  * formatted XML.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class InputStreamToDom4jConverter implements ContentTypeConverter<InputStream,Document> {
 

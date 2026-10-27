@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
  *
  * @param <A> The aggregate type this factory constructs.
  * @author Stefan Andjelkovic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class NoArgumentConstructorCreationPolicyAggregateFactory<A> implements CreationPolicyAggregateFactory<A> {
 

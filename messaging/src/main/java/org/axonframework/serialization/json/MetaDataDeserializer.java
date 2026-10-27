@@ -30,7 +30,7 @@ import java.util.Map;
  * JsonDeserializer implementation for Jackson 2 that deserializes MetaData instances.
  *
  * @author Allard Buijze
- * @since 2.4.2
+ * @since axon-2.4.2
  */
 public class MetaDataDeserializer extends JsonDeserializer<MetaData> {
 

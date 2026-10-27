@@ -52,7 +52,7 @@ import static org.axonframework.eventhandling.EventUtils.asTrackedEventMessage;
  * Thread-safe event storage engine that stores events and snapshots in memory.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class InMemoryEventStorageEngine implements EventStorageEngine {
 

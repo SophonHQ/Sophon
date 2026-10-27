@@ -66,7 +66,7 @@ import static org.axonframework.common.BuilderUtils.assertPositive;
  * may have been committed by other nodes or applications. This periodic fetch delay is configurable.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  * @deprecated in favor of using {@link org.axonframework.eventsourcing.eventstore.EmbeddedEventStore} which moved to jakarta.
  */
 @Deprecated

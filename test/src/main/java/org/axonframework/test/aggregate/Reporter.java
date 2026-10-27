@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * actual results were.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class Reporter {
 

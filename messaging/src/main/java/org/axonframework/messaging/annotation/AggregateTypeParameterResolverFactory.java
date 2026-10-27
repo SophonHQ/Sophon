@@ -26,7 +26,7 @@ import org.axonframework.messaging.Message;
  * {@link org.axonframework.eventhandling.DomainEventMessage}.
  *
  * @author Frank Scheffler
- * @since 4.7.0
+ * @since axon-4.7.0
  */
 @Priority(Priority.HIGH)
 public final class AggregateTypeParameterResolverFactory

@@ -39,7 +39,7 @@ import java.util.function.Supplier;
  * @param <T> The query result type.
  * @param <R> The mapped result type.
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  * @deprecated in favor of using {@link org.axonframework.common.jpa.PagingJpaQueryIterable} which moved to jakarta.
  */
 @Deprecated

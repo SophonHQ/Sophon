@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * Message. The parameter type must be assignable from {@link java.time.Instant}.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})

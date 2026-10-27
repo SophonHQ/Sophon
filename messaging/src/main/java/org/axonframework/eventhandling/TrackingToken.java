@@ -81,7 +81,7 @@ public interface TrackingToken {
      * @return {@code true} if this token is at the same location as the other token, otherwise {@code false}.
      *         Returns {@code false} if {@code other} is {@code null}.
      * @see #covers(TrackingToken)
-     * @since 4.12.3
+     * @since axon-4.12.3
      */
     default boolean samePositionAs(TrackingToken other) {
         return other != null && covers(other) && other.covers(this);

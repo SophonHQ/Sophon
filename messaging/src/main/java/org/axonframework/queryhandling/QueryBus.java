@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
  *
  * @author Marc Gathier
  * @author Allard Buijze
- * @since 3.1
+ * @since axon-3.1
  */
 public interface QueryBus extends MessageHandlerInterceptorSupport<QueryMessage<?, ?>>,
         MessageDispatchInterceptorSupport<QueryMessage<?, ?>> {

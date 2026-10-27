@@ -34,7 +34,7 @@ import static java.lang.String.format;
  * attached to the processors consuming from a Persistent Stream.
  *
  * @author Marc Gathier
- * @since 4.10.0
+ * @since axon-4.10.0
  */
 public class PersistentStreamSequencingPolicyProvider
         implements Function<Configuration, SequencingPolicy<? super EventMessage<?>>> {

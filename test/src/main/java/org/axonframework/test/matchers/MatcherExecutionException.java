@@ -24,7 +24,7 @@ import org.axonframework.common.AxonNonTransientException;
  * match due to external factors.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class MatcherExecutionException extends AxonNonTransientException {
 

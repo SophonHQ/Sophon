@@ -26,7 +26,7 @@ import java.util.List;
  * when a duplicate registration is detected.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class FailingDuplicateQueryHandlerResolver implements DuplicateQueryHandlerResolver {
 

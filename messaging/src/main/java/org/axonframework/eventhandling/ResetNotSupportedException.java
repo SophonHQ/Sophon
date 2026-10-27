@@ -22,7 +22,7 @@ import org.axonframework.common.AxonNonTransientException;
  * Exception indicating that a reset is not supported by a component.
  *
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 public class ResetNotSupportedException extends AxonNonTransientException {
 

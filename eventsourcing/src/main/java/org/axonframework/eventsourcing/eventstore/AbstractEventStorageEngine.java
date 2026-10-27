@@ -48,7 +48,7 @@ import static org.axonframework.eventsourcing.EventStreamUtils.upcastAndDeserial
  * Abstract {@link EventStorageEngine} implementation that takes care of event serialization and upcasting.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class AbstractEventStorageEngine implements EventStorageEngine {
 

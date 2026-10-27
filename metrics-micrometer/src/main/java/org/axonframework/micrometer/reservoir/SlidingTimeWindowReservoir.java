@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Coda Hale
  * @author ceetav
  * @author Marijn van Zelst
- * @since 4.1
+ * @since axon-4.1
  */
 public class SlidingTimeWindowReservoir {
 

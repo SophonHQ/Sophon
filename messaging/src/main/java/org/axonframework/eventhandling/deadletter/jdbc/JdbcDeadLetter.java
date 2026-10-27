@@ -35,7 +35,7 @@ import java.util.Optional;
  * @param <E> The {@link EventMessage} contained in this {@link DeadLetter}.
  * @author Mitchell Herrijgers
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class JdbcDeadLetter<E extends EventMessage<?>> implements DeadLetter<E> {
 

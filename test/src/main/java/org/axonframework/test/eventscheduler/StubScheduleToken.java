@@ -28,7 +28,7 @@ import java.util.Objects;
  * ScheduleToken returned by the StubEventScheduler.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class StubScheduleToken implements ScheduleToken, Comparable<StubScheduleToken>, ScheduledItem {
 

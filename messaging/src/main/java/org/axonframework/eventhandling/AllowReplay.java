@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * method). Messages that would otherwise be handled by such handler are simply ignored.
  *
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 @Documented
 @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE, ElementType.METHOD})

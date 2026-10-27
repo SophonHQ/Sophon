@@ -21,7 +21,7 @@ package org.axonframework.axonserver.connector.command;
  * order to balance the load among client instances.
  *
  * @author Sara Pellegrini
- * @since 4.3
+ * @since axon-4.3
  */
 @FunctionalInterface
 public interface CommandLoadFactorProvider {

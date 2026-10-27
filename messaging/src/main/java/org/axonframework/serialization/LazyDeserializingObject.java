@@ -27,7 +27,7 @@ import java.util.function.Supplier;
  * @param <T> The type of object contained in the serialized object
  * @author Allard Buijze
  * @author Frank Versnel
- * @since 2.0
+ * @since axon-2.0
  */
 public class LazyDeserializingObject<T> {
 

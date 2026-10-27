@@ -37,7 +37,7 @@ import static java.util.Objects.requireNonNull;
  * can be determined. For example, if an aggregate identifier is present, it was a {@link DomainEventMessage}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @Embeddable
 @javax.persistence.Embeddable

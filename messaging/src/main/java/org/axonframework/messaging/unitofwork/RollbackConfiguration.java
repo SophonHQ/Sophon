@@ -24,7 +24,7 @@ package org.axonframework.messaging.unitofwork;
  * the Unit of Work is rolled back.
  *
  * @author Martin Tilma
- * @since 1.1
+ * @since axon-1.1
  */
 public interface RollbackConfiguration {
 

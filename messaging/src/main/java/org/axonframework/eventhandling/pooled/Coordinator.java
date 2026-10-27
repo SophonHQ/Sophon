@@ -73,7 +73,7 @@ import static org.axonframework.common.io.IOUtils.closeQuietly;
  * @author Steven van Beelen
  * @see PooledStreamingEventProcessor
  * @see WorkPackage
- * @since 4.5
+ * @since axon-4.5
  */
 class Coordinator {
 

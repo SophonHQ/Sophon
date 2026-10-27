@@ -30,7 +30,7 @@ import java.util.Set;
  *
  * @author Kristian Rosenvold
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public interface SagaSqlSchema {
 

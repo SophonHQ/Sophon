@@ -98,7 +98,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * @author Zoltan Altfatter
  * @author Marc Gathier
  * @author Allard Buijze
- * @since 4.0
+ * @since axon-4.0
  */
 public class AxonServerEventStore extends AbstractEventStore {
 

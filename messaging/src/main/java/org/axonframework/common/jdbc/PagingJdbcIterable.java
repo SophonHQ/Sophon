@@ -45,7 +45,7 @@ import static org.axonframework.common.jdbc.JdbcUtils.listResults;
  * @param <R> The mapped result type.
  * @author Mitchell Herrijgers
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class PagingJdbcIterable<R> implements Iterable<R> {
 

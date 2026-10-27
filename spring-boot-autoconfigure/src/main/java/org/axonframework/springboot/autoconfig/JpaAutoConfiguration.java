@@ -48,7 +48,7 @@ import javax.sql.DataSource;
  * Autoconfiguration class for Axon's JPA specific infrastructure components.
  *
  * @author Allard Buijze
- * @since 3.0.3
+ * @since axon-3.0.3
  */
 @AutoConfiguration
 @ConditionalOnBean(EntityManagerFactory.class)

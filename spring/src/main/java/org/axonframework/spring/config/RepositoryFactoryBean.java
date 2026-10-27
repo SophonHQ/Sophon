@@ -26,7 +26,7 @@
   *
   * @param <T> The type of Aggregate stored by the repository
   * @author Allard Buijze
-  * @since 3.3
+  * @since axon-3.3
   * @deprecated Replaced by the {@link SpringAggregateLookup} and {@link SpringAggregateConfigurer}.
   */
  @Deprecated

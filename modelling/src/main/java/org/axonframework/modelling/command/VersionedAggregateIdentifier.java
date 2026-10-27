@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * Structure that holds an Aggregate Identifier and an expected version of an aggregate.
  *
  * @author Allard Buijze
- * @since 1.2
+ * @since axon-1.2
  */
 public class VersionedAggregateIdentifier {
 

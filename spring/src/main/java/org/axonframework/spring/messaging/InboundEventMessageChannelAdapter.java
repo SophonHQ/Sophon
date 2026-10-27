@@ -38,7 +38,7 @@ import static java.util.Collections.singletonList;
  * Optionally, this adapter can be configured with a filter, which can block or accept messages based on their type.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class InboundEventMessageChannelAdapter implements MessageHandler, SubscribableMessageSource<EventMessage<?>> {
 

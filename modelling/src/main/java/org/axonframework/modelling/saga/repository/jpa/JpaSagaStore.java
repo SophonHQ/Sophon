@@ -48,7 +48,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * contains the last modifications. To override this behavior, see {@link #setUseExplicitFlush(boolean)}
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class JpaSagaStore implements SagaStore<Object> {
 

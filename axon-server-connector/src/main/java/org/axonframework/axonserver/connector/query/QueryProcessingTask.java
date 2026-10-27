@@ -59,7 +59,7 @@ import static org.axonframework.axonserver.connector.util.ProcessingInstructionH
  * @author Steven van Beelen
  * @author Milan Savic
  * @author Stefan Dragisic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 class QueryProcessingTask implements Runnable, FlowControl {
 

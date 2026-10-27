@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
  *
  * @author Allard Buijze
  * @author Knut-Olav Hoven
- * @since 2.0
+ * @since axon-2.0
  */
 public final class IOUtils {
 

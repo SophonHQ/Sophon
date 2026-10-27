@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * Thread factory that created threads in a given group.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class AxonThreadFactory implements ThreadFactory {
 

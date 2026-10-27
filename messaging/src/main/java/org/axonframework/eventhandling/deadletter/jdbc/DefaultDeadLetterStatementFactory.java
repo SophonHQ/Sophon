@@ -58,7 +58,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * @param <E> An implementation of {@link EventMessage} within the {@link DeadLetter} this factory constructs
  *            {@link PreparedStatement PreparedStatements} for.
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
 public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implements DeadLetterStatementFactory<E> {

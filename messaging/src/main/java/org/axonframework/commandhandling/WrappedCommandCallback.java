@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  *
  * @param <R> the type of result of the command handling
  * @param <C> the type of payload of the command
- * @since 4.6.0
+ * @since axon-4.6.0
  * @author Mitchell Herrijgers
  */
 public class WrappedCommandCallback<C, R> implements CommandCallback<C, R> {

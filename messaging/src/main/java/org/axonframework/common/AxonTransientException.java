@@ -21,7 +21,7 @@ package org.axonframework.common;
  * Typically, the cause of the exception is of temporary nature and may be resolved without intervention.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public abstract class AxonTransientException extends AxonException {
 

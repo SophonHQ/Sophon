@@ -39,7 +39,7 @@ import static java.lang.String.format;
  * logged using the {@code WARN} level.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class LoggingInterceptor<T extends Message<?>>
         implements MessageDispatchInterceptor<T>, MessageHandlerInterceptor<T> {

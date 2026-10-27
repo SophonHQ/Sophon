@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * </ul>
  *
  * @author Mateusz Nowak
- * @since 4.12.3
+ * @since axon-4.12.3
  */
 class ReplayTokenWrappingComplexTokenTest {
 

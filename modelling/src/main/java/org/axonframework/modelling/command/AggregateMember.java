@@ -42,7 +42,7 @@ import java.lang.annotation.Target;
  * those may not be placed on an non-root Entity's constructor.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 @Documented
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE})

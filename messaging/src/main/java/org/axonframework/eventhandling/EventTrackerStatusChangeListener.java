@@ -23,7 +23,7 @@ import java.util.Map;
  * TrackingEventProcessor} this component is registered to has changed.
  *
  * @author Steven van Beelen
- * @since 4.4
+ * @since axon-4.4
  */
 public interface EventTrackerStatusChangeListener {
 

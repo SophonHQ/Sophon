@@ -27,7 +27,7 @@ import java.util.function.Supplier;
  * Implementation that provides access to a {@link Map} of gRPC {@link MetaDataValue}s in the form of {@link MetaData}.
  *
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  */
 public class GrpcMetaData implements Supplier<MetaData> {
 

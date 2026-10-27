@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
  * more suitable for long-term triggers and triggers that must survive a system restart.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class QuartzEventSchedulerFactoryBean implements FactoryBean<QuartzEventScheduler>, InitializingBean,
         ApplicationContextAware {

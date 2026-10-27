@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
  * Functional interface towards a lifecycle handler used during start up or shutdown of an application.
  *
  * @author Steven van Beelen
- * @since 4.3
+ * @since axon-4.3
  */
 @FunctionalInterface
 public interface LifecycleHandler {

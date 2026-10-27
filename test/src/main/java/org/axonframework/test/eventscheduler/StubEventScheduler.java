@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * these events.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class StubEventScheduler implements EventScheduler {
 

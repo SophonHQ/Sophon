@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * Typically, this will involve opening database transactions or connecting to external systems.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface TransactionManager {
 

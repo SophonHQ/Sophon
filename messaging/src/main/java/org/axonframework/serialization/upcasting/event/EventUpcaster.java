@@ -23,7 +23,7 @@ import org.axonframework.serialization.upcasting.Upcaster;
  * aggregate identifier, event metadata etc.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 @FunctionalInterface
 public interface EventUpcaster extends Upcaster<IntermediateEventRepresentation> {

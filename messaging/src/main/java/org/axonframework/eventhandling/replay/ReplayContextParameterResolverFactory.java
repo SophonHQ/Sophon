@@ -35,7 +35,7 @@ import java.lang.reflect.Parameter;
  * This parameter resolver will always match to prevent missing event handlers.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class ReplayContextParameterResolverFactory implements ParameterResolverFactory {
 

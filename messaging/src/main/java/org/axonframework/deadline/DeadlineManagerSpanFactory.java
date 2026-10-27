@@ -26,7 +26,7 @@ import org.axonframework.tracing.Span;
  * your own implementation.
  *
  * @author Mitchell Herrijgers
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public interface DeadlineManagerSpanFactory {
 

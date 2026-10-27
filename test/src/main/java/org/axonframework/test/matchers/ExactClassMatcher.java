@@ -26,7 +26,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * Matcher testing for exact classes.
  *
  * @author Yoann CAPLAIN
- * @since 4.6.2
+ * @since axon-4.6.2
  */
 public class ExactClassMatcher<T> extends TypeSafeMatcher<T> {
 

@@ -37,7 +37,7 @@ import static java.util.Collections.singletonMap;
  * {@link org.axonframework.eventhandling.AllowReplay} annotated message handling methods.
  *
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 public class ReplayAwareMessageHandlerWrapper implements HandlerEnhancerDefinition {
 

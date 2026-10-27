@@ -24,7 +24,7 @@ import io.grpc.stub.StreamObserver;
  *
  * @param <T> the type of message to be sent
  * @author Milan Savic
- * @since 4.2.1
+ * @since axon-4.2.1
  */
 @FunctionalInterface
 public interface InstructionAckSource<T> {

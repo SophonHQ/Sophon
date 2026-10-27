@@ -89,7 +89,7 @@ import static org.axonframework.common.io.IOUtils.closeQuietly;
  *
  * @author Rene de Waele
  * @author Christophe Bouhier
- * @since 3.0
+ * @since axon-3.0
  */
 public class TrackingEventProcessor extends AbstractEventProcessor implements StreamingEventProcessor, Lifecycle {
 

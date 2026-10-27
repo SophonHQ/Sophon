@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * scheduler context.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  * @see EventJobDataBinder
  */
 public class FireEventJob implements Job {

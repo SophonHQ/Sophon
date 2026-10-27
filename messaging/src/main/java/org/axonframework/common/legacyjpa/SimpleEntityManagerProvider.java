@@ -25,7 +25,7 @@ import javax.persistence.EntityManager;
  * time.
  *
  * @author Allard Buijze
- * @since 1.3
+ * @since axon-1.3
  * @deprecated in favor of using {@link org.axonframework.common.jpa.SimpleEntityManagerProvider} which moved to
  * jakarta.
  */

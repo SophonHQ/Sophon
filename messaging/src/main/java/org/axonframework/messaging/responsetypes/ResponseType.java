@@ -35,7 +35,7 @@ import java.util.Optional;
  * @param <R> the generic type of this {@link ResponseType} to be matched and converted.
  * @author Steven van Beelen
  * @see ResponseTypes to instantiate a {@link ResponseType} implementation
- * @since 3.2
+ * @since axon-3.2
  */
 public interface ResponseType<R> extends Serializable {
 

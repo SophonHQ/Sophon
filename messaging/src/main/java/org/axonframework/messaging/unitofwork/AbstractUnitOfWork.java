@@ -35,7 +35,7 @@ import java.util.function.Consumer;
  * processing of a Message.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class AbstractUnitOfWork<T extends Message<?>> implements UnitOfWork<T> {
 

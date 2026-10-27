@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * Implementation of a {@link HandlerEnhancerDefinition} that is used for {@link CommandHandler} annotated methods.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class MethodCommandHandlerDefinition implements HandlerEnhancerDefinition {
 

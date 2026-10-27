@@ -28,7 +28,7 @@ import java.util.List;
  * Matches a list of Messages if the list of their payloads matches the given matcher..
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class PayloadsMatcher extends BaseMatcher<List<Message<?>>> {
     private final Matcher<? extends Iterable<?>> matcher;

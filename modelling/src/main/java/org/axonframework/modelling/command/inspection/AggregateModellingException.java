@@ -22,7 +22,7 @@ import org.axonframework.common.AxonConfigurationException;
  * Thrown if an aggregate model is invalid.
  *
  * @author Milan Savic
- * @since 4.3
+ * @since axon-4.3
  */
 public class AggregateModellingException extends AxonConfigurationException {
 

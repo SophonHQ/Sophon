@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * the identifier of the Aggregate.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

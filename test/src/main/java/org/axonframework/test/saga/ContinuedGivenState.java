@@ -26,7 +26,7 @@ import java.util.Map;
  * "given" state can be appended, or a transition to the definition of "when" can be made.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public interface ContinuedGivenState extends WhenState {
 

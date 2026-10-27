@@ -25,7 +25,7 @@ import org.hamcrest.Description;
  *
  * @param <T> The generic type of the mather
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class NullOrVoidMatcher<T> extends BaseMatcher<T> {
 

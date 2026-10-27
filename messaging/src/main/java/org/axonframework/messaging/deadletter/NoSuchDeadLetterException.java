@@ -23,7 +23,7 @@ import org.axonframework.common.AxonException;
  * {@link SequencedDeadLetterQueue}.
  *
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class NoSuchDeadLetterException extends AxonException {
 

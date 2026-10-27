@@ -33,7 +33,7 @@ import java.util.Properties;
  * log a debug message and skip the property provider.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class PropertyFileUsagePropertyProvider implements UsagePropertyProvider {
 

@@ -29,7 +29,7 @@ import org.axonframework.messaging.StreamableMessageSource;
  * been met. This ensures the highest chance of a consumable message being found.
  *
  * @author Greg Woods
- * @since 4.2
+ * @since axon-4.2
  * @deprecated In favor of {@link org.axonframework.eventhandling.MultiStreamableMessageSource}. This class belongs in
  * the {@code messaging} module instead of the {@code eventsourcing} module.
  */

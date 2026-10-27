@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
  * passed if that parameter is supplied.
  *
  * @author Allard Buijze
- * @since 0.5
+ * @since axon-0.5
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

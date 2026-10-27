@@ -20,7 +20,7 @@ package org.axonframework.axonserver.connector;
  * Interface that encapsulates the instruction result publication functionality.
  *
  * @author Sara Pellegrini
- * @since 4.4
+ * @since axon-4.4
  * @deprecated in through use of the AxonServer java connector
  * @see <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java connector</a>
  */

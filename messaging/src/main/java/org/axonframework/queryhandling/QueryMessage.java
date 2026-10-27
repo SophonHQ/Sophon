@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * Handlers should only answer a query if they can respond with the appropriate response type.
  *
  * @author Marc Gathier
- * @since 3.1
+ * @since axon-3.1
  */
 public interface QueryMessage<T, R> extends Message<T> {
 

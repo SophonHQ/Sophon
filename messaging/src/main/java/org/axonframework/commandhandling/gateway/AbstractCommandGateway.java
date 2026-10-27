@@ -37,7 +37,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * actual dispatching of commands is left to the subclasses.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public abstract class AbstractCommandGateway {
 

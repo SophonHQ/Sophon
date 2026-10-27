@@ -37,7 +37,7 @@ import static org.axonframework.eventhandling.GenericEventMessage.asEventMessage
  * is left to the subclasses.
  *
  * @author Bert Laverman
- * @since 4.1
+ * @since axon-4.1
  */
 public abstract class AbstractEventGateway {
 

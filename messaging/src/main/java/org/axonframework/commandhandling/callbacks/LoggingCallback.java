@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * CommandCallback implementation that simply logs the results of a command.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class LoggingCallback implements CommandCallback<Object, Object> {
 

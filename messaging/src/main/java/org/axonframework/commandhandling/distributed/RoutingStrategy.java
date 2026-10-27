@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * the same segment, should result in the same routing key.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface RoutingStrategy {
 

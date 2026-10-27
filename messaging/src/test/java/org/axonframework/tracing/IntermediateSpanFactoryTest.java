@@ -33,7 +33,7 @@ import java.util.function.Function;
  *
  * @param <BI> The builder class
  * @param <SI> The span factory class
- * @since 4.9.0
+ * @since axon-4.9.0
  * @author Mitchell Herrijgers
  */
 public abstract class IntermediateSpanFactoryTest<BI, SI> {

@@ -25,7 +25,7 @@ import java.time.Duration;
  * {@link org.axonframework.eventhandling.tokenstore.TokenStore Token Store}.
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 @ConfigurationProperties("axon.eventhandling.tokenstore")
 public class TokenStoreProperties {

@@ -35,7 +35,7 @@ import java.util.stream.Stream;
  * <p>
  * This implementation is not thread safe. It should not be consumed by more than one thread at a time.
  *
- * @since 3.1.1
+ * @since axon-3.1.1
  */
 public class ConcatenatingDomainEventStream implements DomainEventStream {
     private final LinkedList<DomainEventStream> streams;

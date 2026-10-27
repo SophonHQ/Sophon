@@ -26,7 +26,7 @@ import java.util.Map;
  * "given" state, these methods record the behavior of the Sagas involved for validation.
  *
  * @author Allard Buijze
- * @since 2.1.1
+ * @since axon-2.1.1
  */
 public interface WhenState {
 

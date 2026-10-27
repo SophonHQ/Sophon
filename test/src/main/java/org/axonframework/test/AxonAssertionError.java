@@ -23,7 +23,7 @@ import java.util.Arrays;
  * about the failed assertion.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class AxonAssertionError extends AssertionError {
 

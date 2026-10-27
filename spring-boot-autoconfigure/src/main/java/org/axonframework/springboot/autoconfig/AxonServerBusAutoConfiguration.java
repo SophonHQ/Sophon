@@ -58,7 +58,7 @@ import org.springframework.context.annotation.Primary;
  *
  * @author Marc Gathier
  * @author Stefan Dragisic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @AutoConfiguration
 @AutoConfigureAfter(AxonServerAutoConfiguration.class)
@@ -176,4 +176,3 @@ public class AxonServerBusAutoConfiguration {
                                           .build();
     }
 }
-

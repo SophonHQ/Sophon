@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  *
  * @author Marijn van Zelst
  * @author Nakul Mishra
- * @since 3.0
+ * @since axon-3.0
  */
 public interface MessageMonitor<T extends Message<?>> {
 

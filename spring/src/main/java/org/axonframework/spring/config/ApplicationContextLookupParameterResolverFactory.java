@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  * ParameterResolverFactory beans in the application context.
  *
  * @author Allard Buijze
- * @since 2.1.2
+ * @since axon-2.1.2
  * @deprecated Use Spring Boot autoconfiguration or register the individual beans explicitly.
  */
 @Deprecated

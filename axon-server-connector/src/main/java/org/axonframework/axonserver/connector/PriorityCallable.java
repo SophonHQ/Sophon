@@ -33,7 +33,7 @@ import java.util.concurrent.Callable;
  * @author Mitchell Herrijgers
  * @see org.axonframework.axonserver.connector.command.CommandPriorityCalculator
  * @see org.axonframework.axonserver.connector.query.QueryPriorityCalculator
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class PriorityCallable<T> implements Callable<T>, PriorityTask {
 

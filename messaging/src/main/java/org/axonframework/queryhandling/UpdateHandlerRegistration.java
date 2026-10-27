@@ -24,7 +24,7 @@ import reactor.core.publisher.Flux;
  * cancelled when we're no longer interested in updates.
  *
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 public class UpdateHandlerRegistration<U> {
 

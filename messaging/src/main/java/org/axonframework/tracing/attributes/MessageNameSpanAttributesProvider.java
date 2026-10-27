@@ -33,7 +33,7 @@ import static java.util.Collections.singletonMap;
  * {@link CommandMessage CommandMessages} and {@link QueryMessage QueryMessages}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MessageNameSpanAttributesProvider implements SpanAttributesProvider {
 

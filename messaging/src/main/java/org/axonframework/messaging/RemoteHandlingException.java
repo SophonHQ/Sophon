@@ -30,7 +30,7 @@ import java.util.List;
  * of message or the infrastructure allows it, try to dispatch the message again.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class RemoteHandlingException extends AxonException {
 

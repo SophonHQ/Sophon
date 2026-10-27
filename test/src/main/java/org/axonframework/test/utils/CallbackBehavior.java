@@ -23,7 +23,7 @@ import org.axonframework.messaging.MetaData;
  * component is to mimic behavior on the callback.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface CallbackBehavior {
 

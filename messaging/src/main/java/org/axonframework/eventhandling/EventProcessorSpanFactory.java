@@ -25,7 +25,7 @@ import java.util.List;
  * event processors by creating your own implementation.
  *
  * @author Mitchell Herrijgers
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public interface EventProcessorSpanFactory {
 

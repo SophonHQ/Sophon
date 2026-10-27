@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
  * @author Kristian Rosenvold
  * @author Allard Buijze
  * @author Rene de Waele
- * @since 2.2
+ * @since axon-2.2
  */
 public class JdbcUtils {
 

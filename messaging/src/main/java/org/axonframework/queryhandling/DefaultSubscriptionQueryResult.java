@@ -26,7 +26,7 @@ import reactor.core.publisher.Mono;
  * @param <I> The type of initial result
  * @param <U> The type of incremental updates
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public class DefaultSubscriptionQueryResult<I, U> implements SubscriptionQueryResult<I, U> {
 

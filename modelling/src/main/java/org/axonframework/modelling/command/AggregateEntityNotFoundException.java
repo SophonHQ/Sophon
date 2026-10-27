@@ -22,7 +22,7 @@ import org.axonframework.common.AxonNonTransientException;
  * Exception indicating that the entity of an aggregate could not be found.
  *
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public class AggregateEntityNotFoundException extends AxonNonTransientException {
 

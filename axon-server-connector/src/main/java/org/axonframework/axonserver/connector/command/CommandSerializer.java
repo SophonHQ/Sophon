@@ -53,7 +53,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * Converter between Axon Framework {@link CommandMessage}s and Axon Server gRPC {@link Command} messages.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class CommandSerializer {
 

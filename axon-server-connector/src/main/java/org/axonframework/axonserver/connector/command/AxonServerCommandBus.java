@@ -76,7 +76,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * responses. Delegates incoming commands to the provided {@code localSegment}.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class AxonServerCommandBus implements CommandBus, Distributed<CommandBus>, Lifecycle {
 

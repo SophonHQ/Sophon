@@ -20,7 +20,7 @@ package org.axonframework.eventhandling.tokenstore.jdbc;
  * Schema of an token entry to be stored using Jdbc.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class TokenSchema {
 

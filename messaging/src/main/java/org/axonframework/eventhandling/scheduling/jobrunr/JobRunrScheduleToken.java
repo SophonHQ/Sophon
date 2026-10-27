@@ -29,7 +29,7 @@ import static java.lang.String.format;
  * ScheduleToken implementation representing a scheduled JobRunr Job.
  *
  * @author Gerard Klijs
- * @since 4.7.0
+ * @since axon-4.7.0
  */
 public class JobRunrScheduleToken implements ScheduleToken {
 

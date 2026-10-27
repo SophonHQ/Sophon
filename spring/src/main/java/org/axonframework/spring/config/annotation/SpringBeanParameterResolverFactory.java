@@ -45,7 +45,7 @@ import java.util.Optional;
  * can be selected as parameter value.
  *
  * @author Allard Buijze
- * @since 2.1
+ * @since axon-2.1
  */
 @SuppressWarnings("PackageAccessibility")
 @Priority(Priority.LOW)

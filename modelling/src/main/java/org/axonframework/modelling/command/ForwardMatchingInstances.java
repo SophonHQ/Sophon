@@ -37,7 +37,7 @@ import static org.axonframework.common.property.PropertyAccessStrategy.getProper
  *
  * @param <T> the implementation {@code T} of the {@link org.axonframework.messaging.Message} being filtered.
  * @author Steven van Beelen
- * @since 3.1
+ * @since axon-3.1
  */
 public class ForwardMatchingInstances<T extends Message<?>> implements ForwardingMode<T> {
 

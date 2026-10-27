@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * created. After creating it should be set on this {@link DbSchedulerEventSchedulerSupplier}.
  *
  * @author Gerard Klijs
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class DbSchedulerEventSchedulerSupplier implements Supplier<DbSchedulerEventScheduler> {
 

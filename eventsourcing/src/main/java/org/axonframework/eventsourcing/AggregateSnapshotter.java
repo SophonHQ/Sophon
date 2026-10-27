@@ -50,7 +50,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * event should capture all necessary information.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class AggregateSnapshotter extends AbstractSnapshotter {
 

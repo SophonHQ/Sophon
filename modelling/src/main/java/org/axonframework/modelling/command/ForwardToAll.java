@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> the implementation {@code T} of the {@link org.axonframework.messaging.Message} being filtered.
  * @author Steven van Beelen
- * @since 3.1
+ * @since axon-3.1
  */
 public class ForwardToAll<T extends Message<?>> implements ForwardingMode<T> {
 

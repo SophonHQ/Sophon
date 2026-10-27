@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * identifier. Same identifier may occur more than once as the results get updated.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class QueryResult {
 

@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  *
  * @param <T> The value type
  * @author Stefan Dragisic
- * @since 4.5
+ * @since axon-4.5
  */
 class SinksManyWrapper<T> implements SinkWrapper<T> {
 

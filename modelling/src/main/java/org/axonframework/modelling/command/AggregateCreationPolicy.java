@@ -20,7 +20,7 @@ package org.axonframework.modelling.command;
  * Enumeration containing the possible creation policies for aggregates.
  *
  * @author Marc Gathier
- * @since 4.3
+ * @since axon-4.3
  */
 public enum AggregateCreationPolicy {
     /**

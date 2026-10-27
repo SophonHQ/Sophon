@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * used as a fallback when there is no tracing implementation available, so framework code does not have to check.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class NoOpSpanFactory implements SpanFactory {
 

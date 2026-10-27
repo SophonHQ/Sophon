@@ -54,7 +54,7 @@ import java.lang.annotation.*;
  *
  * @author Allard Buijze
  * @see EventHandler
- * @since 0.7
+ * @since axon-0.7
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * Delegates messages and callbacks to the given list of message monitors
  *
  * @author Marijn van Zelst
- * @since 3.0
+ * @since axon-3.0
  */
 public class MultiMessageMonitor<T extends Message<?>> implements MessageMonitor<T> {
 

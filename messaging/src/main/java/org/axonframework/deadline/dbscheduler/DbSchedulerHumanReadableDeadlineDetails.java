@@ -38,7 +38,7 @@ import static java.lang.String.format;
  * {@link DbSchedulerDeadlineManager#humanReadableTask()}.
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 @SuppressWarnings("Duplicates")
 public class DbSchedulerHumanReadableDeadlineDetails implements Serializable {

@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  * @param <T> The type of payload contained in this Message
  * @author Milan Savic
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public class GenericDeadlineMessage<T> extends GenericEventMessage<T> implements DeadlineMessage<T> {
 

@@ -29,7 +29,7 @@ import java.util.function.Function;
  * connection with AxonServer.
  *
  * @author Sara Pellegrini
- * @since 4.2.1
+ * @since axon-4.2.1
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

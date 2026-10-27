@@ -32,7 +32,7 @@ import java.util.function.Function;
  * association value with key {@code "orderId"} and value {@code "1234"}.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public interface Saga<T> extends EventMessageHandler {
 

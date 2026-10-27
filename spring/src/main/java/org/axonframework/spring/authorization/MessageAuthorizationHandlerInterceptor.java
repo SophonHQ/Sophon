@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
  * of {@link Message Messages}.
  *
  * @author Roald Bankras
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class MessageAuthorizationHandlerInterceptor<T extends Message<?>> implements MessageHandlerInterceptor<T> {
 
@@ -81,4 +81,3 @@ public class MessageAuthorizationHandlerInterceptor<T extends Message<?>> implem
         );
     }
 }
-

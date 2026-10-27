@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * setting the warning threshold to {@code 1000}.
  *
  * @author Mitchell Herrijgers
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

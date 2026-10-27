@@ -23,7 +23,7 @@ import org.axonframework.common.AxonException;
  * {@link DbSchedulerDeadlineManager} wasn't properly supplied.
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class DeadlineManagerNotSuppliedException extends AxonException {
 

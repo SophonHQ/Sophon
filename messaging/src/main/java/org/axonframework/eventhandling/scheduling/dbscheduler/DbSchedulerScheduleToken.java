@@ -30,7 +30,7 @@ import static java.lang.String.format;
  * ScheduleToken implementation representing a scheduled DbScheduler Job.
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class DbSchedulerScheduleToken implements ScheduleToken, TaskInstanceId {
 

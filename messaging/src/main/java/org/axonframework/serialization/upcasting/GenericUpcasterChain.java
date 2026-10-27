@@ -26,7 +26,7 @@ import java.util.stream.Stream;
  * stream of intermediate objects.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class GenericUpcasterChain<T> implements Upcaster<T> {
 

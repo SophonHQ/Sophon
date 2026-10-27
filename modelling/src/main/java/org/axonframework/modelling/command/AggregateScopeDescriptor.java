@@ -31,7 +31,7 @@ import static org.axonframework.common.Assert.notNull;
  * Describes the scope of an Aggregate by means of its type and identifier.
  *
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public class AggregateScopeDescriptor implements ScopeDescriptor {
 

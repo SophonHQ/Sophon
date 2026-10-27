@@ -21,7 +21,7 @@ package org.axonframework.modelling.saga;
  * with.
  *
  * @author Allard Buijze
- * @since 2.1
+ * @since axon-2.1
  */
 public class SagaInitializationPolicy {
 

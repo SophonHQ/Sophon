@@ -37,7 +37,7 @@ import java.util.function.BiFunction;
  * a {@link MessageHandlerInterceptor} or as a {@link MessageDispatchInterceptor}.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  * @deprecated in favor of using {@link org.axonframework.messaging.interceptors.BeanValidationInterceptor} which moved
  * to jakarta.
  */

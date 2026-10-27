@@ -59,7 +59,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  *
  * @author Allard Buijze
  * @author Martin Tilma
- * @since 0.5
+ * @since axon-0.5
  */
 public class SimpleCommandBus implements CommandBus {
 

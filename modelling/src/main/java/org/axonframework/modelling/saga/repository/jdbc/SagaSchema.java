@@ -22,7 +22,7 @@ package org.axonframework.modelling.saga.repository.jdbc;
  * Usage depends on the underlying database - in general the form of "schema.tablename" should be sufficient.
  *
  * @author Jochen Munz
- * @since 2.4
+ * @since axon-2.4
  */
 public class SagaSchema {
 

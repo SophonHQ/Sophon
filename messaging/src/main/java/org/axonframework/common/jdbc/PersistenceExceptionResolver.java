@@ -20,7 +20,7 @@ package org.axonframework.common.jdbc;
  * The PersistenceExceptionResolver is used to find out if an exception is caused by  duplicate keys.
  *
  * @author Martin Tilma
- * @since 2.2
+ * @since axon-2.2
  */
 public interface PersistenceExceptionResolver {
 

@@ -23,7 +23,7 @@ import java.sql.SQLException;
  * Specialization of the GenericSagaSqlSchema for use in the HSQL database.
  *
  * @author Kristian Rosenvold
- * @since 2.2
+ * @since axon-2.2
  */
 public class HsqlSagaSqlSchema extends GenericSagaSqlSchema {
 

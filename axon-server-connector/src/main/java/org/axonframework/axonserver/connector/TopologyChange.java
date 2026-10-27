@@ -28,7 +28,7 @@ import java.util.OptionalInt;
  *
  * @author Steven van Beelen
  * @see TopologyChangeListener
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class TopologyChange {
 

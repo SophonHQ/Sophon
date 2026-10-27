@@ -67,7 +67,7 @@ import java.lang.annotation.*;
  * @author Allard Buijze
  * @see AnnotationEventHandlerAdapter
  * @see ParameterResolverFactory
- * @since 0.1
+ * @since axon-0.1
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

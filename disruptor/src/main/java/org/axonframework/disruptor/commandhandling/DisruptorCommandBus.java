@@ -139,7 +139,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * example, <a href="http://johannburkard.de/software/uuid/" target="_blank">{@code com.eaio.uuid.UUID}</a>
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class DisruptorCommandBus implements CommandBus {
 

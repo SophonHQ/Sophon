@@ -22,7 +22,7 @@ import org.axonframework.common.AxonException;
  * Exception indicating that a required identifier is missing in the processed message.
  *
  * @author Stefan Andjelkovic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class IdentifierMissingException extends AxonException {
 

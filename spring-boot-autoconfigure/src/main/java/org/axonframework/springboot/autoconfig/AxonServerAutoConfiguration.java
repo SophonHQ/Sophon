@@ -77,7 +77,7 @@ import javax.annotation.Nonnull;
  * Configures Axon Server as implementation for the CommandBus, QueryBus and EventStore.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 @AutoConfiguration
 @AutoConfigureBefore(AxonAutoConfiguration.class)

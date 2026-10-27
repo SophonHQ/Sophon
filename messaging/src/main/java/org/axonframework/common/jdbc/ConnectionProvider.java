@@ -23,7 +23,7 @@ import java.sql.SQLException;
  * Interface towards a mechanism that provides access to a JDBC Connection.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 @FunctionalInterface
 public interface ConnectionProvider {

@@ -23,7 +23,7 @@ package org.axonframework.common;
  * Examples of such errors are programming errors and version conflicts.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public abstract class AxonNonTransientException extends AxonException {
 

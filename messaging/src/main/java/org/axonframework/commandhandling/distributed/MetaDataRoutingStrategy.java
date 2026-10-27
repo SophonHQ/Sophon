@@ -30,7 +30,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * to a String.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class MetaDataRoutingStrategy extends AbstractRoutingStrategy {
 

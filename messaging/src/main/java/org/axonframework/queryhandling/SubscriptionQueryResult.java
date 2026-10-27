@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  *
  * @author Milan Savic
  * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage, int)
- * @since 3.3
+ * @since axon-3.3
  */
 public interface SubscriptionQueryResult<I, U> extends Registration {
 

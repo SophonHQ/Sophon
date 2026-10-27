@@ -50,7 +50,7 @@ import static org.springframework.core.ResolvableType.forClassWithGenerics;
  * {@link SpringAggregateConfigurer configurer} for each Aggregate found.
  *
  * @author Allard Buijze
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class SpringAggregateLookup implements BeanDefinitionRegistryPostProcessor {
 

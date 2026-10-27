@@ -30,7 +30,7 @@ import javax.persistence.PersistenceContext;
  * @author Allard Buijze
  * @see PersistenceContext
  * @see EntityManager
- * @since 1.3
+ * @since axon-1.3
  * @deprecated in favor of using {@link org.axonframework.springboot.util.jpa.ContainerManagedEntityManagerProvider}
  * which moved to jakarta.
  */

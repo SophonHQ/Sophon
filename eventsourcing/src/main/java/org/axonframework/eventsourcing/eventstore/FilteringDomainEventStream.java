@@ -24,7 +24,7 @@ import java.util.function.Predicate;
  * DomainEventStream implementation that filters a stream.
  * 
  * @author André Bierwolf
- * @since 3.3
+ * @since axon-3.3
  */
 public class FilteringDomainEventStream implements DomainEventStream {
 

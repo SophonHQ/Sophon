@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * Adds the message type (simple class name) to the Span.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MessageTypeSpanAttributesProvider implements SpanAttributesProvider {
 

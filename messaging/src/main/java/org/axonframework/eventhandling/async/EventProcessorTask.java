@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  * Scheduler that keeps track of (Event processing) tasks that need to be executed sequentially.
  *
  * @author Allard Buijze
- * @since 1.0
+ * @since axon-1.0
  */
 public class EventProcessorTask implements Runnable {
 

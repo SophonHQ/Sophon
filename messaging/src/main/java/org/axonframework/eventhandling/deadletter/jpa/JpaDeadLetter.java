@@ -34,7 +34,7 @@ import java.util.Optional;
  *
  * @param <M> The {@link EventMessage} type of the contained message.
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class JpaDeadLetter<M extends EventMessage<?>> implements DeadLetter<M> {
 

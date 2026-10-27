@@ -45,7 +45,7 @@ import javax.persistence.EntityManagerFactory;
  * Autoconfiguration class for Axon's JPA specific event store components.
  *
  * @author Sara Pelligrini
- * @since 4.0
+ * @since axon-4.0
  * @deprecated in favor of using {@link JpaEventStoreAutoConfiguration} which moved to jakarta.
  */
 @Deprecated

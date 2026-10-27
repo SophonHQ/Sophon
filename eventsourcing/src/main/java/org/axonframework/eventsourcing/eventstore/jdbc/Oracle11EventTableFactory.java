@@ -27,7 +27,7 @@ import java.sql.SQLException;
  * seem to like colons in create table statements, so those have been removed.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class Oracle11EventTableFactory extends AbstractEventTableFactory {
 

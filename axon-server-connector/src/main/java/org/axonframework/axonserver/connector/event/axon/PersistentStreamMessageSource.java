@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * Axon Server. Using the same name for different instances will overwrite the existing connection.
  *
  * @author Marc Gathier
- * @since 4.10.0
+ * @since axon-4.10.0
  */
 public class PersistentStreamMessageSource implements SubscribableMessageSource<EventMessage<?>> {
 

@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * SequencingPolicy that requires sequential handling of all events delivered to an event handler.
  *
  * @author Allard Buijze
- * @since 0.3
+ * @since axon-0.3
  */
 public class SequentialPolicy implements SequencingPolicy<Object> {
 

@@ -21,7 +21,7 @@ package org.axonframework.messaging;
  *
  * @param <T> The message type this handler can process
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public interface MessageHandler<T extends Message<?>> {
 

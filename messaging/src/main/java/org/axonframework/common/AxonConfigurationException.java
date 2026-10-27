@@ -21,7 +21,7 @@ package org.axonframework.common;
  * application from operating properly.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class AxonConfigurationException extends AxonNonTransientException {
 

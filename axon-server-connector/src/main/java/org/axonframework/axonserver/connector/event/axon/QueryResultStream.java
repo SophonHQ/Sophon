@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * wait for the next result.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public interface QueryResultStream extends Iterator<QueryResult>, AutoCloseable {
 

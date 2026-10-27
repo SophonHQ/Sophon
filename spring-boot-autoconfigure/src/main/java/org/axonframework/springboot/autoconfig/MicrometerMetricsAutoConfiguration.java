@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Bean;
  *
  * @author Steven van Beelen
  * @author Marijn van Zelst
- * @since 4.1
+ * @since axon-4.1
  */
 @AutoConfiguration
 @AutoConfigureAfter(name = {
@@ -73,4 +73,3 @@ public class MicrometerMetricsAutoConfiguration {
         return new MetricsConfigurerModule(globalMetricRegistry, metricsProperties.getMicrometer().isDimensional());
     }
 }
-

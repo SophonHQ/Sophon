@@ -21,7 +21,7 @@ package org.axonframework.serialization;
  * involved. This can be useful when using the application version as Revision, for example.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class FixedValueRevisionResolver implements RevisionResolver {
 

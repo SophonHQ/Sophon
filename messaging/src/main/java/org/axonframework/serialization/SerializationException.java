@@ -22,7 +22,7 @@ import org.axonframework.common.AxonNonTransientException;
  * Indicates that an exception occurred while serializing or deserializing an object.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class SerializationException extends AxonNonTransientException {
 

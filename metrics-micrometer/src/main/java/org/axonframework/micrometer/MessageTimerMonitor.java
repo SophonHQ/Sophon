@@ -41,7 +41,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @author Marijn van Zelst
  * @author Ivan Dugalic
- * @since 4.1
+ * @since axon-4.1
  */
 public class MessageTimerMonitor implements MessageMonitor<Message<?>> {
 

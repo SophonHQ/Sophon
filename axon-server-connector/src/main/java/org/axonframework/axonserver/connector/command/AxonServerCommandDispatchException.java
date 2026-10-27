@@ -26,7 +26,7 @@ import java.util.List;
  * Exception thrown if there is a problem dispatching a command on Axon Server.
  *
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 public class AxonServerCommandDispatchException extends CommandDispatchException {
 

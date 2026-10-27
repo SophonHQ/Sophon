@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @param <T> The type of payload contained in this Message; may be {@link Void} if no payload was provided
  * @author Milan Savic
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public interface DeadlineMessage<T> extends EventMessage<T> {
 

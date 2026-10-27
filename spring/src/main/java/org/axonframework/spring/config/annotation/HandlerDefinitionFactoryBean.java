@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
  * HandlerEnhancerDefinition} beans from the Application Context.
  *
  * @author Allard Buijze
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class HandlerDefinitionFactoryBean implements FactoryBean<HandlerDefinition>, BeanClassLoaderAware {
 

@@ -21,7 +21,7 @@ package org.axonframework.tracing;
  * on the same thread as it was created before the span is ended.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.5
+ * @since axon-4.6.5
  */
 @FunctionalInterface
 public interface SpanScope extends AutoCloseable {

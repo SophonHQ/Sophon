@@ -27,7 +27,7 @@ import org.axonframework.messaging.RemoteHandlingException;
  * explicitly via the constructor accepting the {@code writableStackTrace} parameter.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class AxonServerRemoteCommandHandlingException extends RemoteHandlingException {
 

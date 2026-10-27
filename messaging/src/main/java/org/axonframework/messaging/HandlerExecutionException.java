@@ -29,7 +29,7 @@ import java.util.Optional;
  * explicitly via the constructor accepting the {@code writableStackTrace} parameter.
  *
  * @author Allard Buize
- * @since 4.2
+ * @since axon-4.2
  */
 public abstract class HandlerExecutionException extends AxonException {
 

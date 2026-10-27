@@ -45,7 +45,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * to the Command.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class DefaultCommandGateway extends AbstractCommandGateway implements CommandGateway {
     private static final Logger logger = LoggerFactory.getLogger(DefaultCommandGateway.class);

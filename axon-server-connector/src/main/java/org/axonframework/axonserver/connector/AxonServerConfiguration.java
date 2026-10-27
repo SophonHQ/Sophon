@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  *
  * @author Marc Gathier
  * @author Steven van Beelen
- * @since 4.0
+ * @since axon-4.0
  */
 @ConfigurationProperties(prefix = "axon.axonserver")
 public class AxonServerConfiguration {
@@ -1328,7 +1328,7 @@ public class AxonServerConfiguration {
      * Configuration class for Flow Control of specific message types.
      *
      * @author Gerlo Hesselink
-     * @since 4.3
+     * @since axon-4.3
      */
     public static class FlowControlConfiguration {
 

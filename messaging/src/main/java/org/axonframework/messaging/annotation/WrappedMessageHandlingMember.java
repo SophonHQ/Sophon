@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> the entity type
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class WrappedMessageHandlingMember<T> implements MessageHandlingMember<T> {
 

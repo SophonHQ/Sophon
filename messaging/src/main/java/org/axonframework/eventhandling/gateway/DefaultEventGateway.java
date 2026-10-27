@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * this would be used to add gateway specific meta data to the Event.
  *
  * @author Bert laverman
- * @since 4.1
+ * @since axon-4.1
  */
 public class DefaultEventGateway extends AbstractEventGateway implements EventGateway {
 

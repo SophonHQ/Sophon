@@ -29,7 +29,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * Implementation of the QueryInvocationErrorHandler that logs all errors to a given {@link Logger}.
  *
  * @author Allard Buijze
- * @since 3.1
+ * @since axon-3.1
  */
 public class LoggingQueryInvocationErrorHandler implements QueryInvocationErrorHandler {
 

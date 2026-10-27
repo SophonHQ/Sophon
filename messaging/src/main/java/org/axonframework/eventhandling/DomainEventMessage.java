@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> The type of payload contained in this Message
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface DomainEventMessage<T> extends EventMessage<T> {
 

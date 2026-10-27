@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @param <I> The type of initial response expected from this query
  * @param <U> The type of incremental updates expected from this query
  * @author Allard Buijze
- * @since 3.3
+ * @since axon-3.3
  */
 public class GenericSubscriptionQueryMessage<Q, I, U> extends GenericQueryMessage<Q, I>
         implements SubscriptionQueryMessage<Q, I, U> {

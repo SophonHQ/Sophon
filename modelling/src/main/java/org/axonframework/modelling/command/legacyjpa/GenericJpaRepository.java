@@ -66,7 +66,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @param <T> The type of aggregate the repository provides access to
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  * @deprecated in favor of using {@link org.axonframework.modelling.command.GenericJpaRepository} which moved to jakarta.
  */
 @Deprecated

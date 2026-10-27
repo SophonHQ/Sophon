@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  * specified by the parameter/return type of that method.
  *
  * @author Marc Gathier
- * @since 3.1
+ * @since axon-3.1
  */
 public class AnnotationQueryHandlerAdapter<T> implements QueryHandlerAdapter, MessageHandler<QueryMessage<?, ?>> {
 

@@ -49,7 +49,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * implementations. Provides support for Saga lifecycle management and asynchronous handling of events.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public abstract class AbstractSagaManager<T> implements EventHandlerInvoker, ScopeAware {
 

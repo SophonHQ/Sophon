@@ -33,7 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * files must contain the fully qualified class names of the implementations to use.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class ChainingConverter implements Converter {
 

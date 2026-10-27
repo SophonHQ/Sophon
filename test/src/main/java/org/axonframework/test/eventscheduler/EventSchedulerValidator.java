@@ -32,7 +32,7 @@ import static org.axonframework.common.DateTimeUtils.formatInstant;
  * Helper class for validating events scheduled in a given event scheduler.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class EventSchedulerValidator {
 

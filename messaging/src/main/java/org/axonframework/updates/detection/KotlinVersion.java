@@ -21,7 +21,7 @@ package org.axonframework.updates.detection;
  * class and invoke its `getCurrent` method. If the class or method is not found, it returns "none".
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class KotlinVersion {
 

@@ -41,7 +41,7 @@ import java.util.Optional;
  *
  * @author Joel Feinstein
  * @see Autowired
- * @since 4.5
+ * @since axon-4.5
  */
 @Priority(Priority.HIGH)
 public class SpringBeanDependencyResolverFactory implements ParameterResolverFactory {

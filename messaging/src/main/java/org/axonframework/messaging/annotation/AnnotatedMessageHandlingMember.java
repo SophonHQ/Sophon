@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> the target type
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class AnnotatedMessageHandlingMember<T> implements MessageHandlingMember<T> {
 

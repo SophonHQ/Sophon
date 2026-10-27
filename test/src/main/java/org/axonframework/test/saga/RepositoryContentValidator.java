@@ -28,7 +28,7 @@ import static java.lang.String.format;
  * Helper class for the validation of Saga Repository content.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class RepositoryContentValidator<T> {
 

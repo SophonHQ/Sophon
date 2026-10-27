@@ -38,7 +38,7 @@ import java.util.Optional;
  * {@link ResultHandler}.
  *
  * @author Allard Buijze
- * @since 4.4
+ * @since axon-4.4
  */
 public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefinition {
 

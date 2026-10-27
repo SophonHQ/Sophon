@@ -38,7 +38,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * ingested {@link Message} takes.
  *
  * @author Marijn van Zelst
- * @since 3.0
+ * @since axon-3.0
  */
 public class MessageTimerMonitor implements MessageMonitor<Message<?>>, MetricSet {
 

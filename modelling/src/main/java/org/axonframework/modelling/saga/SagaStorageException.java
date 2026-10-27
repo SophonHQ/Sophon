@@ -22,7 +22,7 @@ import org.axonframework.common.AxonTransientException;
  * Exception indicating that an error has occurred while storing a Saga.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class SagaStorageException extends AxonTransientException {
 

@@ -36,7 +36,7 @@ import java.lang.reflect.Parameter;
  *
  * @author Allard Buijze
  * @see ClasspathParameterResolverFactory
- * @since 2.1
+ * @since axon-2.1
  */
 @FunctionalInterface
 public interface ParameterResolverFactory {

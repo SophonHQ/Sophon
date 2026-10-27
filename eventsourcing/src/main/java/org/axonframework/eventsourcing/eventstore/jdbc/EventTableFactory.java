@@ -24,7 +24,7 @@ import java.sql.SQLException;
  * Interface describing a factory for JDBC to create the Domain and Snapshot Event tables.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public interface EventTableFactory {
 

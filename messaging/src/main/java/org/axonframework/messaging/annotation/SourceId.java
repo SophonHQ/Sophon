@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * assignable from {@link String}.
  *
  * @author Thomas van Putten (delta11)
- * @since 4.1
+ * @since axon-4.1
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})

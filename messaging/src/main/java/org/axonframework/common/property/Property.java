@@ -22,7 +22,7 @@ package org.axonframework.common.property;
  * @param <T> The type of object defining this property
  * @author Maxim Fedorov
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface Property<T> {
 

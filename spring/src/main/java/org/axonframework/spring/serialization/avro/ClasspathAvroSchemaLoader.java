@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author Simon Zambrovski
  * @author Jan Galinski
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public interface ClasspathAvroSchemaLoader {
 

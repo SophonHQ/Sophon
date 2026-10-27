@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  *
  * @author Milan Savic
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public class DeadlineMethodMessageHandlerDefinition implements HandlerEnhancerDefinition {
 

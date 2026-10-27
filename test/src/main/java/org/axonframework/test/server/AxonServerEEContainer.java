@@ -28,7 +28,7 @@ import java.util.Optional;
  * Constructs a single node AxonServer Enterprise Edition (EE) for testing.
  *
  * @author Lucas Campos
- * @since 4.6.0
+ * @since axon-4.6.0
  * @deprecated In favor of {@link AxonServerContainer} following the merger of Standard and Enterprise edition into a
  * single version.
  */

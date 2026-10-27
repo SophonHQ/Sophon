@@ -33,7 +33,7 @@ import java.util.Map;
  * MetaDataMap} defined in the protobuf message.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class GrpcBackedDomainEventData implements DomainEventData<byte[]> {
 

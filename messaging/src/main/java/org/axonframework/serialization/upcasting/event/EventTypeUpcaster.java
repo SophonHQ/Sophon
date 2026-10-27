@@ -33,7 +33,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * points towards a new event type instead of adjusting an existing one.
  *
  * @author Steven van Beelen
- * @since 4.3
+ * @since axon-4.3
  */
 public class EventTypeUpcaster extends SingleEventUpcaster {
 

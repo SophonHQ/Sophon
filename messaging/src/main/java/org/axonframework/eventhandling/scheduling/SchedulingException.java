@@ -22,7 +22,7 @@ import org.axonframework.common.AxonTransientException;
  * Exception indicating a problem in the Event Scheduling mechanism.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class SchedulingException extends AxonTransientException {
 

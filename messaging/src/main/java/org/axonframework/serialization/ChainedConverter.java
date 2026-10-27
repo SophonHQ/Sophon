@@ -29,7 +29,7 @@ import static java.lang.String.format;
  * @param <S> The source type of the converter
  * @param <T> The target type of the converter
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class ChainedConverter<S, T> implements ContentTypeConverter<S, T> {
 

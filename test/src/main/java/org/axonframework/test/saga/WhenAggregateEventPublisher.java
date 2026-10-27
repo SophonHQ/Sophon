@@ -23,7 +23,7 @@ import java.util.Map;
  * exactly sequential per aggregate.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public interface WhenAggregateEventPublisher {
 

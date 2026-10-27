@@ -87,7 +87,7 @@ import static org.axonframework.common.ReflectionUtils.fieldsOf;
  * for the sagas to use.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class SagaTestFixture<T> implements FixtureConfiguration, ContinuedGivenState {
 

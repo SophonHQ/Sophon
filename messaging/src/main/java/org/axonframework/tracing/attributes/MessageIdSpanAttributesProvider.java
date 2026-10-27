@@ -28,7 +28,7 @@ import static java.util.Collections.singletonMap;
  * Adds the message identifier to the Span.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MessageIdSpanAttributesProvider implements SpanAttributesProvider {
 

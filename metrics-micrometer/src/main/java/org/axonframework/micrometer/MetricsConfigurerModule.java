@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * @author Steven van Beelen
  * @author Marijn van Zelst
  * @author Ivan Dugalic
- * @since 4.1
+ * @since axon-4.1
  */
 public class MetricsConfigurerModule implements ConfigurerModule {
 

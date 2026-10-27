@@ -30,7 +30,7 @@ import java.lang.reflect.Parameter;
  * ParameterResolverFactory that add support for the UnitOfWork parameter type in annotated handlers.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 @Priority(Priority.FIRST)
 public class CurrentUnitOfWorkParameterResolverFactory implements ParameterResolverFactory, ParameterResolver {

@@ -30,7 +30,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * used.
  *
  * @author Lucas Campos
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MetaDataSequencingPolicy implements SequencingPolicy<EventMessage<?>> {
 

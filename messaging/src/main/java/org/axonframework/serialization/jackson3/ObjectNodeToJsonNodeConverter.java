@@ -29,7 +29,7 @@ import tools.jackson.databind.node.ObjectNode;
  *
  * @author Steven van Beelen
  * @author John Hendrikx
- * @since 4.13.0
+ * @since axon-4.13.0
  */
 public class ObjectNodeToJsonNodeConverter implements ContentTypeConverter<ObjectNode, JsonNode> {
 

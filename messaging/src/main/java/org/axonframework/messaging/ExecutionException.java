@@ -23,7 +23,7 @@ import org.axonframework.common.AxonTransientException;
  * the operation could succeed if repeated.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class ExecutionException extends AxonTransientException {
 

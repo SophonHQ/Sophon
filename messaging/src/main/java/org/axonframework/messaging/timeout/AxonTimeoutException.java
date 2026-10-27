@@ -23,7 +23,7 @@ package org.axonframework.messaging.timeout;
  * @author Mitchell Herrijgers
  * @see AxonTimeLimitedTask
  * @see AxonTaskJanitor
- * @since 4.11.3
+ * @since axon-4.11.3
  */
 public class AxonTimeoutException extends RuntimeException {
 

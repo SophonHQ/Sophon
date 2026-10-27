@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
  * as completed.
  *
  * @author Mitchell Herrijgers
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 class AxonTimeLimitedTask {
 

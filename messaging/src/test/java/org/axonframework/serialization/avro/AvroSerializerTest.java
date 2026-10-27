@@ -48,7 +48,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Simon Zambrovski
  * @author Jan Galinski
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class AvroSerializerTest {
 

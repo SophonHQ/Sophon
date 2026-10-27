@@ -39,7 +39,7 @@ import javax.annotation.Nullable;
  * @param <P> the parent entity type
  * @param <C> the child entity type
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class ChildForwardingCommandMessageHandlingMember<P, C> implements ForwardingCommandMessageHandlingMember<P> {
 

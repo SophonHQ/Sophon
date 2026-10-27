@@ -27,7 +27,7 @@ import org.axonframework.tracing.SpanFactory;
  * the scope of the deadline are configurable.
  *
  * @author Mitchell Herrijgers
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class DefaultDeadlineManagerSpanFactory implements DeadlineManagerSpanFactory {
 

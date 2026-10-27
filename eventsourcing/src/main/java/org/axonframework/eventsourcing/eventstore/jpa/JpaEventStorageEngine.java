@@ -68,7 +68,7 @@ import static org.axonframework.common.DateTimeUtils.formatInstant;
  * that allow quick finding of DomainEvents for a specific aggregate in the correct order.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class JpaEventStorageEngine extends BatchingEventStorageEngine {
 

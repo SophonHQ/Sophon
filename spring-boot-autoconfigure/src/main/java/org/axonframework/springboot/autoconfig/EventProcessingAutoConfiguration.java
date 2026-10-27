@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Bean;
  * Auto configuration for {@link EventProcessingModule}.
  *
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 @AutoConfiguration
 @AutoConfigureAfter(name = {

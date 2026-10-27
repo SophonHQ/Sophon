@@ -31,7 +31,7 @@ import static org.axonframework.serialization.avro.AvroUtil.genericData;
  *
  * @author Simon Zambrovski
  * @author Jan Galinski
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class GenericRecordToByteArrayConverter implements ContentTypeConverter<GenericRecord, byte[]> {
 

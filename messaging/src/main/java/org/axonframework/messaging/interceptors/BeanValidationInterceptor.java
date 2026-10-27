@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
  * a {@link MessageHandlerInterceptor} or as a {@link MessageDispatchInterceptor}.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class BeanValidationInterceptor<T extends Message<?>>
         implements MessageHandlerInterceptor<T>, MessageDispatchInterceptor<T> {

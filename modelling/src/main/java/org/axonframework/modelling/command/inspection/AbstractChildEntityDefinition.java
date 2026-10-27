@@ -44,7 +44,7 @@ import static org.axonframework.common.property.PropertyAccessStrategy.getProper
  * ChildEntityDefinitions.
  *
  * @author Steven van Beelen
- * @since 3.1
+ * @since axon-3.1
  */
 public abstract class AbstractChildEntityDefinition implements ChildEntityDefinition {
 
@@ -211,4 +211,3 @@ public abstract class AbstractChildEntityDefinition implements ChildEntityDefini
                                                               Member member,
                                                               ForwardingMode eventForwardingMode);
 }
-

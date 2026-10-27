@@ -33,7 +33,7 @@ import java.util.Set;
  * Utility class for locating annotations and attribute values on elements.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class AnnotationUtils {
 

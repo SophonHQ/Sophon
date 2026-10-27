@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Bean;
  * {@link io.opentelemetry.sdk.OpenTelemetrySdkBuilder#buildAndRegisterGlobal()}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @AutoConfiguration
 @AutoConfigureBefore({AxonTracingAutoConfiguration.class, AxonAutoConfiguration.class})

@@ -28,7 +28,7 @@ import java.sql.SQLException;
  * connection over creating a new one.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public class UnitOfWorkAwareConnectionProviderWrapper implements ConnectionProvider {
 

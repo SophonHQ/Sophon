@@ -36,7 +36,7 @@ import java.lang.annotation.*;
  * SagaEventHandler @SagaEventHandler}.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

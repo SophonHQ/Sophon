@@ -50,7 +50,7 @@ import java.util.stream.Collectors;
  * This class is not intended to be instantiated, and all methods are static.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public final class AxonVersionDetector {
 

@@ -45,7 +45,7 @@ import static org.axonframework.common.ReflectionUtils.invokeAndGetMethodValue;
  * @see ShutdownHandler
  * @see StartHandler
  * @see LifecycleHandler
- * @since 4.3
+ * @since axon-4.3
  */
 public abstract class LifecycleHandlerInspector {
 

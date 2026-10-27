@@ -42,7 +42,7 @@ import javax.annotation.Nonnull;
  * @author Tyler Thrailkill
  * @author Milan Savic
  * @see ClasspathHandlerDefinition
- * @since 3.3
+ * @since axon-3.3
  * @deprecated Replaced by the {@link HandlerDefinitionFactoryBean}.
  */
 @Deprecated

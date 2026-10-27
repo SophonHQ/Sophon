@@ -26,7 +26,7 @@ import static java.lang.String.format;
  * SerializedType implementation that takes its properties as constructor parameters.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class SimpleSerializedType implements SerializedType {
 

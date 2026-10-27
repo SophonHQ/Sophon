@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  *
  * @author Allard Buijze
  * @author Henrique Sena
- * @since 0.3
+ * @since axon-0.3
  */
 public class FullConcurrencyPolicy implements SequencingPolicy<EventMessage<?>> {
 

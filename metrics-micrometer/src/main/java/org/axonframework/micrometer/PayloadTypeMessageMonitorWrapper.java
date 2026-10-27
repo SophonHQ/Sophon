@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  * @param <T> The type of the MessageMonitor created for every payload type.Must implement both {@link MessageMonitor}
  * @author Steven van Beelen
  * @author Marijn van Zelst
- * @since 4.1
+ * @since axon-4.1
  * @deprecated As of release 4.4, replaced by using {@link Tag}s on the monitor implementations.
  * Use {@link org.axonframework.micrometer.GlobalMetricRegistry#registerWithConfigurerWithDefaultTags(Configurer) to achieve the same behavior as this implementation.
  */

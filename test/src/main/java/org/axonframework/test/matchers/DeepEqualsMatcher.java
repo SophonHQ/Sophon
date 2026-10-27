@@ -35,7 +35,7 @@ import static org.axonframework.common.ReflectionUtils.hasEqualsMethod;
  *
  * @param <T> The type of object to match.
  * @author Steven van Beelen
- * @since 4.5.10
+ * @since axon-4.5.10
  */
 public class DeepEqualsMatcher<T> extends BaseMatcher<T> {
 

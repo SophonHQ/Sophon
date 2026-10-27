@@ -27,7 +27,7 @@ import java.lang.annotation.*;
  * classes used. This will make it easier to keep the necessary upcasters up-to-date.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

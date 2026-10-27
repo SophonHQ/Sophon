@@ -37,7 +37,7 @@ import static org.axonframework.queryhandling.QueryMessage.queryName;
  * @author Allard Buijze
  * @author Steven van Beelen
  * @author Milan Savic
- * @since 3.1
+ * @since axon-3.1
  */
 public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMessage<?, ?>> {
 

@@ -20,7 +20,7 @@ package org.axonframework.serialization;
  * Describes the type of a serialized object. This information is used to decide how to deserialize an object.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface SerializedType {
 

@@ -20,7 +20,7 @@ package org.axonframework.messaging.unitofwork;
  * Enum containing common rollback configurations for the Unit of Work.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public enum RollbackConfigurationType implements RollbackConfiguration {
 

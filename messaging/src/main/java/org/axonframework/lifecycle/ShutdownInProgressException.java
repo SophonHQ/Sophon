@@ -23,7 +23,7 @@ import org.axonframework.common.AxonNonTransientException;
  *
  * @author Steven van Beelen
  * @see ShutdownLatch
- * @since 4.3
+ * @since axon-4.3
  */
 public class ShutdownInProgressException extends AxonNonTransientException {
 

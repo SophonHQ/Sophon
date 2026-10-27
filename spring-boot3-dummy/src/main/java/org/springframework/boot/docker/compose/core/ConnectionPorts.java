@@ -15,7 +15,7 @@ import java.util.List;
  * @author Andy Wilkinson
  * @author Phillip Webb
  * @see RunningService
- * @since 3.1.0
+ * @since axon-3.1.0
  */
 public interface ConnectionPorts {
 

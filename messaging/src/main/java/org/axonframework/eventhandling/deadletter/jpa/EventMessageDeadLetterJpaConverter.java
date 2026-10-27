@@ -43,7 +43,7 @@ import java.util.function.Supplier;
  * {@link GenericTrackedDomainEventMessage}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class EventMessageDeadLetterJpaConverter implements DeadLetterJpaConverter<EventMessage<?>> {
 

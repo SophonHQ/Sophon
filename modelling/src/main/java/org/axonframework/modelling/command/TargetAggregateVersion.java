@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * If place on a field, the value is converted to a Long in an identical fashion.
  *
  * @author Allard Buijze
- * @since 1.2
+ * @since axon-1.2
  */
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

@@ -29,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Provides functionality for incompatibility checks and saves the results in a in memory cache.
  * @author Simon Zambrovski
  * @author Jan Galinski
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class DefaultSchemaIncompatibilityChecker implements SchemaIncompatibilityChecker {
 

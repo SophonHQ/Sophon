@@ -23,7 +23,7 @@ import org.axonframework.common.AxonTransientException;
  * retried without any intervention.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class LockAcquisitionFailedException extends AxonTransientException {
 

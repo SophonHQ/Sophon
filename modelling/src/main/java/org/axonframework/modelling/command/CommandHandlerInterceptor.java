@@ -57,7 +57,7 @@ import java.lang.annotation.Target;
  * interceptors within the same entity is not specified.
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

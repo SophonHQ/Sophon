@@ -35,7 +35,7 @@ import java.util.function.UnaryOperator;
  * @param <M> The type of {@link Message} represented by this interface.
  * @author Steven van Beelen
  * @author Allard Buijze
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface DeadLetter<M extends Message<?>> {
 

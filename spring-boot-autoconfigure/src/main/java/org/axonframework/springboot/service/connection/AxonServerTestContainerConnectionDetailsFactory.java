@@ -27,7 +27,7 @@ import org.springframework.boot.testcontainers.service.connection.ContainerConne
  * correct connection information.
  *
  * @author Allard Buijze
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class AxonServerTestContainerConnectionDetailsFactory extends ContainerConnectionDetailsFactory<AxonServerContainer, AxonServerConnectionDetails> {
 

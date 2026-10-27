@@ -30,7 +30,7 @@ import java.util.TreeSet;
  * Provides a set of JSR303 {@link ConstraintViolation}s that provide details about the exact failure of the message.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  * @deprecated in favor of using {@link org.axonframework.messaging.interceptors.JSR303ViolationException} which moved
  * to jakarta.
  */

@@ -24,7 +24,7 @@ import org.axonframework.serialization.SerializedType;
  * SerializedObject}.
  *
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  */
 public class GrpcSerializedObject implements SerializedObject<byte[]> {
 

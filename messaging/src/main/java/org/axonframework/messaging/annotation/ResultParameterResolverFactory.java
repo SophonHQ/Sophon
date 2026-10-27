@@ -34,7 +34,7 @@ import java.util.function.Supplier;
  * the result type in its parameters.
  *
  * @author Allard Buijze
- * @since 4.4
+ * @since axon-4.4
  */
 public class ResultParameterResolverFactory implements ParameterResolverFactory {
 

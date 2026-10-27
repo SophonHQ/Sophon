@@ -40,7 +40,7 @@ import static org.axonframework.common.annotation.AnnotationUtils.isAnnotatedWit
  * of the annotation (meta-)annotated with {@code HasHandlerAttributes}, separated by a dot.
  *
  * @author Steven van Beelen
- * @since 4.5
+ * @since axon-4.5
  */
 public class AnnotatedHandlerAttributes implements HandlerAttributes {
 

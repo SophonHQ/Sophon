@@ -37,7 +37,7 @@ import java.util.ServiceLoader;
  *
  * @author Allard Buijze
  * @see ServiceLoader
- * @since 1.2
+ * @since axon-1.2
  */
 public abstract class IdentifierFactory {
 

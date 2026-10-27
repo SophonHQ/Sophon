@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  * Utility class containing static methods to obtain instances of (List) Matchers.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public abstract class Matchers {
 

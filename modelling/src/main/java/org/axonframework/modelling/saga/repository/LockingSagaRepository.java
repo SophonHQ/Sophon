@@ -33,7 +33,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * Abstract implementation of a saga repository that locks access to a saga while the saga is being operated on.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class LockingSagaRepository<T> implements SagaRepository<T> {
 

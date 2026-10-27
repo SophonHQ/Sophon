@@ -39,7 +39,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @param <T> The type of aggregate this repository stores
  * @author Allard Buijze
- * @since 0.3
+ * @since axon-0.3
  */
 public class CachingEventSourcingRepository<T> extends EventSourcingRepository<T> {
 

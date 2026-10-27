@@ -20,7 +20,7 @@ package org.axonframework.modelling.utils;
  * Mock exception that provides no stack trace.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class MockException extends RuntimeException {
 

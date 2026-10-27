@@ -50,7 +50,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @param <T> generic type specifying the Saga type stored by this {@link SagaRepository}
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class AnnotatedSagaRepository<T> extends LockingSagaRepository<T> {
 

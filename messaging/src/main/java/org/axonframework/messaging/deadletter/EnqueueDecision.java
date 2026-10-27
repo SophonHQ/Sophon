@@ -36,7 +36,7 @@ import java.util.Optional;
  *            decision on.
  * @author Steven van Beelen
  * @see Decisions
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface EnqueueDecision<M extends Message<?>> {
 

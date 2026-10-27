@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
  * @see SpringAggregateLookup
  * @see SpringConfigurer
  * @see SpringAxonConfiguration
- * @since 2.3
+ * @since axon-2.3
  * @deprecated Use Spring Boot autoconfiguration or register the individual beans explicitly. Check the "See also" list
  * for which individual beans to register.
  */

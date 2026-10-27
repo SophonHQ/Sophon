@@ -30,7 +30,7 @@ import java.util.concurrent.CompletableFuture;
  * a whole group at once.
  *
  * @author Allard Buijze
- * @since 1.2
+ * @since axon-1.2
  */
 public interface EventProcessor extends MessageHandlerInterceptorSupport<EventMessage<?>> {
 

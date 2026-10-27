@@ -69,7 +69,7 @@ import static org.axonframework.common.Assert.state;
  *
  * @param <A> the type of Aggregate configured
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class AggregateConfigurer<A> implements AggregateConfiguration<A> {
 

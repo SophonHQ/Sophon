@@ -26,7 +26,7 @@ import io.grpc.stub.ClientResponseObserver;
  * @param <ResT> the type of response sent by the server
  * @author Allard Buijze
  * @see ClientCallStreamObserver
- * @since 4.2
+ * @since axon-4.2
  */
 public abstract class UpstreamAwareStreamObserver<ResT> implements ClientResponseObserver<Object, ResT> {
 

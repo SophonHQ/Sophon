@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author Allard Buijze
  * @author John Hendrikx
- * @since 4.13.0
+ * @since axon-4.13.0
  */
 public class MetaDataDeserializer extends ValueDeserializer<MetaData> {
 

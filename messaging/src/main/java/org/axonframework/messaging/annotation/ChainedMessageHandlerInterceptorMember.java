@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> The type that declares the handlers in this chain.
  * @author Allard Buijze
- * @since 4.4.0
+ * @since axon-4.4.0
  */
 public class ChainedMessageHandlerInterceptorMember<T> implements MessageHandlerInterceptorMemberChain<T> {
 

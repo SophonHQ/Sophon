@@ -31,7 +31,7 @@ import java.util.Objects;
  * @author Steven van Beelen
  * @see org.axonframework.axonserver.connector.command.CommandPriorityCalculator
  * @see org.axonframework.axonserver.connector.query.QueryPriorityCalculator
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class PriorityRunnable implements Runnable, PriorityTask {
 

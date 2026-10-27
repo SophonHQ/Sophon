@@ -30,7 +30,7 @@ import java.util.Map;
  * @param <R> the type of the result streamed via {@link Publisher}
  * @author Milan Savic
  * @author Stefan Dragisic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface StreamingQueryMessage<Q, R> extends QueryMessage<Q, Publisher<R>> {
 

@@ -22,7 +22,7 @@ import org.axonframework.queryhandling.QueryMessage;
  * Calculate the priority of {@link QueryMessage} based on its content. Higher value means higher priority.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 @FunctionalInterface
 public interface QueryPriorityCalculator {

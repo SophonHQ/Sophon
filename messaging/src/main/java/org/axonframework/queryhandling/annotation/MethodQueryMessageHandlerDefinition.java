@@ -42,7 +42,7 @@ import static org.axonframework.common.ReflectionUtils.unwrapIfType;
  * QueryHandlingMember} that exposes query-specific handler information.
  *
  * @author Allard Buijze
- * @since 3.1
+ * @since axon-3.1
  */
 public class MethodQueryMessageHandlerDefinition implements HandlerEnhancerDefinition {
 

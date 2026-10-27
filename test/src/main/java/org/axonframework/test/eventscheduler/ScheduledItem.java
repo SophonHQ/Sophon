@@ -25,7 +25,7 @@ import java.time.Instant;
  * Interface describing an event to be scheduled at a given date and time.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public interface ScheduledItem {
 

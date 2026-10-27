@@ -22,7 +22,7 @@ import org.axonframework.common.AxonTransientException;
  * Exception indicating an error occurred while interacting with a JDBC resource.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public class JdbcException extends AxonTransientException {
 

@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  * and should not be wired "manually" in an Application Context.
  *
  * @author Allard Buijze
- * @since 4.2
+ * @since axon-4.2
  * @deprecated Replaced by the {@link SpringConfigurer}, which itself is a {@link Configurer} implementation.
  */
 @Deprecated
@@ -90,5 +90,3 @@ public class ConfigurerFactoryBean implements FactoryBean<Configurer>, Applicati
         return true;
     }
 }
-
-

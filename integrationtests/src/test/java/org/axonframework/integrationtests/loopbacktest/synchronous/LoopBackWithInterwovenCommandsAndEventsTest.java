@@ -135,7 +135,7 @@ class LoopBackWithInterwovenCommandsAndEventsTest {
 
     /**
      * @author Gerard de Leeuw
-     * @since 0.1.0 on 4-1-2017
+     * @since axon-0.1.0 on 4-1-2017
      */
     @AggregateRoot
     public static class MyAggregate {
@@ -170,7 +170,7 @@ class LoopBackWithInterwovenCommandsAndEventsTest {
 
     /**
      * @author Gerard de Leeuw
-     * @since 0.1.0 on 4-1-2017
+     * @since axon-0.1.0 on 4-1-2017
      */
     public static class MyCommand {
 
@@ -216,7 +216,7 @@ class LoopBackWithInterwovenCommandsAndEventsTest {
 
     /**
      * @author Gerard de Leeuw
-     * @since 0.1.0 on 4-1-2017
+     * @since axon-0.1.0 on 4-1-2017
      */
     public static class MyCommandHandler {
 
@@ -243,7 +243,7 @@ class LoopBackWithInterwovenCommandsAndEventsTest {
 
     /**
      * @author Gerard de Leeuw
-     * @since 0.1.0 on 4-1-2017
+     * @since axon-0.1.0 on 4-1-2017
      */
     public static class MyEvent {
 

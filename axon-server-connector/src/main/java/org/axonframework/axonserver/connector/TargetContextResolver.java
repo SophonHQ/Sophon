@@ -26,7 +26,7 @@ import org.axonframework.messaging.Message;
  *
  * @param <T> the type of {@link Message} to resolve the context for
  * @author Allard Buijze
- * @since 4.2
+ * @since axon-4.2
  */
 @FunctionalInterface
 public interface TargetContextResolver<T extends Message<?>> {

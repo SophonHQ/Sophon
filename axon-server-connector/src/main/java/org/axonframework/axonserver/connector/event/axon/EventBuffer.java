@@ -53,7 +53,7 @@ import java.util.stream.StreamSupport;
  *
  * @author Marc Gathier
  * @author Allard Buijze
- * @since 4.0
+ * @since axon-4.0
  */
 public class EventBuffer implements TrackingEventStream {
 

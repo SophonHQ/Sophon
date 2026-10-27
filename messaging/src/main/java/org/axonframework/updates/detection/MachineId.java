@@ -30,7 +30,7 @@ import java.util.UUID;
  * tracking purposes. If the ID can't be stored or read, it will generate a new UUID.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class MachineId {
 

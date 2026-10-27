@@ -55,7 +55,7 @@ import javax.sql.DataSource;
  * Autoconfiguration class for Axon's JDBC specific infrastructure components.
  *
  * @author Allard Buijze
- * @since 3.1
+ * @since axon-3.1
  */
 @AutoConfiguration
 @ConditionalOnBean(DataSource.class)

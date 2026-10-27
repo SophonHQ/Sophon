@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  * These attributes can be extracted into an {@link AnnotatedHandlerAttributes} objects through its constructor.
  *
  * @author Steven van Beelen
- * @since 4.5
+ * @since axon-4.5
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

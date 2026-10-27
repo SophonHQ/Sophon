@@ -22,7 +22,7 @@ import org.axonframework.common.AxonNonTransientException;
  * Exception indicating that the an aggregate could not be found in the repository.
  *
  * @author Allard Buijze
- * @since 0.4
+ * @since axon-0.4
  */
 public class AggregateNotFoundException extends AxonNonTransientException {
 

@@ -29,7 +29,7 @@ import static org.axonframework.common.BuilderUtils.assertPositive;
  * is not explicitly non-transient. Checked exceptions are considered non-transient and will not result in a retry.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class IntervalRetryScheduler extends AbstractRetryScheduler {
 

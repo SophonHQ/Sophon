@@ -36,7 +36,7 @@ import static org.axonframework.eventhandling.ReplayToken.createReplayToken;
  *
  * @author Christophe Bouhier
  * @author Allard Buijze
- * @since 3.1
+ * @since axon-3.1
  */
 public class TrackingEventProcessorConfiguration {
 

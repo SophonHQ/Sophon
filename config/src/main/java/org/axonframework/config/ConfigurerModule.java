@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * the {@link org.axonframework.config.Configurer} like the {@link org.axonframework.monitoring.MessageMonitor}.
  *
  * @author Steven van Beelen
- * @since 3.2
+ * @since axon-3.2
  */
 public interface ConfigurerModule {
 

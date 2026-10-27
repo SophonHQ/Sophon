@@ -55,7 +55,7 @@ import static org.axonframework.common.ObjectUtils.sameInstanceSupplier;
  *
  * @param <T> The type that this aggregate stores
  * @author Allard Buijze
- * @since 0.3
+ * @since axon-0.3
  */
 public abstract class LockingRepository<T, A extends Aggregate<T>> extends
         AbstractRepository<T, LockAwareAggregate<T, A>> {

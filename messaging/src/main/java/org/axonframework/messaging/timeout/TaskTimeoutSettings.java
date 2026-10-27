@@ -19,7 +19,7 @@ package org.axonframework.messaging.timeout;
  * Configuration properties for a task timeout. Used in other parts of the configuration.
  *
  * @author Mitchell Herrijgers
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class TaskTimeoutSettings {
 

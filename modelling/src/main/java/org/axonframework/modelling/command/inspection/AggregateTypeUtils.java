@@ -8,7 +8,7 @@ import static org.axonframework.common.annotation.AnnotationUtils.findAnnotation
  * Utility class providing static methods to retrieve the type as a {@link String} for a given aggregate {@link Class}.
  *
  * @author Mateusz Nowak
- * @since 4.13.2
+ * @since axon-4.13.2
  */
 public class AggregateTypeUtils {
 
@@ -22,7 +22,7 @@ public class AggregateTypeUtils {
      *
      * @param type the aggregate class to resolve the declared type for
      * @return the declared type of the given aggregate {@code type}
-     * @since 4.13.2
+     * @since axon-4.13.2
      */
     public static String declaredTypeOf(Class<?> type) {
         return findAnnotationAttributes(type, AggregateRoot.class)

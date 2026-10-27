@@ -22,7 +22,7 @@ import org.axonframework.common.AxonTransientException;
  * Exception indicating that the TokenStore was unable to initialize a Token for a tracking processor and Segment.
  *
  * @author Allard Buijze
- * @since 4.1
+ * @since axon-4.1
  */
 public class UnableToInitializeTokenException extends AxonTransientException {
 

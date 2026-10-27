@@ -25,7 +25,7 @@ import java.sql.Statement;
  * table and its indices.
  *
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 @FunctionalInterface
 public interface DeadLetterTableFactory {

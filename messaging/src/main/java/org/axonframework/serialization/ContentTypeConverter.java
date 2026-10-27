@@ -24,7 +24,7 @@ package org.axonframework.serialization;
  * @param <S> The expected source type
  * @param <T> The output type
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface ContentTypeConverter<S, T> {
 

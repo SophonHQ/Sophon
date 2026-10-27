@@ -22,7 +22,7 @@ import org.axonframework.common.AxonNonTransientException;
  * Indicates situations when access to the Payload of a Message is not allowed.
  *
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 public class IllegalPayloadAccessException extends AxonNonTransientException {
 

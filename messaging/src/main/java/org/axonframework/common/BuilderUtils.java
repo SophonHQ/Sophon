@@ -23,7 +23,7 @@ import java.util.function.Predicate;
  * Utility class containing reusable functionality for implementing the Builder Pattern in (infrastructure) components.
  *
  * @author Steven van Beelen
- * @since 4.0
+ * @since axon-4.0
  */
 public abstract class BuilderUtils {
 

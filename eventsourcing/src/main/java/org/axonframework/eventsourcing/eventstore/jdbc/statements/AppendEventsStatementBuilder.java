@@ -31,7 +31,7 @@ import java.util.List;
  * Serializer)}
  *
  * @author Lucas Campos
- * @since 4.3
+ * @since axon-4.3
  */
 @FunctionalInterface
 public interface AppendEventsStatementBuilder {

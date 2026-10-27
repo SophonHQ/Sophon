@@ -24,7 +24,7 @@ import org.axonframework.messaging.ScopeDescriptor;
  *
  * @author Milan Savic
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 @FunctionalInterface
 public interface DeadlineConsumer {

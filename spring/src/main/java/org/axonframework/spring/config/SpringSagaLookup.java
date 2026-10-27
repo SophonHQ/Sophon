@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * SpringSagaConfigurer configurer} for each Saga found.
  *
  * @author Allard Buijze
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class SpringSagaLookup implements BeanDefinitionRegistryPostProcessor {
 

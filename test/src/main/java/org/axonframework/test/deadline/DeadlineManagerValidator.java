@@ -39,7 +39,7 @@ import static org.hamcrest.Matchers.any;
  * Helps validation of deadline mechanism provided by {@link StubDeadlineManager}.
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public class DeadlineManagerValidator {
 

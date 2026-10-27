@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * calls to the given {@code resultStream}, adapting them to a {@link QueryResult}.
  *
  * @author Allard Buijze
- * @since 4.5.2
+ * @since axon-4.5.2
  */
 public class QueryResultStreamAdapter implements QueryResultStream {
 

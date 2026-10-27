@@ -42,7 +42,7 @@ import java.util.function.Supplier;
  *
  * @author Mitchell Herrijgers
  * @see SpanFactory For more information about creating different kinds of traces.
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface Span {
 

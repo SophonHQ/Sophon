@@ -80,7 +80,7 @@ import static org.mockito.Mockito.*;
  *
  * @author Milan Savic
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public abstract class AbstractDeadlineManagerTestSuite {
 

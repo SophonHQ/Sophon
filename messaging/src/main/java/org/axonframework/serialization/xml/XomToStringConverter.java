@@ -23,7 +23,7 @@ import org.axonframework.serialization.ContentTypeConverter;
  * Converter that converts XOM Document instances to a String. The Document is written as XML string.
  *
  * @author Jochen Munz
- * @since 2.2
+ * @since axon-2.2
  */
 public class XomToStringConverter implements ContentTypeConverter<Document,String> {
 

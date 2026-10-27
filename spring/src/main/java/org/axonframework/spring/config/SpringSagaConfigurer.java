@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * Context.
  *
  * @author Allard Buijze
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class SpringSagaConfigurer implements ConfigurerModule, ApplicationContextAware {
 

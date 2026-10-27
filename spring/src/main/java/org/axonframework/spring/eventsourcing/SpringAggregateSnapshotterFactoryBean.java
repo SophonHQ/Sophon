@@ -53,7 +53,7 @@ import javax.annotation.Nonnull;
  * Factories.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class SpringAggregateSnapshotterFactoryBean
         implements FactoryBean<SpringAggregateSnapshotter>, ApplicationContextAware {

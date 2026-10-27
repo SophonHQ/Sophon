@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * commands.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

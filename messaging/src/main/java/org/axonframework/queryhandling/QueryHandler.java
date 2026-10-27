@@ -29,7 +29,7 @@ import java.lang.annotation.*;
  * passed if that parameter is supplied.
  *
  * @author Marc Gathier
- * @since 3.1
+ * @since axon-3.1
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

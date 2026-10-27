@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * exceeds the maximum length.
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public abstract class LabelUtils {
     private static final int MAX_LENGTH = 44;

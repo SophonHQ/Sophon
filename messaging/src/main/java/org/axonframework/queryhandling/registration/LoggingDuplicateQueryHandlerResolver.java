@@ -28,7 +28,7 @@ import java.util.List;
  * but logs this (on WARN level) to a given logger.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class LoggingDuplicateQueryHandlerResolver implements DuplicateQueryHandlerResolver {
 

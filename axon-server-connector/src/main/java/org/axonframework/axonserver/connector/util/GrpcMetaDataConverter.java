@@ -37,7 +37,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * and from a {@code byte[]} using the configured Serializer.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class GrpcMetaDataConverter {
 

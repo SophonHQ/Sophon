@@ -23,7 +23,7 @@ import org.axonframework.messaging.MessageHandler;
  * Exception indicating a duplicate Command Handler was subscribed whilst this behavior is purposefully guarded against.
  *
  * @author Steven van Beelen
- * @since 4.2
+ * @since axon-4.2
  */
 public class DuplicateCommandHandlerSubscriptionException extends AxonNonTransientException {
 

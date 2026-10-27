@@ -26,7 +26,7 @@ import org.axonframework.eventhandling.DomainEventMessage;
  *
  * @param <T> The type of aggregate this factory creates
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public interface AggregateFactory<T> {
 

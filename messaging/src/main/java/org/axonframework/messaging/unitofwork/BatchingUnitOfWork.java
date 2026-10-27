@@ -40,7 +40,7 @@ import static org.axonframework.messaging.GenericResultMessage.asResultMessage;
  * @param <T> The type of message handled by this Unit of Work
  * @author Rene de Waele
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class BatchingUnitOfWork<T extends Message<?>> extends AbstractUnitOfWork<T> {
 

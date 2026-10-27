@@ -23,7 +23,7 @@ import org.springframework.boot.actuate.health.Status;
  *
  * @author Steven van Beelen
  * @author Marc Gathier
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public abstract class HealthStatus {
 

@@ -30,7 +30,7 @@ import java.util.function.Predicate;
  * of the Class represented by the {@code DomainEventData}.
  *
  * @author Shyam Sankaran
- * @since 3.3
+ * @since axon-3.3
  */
 public class EqualRevisionPredicate implements Predicate<DomainEventData<?>> {
 

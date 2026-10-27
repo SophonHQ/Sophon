@@ -24,7 +24,7 @@ import org.axonframework.messaging.RemoteNonTransientHandlingException;
  * Exception indicating a non-transient problem that was reported by the remote end of a connection.
  *
  * @author Stefan Andjelkovic
- * @since 4.5
+ * @since axon-4.5
  */
 public class AxonServerNonTransientRemoteCommandHandlingException extends RemoteNonTransientHandlingException {
 

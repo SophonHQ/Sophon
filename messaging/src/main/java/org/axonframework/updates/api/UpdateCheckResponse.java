@@ -26,7 +26,7 @@ import java.util.Objects;
  * found in the artifacts used by the application.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class UpdateCheckResponse {
 

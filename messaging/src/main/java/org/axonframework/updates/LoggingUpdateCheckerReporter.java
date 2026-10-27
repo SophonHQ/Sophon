@@ -30,7 +30,7 @@ import java.util.function.Function;
  * An {@link UpdateCheckerReporter} implementation that logs the results of the update check.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class LoggingUpdateCheckerReporter implements UpdateCheckerReporter {
 

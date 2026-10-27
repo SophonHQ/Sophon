@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  * @param <Q> a generic specifying the type of the {@link QueryMessage}'s payload
  * @param <R> a generic specifying the expected response type of the {@link QueryMessage}
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class GrpcBackedQueryMessage<Q, R> implements QueryMessage<Q, R> {
 

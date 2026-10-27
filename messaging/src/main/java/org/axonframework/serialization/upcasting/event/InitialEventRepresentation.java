@@ -39,7 +39,7 @@ import java.util.function.Supplier;
  * the data store.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class InitialEventRepresentation implements IntermediateEventRepresentation {
 

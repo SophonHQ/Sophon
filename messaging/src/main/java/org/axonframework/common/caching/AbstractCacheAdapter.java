@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @param <L> The type of event listener the cache uses
  * @author Allard Buijze
- * @since 2.1.2
+ * @since axon-2.1.2
  */
 public abstract class AbstractCacheAdapter<L> implements Cache {
 

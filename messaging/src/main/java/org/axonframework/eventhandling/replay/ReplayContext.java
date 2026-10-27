@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * Will inject null when there is no replay currently happening, or when the context is null.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})

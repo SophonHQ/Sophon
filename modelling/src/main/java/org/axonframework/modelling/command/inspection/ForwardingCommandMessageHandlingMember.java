@@ -23,7 +23,7 @@ import org.axonframework.commandhandling.CommandMessageHandlingMember;
  *
  * @param <T> The type of entity to which the message handler will delegate the actual handling of the command
  * @author Somrak Monpengpinij
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface ForwardingCommandMessageHandlingMember<T> extends CommandMessageHandlingMember<T> {
 

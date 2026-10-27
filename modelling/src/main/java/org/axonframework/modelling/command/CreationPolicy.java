@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * new instance of the aggregate from a handler operation.
  *
  * @author Marc Gathier
- * @since 4.3
+ * @since axon-4.3
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

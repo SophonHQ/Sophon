@@ -33,7 +33,7 @@ import java.util.function.Predicate;
  * messages
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

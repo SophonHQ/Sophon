@@ -39,7 +39,7 @@ import org.springframework.context.annotation.Bean;
  * Autoconfiguration class for Axon's JPA specific event store components.
  *
  * @author Sara Pelligrini
- * @since 4.0
+ * @since axon-4.0
  */
 @AutoConfiguration
 @ConditionalOnBean(EntityManagerFactory.class)

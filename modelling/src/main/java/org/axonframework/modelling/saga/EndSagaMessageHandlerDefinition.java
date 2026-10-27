@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * EndSageMessageHandlingMember}.
  *
  * @author Steven van Beelen
- * @since 4.5
+ * @since axon-4.5
  */
 public class EndSagaMessageHandlerDefinition implements HandlerEnhancerDefinition {
 

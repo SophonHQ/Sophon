@@ -20,7 +20,7 @@ package org.axonframework.monitoring;
  * A NoOp MessageMonitor callback
  *
  * @author Marijn van Zelst
- * @since 3.0
+ * @since axon-3.0
  */
 public enum NoOpMessageMonitorCallback implements MessageMonitor.MonitorCallback {
 

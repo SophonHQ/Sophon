@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * from {@link String}.
  *
  * @author Frank Scheffler
- * @since 4.7.0
+ * @since axon-4.7.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})

@@ -24,7 +24,7 @@ import org.axonframework.serialization.upcasting.SingleEntryMultiUpcaster;
  * mapping function to the input stream of intermediate representations.
  *
  * @author Steven van Beelen
- * @since 3.0.6
+ * @since axon-3.0.6
  */
 public abstract class EventMultiUpcaster
         extends SingleEntryMultiUpcaster<IntermediateEventRepresentation> implements EventUpcaster {

@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  *
  * @author Steven van Beelen
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class GenericDeadLetter<M extends Message<?>> implements DeadLetter<M> {
 

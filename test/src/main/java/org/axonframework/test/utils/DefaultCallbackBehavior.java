@@ -26,7 +26,7 @@ import org.axonframework.messaging.MetaData;
  * parameter.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class DefaultCallbackBehavior implements CallbackBehavior {
 

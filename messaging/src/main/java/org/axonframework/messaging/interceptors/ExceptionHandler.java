@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * the result of the handler method invocation.
  *
  * @author Allard Buijze
- * @since 4.4
+ * @since axon-4.4
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})

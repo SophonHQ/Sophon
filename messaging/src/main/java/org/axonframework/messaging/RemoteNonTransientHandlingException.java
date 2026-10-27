@@ -26,7 +26,7 @@ import java.util.List;
  * The sender of the message <strong>cannot</strong> assume that the message has not been handled.
  *
  * @author Stefan Andjelkovic
- * @since 4.5
+ * @since axon-4.5
  */
 public class RemoteNonTransientHandlingException extends AxonNonTransientException {
 

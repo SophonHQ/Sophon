@@ -36,7 +36,7 @@ import static java.util.Collections.emptyIterator;
  * @param <T> The type of result to be streamed
  * @author Milan Savic
  * @author Stefan Dragisic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 class StreamableMultiInstanceResponse<T> implements StreamableResponse {
 

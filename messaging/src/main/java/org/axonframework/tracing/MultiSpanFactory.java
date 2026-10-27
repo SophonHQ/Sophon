@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * implementations to be used as a single factory.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MultiSpanFactory implements SpanFactory {
 

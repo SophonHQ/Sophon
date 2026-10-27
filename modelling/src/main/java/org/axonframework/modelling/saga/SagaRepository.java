@@ -25,7 +25,7 @@ import java.util.function.Supplier;
  * they have been associated with (see {@link AssociationValue}) or via their unique identifier.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public interface SagaRepository<T> {
 

@@ -28,7 +28,7 @@ import java.util.function.UnaryOperator;
  * Cache implementation that delegates all calls to an EhCache instance.
  *
  * @author Allard Buijze
- * @since 2.1.2
+ * @since axon-2.1.2
  * @deprecated since ehcache 2 is nearing eol, we added {@link EhCache3Adapter} instead, which uses ehcache 3.
  */
 @Deprecated

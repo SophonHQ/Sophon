@@ -37,7 +37,7 @@ import java.util.function.Supplier;
  * {@link GenericTrackedDomainEventMessage}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  * @deprecated in favor of using {@link org.axonframework.eventhandling.deadletter.jpa.EventMessageDeadLetterJpaConverter}
  * which moved to jakarta.
  */

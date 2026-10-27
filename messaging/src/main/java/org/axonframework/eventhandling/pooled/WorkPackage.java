@@ -66,7 +66,7 @@ import java.util.function.UnaryOperator;
  * @author Steven van Beelen
  * @see PooledStreamingEventProcessor
  * @see Coordinator
- * @since 4.5
+ * @since axon-4.5
  */
 class WorkPackage {
 

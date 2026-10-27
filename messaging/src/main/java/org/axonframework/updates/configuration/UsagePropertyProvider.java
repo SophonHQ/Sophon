@@ -29,7 +29,7 @@ import java.util.List;
  * providers, such as command line, property file, and default providers.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public interface UsagePropertyProvider {
 

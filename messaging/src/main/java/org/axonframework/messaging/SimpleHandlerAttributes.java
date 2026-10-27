@@ -26,7 +26,7 @@ import java.util.Objects;
  * Simple implementation of the {@link HandlerAttributes} which is given the {@code attributes} in the constructor.
  *
  * @author Steven van Beelen
- * @since 4.5
+ * @since axon-4.5
  */
 public class SimpleHandlerAttributes implements HandlerAttributes {
 

@@ -38,7 +38,7 @@ import static java.util.stream.Collectors.toList;
  *
  * @author Steven van Beelen
  * @author Rob van der Linden Vooren
- * @since 3.3
+ * @since axon-3.3
  */
 public class ConfigurationScopeAwareProvider implements ScopeAwareProvider {
 

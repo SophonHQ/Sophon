@@ -43,7 +43,7 @@ import static org.axonframework.springboot.util.XStreamSecurityTypeUtility.autoC
  * packages.
  *
  * @author Steven van Beelen
- * @since 4.5.4
+ * @since axon-4.5.4
  */
 @AutoConfiguration
 @AutoConfigureBefore(AxonAutoConfiguration.class)

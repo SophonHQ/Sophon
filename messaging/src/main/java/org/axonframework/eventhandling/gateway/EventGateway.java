@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  *
  * @author Bert Laverman
  * @see DefaultEventGateway
- * @since 4.1
+ * @since axon-4.1
  */
 public interface EventGateway extends MessageDispatchInterceptorSupport<EventMessage<?>> {
 

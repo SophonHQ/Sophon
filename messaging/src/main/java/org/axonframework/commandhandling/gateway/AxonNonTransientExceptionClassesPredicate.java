@@ -26,7 +26,7 @@ import org.axonframework.common.AxonNonTransientException;
  * This {@code Predicate} acts as the default for {@link RetryScheduler} instances.
  *
  * @author Damir Murat
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class AxonNonTransientExceptionClassesPredicate extends NonTransientExceptionClassesPredicate {
     public AxonNonTransientExceptionClassesPredicate() {

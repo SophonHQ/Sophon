@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * instances match.
  *
  * @author Allard Buijze
- * @since 4.0
+ * @since axon-4.0
  */
 public class AndCommandMessageFilter implements CommandMessageFilter {
 

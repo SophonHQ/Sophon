@@ -25,7 +25,7 @@ import reactor.core.publisher.FluxSink;
  *
  * @param <T> The value type
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  * @deprecated in favour of using the {{@link SinksManyWrapper}}
  */
 @Deprecated

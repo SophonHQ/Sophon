@@ -27,7 +27,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * which prescribes what happens when routing cannot be resolved by this implementation.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public abstract class AbstractRoutingStrategy implements RoutingStrategy {
 

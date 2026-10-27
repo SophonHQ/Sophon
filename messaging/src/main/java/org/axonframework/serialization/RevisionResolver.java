@@ -22,7 +22,7 @@ package org.axonframework.serialization;
  * currently known version of the payload.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface RevisionResolver {
 

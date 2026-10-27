@@ -26,7 +26,7 @@ import org.axonframework.modelling.command.Repository;
  *
  * @param <A> The type of Aggregate defined in this Configuration
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public interface AggregateConfiguration<A> extends ModuleConfiguration {
 

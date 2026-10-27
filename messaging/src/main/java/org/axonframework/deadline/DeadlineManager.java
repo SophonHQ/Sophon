@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  *
  * @author Milan Savic
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public interface DeadlineManager extends MessageDispatchInterceptorSupport<DeadlineMessage<?>>,
         MessageHandlerInterceptorSupport<DeadlineMessage<?>> {

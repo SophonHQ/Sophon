@@ -22,7 +22,7 @@ package org.axonframework.messaging;
  *
  * @param <MessageBus> the message bus which is distributed
  * @author Steven van Beelen
- * @since 4.2.2
+ * @since axon-4.2.2
  */
 public interface Distributed<MessageBus> {
 

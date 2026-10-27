@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
  * @param <T> The type of the MessageMonitor created for every payload type.Must implement both {@link MessageMonitor}
  *            and {@link MetricSet}
  * @author Steven van Beelen
- * @since 3.0
+ * @since axon-3.0
  */
 public class PayloadTypeMessageMonitorWrapper<T extends MessageMonitor<Message<?>> & MetricSet>
         implements MessageMonitor<Message<?>>, MetricSet {

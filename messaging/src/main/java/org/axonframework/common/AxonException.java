@@ -20,7 +20,7 @@ package org.axonframework.common;
  * Base exception for all Axon Framework related exceptions.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public abstract class AxonException extends RuntimeException {
 

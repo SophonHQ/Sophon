@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
  * Properties describing the settings for Event Processors.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 @ConfigurationProperties("axon.eventhandling")
 public class EventProcessorProperties {

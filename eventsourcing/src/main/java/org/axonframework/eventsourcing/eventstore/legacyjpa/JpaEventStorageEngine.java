@@ -70,7 +70,7 @@ import static org.axonframework.common.DateTimeUtils.formatInstant;
  * that allow quick finding of DomainEvents for a specific aggregate in the correct order.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  * @deprecated in favor of using {@link org.axonframework.eventsourcing.eventstore.jpa.JpaEventStorageEngine} which
  * moved to jakarta.
  */

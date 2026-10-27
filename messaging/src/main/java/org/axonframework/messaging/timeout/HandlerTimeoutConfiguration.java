@@ -21,7 +21,7 @@ package org.axonframework.messaging.timeout;
  * settings.
  *
  * @author Mitchell Herrijgers
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class HandlerTimeoutConfiguration {
 

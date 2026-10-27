@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  *
  * @param <U> type of incremental update
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public interface SubscriptionQueryUpdateMessage<U> extends ResultMessage<U> {
 

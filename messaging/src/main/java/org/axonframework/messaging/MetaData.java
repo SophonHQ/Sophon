@@ -36,7 +36,7 @@ import javax.annotation.Nullable;
  * about the message payload that isn't "domain-specific". Examples are originating IP-address or executing User ID.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class MetaData implements Map<String, Object>, Serializable {
 

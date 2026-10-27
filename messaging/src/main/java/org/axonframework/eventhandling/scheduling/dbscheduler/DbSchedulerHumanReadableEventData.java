@@ -28,7 +28,7 @@ import static java.lang.String.format;
  * {@link DbSchedulerEventScheduler#humanReadableTask()}
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class DbSchedulerHumanReadableEventData implements Serializable {
 

@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * Implementation of {@link EventHandlerInvoker} with capabilities to invoke several different invokers.
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public class MultiEventHandlerInvoker implements EventHandlerInvoker {
 

@@ -48,7 +48,7 @@ import java.util.Optional;
  * InitializingBean function and register the interceptors there.
  *
  * @author Christian Thiel
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 @AutoConfiguration
 @ConditionalOnClass(SpringConfigurer.class)

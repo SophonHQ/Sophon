@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  *
  * @author Tyler Thrailkill
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public class MultiHandlerDefinition implements HandlerDefinition {
 

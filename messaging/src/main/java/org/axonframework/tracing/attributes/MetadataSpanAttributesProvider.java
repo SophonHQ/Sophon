@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * The values are not serialized to a specific format, rather the {@link Object#toString()} method is called on it.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MetadataSpanAttributesProvider implements SpanAttributesProvider {
 

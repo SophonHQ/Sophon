@@ -25,7 +25,7 @@ import java.lang.reflect.Member;
  * methods.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class UnsupportedHandlerException extends AxonConfigurationException {
 

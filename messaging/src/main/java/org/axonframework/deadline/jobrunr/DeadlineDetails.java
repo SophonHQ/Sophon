@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  *
  * @author Tom de Backer
  * @author Gerard Klijs
- * @since 4.7.0
+ * @since axon-4.7.0
  */
 public class DeadlineDetails {
 

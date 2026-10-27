@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  * components provided by this configuration, ensure that {@link #start()} has been invoked.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public interface Configuration extends LifecycleOperations {
 

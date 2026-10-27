@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  * @param <T> the type of entry to be upcasted as {@code T}
  * @param <C> the type of context used as {@code C}
  * @author Steven van Beelen
- * @since 3.1
+ * @since axon-3.1
  */
 public abstract class ContextAwareSingleEntryUpcaster<T, C> implements Upcaster<T> {
 

@@ -33,7 +33,7 @@ import org.springframework.context.annotation.Bean;
  * Auto configuration to set up Metrics for the infrastructure components.
  *
  * @author Steven van Beelen
- * @since 3.2
+ * @since axon-3.2
  */
 @AutoConfiguration
 @AutoConfigureBefore(AxonAutoConfiguration.class)
@@ -66,4 +66,3 @@ public class MetricsAutoConfiguration {
         return new MetricsConfigurerModule(globalMetricRegistry);
     }
 }
-

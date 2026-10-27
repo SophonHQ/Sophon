@@ -36,7 +36,7 @@ import java.util.Objects;
  * by one of the configured {@link DeadLetterJpaConverter converters}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @Entity
 @Table(indexes = {

@@ -20,7 +20,7 @@ package org.axonframework.common;
  * Interface that provides a mechanism to cancel a registration.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 @FunctionalInterface
 public interface Registration extends AutoCloseable {

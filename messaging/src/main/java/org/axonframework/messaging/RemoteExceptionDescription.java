@@ -31,7 +31,7 @@ import java.util.Objects;
  * Exceptions without requiring any knowledge on the Exception classes.
  *
  * @author Steven van Beelen
- * @since 4.0
+ * @since axon-4.0
  */
 public class RemoteExceptionDescription implements Serializable {
 

@@ -34,7 +34,7 @@ import java.util.function.Supplier;
  * registered.
  *
  * @author Steven van Beelen
- * @since 4.3
+ * @since axon-4.3
  */
 public class ShutdownLatch {
 

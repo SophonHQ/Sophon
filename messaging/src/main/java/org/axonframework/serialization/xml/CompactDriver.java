@@ -33,7 +33,7 @@ import java.net.URL;
  * write to a text based output stream, such as the {@link java.io.OutputStreamWriter}.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class CompactDriver implements HierarchicalStreamDriver {
 

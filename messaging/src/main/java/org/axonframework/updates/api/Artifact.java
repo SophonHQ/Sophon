@@ -22,7 +22,7 @@ import java.util.Objects;
  * Represents an artifact with its group ID, artifact ID, and version.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class Artifact {
 

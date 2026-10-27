@@ -55,7 +55,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @author Allard Buijze
  * @see org.axonframework.eventhandling.scheduling.quartz.QuartzEventScheduler
- * @since 0.7
+ * @since axon-0.7
  */
 public class SimpleEventScheduler implements EventScheduler, Lifecycle {
 

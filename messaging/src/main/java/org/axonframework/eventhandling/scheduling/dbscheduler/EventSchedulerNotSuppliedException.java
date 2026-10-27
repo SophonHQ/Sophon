@@ -23,7 +23,7 @@ import org.axonframework.common.AxonException;
  * {@link DbSchedulerEventScheduler} was not supplied properly.
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class EventSchedulerNotSuppliedException extends AxonException {
 

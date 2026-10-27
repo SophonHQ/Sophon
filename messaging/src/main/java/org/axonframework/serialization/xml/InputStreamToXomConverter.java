@@ -31,7 +31,7 @@ import java.io.InputStreamReader;
  * formatted XML.
  *
  * @author Jochen Munz
- * @since 2.2
+ * @since axon-2.2
  */
 public class InputStreamToXomConverter implements ContentTypeConverter<InputStream,Document> {
 

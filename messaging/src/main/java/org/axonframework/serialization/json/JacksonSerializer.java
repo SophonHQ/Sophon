@@ -52,7 +52,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * still being human-readable.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public class JacksonSerializer implements Serializer {
 

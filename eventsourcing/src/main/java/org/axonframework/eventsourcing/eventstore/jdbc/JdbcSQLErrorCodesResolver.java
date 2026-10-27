@@ -25,7 +25,7 @@ import org.axonframework.common.jdbc.PersistenceExceptionResolver;
  * <p/>
  *
  * @author Kristian Rosenvold
- * @since 2.2
+ * @since axon-2.2
  */
 public class JdbcSQLErrorCodesResolver implements PersistenceExceptionResolver {
 

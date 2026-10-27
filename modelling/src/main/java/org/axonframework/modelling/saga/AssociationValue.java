@@ -30,7 +30,7 @@ import java.util.Objects;
  * Orders could have a AssociationValue with key &quot;orderId&quot; and the order identifier as value.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class AssociationValue implements Serializable {
 

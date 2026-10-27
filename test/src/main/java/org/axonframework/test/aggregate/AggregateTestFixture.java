@@ -110,7 +110,7 @@ import static org.axonframework.common.ReflectionUtils.*;
  *
  * @param <T> The type of Aggregate tested in this Fixture
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class AggregateTestFixture<T> implements FixtureConfiguration<T>, TestExecutor<T> {
 

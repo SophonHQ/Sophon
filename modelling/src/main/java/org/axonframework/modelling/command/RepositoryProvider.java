@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
  * Provides a repository for given aggregate type.
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 @FunctionalInterface
 public interface RepositoryProvider {

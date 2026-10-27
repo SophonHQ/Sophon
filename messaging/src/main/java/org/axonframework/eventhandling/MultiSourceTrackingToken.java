@@ -36,7 +36,7 @@ import java.util.StringJoiner;
  * several message sources at once, like the {@link MultiStreamableMessageSource}.
  *
  * @author Greg Woods
- * @since 4.2
+ * @since axon-4.2
  */
 public class MultiSourceTrackingToken implements TrackingToken, Serializable {
 

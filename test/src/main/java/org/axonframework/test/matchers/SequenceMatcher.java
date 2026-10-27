@@ -32,7 +32,7 @@ import java.util.List;
  * has been evaluated, and Matchers still remain, they are evaluated against a {@code null} value.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class SequenceMatcher<T> extends ListMatcher<T> {
 

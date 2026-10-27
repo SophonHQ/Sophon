@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
  *
  * @param <U> The declared response type.
  * @author Allard Buijze
- * @since 4.12.3
+ * @since axon-4.12.3
  */
 class IgnoredResponseType<U> implements ResponseType<U> {
 

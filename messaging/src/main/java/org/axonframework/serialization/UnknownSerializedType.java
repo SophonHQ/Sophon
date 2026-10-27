@@ -21,7 +21,7 @@ package org.axonframework.serialization;
  * class provides access to the raw underlying data, as well as any format supported by the serializer.
  *
  * @author Allard Buijze
- * @since 4.0
+ * @since axon-4.0
  */
 public class UnknownSerializedType {
 

@@ -25,7 +25,7 @@ import java.io.Serializable;
  * cancel that timer.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public interface ScheduleToken extends Serializable {

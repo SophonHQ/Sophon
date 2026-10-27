@@ -27,7 +27,7 @@ import java.util.Objects;
  * Utilities for creating spans which are relevant for all implementations of tracing.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class SpanUtils {
 

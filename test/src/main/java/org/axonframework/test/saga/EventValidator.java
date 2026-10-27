@@ -35,7 +35,7 @@ import static org.axonframework.test.saga.DescriptionUtils.describe;
  * Helper class for validating events published on a given EventBus.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class EventValidator implements EventMessageHandler {
 

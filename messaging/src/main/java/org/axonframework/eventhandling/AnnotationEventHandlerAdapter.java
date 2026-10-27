@@ -35,7 +35,7 @@ import java.util.Optional;
  *
  * @author Allard Buijze
  * @see EventMessageHandler
- * @since 0.1
+ * @since axon-0.1
  */
 public class AnnotationEventHandlerAdapter implements EventMessageHandler {
 

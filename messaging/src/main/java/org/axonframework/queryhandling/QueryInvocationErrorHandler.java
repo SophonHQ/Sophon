@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  *
  * @author Allard Buijze
  * @author Marc Gathier
- * @since 3.1
+ * @since axon-3.1
  */
 public interface QueryInvocationErrorHandler {
 

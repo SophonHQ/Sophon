@@ -23,7 +23,7 @@ import org.axonframework.common.AxonNonTransientException;
  * GenericAggregateFactory}.
  *
  * @author Allard Buijze
- * @since 0.5
+ * @since axon-0.5
  */
 public class IncompatibleAggregateException extends AxonNonTransientException {
 

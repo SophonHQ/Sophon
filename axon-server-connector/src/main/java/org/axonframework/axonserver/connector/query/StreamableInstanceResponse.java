@@ -25,7 +25,7 @@ import org.axonframework.queryhandling.QueryResponseMessage;
  *
  * @author Milan Savic
  * @author Stefan Dragisic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 class StreamableInstanceResponse implements StreamableResponse {
 

@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * a DomainEventMessage. The parameter type must be assignable from {@link java.lang.Long}.
  *
  * @author Mark Ingram
- * @since 2.1
+ * @since axon-2.1
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})

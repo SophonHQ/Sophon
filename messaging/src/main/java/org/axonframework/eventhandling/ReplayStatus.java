@@ -27,7 +27,7 @@ package org.axonframework.eventhandling;
  *
  * @author Allard Buijze
  * @see AllowReplay @AllowReplay
- * @since 3.2
+ * @since axon-3.2
  */
 public enum ReplayStatus {
 

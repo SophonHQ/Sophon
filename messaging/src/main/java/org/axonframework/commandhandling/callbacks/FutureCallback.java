@@ -37,7 +37,7 @@ import static org.axonframework.commandhandling.GenericCommandResultMessage.asCo
  * @param <R> the type of result of the command handling
  * @param <C> The type of payload of the dispatched command
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class FutureCallback<C, R> extends CompletableFuture<CommandResultMessage<? extends R>>
         implements CommandCallback<C, R> {

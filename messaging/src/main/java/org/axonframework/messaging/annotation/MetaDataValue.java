@@ -24,7 +24,7 @@ import java.lang.annotation.*;
  * invoked.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 @Documented
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})

@@ -33,7 +33,7 @@ import java.util.Objects;
  * as a means to track progress of event stream processing.
  *
  * @author Allard Buijze
- * @since 4.4
+ * @since axon-4.4
  */
 public class ConfigToken implements TrackingToken, Serializable {
 

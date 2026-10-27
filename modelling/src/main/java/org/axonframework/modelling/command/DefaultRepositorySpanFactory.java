@@ -25,7 +25,7 @@ import org.axonframework.tracing.SpanFactory;
  * can be configured.
  *
  * @author Mitchell Herrijgers
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class DefaultRepositorySpanFactory implements RepositorySpanFactory {
 

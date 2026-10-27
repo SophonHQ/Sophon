@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> The type of Message that can be intercepted
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class CorrelationDataInterceptor<T extends Message<?>> implements MessageHandlerInterceptor<T> {
 

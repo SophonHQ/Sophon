@@ -23,7 +23,7 @@ import org.axonframework.messaging.annotation.MessageHandlingMember;
  *
  * @param <T> The type of entity to which the message handler will delegate the actual handling of the deadline
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public interface DeadlineHandlingMember<T> extends MessageHandlingMember<T> {
 

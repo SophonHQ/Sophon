@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * method's return value is converted.
  *
  * @author Allard Buijze
- * @since 1.2
+ * @since axon-1.2
  */
 @RoutingKey
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE})

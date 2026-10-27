@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * gRPC implementation of {@link HeartbeatSource}, which sends to AxonServer a {@link Heartbeat} message.
  *
  * @author Sara Pellegrini
- * @since 4.2.1
+ * @since axon-4.2.1
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

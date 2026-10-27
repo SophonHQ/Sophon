@@ -27,7 +27,7 @@ import java.sql.SQLException;
  * java.sql.Connection#close()} method.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public abstract class ConnectionWrapperFactory {
 

@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * @param <I> the type of initial response
  * @param <U> the type of incremental responses
  * @author Allard Buijze
- * @since 3.3
+ * @since axon-3.3
  */
 public interface SubscriptionQueryMessage<Q, I, U> extends QueryMessage<Q, I> {
 

@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
  * and the console-framework-client is not available.
  *
  * @author Gerard Klijs
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class AxonIQConsoleModule implements ModuleConfiguration {
 

@@ -27,7 +27,7 @@ import org.axonframework.modelling.saga.repository.SagaStore;
  *
  * @param <S> a generic specifying the Saga type
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 public interface SagaConfiguration<S> {
 

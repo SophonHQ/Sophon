@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * Implementation of the {@link EventBus} that dispatches events in the thread the publishes them.
  *
  * @author Allard Buijze
- * @since 0.5
+ * @since axon-0.5
  */
 public class SimpleEventBus extends AbstractEventBus {
 

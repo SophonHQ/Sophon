@@ -34,7 +34,7 @@ import java.util.OptionalLong;
  * individually, until both halves represent the same position.
  *
  * @author Allard Buijze
- * @since 4.1
+ * @since axon-4.1
  */
 public class MergedTrackingToken implements TrackingToken, Serializable, WrappedToken {
 

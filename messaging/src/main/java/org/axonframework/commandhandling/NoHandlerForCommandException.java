@@ -28,7 +28,7 @@ import static java.lang.String.format;
  * now see this exception as retryable.
  *
  * @author Allard Buijze
- * @since 0.5
+ * @since axon-0.5
  */
 public class NoHandlerForCommandException extends AxonTransientException {
 

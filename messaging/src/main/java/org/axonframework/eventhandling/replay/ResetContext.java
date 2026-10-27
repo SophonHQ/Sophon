@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> the type of payload contained in the message
  * @author Steven van Beelen
- * @since 4.4
+ * @since axon-4.4
  */
 public interface ResetContext<T> extends Message<T> {
 

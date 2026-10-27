@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  * efficient manner.
  *
  * @author Koen Lavooij
- * @since 3.0
+ * @since axon-3.0
  */
 public class CommandNameFilter implements CommandMessageFilter {
 

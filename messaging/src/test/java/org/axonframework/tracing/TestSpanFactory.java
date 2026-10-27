@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * assertions in unit tests and provides several out of the box.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class TestSpanFactory implements SpanFactory {
 

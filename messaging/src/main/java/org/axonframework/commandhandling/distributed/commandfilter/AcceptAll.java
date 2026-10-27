@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * A command filter that accepts all {@link CommandMessage}s.
  *
  * @author Koen Lavooij
- * @since 3.0
+ * @since axon-3.0
  */
 public enum AcceptAll implements CommandMessageFilter {
 

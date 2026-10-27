@@ -52,7 +52,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * independent of the actual format used to marshal to.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public abstract class AbstractXStreamSerializer implements Serializer {
 

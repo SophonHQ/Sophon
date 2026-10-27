@@ -20,7 +20,7 @@ package org.axonframework.messaging;
  * A {@link ScopeDescriptor} describing no active scope.
  *
  * @author Steven van Beelen
- * @since 4.5
+ * @since axon-4.5
  */
 public class NoScopeDescriptor implements ScopeDescriptor {
 

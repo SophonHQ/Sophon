@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * A message monitor that returns a NoOp message callback
  *
  * @author Marijn van Zelst
- * @since 3.0
+ * @since axon-3.0
  */
 public enum NoOpMessageMonitor implements MessageMonitor<Message<?>> {
 

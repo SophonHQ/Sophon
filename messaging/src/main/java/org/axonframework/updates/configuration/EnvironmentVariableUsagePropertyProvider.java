@@ -23,7 +23,7 @@ import org.axonframework.common.BuilderUtils;
  * priority is half of max integer value, meaning it will be overridden by the command-line properties provider.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class EnvironmentVariableUsagePropertyProvider implements UsagePropertyProvider {
 

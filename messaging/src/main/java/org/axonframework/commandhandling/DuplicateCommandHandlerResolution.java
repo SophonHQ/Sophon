@@ -22,7 +22,7 @@ package org.axonframework.commandhandling;
  * command handling function.
  *
  * @author Steven van Beelen
- * @since 4.2
+ * @since axon-4.2
  */
 public abstract class DuplicateCommandHandlerResolution {
     private DuplicateCommandHandlerResolution() {

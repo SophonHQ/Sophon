@@ -44,7 +44,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * {@link AbstractEventStorageEngine} implementation that fetches events in batches from the backing database.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class BatchingEventStorageEngine extends AbstractEventStorageEngine {
 

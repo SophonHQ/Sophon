@@ -23,7 +23,7 @@ import org.axonframework.messaging.Message;
  *
  * @param <T> The type of parameter returned by this resolver
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface ParameterResolver<T> {
 

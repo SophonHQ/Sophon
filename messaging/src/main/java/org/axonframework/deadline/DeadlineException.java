@@ -22,7 +22,7 @@ import org.axonframework.common.AxonTransientException;
  * Exception which occurs during deadline message processing.
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public class DeadlineException extends AxonTransientException {
 

@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * functionality.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public interface HandlerEnhancerDefinition {
 

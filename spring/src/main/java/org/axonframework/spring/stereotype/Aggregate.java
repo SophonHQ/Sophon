@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * Annotation that informs Axon's auto configurer for Spring that a given {@link Component} is an aggregate instance.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

@@ -34,7 +34,7 @@ import org.springframework.context.ApplicationContextAware;
  * {@code AutowiredAnnotationBeanPostProcessor}. See the Spring documentation for more information.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class SpringResourceInjector implements ResourceInjector, ApplicationContextAware {
 

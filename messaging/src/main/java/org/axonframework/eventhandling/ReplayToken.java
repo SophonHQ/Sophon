@@ -34,7 +34,7 @@ import java.util.OptionalLong;
  * messages that are redelivered as part of a replay.
  *
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 public class ReplayToken implements TrackingToken, WrappedToken, Serializable {
 

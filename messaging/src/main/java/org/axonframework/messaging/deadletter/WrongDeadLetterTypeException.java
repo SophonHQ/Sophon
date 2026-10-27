@@ -26,7 +26,7 @@ import org.axonframework.common.AxonException;
  * original supplied by the queue in the first place.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class WrongDeadLetterTypeException extends AxonException {
 

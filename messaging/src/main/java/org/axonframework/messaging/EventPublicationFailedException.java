@@ -23,7 +23,7 @@ import org.axonframework.common.AxonException;
  *
  * @author Allard Buijze
  * @author Nakul Mishra
- * @since 3.0
+ * @since axon-3.0
  */
 
 public class EventPublicationFailedException extends AxonException {

@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * SagaRepository implementation that stores all Saga instances in memory.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class InMemorySagaStore implements SagaStore<Object> {
 

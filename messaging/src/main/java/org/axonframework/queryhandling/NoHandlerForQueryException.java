@@ -24,7 +24,7 @@ import static java.lang.String.format;
  * answer.
  *
  * @author Marc Gathier
- * @since 3.1
+ * @since axon-3.1
  */
 public class NoHandlerForQueryException extends AxonNonTransientException {
 

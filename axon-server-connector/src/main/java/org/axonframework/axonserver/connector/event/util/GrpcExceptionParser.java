@@ -25,7 +25,7 @@ import org.axonframework.axonserver.connector.ErrorCode;
  * Converts GRPC Exceptions to {@link RuntimeException}s.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class GrpcExceptionParser {
 

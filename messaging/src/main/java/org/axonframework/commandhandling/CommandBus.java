@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * bus. Only a single handler may be subscribed for a single command name at any time.
  *
  * @author Allard Buijze
- * @since 0.5
+ * @since axon-0.5
  */
 public interface CommandBus extends MessageHandlerInterceptorSupport<CommandMessage<?>>,
         MessageDispatchInterceptorSupport<CommandMessage<?>> {

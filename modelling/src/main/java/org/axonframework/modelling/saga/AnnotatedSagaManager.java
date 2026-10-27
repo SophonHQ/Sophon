@@ -40,7 +40,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @param <T> The type of Saga managed by this instance
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class AnnotatedSagaManager<T> extends AbstractSagaManager<T> {
 

@@ -31,7 +31,7 @@ import reactor.core.publisher.Mono;
  * @param <I> a generic specifying the type of the initial result of the {@link SubscriptionQueryResult}
  * @param <U> a generic specifying the type of the subsequent updates of the {@link SubscriptionQueryResult}
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

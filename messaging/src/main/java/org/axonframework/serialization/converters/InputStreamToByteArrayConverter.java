@@ -28,7 +28,7 @@ import java.io.InputStream;
  * input stream and returns that as an array.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class InputStreamToByteArrayConverter implements ContentTypeConverter<InputStream, byte[]> {
 

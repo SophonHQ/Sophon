@@ -23,7 +23,7 @@ import org.axonframework.modelling.command.Repository;
  * Helper class to simplify the creation of bean definitions for components configured in Axon Configuration.
  *
  * @author Allard Buijze
- * @since 4.7.4
+ * @since axon-4.7.4
  */
 public abstract class BeanHelper {
 

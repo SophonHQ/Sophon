@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> the type of the handlers
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class NoMoreInterceptors<T> implements MessageHandlerInterceptorMemberChain<T> {
 

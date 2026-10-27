@@ -24,7 +24,7 @@ import org.axonframework.updates.api.UpdateCheckResponse;
  * handle how the response is communicated to the user.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public interface UpdateCheckerReporter {
 

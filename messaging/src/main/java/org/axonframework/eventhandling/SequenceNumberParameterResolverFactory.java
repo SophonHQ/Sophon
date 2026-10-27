@@ -30,7 +30,7 @@ import org.axonframework.messaging.annotation.ParameterResolverFactory;
  * Primitive long parameters are also supported.
  *
  * @author Mark Ingram
- * @since 2.1
+ * @since axon-2.1
  */
 @Priority(Priority.HIGH)
 public final class SequenceNumberParameterResolverFactory extends

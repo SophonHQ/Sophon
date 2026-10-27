@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  *
  * @author Allard Buijze
  * @author Sofia Guy Ang
- * @since 2.0
+ * @since axon-2.0
  */
 public class SagaMethodMessageHandlingMember<T> extends WrappedMessageHandlingMember<T> {
 

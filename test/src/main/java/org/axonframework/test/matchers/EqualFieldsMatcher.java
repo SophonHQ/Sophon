@@ -28,7 +28,7 @@ import java.util.Objects;
  *
  * @param <T> The type of object
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class EqualFieldsMatcher<T> extends BaseMatcher<T> {
 

@@ -24,7 +24,7 @@ import java.util.OptionalLong;
  * EventTrackerStatus} value object to another.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public final class TrackerStatus implements EventTrackerStatus {
 

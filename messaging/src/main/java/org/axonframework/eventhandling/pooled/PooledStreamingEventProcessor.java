@@ -84,7 +84,7 @@ import static org.axonframework.common.BuilderUtils.assertStrictPositive;
  *
  * @author Allard Buijze
  * @author Steven van Beelen
- * @since 4.5
+ * @since axon-4.5
  */
 public class PooledStreamingEventProcessor extends AbstractEventProcessor
         implements StreamingEventProcessor, Lifecycle {

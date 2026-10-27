@@ -55,7 +55,7 @@ import static io.axoniq.axonserver.grpc.query.QueryProviderOutbound.newBuilder;
  * SubscriptionQueryResponse.
  *
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  */
 public class SubscriptionMessageSerializer {
 

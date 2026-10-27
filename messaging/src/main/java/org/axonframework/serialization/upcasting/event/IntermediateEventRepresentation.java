@@ -30,7 +30,7 @@ import java.util.function.Function;
  * Interface describing the intermediate representation of an event during upcasting.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public interface IntermediateEventRepresentation {
 

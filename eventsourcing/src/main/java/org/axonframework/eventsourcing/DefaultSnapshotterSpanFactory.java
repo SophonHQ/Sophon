@@ -29,7 +29,7 @@ import static java.lang.String.format;
  * span name (true by default) and to create a separate trace for the creation of the snapshot (false by default).
  *
  * @author Mitchell Herrijgers
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class DefaultSnapshotterSpanFactory implements SnapshotterSpanFactory {
     private final SpanFactory spanFactory;

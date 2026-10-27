@@ -49,7 +49,7 @@ import static org.axonframework.eventhandling.tokenstore.jpa.TokenEntry.clock;
  * entities.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class JpaTokenStore implements TokenStore {
 

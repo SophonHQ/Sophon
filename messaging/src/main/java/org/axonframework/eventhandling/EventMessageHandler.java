@@ -27,7 +27,7 @@ import java.util.Objects;
  * @see EventBus
  * @see DomainEventMessage
  * @see EventHandler
- * @since 0.1
+ * @since axon-0.1
  */
 public interface EventMessageHandler extends MessageHandler<EventMessage<?>> {
 

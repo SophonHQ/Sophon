@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * metrics, and functions responsible for creating the Micrometer {@link Tag}s based on the message that is ingested.
  *
  * @author Ivan Dugalic
- * @since 4.4
+ * @since axon-4.4
  */
 public class TagsUtil {
 

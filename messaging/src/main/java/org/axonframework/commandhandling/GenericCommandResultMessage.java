@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
  *
  * @param <R> The type of the payload contained in this Message
  * @author Milan Savic
- * @since 4.0
+ * @since axon-4.0
  */
 public class GenericCommandResultMessage<R> extends GenericResultMessage<R> implements CommandResultMessage<R> {
 

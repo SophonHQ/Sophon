@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  * @param <R> the type of result of the command handling
  * @param <C> the type of payload of the command
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 @FunctionalInterface
 public interface CommandCallback<C, R> {
@@ -47,7 +47,7 @@ public interface CommandCallback<C, R> {
      *
      * @param wrappingCallback The command callback that should wrap the current instance
      * @return The {@link WrappedCommandCallback} representing the execution of both callbacks
-     * @since 4.6.0
+     * @since axon-4.6.0
      * @author Mitchell Herrijgers
      */
     default CommandCallback<C, R> wrap(CommandCallback<C, R> wrappingCallback) {

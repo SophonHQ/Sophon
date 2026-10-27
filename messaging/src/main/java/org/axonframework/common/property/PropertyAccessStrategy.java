@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  * @author Allard Buijze
  * @see java.util.ServiceLoader
  * @see java.util.ServiceLoader#load(Class)
- * @since 2.0
+ * @since axon-2.0
  */
 public abstract class PropertyAccessStrategy implements Comparable<PropertyAccessStrategy> {
 
@@ -131,4 +131,3 @@ public abstract class PropertyAccessStrategy implements Comparable<PropertyAcces
      */
     protected abstract <T> Property<T> propertyFor(Class<? extends T> targetClass, String property);
 }
-

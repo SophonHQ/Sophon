@@ -29,7 +29,7 @@ import static org.axonframework.common.BuilderUtils.assertStrictPositive;
  * result in a retry.
  *
  * @author Bert Laverman
- * @since 4.2
+ * @since axon-4.2
  */
 public class ExponentialBackOffIntervalRetryScheduler extends AbstractRetryScheduler {
 

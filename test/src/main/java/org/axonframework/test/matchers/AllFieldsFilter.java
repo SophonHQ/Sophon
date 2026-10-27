@@ -22,7 +22,7 @@ import java.lang.reflect.Field;
  * FieldFilter implementation that accepts all Fields.
  *
  * @author Allard Buijze
- * @since 2.4.1
+ * @since axon-2.4.1
  */
 public class AllFieldsFilter implements FieldFilter {
 

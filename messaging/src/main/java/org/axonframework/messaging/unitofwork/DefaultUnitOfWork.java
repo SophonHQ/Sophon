@@ -32,7 +32,7 @@ import static org.axonframework.messaging.GenericResultMessage.asResultMessage;
  * Implementation of the UnitOfWork that processes a single message.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class DefaultUnitOfWork<T extends Message<?>> extends AbstractUnitOfWork<T> {
 

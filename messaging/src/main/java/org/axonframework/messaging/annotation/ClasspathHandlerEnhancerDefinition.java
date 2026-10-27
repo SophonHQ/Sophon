@@ -41,7 +41,7 @@ import static java.util.ServiceLoader.load;
  * @author Tyler Thrailkill
  * @author Milan Savic
  * @see ServiceLoader
- * @since 3.3
+ * @since axon-3.3
  */
 public final class ClasspathHandlerEnhancerDefinition {
 

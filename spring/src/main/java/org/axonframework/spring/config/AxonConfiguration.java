@@ -53,7 +53,7 @@ import javax.annotation.Nonnull;
  * are available in the Configuration, but not made available as Spring beans by default.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  * @deprecated Replaced by the {@link SpringConfigurer} and {@link SpringAxonConfiguration}.
  */
 @org.springframework.context.annotation.Configuration("org.axonframework.spring.config.AxonConfiguration")
@@ -250,4 +250,3 @@ public class AxonConfiguration implements Configuration, InitializingBean, Appli
         configurer.registerComponent(ApplicationContext.class, c -> applicationContext);
     }
 }
-

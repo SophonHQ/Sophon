@@ -57,7 +57,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @author Allard Buijze
  * @author John Hendrikx
- * @since 4.13.0
+ * @since axon-4.13.0
  */
 public class Jackson3Serializer implements Serializer {
 

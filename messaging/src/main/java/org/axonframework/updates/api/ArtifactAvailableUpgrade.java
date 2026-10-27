@@ -22,7 +22,7 @@ import java.util.Objects;
  * Represents an upgrade suggestion for a specific artifact version by the AxonIQ Update Checker API.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class ArtifactAvailableUpgrade {
 

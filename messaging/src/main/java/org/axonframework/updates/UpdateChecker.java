@@ -55,7 +55,7 @@ import javax.annotation.Nonnull;
  * This class is not intended to be in use during the running of test suites and therefore does not run when it detects one.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class UpdateChecker implements Runnable, Lifecycle {
 

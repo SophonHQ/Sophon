@@ -22,7 +22,7 @@ package org.axonframework.messaging;
  * {@link Message} to that Scope.
  *
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public interface ScopeAware {
 

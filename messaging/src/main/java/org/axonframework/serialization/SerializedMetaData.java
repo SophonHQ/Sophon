@@ -25,7 +25,7 @@ import java.util.Objects;
  *
  * @param <T> The data type representing the serialized object
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class SerializedMetaData<T> implements SerializedObject<T> {
 

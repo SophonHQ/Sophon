@@ -25,7 +25,7 @@ import java.util.Iterator;
  *
  * @param <T> The message type this interceptor chain can process
  * @author Allard Buijze
- * @since 0.5
+ * @since axon-0.5
  */
 public class DefaultInterceptorChain<T extends Message<?>> implements InterceptorChain {
 

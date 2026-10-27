@@ -63,7 +63,7 @@ import static org.axonframework.modelling.command.AggregateCreationPolicy.NEVER;
  *
  * @param <T> the type of aggregate this handler handles commands for
  * @author Allard Buijze
- * @since 1.2
+ * @since axon-1.2
  */
 public class AggregateAnnotationCommandHandler<T> implements CommandMessageHandler {
 

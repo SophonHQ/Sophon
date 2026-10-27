@@ -27,7 +27,7 @@ import java.util.List;
  * ingests two {@link MessageHandler} instances and returns a list with the wanted handlers
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @FunctionalInterface
 public interface DuplicateQueryHandlerResolver {

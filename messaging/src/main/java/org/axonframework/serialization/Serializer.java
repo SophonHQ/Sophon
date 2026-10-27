@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * output stream and read the object back in from an input stream.
  *
  * @author Allard Buijze
- * @since 1.2
+ * @since axon-1.2
  */
 public interface Serializer {
 

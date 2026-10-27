@@ -30,7 +30,7 @@ import java.util.Optional;
  *
  * @author Maxim Fedorov
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public abstract class AbstractMethodPropertyAccessStrategy extends PropertyAccessStrategy {
 

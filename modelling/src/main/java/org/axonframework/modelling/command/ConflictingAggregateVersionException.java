@@ -22,7 +22,7 @@ package org.axonframework.modelling.command;
  * the command modifying the aggregate was handled.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class ConflictingAggregateVersionException extends ConflictingModificationException {
 

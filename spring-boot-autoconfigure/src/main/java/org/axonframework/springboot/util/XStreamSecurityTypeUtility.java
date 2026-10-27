@@ -29,7 +29,7 @@ import java.lang.invoke.MethodHandles;
  * packages.
  *
  * @author Steven van Beelen
- * @since 4.5.4
+ * @since axon-4.5.4
  */
 public abstract class XStreamSecurityTypeUtility {
 

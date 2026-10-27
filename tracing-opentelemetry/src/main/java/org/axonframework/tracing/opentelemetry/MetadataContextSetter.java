@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * The trace becomes the message's parent span in its{@link org.axonframework.messaging.MetaData}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class MetadataContextSetter implements TextMapSetter<Map<String, String>> {
 

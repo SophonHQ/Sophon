@@ -54,7 +54,7 @@ import static org.axonframework.tracing.SpanUtils.determineMessageName;
  * starting the span (Default OpenTelemetry behavior). This is done using {@link SpanBuilder#setParent(Context)}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class OpenTelemetrySpanFactory implements SpanFactory {
 

@@ -48,7 +48,7 @@ import static org.axonframework.micrometer.TagsUtil.*;
  *
  * @author Rene de Waele
  * @author Marijn van Zelst
- * @since 4.1
+ * @since axon-4.1
  */
 public class GlobalMetricRegistry {
 

@@ -22,7 +22,7 @@ import org.axonframework.serialization.SimpleSerializedObject;
  * Specialization of the SerializedObject for Sagas represented as byte array.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class SerializedSaga extends SimpleSerializedObject<byte[]> {
 

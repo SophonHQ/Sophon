@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
  * @param <E> An implementation of {@link EventMessage} within the {@link DeadLetter} this factory constructs
  *            {@link PreparedStatement PreparedStatements} for.
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public interface DeadLetterStatementFactory<E extends EventMessage<?>> {
 

@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> the type of payload contained in the message
  * @author Steven van Beelen
- * @since 4.4
+ * @since axon-4.4
  */
 public class GenericResetContext<T> extends MessageDecorator<T> implements ResetContext<T> {
 

@@ -26,7 +26,7 @@ import java.util.UUID;
  * to get a duplicate incredibly small.
  *
  * @author Allard Buijze
- * @since 1.2
+ * @since axon-1.2
  */
 public class DefaultIdentifierFactory extends IdentifierFactory {
 

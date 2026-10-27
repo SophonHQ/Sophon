@@ -21,7 +21,7 @@ package org.axonframework.eventhandling;
  * the {@link EventTrackerStatusChangeListener}.
  *
  * @author Steven van Beelen
- * @since 4.4
+ * @since axon-4.4
  */
 public class AddedTrackerStatus extends WrappedTrackerStatus {
 

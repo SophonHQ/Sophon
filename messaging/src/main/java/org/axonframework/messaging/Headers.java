@@ -29,7 +29,7 @@ import java.util.Map;
  * Default headers to include when publishing a message on a broker.
  *
  * @author Nakul Mishra
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class Headers {
 

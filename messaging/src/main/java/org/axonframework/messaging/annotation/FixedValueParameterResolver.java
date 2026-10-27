@@ -24,7 +24,7 @@ import org.axonframework.messaging.Message;
  *
  * @param <T> The type of value resolved by this parameter
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class FixedValueParameterResolver<T> implements ParameterResolver<T> {
 

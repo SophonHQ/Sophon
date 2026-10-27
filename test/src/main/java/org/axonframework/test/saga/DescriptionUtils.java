@@ -24,7 +24,7 @@ import java.util.List;
  * Utility class for creating a description.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public abstract class DescriptionUtils {
 

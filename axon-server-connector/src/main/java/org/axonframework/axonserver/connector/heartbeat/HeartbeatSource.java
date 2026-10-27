@@ -20,7 +20,7 @@ package org.axonframework.axonserver.connector.heartbeat;
  * Represents the mechanism used to send an heartbeat message to AxonServer.
  *
  * @author Sara Pellegrini
- * @since 4.2.1
+ * @since axon-4.2.1
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

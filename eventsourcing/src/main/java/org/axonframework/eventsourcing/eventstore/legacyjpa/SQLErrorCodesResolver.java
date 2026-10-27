@@ -58,7 +58,7 @@ import static org.axonframework.common.ExceptionUtils.findException;
  *
  * @author Martin Tilma
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  * @deprecated in favor of using {@link org.axonframework.eventsourcing.eventstore.jpa.SQLErrorCodesResolver} which moved
  * to jakarta.
  */

@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * will not block processing of any other handlers that do match.
  *
  * @author Allard Buijze
- * @since 4.4
+ * @since axon-4.4
  */
 @MessageHandler
 @Retention(RetentionPolicy.RUNTIME)

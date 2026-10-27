@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Default implementation of FixtureExecutionResult.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class FixtureExecutionResultImpl<T> implements FixtureExecutionResult {
 

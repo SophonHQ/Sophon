@@ -25,7 +25,7 @@ import org.axonframework.serialization.Serializer;
  *
  * @param <M> The type of the event message this converter will convert.
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  * @deprecated in favor of using {@link org.axonframework.eventhandling.deadletter.jpa.DeadLetterJpaConverter} which
  * moved to jakarta.
  */

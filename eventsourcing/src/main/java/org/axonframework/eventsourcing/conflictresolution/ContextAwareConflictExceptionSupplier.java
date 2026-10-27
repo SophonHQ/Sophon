@@ -21,7 +21,7 @@ package org.axonframework.eventsourcing.conflictresolution;
  *
  * @param <T> The type of exception supplied
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 @FunctionalInterface
 public interface ContextAwareConflictExceptionSupplier<T> {

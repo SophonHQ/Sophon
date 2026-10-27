@@ -57,7 +57,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * @param <E> An implementation of {@link EventMessage} contained within the {@link JdbcDeadLetter} implementation this
  *            converter converts.
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class DefaultDeadLetterJdbcConverter<E extends EventMessage<?>>
         implements DeadLetterJdbcConverter<E, JdbcDeadLetter<E>> {

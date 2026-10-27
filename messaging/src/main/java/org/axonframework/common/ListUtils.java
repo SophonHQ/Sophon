@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * Utility methods for operations on lists.
  *
  * @author Stefan Andjelkovic
- * @since 4.4
+ * @since axon-4.4
  */
 public abstract class ListUtils {
 

@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 class FixtureTest_RegularParams {
 

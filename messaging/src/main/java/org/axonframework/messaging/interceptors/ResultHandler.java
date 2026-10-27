@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  *
  * @author Allard Buijze
  * @see ExceptionHandler
- * @since 4.4
+ * @since axon-4.4
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE})

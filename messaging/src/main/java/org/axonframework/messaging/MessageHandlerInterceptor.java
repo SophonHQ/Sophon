@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  *
  * @param <T> The message type this interceptor can process
  * @author Allard Buijze
- * @since 0.5
+ * @since axon-0.5
  */
 public interface MessageHandlerInterceptor<T extends Message<?>> {
 

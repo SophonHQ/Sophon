@@ -52,7 +52,7 @@ import static org.axonframework.common.BuilderUtils.assertThat;
  * can be passed to method {@link #processInUnitOfWork(List, UnitOfWork, Collection)} for processing.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class AbstractEventProcessor implements EventProcessor {
 

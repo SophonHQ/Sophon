@@ -37,7 +37,7 @@ import static org.axonframework.common.BuilderUtils.assertStrictPositive;
  * decides if a given {@link Throwable} is explicitly transient.
  *
  * @author Bert Laverman
- * @since 4.2
+ * @since axon-4.2
  */
 public abstract class AbstractRetryScheduler implements RetryScheduler {
 

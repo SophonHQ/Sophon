@@ -27,7 +27,7 @@ import java.io.ObjectInputStream;
  * versions of this descriptor when migrating from Axon 3.x to Axon 4.x.
  *
  * @author Steven van Beelen
- * @since 4.2
+ * @since axon-4.2
  * @deprecated in favor of the {@link org.axonframework.modelling.command.AggregateScopeDescriptor}
  */
 @Deprecated

@@ -40,7 +40,7 @@ import static io.axoniq.axonserver.connector.impl.ObjectUtils.nonNullOrDefault;
  * Post-processor to create Spring beans for persistent streams defined in the application context.
  *
  * @author Marc Gathier
- * @since 4.10.0
+ * @since axon-4.10.0
  */
 public class PersistentStreamMessageSourceRegistrar implements BeanDefinitionRegistryPostProcessor {
 

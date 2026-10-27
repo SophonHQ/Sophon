@@ -25,7 +25,7 @@ import static org.axonframework.common.BuilderUtils.assertNonEmpty;
  * {@link org.axonframework.messaging.deadletter.DeadLetter} entry table in JDBC.
  *
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class DeadLetterSchema {
 

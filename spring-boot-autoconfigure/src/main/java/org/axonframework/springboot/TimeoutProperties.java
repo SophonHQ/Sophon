@@ -30,7 +30,7 @@ import javax.transaction.Transactional;
  * Configuration properties for time limits of processing transactions and handlers in Axon Framework.
  *
  * @author Mitchell Herrijgers
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 @ConfigurationProperties(prefix = "axon.timeout")
 public class TimeoutProperties {

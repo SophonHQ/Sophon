@@ -41,7 +41,7 @@ import reactor.core.publisher.Mono;
  * @author Stefan Dragisic
  * @author Steven van Beelen
  * @author Allard Buijze
- * @since 4.0
+ * @since axon-4.0
  */
 public class AxonServerSubscriptionQueryResult<I, U>
         implements SubscriptionQueryResult<QueryResponseMessage<I>, SubscriptionQueryUpdateMessage<U>> {

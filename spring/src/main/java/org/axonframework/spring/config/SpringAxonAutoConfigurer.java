@@ -126,7 +126,7 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ge
  * required components to operate the Aggregate or Saga are registered.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  * @deprecated Replaced by the {@link SpringConfigurer} and {@link SpringAxonConfiguration}.
  */
 @Deprecated

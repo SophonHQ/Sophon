@@ -26,7 +26,7 @@ import java.util.List;
  * Matches any empty collection.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class EmptyCollectionMatcher<T> extends BaseMatcher<List<T>> {
 

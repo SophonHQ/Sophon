@@ -68,7 +68,7 @@ import static org.axonframework.messaging.deadletter.ThrowableCause.truncated;
  * dead letters. Furthermore, these are exposed through the {@link SequencedDeadLetterProcessor} contract.
  *
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class DeadLetteringEventHandlerInvoker
         extends SimpleEventHandlerInvoker

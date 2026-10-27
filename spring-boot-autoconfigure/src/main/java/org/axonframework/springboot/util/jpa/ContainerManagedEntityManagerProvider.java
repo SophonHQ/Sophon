@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * @author Allard Buijze
  * @see PersistenceContext
  * @see EntityManager
- * @since 1.3
+ * @since axon-1.3
  */
 public class ContainerManagedEntityManagerProvider implements EntityManagerProvider {
 

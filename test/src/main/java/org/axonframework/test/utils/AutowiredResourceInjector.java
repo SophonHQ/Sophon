@@ -25,7 +25,7 @@ import org.axonframework.modelling.saga.SimpleResourceInjector;
  * Unlike the SimpleResourceInjector, changes in the provided {@link Iterable} are reflected in this injector.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  * @deprecated in favor of the {@link SimpleResourceInjector}
  */
 @Deprecated

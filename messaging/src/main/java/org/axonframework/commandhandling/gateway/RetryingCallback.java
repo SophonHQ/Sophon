@@ -39,7 +39,7 @@ import static org.axonframework.commandhandling.GenericCommandResultMessage.asCo
  * @param <C> The type of payload of the dispatched command
  * @author Allard Buijze
  * @see DefaultCommandGateway
- * @since 2.0
+ * @since axon-2.0
  */
 public class RetryingCallback<C, R> implements CommandCallback<C, R> {
 

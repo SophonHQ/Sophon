@@ -27,7 +27,7 @@ import java.util.Objects;
  *
  * @author Milan Savic
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public class ScheduledDeadlineInfo implements Comparable<ScheduledDeadlineInfo> {
 

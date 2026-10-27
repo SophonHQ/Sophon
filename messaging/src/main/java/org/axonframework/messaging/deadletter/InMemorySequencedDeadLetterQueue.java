@@ -52,7 +52,7 @@ import static org.axonframework.common.BuilderUtils.assertStrictPositive;
  * @param <M> The type of {@link Message} maintained in the {@link DeadLetter dead letter} of this
  *            {@link SequencedDeadLetterQueue}.
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements SequencedDeadLetterQueue<M> {
 

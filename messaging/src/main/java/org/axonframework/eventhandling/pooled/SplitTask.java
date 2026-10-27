@@ -40,7 +40,7 @@ import java.util.concurrent.CompletableFuture;
  *
  * @author Steven van Beelen
  * @see Coordinator
- * @since 4.5
+ * @since axon-4.5
  */
 class SplitTask extends CoordinatorTask {
 

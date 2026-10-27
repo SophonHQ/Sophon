@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  *
  * @author wadhwaroh-lang
  * @see AxonTaskJanitor
- * @since 4.13.1
+ * @since axon-4.13.1
  */
 public class AxonTaskJanitorShutdownConfigurerModule implements ConfigurerModule {
 

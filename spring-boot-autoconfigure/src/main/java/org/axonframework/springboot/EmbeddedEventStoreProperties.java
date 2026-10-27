@@ -24,7 +24,7 @@ import java.time.Duration;
  * Properties describing the settings for the default {@link org.axonframework.eventsourcing.eventstore.EmbeddedEventStore}.
  *
  * @author Allard Buijze
- * @since 4.13.1
+ * @since axon-4.13.1
  */
 @ConfigurationProperties("axon.eventstore")
 public class EmbeddedEventStoreProperties {

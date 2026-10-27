@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Interface for components that can be started and shut down as part of the Application lifecycle.
  *
  * @author Allard Buijze
- * @since 4.6
+ * @since axon-4.6
  */
 public interface Lifecycle {
 

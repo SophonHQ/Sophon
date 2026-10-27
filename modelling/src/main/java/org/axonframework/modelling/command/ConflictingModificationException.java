@@ -26,7 +26,7 @@ import org.axonframework.common.AxonNonTransientException;
  * interaction or confirmation is needed before the failed action can be retried.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public class ConflictingModificationException extends AxonNonTransientException {
 

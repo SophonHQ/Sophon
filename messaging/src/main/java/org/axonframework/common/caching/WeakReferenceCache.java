@@ -45,7 +45,7 @@ import java.util.function.UnaryOperator;
  *
  * @author Allard Buijze
  * @author Henrique Sena
- * @since 2.2.1
+ * @since axon-2.2.1
  */
 public class WeakReferenceCache implements Cache {
 

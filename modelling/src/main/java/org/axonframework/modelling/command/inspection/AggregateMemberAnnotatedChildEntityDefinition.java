@@ -32,7 +32,7 @@ import java.util.stream.Stream;
  * AggregateMember}. If such a field or method is found a {@link ChildEntity} is created that delegates to the entity.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class AggregateMemberAnnotatedChildEntityDefinition extends AbstractChildEntityDefinition {
 

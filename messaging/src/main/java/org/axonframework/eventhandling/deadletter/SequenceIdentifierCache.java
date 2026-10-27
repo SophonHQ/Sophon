@@ -33,7 +33,7 @@ import java.util.Set;
  * not empty, we need to keep track of the identifiers not present as well.
  *
  * @author Gerard Klijs
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 class SequenceIdentifierCache {
 

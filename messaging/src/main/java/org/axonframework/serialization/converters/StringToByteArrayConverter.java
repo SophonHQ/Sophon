@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
  * ContentTypeConverter that converts String into byte arrays. Conversion is done using the UTF-8 character set.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class StringToByteArrayConverter implements ContentTypeConverter<String,byte[]> {
 

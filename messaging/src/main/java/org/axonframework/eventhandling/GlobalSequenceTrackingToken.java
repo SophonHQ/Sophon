@@ -30,7 +30,7 @@ import static org.axonframework.common.Assert.isTrue;
  * Tracking token based on the global sequence number of an event.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class GlobalSequenceTrackingToken implements TrackingToken, Comparable<GlobalSequenceTrackingToken>,
         Serializable {

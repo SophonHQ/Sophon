@@ -21,7 +21,7 @@ package org.axonframework.serialization;
  *
  * @param <T> The data type representing the serialized object
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface SerializedObject<T> {
 

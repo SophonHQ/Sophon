@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * aggregates may be processed in different threads, as will events that do not extend the DomainEvent type.
  *
  * @author Allard Buijze
- * @since 0.3
+ * @since axon-0.3
  */
 public class SequentialPerAggregatePolicy implements SequencingPolicy<EventMessage> {
 

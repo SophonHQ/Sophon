@@ -31,7 +31,7 @@ import java.util.function.UnaryOperator;
  * Cache implementation that delegates all calls to an EhCache instance.
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 @SuppressWarnings("rawtypes")
 public class EhCache3Adapter extends AbstractCacheAdapter<CacheEventListener> {

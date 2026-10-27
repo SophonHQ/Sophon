@@ -48,7 +48,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * creates snapshots. Actual snapshot creation logic should be provided by a subclass.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public abstract class AbstractSnapshotter implements Snapshotter {
 

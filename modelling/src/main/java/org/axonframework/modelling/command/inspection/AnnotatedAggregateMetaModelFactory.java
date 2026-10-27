@@ -67,7 +67,7 @@ import static org.axonframework.common.annotation.AnnotationUtils.findAnnotation
  * meta-model of the aggregate.
  *
  * @author Allard Buijze
- * @since 3.1
+ * @since axon-3.1
  */
 public class AnnotatedAggregateMetaModelFactory implements AggregateMetaModelFactory {
 

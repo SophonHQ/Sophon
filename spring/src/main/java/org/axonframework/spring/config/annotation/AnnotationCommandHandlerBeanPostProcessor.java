@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  * annotated methods.
  *
  * @author Allard Buijze
- * @since 0.5
+ * @since axon-0.5
  * @deprecated Replaced by the {@link org.axonframework.spring.config.MessageHandlerLookup} and {@link
  * org.axonframework.spring.config.MessageHandlerConfigurer}.
  */

@@ -37,7 +37,7 @@ import java.util.function.Function;
  * @param <T> the required type of the serialized data. If the data is not of this type the representation uses a {@link
  *            Converter} to convert to the required type.
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class UpcastedEventRepresentation<T> implements IntermediateEventRepresentation {
 

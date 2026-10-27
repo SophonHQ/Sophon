@@ -28,7 +28,7 @@ import java.util.List;
  * By default, all fields are accepted.
  *
  * @author Allard Buijze
- * @since 2.4.1
+ * @since axon-2.4.1
  */
 public class MatchAllFieldFilter implements FieldFilter {
 

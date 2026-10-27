@@ -39,7 +39,7 @@ import static org.axonframework.commandhandling.GenericCommandResultMessage.asCo
  * cases.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public class RecordingCommandBus implements CommandBus {
 

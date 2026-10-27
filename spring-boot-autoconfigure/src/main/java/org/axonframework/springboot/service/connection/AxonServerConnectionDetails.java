@@ -26,7 +26,7 @@ import org.springframework.boot.autoconfigure.service.connection.ConnectionDetai
  * the endpoint at which a node runs.
  *
  * @author Allard Buijze
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public interface AxonServerConnectionDetails extends ConnectionDetails {
 

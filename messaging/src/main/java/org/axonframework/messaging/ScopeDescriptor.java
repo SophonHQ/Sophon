@@ -23,7 +23,7 @@ import java.io.Serializable;
  * handled.
  *
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public interface ScopeDescriptor extends Serializable {
 

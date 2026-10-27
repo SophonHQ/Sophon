@@ -31,7 +31,7 @@ import org.axonframework.common.AxonTransientException;
  * non-transient.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class AggregateStateCorruptedException extends AxonTransientException {
 

@@ -22,7 +22,7 @@ import org.axonframework.common.AxonNonTransientException;
  * Exception indicating that a message has been rejected due to a lack of authorization.
  *
  * @author Roald Bankras
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class UnauthorizedMessageException extends AxonNonTransientException {
 

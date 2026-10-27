@@ -31,7 +31,7 @@ import javax.persistence.MappedSuperclass;
  * @param <T> the serialized content-type of the saga.
  * @author Christophe Bouhier
  * @{@link SagaEntry} is declared in the concrete implementation of this class.
- * @since 3.0.3
+ * @since axon-3.0.3
  * @deprecated since moving to jakarta, as the generic {@code serializedSaga} was not handled well. There is a
  * {@link SagaEntry} not extending from this abstract class anymore, you might be able to use instead.
  */

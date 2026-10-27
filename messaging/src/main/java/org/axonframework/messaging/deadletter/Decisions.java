@@ -30,7 +30,7 @@ import java.util.function.Function;
  *
  * @author Steven van Beelen
  * @see EnqueuePolicy
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public abstract class Decisions {
 

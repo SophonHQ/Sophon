@@ -33,7 +33,7 @@ import static java.util.ServiceLoader.load;
  *
  * @author Allard Buijze
  * @see ServiceLoader
- * @since 2.1
+ * @since axon-2.1
  */
 public final class ClasspathParameterResolverFactory {
 

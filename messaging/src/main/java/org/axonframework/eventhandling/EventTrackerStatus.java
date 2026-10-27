@@ -25,7 +25,7 @@ import java.util.OptionalLong;
  * Interface describing the status of a {@link Segment} of a {@link TrackingEventProcessor}.
  *
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 public interface EventTrackerStatus {
 

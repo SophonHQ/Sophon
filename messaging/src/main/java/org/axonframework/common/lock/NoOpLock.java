@@ -21,7 +21,7 @@ package org.axonframework.common.lock;
  * {@link #isHeld()}.
  *
  * @author Steven van Beelen
- * @since 4.5.11
+ * @since axon-4.5.11
  */
 public class NoOpLock implements Lock {
 

@@ -24,7 +24,7 @@ import java.util.function.Function;
  * {@code processingGroup}.
  *
  * @author Manish
- * @since 4.10.0
+ * @since axon-4.10.0
  */
 public interface MaxSegmentProvider extends Function<String, Integer> {
 

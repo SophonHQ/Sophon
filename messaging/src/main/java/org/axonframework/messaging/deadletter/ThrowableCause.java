@@ -25,7 +25,7 @@ import java.util.Objects;
  *
  * @author Steven van Beelen
  * @author Mitchel Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class ThrowableCause extends AxonException implements Cause {
 

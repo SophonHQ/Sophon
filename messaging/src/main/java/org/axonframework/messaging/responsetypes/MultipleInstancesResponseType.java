@@ -42,7 +42,7 @@ import static org.axonframework.common.ReflectionUtils.unwrapIfType;
  *
  * @param <R> The response type which will be matched against and converted to
  * @author Steven van Beelen
- * @since 3.2
+ * @since axon-3.2
  */
 public class MultipleInstancesResponseType<R> extends AbstractResponseType<List<R>> {
 

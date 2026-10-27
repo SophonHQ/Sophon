@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * Implementation of {@link HandlerEnhancerDefinition} used for {@link CommandHandlerInterceptor} annotated methods.
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public class MethodCommandHandlerInterceptorDefinition implements HandlerEnhancerDefinition {
 

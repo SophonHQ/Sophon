@@ -44,7 +44,7 @@ import javax.annotation.Nonnull;
  *
  * @author Marijn van Zelst
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class EventProcessorLatencyMonitor implements MessageMonitor<EventMessage<?>>, MetricSet {
 

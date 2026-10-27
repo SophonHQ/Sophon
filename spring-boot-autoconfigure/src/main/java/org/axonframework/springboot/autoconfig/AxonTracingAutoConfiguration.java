@@ -65,7 +65,7 @@ import java.util.List;
  *
  * @author Mitchell Herrijgers
  * @see OpenTelemetryAutoConfiguration
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 @AutoConfiguration
 @AutoConfigureBefore({AxonServerAutoConfiguration.class, AxonAutoConfiguration.class})

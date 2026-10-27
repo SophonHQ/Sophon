@@ -38,7 +38,7 @@ import static org.axonframework.springboot.utils.GrpcServerStub.DEFAULT_HOST;
  *
  * @author Marc Gathier
  * @author Steven van Beelen
- * @since 4.0
+ * @since axon-4.0
  */
 public class ControlChannelStub extends PlatformServiceGrpc.PlatformServiceImplBase {
 

@@ -34,7 +34,7 @@ import static java.lang.String.format;
  *
  * @author Allard Buijze
  * @author Sofia Guy Ang
- * @since 0.7
+ * @since axon-0.7
  */
 public class SagaMethodMessageHandlerDefinition implements HandlerEnhancerDefinition {
 

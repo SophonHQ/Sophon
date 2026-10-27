@@ -28,7 +28,7 @@ package org.axonframework.disruptor.commandhandling;
  * non-transient.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class AggregateBlacklistedException extends AggregateStateCorruptedException {
 

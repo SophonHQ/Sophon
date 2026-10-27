@@ -28,7 +28,7 @@ import org.axonframework.serialization.Serializer;
  * Java Persistence Entity allowing sagas to be stored in a relational database.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 @Entity
 @javax.persistence.Entity

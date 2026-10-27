@@ -26,7 +26,7 @@ import java.util.Optional;
  *
  * @author Allard Buijze
  * @see java.util.ServiceLoader
- * @since 3.0
+ * @since axon-3.0
  */
 public interface ChildEntityDefinition {
 

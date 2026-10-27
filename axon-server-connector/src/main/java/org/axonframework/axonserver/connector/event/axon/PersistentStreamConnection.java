@@ -55,7 +55,7 @@ import static io.axoniq.axonserver.connector.event.PersistentStreamSegment.PENDI
  * consumer.
  *
  * @author Marc Gathier
- * @since 4.10.0
+ * @since axon-4.10.0
  */
 public class PersistentStreamConnection {
 

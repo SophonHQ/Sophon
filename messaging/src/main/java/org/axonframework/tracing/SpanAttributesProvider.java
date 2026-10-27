@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * {@link SpanFactory} to invoke these and add the attributes to the {@link Span}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface SpanAttributesProvider {
 

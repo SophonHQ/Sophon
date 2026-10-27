@@ -29,7 +29,7 @@ import java.sql.SQLException;
  *            converter converts.
  * @param <D> An implementation of {@link JdbcDeadLetter} converted by this converter.
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 @FunctionalInterface
 public interface DeadLetterJdbcConverter<E extends EventMessage<?>, D extends JdbcDeadLetter<E>> {

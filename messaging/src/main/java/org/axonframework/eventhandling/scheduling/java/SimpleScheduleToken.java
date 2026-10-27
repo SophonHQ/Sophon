@@ -27,7 +27,7 @@ import java.util.Objects;
  * ScheduleToken for tasks event scheduled using the SimpleEventScheduler.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class SimpleScheduleToken implements ScheduleToken {
 

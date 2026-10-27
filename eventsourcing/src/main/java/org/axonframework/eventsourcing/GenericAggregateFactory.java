@@ -39,7 +39,7 @@ import static org.axonframework.common.ReflectionUtils.ensureAccessible;
  *
  * @param <T> The type of aggregate this factory creates
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class GenericAggregateFactory<T> extends AbstractAggregateFactory<T> {
 

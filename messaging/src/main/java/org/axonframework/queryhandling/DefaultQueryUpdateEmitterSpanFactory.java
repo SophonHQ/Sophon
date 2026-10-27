@@ -24,7 +24,7 @@ import org.axonframework.tracing.SpanFactory;
  * Default implementation of the {@link QueryUpdateEmitterSpanFactory}.
  *
  * @author Mitchell Herrijgers
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class DefaultQueryUpdateEmitterSpanFactory implements QueryUpdateEmitterSpanFactory {
 

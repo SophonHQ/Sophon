@@ -22,7 +22,7 @@ import org.axonframework.common.AxonException;
  * Exception thrown when an {@link EventProcessor} failed to handle a batch of events.
  *
  * @author Allard Buijze
- * @since 0.3
+ * @since axon-0.3
  */
 public class EventProcessingException extends AxonException {
 

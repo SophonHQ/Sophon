@@ -34,7 +34,7 @@ import java.util.function.Function;
  * processing the Message transitions to a new {@link Phase}.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class MessageProcessingContext<T extends Message<?>> {
 

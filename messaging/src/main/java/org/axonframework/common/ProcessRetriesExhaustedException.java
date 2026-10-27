@@ -20,7 +20,7 @@ package org.axonframework.common;
  * Exception indicating that an action was retried a maximum times, without a good result.
  *
  * @author Gerard Klijs
- * @since 4.5.13
+ * @since axon-4.5.13
  */
 public class ProcessRetriesExhaustedException extends AxonException {
 

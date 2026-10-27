@@ -33,7 +33,7 @@ import static java.util.stream.Collectors.toList;
  * Supplier of {@link PlatformInboundInstruction} that represent the status of a {@link StreamingEventProcessor}.
  *
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  */
 public class StreamingEventProcessorInfoMessage {
 

@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * @param <T> The type of payload contained in this Message
  * @author Allard Buijze
  * @see DomainEventMessage
- * @since 2.0
+ * @since axon-2.0
  */
 public interface EventMessage<T> extends Message<T> {
 

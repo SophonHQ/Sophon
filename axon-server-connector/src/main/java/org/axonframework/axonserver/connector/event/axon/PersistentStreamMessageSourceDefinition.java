@@ -31,7 +31,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * {@link Configuration configuration}.
  *
  * @author Marc Gathier
- * @since 4.10.0
+ * @since axon-4.10.0
  */
 public class PersistentStreamMessageSourceDefinition implements SubscribableMessageSourceDefinition<EventMessage<?>> {
 

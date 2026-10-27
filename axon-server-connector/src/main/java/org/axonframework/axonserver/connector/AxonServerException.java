@@ -28,7 +28,7 @@ import java.util.List;
  * Generic exception indicating an error related to AxonServer.
  *
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  */
 public class AxonServerException extends AxonException {
 

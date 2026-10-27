@@ -26,7 +26,7 @@ import java.io.InputStream;
  * ByteArrayInputStream with the underlying byte[] is backing data.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class ByteArrayToInputStreamConverter implements ContentTypeConverter<byte[],InputStream> {
 

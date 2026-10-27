@@ -58,7 +58,7 @@ import static org.axonframework.eventhandling.tokenstore.AbstractTokenEntry.cloc
  * entities.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  * @deprecated in favor of using {@link org.axonframework.eventhandling.tokenstore.jpa.JpaTokenStore} which moved to
  * jakarta.
  */

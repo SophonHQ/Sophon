@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  *
  * @param <M> An implementation of {@link Message} contained in the processed {@link DeadLetter dead letters}.
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface SequencedDeadLetterProcessor<M extends Message<?>> {
 

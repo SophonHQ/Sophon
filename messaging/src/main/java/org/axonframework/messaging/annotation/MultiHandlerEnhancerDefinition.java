@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * HandlerEnhancerDefinition instance that delegates to multiple other instances, in the order provided.
  *
  * @author Tyler Thrailkill
- * @since 3.3
+ * @since axon-3.3
  */
 public class MultiHandlerEnhancerDefinition implements HandlerEnhancerDefinition {
 

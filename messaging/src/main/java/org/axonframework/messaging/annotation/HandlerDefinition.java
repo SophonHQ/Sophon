@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
  * handling. If the method is suitable the definition returns a {@link MessageHandler} instance to invoke the method.
  *
  * @author Allard Buijze
- * @since 2.1
+ * @since axon-2.1
  */
 public interface HandlerDefinition {
 

@@ -21,7 +21,7 @@ package org.axonframework.updates.configuration;
  * properties. This is the highest priority provider, meaning any defined property will override the others.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class CommandLineUsagePropertyProvider implements UsagePropertyProvider {
 

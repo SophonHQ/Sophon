@@ -26,7 +26,7 @@ import java.util.Objects;
  * Matcher testing for object equality as per {@link Objects#equals(Object o)}
  *
  * @author bliessens
- * @since 3.3
+ * @since axon-3.3
  */
 public class EqualsMatcher<T> extends TypeSafeMatcher<T> {
 

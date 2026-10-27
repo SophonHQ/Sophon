@@ -27,7 +27,7 @@ import java.util.Set;
  * a single thread at a time.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class AssociationValuesImpl implements AssociationValues, Serializable {
 

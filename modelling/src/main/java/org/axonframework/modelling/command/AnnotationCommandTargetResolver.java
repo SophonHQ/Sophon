@@ -43,7 +43,7 @@ import static org.axonframework.common.ReflectionUtils.*;
  * version. Note that the method must return a Long value, or a value that may be parsed as a Long.
  *
  * @author Allard Buijze
- * @since 1.2
+ * @since axon-1.2
  */
 public class AnnotationCommandTargetResolver implements CommandTargetResolver {
 

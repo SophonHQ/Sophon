@@ -64,7 +64,7 @@ import static org.axonframework.deadline.GenericDeadlineMessage.asDeadlineMessag
  *
  * @author Milan Savic
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public class SimpleDeadlineManager extends AbstractDeadlineManager implements Lifecycle {
 

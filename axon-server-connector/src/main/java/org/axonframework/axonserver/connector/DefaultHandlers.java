@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * @param <Case>    the type of the case
  * @param <Handler> the type of the handler
  * @author Sara Pellegrini, Milan Savic
- * @since 4.2.1
+ * @since axon-4.2.1
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

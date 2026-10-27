@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
  * Otherwise the operation can be executed immediately.
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 public interface QueryUpdateEmitter extends MessageDispatchInterceptorSupport<SubscriptionQueryUpdateMessage<?>> {
 

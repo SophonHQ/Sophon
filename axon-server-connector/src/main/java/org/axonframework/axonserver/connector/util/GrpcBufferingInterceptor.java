@@ -31,7 +31,7 @@ import io.grpc.MethodDescriptor;
  * will allow that number of messages to be "in transit" before the server stops sending more.
  *
  * @author Allard Buijze
- * @since 4.2
+ * @since axon-4.2
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

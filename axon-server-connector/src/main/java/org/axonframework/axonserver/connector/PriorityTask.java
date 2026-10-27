@@ -31,7 +31,7 @@ package org.axonframework.axonserver.connector;
  * @author Mitchell Herrijgers
  * @see org.axonframework.axonserver.connector.command.CommandPriorityCalculator
  * @see org.axonframework.axonserver.connector.query.QueryPriorityCalculator
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface PriorityTask extends Comparable<PriorityTask> {
 

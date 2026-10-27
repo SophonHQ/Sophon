@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
  *
  * @author Gerard Klijs
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class DeadLetterQueueProviderConfigurerModule implements ConfigurerModule {
 

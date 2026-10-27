@@ -46,7 +46,7 @@ import static org.axonframework.common.Assert.nonNull;
  * @author Allard Buijze
  * @author Michael Bischoff
  * @author Henrique Sena
- * @since 1.3
+ * @since axon-1.3
  */
 public class PessimisticLockFactory implements LockFactory {
 

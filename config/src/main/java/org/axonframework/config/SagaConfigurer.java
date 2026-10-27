@@ -37,7 +37,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  *
  * @param <T> the Saga type under configuration
  * @author Allard Buijze
- * @since 4.0
+ * @since axon-4.0
  */
 public class SagaConfigurer<T> {
 

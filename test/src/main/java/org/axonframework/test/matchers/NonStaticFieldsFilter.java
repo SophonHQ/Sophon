@@ -23,7 +23,7 @@ import java.lang.reflect.Modifier;
  * FieldFilter implementation that only accepts non-static Fields.
  *
  * @author bliessens
- * @since 3.3
+ * @since axon-3.3
  */
 public class NonStaticFieldsFilter implements FieldFilter {
 

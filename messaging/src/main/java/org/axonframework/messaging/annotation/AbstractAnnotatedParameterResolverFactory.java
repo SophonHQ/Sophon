@@ -34,7 +34,7 @@ import java.lang.reflect.Parameter;
  * @param <A> The type of annotation to check for
  * @param <P> The type the parameter needs to be assignable from.
  * @author Mark Ingram
- * @since 2.1
+ * @since axon-2.1
  */
 public abstract class AbstractAnnotatedParameterResolverFactory<A extends Annotation, P> implements ParameterResolverFactory {
 

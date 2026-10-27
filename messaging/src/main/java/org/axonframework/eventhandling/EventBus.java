@@ -32,7 +32,7 @@ import javax.annotation.Nonnull;
  * @author Allard Buijze
  * @see EventMessageHandler
  * @see SimpleEventBus
- * @since 0.1
+ * @since axon-0.1
  */
 public interface EventBus extends SubscribableMessageSource<EventMessage<?>>,
                                   MessageDispatchInterceptorSupport<EventMessage<?>> {

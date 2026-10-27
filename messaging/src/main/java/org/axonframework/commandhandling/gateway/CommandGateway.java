@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  *
  * @author Allard Buijze
  * @see DefaultCommandGateway
- * @since 2.0.0
+ * @since axon-2.0.0
  */
 public interface CommandGateway extends MessageDispatchInterceptorSupport<CommandMessage<?>> {
 

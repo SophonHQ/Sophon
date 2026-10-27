@@ -48,7 +48,7 @@ import static org.axonframework.common.ReflectionUtils.*;
  *
  * @author Allard Buijze
  * @see DistributedCommandBus
- * @since 2.0
+ * @since axon-2.0
  */
 public class AnnotationRoutingStrategy extends AbstractRoutingStrategy {
 

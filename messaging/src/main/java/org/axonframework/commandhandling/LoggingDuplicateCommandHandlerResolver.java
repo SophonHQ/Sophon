@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * logs this (on WARN level) to a given logger.
  *
  * @author Allard Buijze
- * @since 4.2
+ * @since axon-4.2
  */
 public class LoggingDuplicateCommandHandlerResolver implements DuplicateCommandHandlerResolver {
 

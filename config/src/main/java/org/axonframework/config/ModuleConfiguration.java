@@ -23,7 +23,7 @@ package org.axonframework.config;
  * Modules have callback methods for the initialization, start and shutdown phases of the application's lifecycle.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public interface ModuleConfiguration {
 

@@ -39,7 +39,7 @@ import javax.annotation.Nonnull;
  * @author Milan Savic
  * @author Mitchell Herrijgers
  * @see DeadLetter
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface SequencedDeadLetterQueue<M extends Message<?>> {
 

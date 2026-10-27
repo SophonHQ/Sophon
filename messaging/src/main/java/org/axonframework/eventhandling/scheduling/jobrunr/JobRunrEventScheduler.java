@@ -53,7 +53,7 @@ import static org.axonframework.eventhandling.GenericEventMessage.clock;
  * EventScheduler implementation that delegates scheduling and triggering to a JobRunr JobScheduler.
  *
  * @author Gerard Klijs
- * @since 4.7.0
+ * @since axon-4.7.0
  */
 public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
 

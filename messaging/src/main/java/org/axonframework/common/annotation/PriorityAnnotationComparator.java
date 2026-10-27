@@ -27,7 +27,7 @@ import java.util.Comparator;
  *
  * @param <T> The type of object to compare
  * @author Allard Buijze
- * @since 2.1.2
+ * @since axon-2.1.2
  */
 public class PriorityAnnotationComparator<T> implements Comparator<T> {
 

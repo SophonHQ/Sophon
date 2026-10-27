@@ -22,7 +22,7 @@ import java.lang.reflect.Field;
  * The FieldFilter indicates whether any given Field should be accepted for processing or not.
  *
  * @author Allard Buijze
- * @since 2.4.1
+ * @since axon-2.4.1
  */
 @FunctionalInterface
 public interface FieldFilter {

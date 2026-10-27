@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * NoOpCallback.&lt;C&gt;instance()}.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public final class NoOpCallback implements CommandCallback<Object, Object> {
 

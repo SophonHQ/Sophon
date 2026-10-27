@@ -28,7 +28,7 @@ import java.util.List;
  * ParameterResolverFactory instance that delegates to multiple other instances, in the order provided.
  *
  * @author Allard Buijze
- * @since 2.1
+ * @since axon-2.1
  */
 public class MultiParameterResolverFactory implements ParameterResolverFactory {
 

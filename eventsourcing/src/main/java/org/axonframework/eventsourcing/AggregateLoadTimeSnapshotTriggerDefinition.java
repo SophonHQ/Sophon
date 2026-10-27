@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  * successfully.
  *
  * @author Yvonne Ceelie
- * @since 4.4.4
+ * @since axon-4.4.4
  */
 public class AggregateLoadTimeSnapshotTriggerDefinition implements SnapshotTriggerDefinition {
 

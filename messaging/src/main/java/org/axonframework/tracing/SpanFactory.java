@@ -44,7 +44,7 @@ import java.util.function.Supplier;
  * Check the individual method's javadoc more information on each type.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface SpanFactory {
 

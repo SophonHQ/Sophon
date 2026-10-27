@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * message anyway.
  *
  * @author Mitchell Herrijgers
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class GrpcMessageSizeInterceptor implements ClientInterceptor {
     private final Logger logger = LoggerFactory.getLogger(GrpcMessageSizeInterceptor.class);

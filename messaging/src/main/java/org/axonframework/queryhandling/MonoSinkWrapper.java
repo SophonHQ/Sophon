@@ -24,7 +24,7 @@ import reactor.core.publisher.MonoSink;
  *
  * @param <T> The value type
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 class MonoSinkWrapper<T> {
 

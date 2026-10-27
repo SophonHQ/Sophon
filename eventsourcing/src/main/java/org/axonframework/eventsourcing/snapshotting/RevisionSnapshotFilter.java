@@ -33,7 +33,7 @@ import static org.axonframework.common.BuilderUtils.assertNonEmpty;
  *
  * @author Steven van Beelen
  * @author Mateusz Nowak
- * @since 4.5
+ * @since axon-4.5
  */
 public class RevisionSnapshotFilter implements SnapshotFilter {
 

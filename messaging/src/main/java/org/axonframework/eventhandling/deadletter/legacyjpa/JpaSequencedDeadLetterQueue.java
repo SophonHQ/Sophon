@@ -76,7 +76,7 @@ import static org.axonframework.common.BuilderUtils.*;
  *
  * @param <M> An implementation of {@link Message} contained in the {@link DeadLetter dead-letters} within this queue.
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  * @deprecated in favor of using {@link org.axonframework.eventhandling.deadletter.jpa.JpaSequencedDeadLetterQueue}
  * which moved to jakarta.
  */

@@ -27,7 +27,7 @@ import java.util.List;
  * An AxonServer Exception which is thrown on a Query Dispatching exception.
  *
  * @author Steven van Beelen
- * @since 4.0
+ * @since axon-4.0
  */
 public class AxonServerQueryDispatchException extends AxonException {
 

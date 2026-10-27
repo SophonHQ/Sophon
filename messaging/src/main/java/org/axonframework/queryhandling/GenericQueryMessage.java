@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  * @param <T> The type of payload expressing the query in this message
  * @param <R> The type of response expected from this query
  * @author Marc Gathier
- * @since 3.1
+ * @since axon-3.1
  */
 public class GenericQueryMessage<T, R> extends MessageDecorator<T> implements QueryMessage<T, R> {
 

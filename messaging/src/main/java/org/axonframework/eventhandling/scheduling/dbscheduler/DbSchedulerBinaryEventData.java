@@ -29,7 +29,7 @@ import static java.lang.String.format;
  * {@link DbSchedulerEventScheduler#binaryTask()}
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class DbSchedulerBinaryEventData implements Serializable {
 

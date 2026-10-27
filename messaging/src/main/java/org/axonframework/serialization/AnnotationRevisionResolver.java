@@ -24,7 +24,7 @@ package org.axonframework.serialization;
  * This implementation returns {@code null} for objects that do not have a {@code @Revision} annotation.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class AnnotationRevisionResolver implements RevisionResolver {
 

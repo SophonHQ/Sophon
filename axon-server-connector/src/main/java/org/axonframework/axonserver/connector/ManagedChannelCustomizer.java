@@ -24,7 +24,7 @@ import java.util.function.UnaryOperator;
  * Customizer to add more customizations to a managed channel to Axon Server.
  *
  * @author Marc Gathier
- * @since 4.4.3
+ * @since axon-4.4.3
  */
 @FunctionalInterface
 public interface ManagedChannelCustomizer extends UnaryOperator<ManagedChannelBuilder<?>> {

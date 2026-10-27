@@ -38,7 +38,7 @@ import static org.axonframework.messaging.GenericResultMessage.asResultMessage;
  * target a single aggregate instance.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public abstract class DisruptorUnitOfWork<T extends Message<?>> extends AbstractUnitOfWork<T> {
 

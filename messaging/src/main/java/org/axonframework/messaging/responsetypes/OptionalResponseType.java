@@ -39,7 +39,7 @@ import java.util.concurrent.Future;
  *
  * @param <R> The response type which will be matched against and converted to
  * @author Allard Buijze
- * @since 4.2
+ * @since axon-4.2
  */
 public class OptionalResponseType<R> extends AbstractResponseType<Optional<R>> {
 

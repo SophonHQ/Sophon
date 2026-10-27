@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
  * the commit of the {@link UnitOfWork} is completed.
  *
  * @author Mitchell Herrijgers
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class UnitOfWorkTimeoutInterceptor implements MessageHandlerInterceptor<Message<?>> {
 

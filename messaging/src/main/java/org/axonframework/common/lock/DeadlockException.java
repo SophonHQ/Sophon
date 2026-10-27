@@ -24,7 +24,7 @@ package org.axonframework.common.lock;
  * It is typically safe to retry the operation when this exception occurs.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class DeadlockException extends LockAcquisitionFailedException {
 

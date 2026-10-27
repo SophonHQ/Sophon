@@ -31,7 +31,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * when name conflicts occur.
  *
  * @author Mateusz Nowak
- * @since 4.11
+ * @since axon-4.11
  */
 public class DefaultPersistentStreamMessageSourceFactory implements PersistentStreamMessageSourceFactory {
 

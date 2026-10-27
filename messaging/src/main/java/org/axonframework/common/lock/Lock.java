@@ -23,7 +23,7 @@ package org.axonframework.common.lock;
  * try}-with-resources block.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public interface Lock extends AutoCloseable {
 

@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
  *
  * @param <R> the type of response this query subscription contains
  * @author Steven van Beelen
- * @since 3.2
+ * @since axon-3.2
  */
 public class QuerySubscription<R> {
 

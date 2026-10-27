@@ -21,7 +21,7 @@ package org.axonframework.queryhandling;
  * API.
  *
  * @author Stefan Dragisic
- * @since 4.5
+ * @since axon-4.5
  */
 public interface SinkWrapper<T> {
 

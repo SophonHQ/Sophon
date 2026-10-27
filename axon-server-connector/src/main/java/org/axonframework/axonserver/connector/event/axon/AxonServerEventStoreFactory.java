@@ -45,7 +45,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * application is required to publish "milestone-"/"integration-events" in a common context.
  *
  * @author Steven van Beelen
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class AxonServerEventStoreFactory {
 

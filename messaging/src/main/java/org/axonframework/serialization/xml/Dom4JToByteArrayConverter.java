@@ -25,7 +25,7 @@ import org.dom4j.Document;
  * converted to bytes using the UTF-8 character set.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class Dom4JToByteArrayConverter implements ContentTypeConverter<Document,byte[]> {
 

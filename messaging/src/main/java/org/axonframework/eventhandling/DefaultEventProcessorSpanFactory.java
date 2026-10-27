@@ -37,7 +37,7 @@
      * minutes, which you can adjust using {@link Builder#distributedInSameTraceTimeLimit(Duration)}.
      *
      * @author Mitchell Herrijgers
-     * @since 4.9.0
+     * @since axon-4.9.0
      */
     public class DefaultEventProcessorSpanFactory implements EventProcessorSpanFactory {
 

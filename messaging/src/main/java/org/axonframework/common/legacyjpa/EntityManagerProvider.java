@@ -27,7 +27,7 @@ import javax.persistence.EntityManager;
  * the case when using application-managed EntityManagers.
  *
  * @author Allard Buijze
- * @since 1.3
+ * @since axon-1.3
  * @deprecated in favor of using {@link org.axonframework.common.jpa.EntityManagerProvider} which moved to jakarta.
  */
 @Deprecated

@@ -39,7 +39,7 @@ import java.util.function.Predicate;
  *
  * @author Milan Savic
  * @author Sara Pelligrini
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 class AxonServerContainerUtils {
 

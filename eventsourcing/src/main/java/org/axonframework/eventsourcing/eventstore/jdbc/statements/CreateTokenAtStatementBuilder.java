@@ -28,7 +28,7 @@ import java.time.Instant;
  * Contract which defines how to build a PreparedStatement for use on {@link JdbcEventStorageEngine#createTokenAt(Instant)}
  *
  * @author Lucas Campos
- * @since 4.3
+ * @since axon-4.3
  */
 @FunctionalInterface
 public interface CreateTokenAtStatementBuilder {

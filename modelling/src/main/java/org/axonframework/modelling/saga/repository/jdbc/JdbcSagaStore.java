@@ -54,7 +54,7 @@ import static org.axonframework.common.jdbc.JdbcUtils.closeQuietly;
  *
  * @author Allard Buijze
  * @author Kristian Rosenvold
- * @since 2.1
+ * @since axon-2.1
  */
 public class JdbcSagaStore implements SagaStore<Object> {
 

@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * Describes a class capable of subscribing to the query bus.
  *
  * @author Marc Gathier
- * @since 3.1
+ * @since axon-3.1
  */
 public interface QueryHandlerAdapter {
 

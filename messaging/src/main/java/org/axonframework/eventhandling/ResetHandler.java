@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * exception to veto against a reset.
  *
  * @author Allard Buijze
- * @since 3.2
+ * @since axon-3.2
  */
 @Retention(RetentionPolicy.RUNTIME)
 @MessageHandler(messageType = ResetContext.class)

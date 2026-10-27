@@ -25,7 +25,7 @@ import org.axonframework.tracing.SpanFactory;
  * distributed query in the same trace or not (true by default).
  *
  * @author Mitchell Herrijgers
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class DefaultQueryBusSpanFactory implements QueryBusSpanFactory {
 

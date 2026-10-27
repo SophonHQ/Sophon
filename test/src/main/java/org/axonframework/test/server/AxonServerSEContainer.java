@@ -26,7 +26,7 @@ import java.util.Objects;
  * Constructs a single node AxonServer Standard Edition (SE) for testing.
  *
  * @author Lucas Campos
- * @since 4.6.0
+ * @since axon-4.6.0
  * @deprecated In favor of {@link AxonServerContainer} following the merger of Standard and Enterprise edition into a
  * single version.
  */

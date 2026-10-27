@@ -28,7 +28,7 @@ import java.sql.SQLException;
  * long, int)}
  *
  * @author Lucas Campos
- * @since 4.3
+ * @since axon-4.3
  */
 @FunctionalInterface
 public interface ReadEventDataForAggregateStatementBuilder {

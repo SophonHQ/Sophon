@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author Mitchell Herrijgers
  * @author Milan Savic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface PriorityTaskSchedulers {
 

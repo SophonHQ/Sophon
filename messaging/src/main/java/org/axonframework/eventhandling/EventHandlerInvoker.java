@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * Interface for an event message handler that defers handling to one or more other handlers.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public interface EventHandlerInvoker {
 

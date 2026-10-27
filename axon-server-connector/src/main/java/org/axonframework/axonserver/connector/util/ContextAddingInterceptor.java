@@ -28,7 +28,7 @@ import io.grpc.MethodDescriptor;
  * Interceptor around a gRPC request to add a Context element to the metadata.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

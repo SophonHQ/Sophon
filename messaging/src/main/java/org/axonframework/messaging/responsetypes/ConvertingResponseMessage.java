@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  *
  * @param <R> the type of response expected
  * @author Allard Buijze
- * @since 4.3
+ * @since axon-4.3
  */
 public class ConvertingResponseMessage<R> implements QueryResponseMessage<R> {
 

@@ -53,7 +53,7 @@ import static org.axonframework.messaging.unitofwork.UnitOfWork.Phase.*;
  *
  * @author Allard Buijze
  * @author René de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class AbstractEventBus implements EventBus {
 

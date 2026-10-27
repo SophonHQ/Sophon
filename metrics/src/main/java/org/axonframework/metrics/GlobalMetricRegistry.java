@@ -43,7 +43,7 @@ import java.util.function.Function;
  * Registry for application metrics with convenient ways to register Axon components.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class GlobalMetricRegistry {
 

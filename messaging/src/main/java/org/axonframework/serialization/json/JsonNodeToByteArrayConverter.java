@@ -27,7 +27,7 @@ import org.axonframework.serialization.ContentTypeConverter;
  * The byte[] will contain the UTF8 encoded JSON string.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public class JsonNodeToByteArrayConverter implements ContentTypeConverter<JsonNode,byte[]> {
 

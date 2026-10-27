@@ -55,7 +55,7 @@ import static org.hamcrest.CoreMatchers.*;
  * Implementation of the ResultValidator. It also acts as a CommandCallback, and registers the actual result.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public class ResultValidatorImpl<T> implements ResultValidator<T>, CommandCallback<Object, Object> {
 

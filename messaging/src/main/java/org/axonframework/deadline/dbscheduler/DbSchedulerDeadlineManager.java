@@ -78,7 +78,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  * {@link Scheduler}.
  *
  * @author Gerard Klijs
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 @SuppressWarnings("Duplicates")
 public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implements Lifecycle {

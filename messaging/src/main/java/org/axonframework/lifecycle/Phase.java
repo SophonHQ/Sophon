@@ -24,7 +24,7 @@ package org.axonframework.lifecycle;
  * @see Lifecycle
  * @see StartHandler
  * @see ShutdownHandler
- * @since 4.3
+ * @since axon-4.3
  */
 public abstract class Phase {
 

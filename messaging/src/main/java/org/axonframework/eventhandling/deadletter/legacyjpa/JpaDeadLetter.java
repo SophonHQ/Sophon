@@ -35,7 +35,7 @@ import java.util.Optional;
  *
  * @param <M> The {@link EventMessage} type of the contained message.
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  * @deprecated in favor of using {@link org.axonframework.eventhandling.deadletter.jpa.JpaDeadLetter} which moved to
  * jakarta.
  */

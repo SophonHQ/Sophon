@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Stub platform service to tap into the {@link PlatformInboundInstruction} being sent.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class PlatformService extends PlatformServiceGrpc.PlatformServiceImplBase {
 

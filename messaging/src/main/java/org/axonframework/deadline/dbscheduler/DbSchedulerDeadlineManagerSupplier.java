@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  * created. After creating it should be set on this {@link DbSchedulerDeadlineManagerSupplier}.
  *
  * @author Gerard Klijs
- * @since 4.9.0
+ * @since axon-4.9.0
  */
 public class DbSchedulerDeadlineManagerSupplier implements Supplier<DbSchedulerDeadlineManager> {
 

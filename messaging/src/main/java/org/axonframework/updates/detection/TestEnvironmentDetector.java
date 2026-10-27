@@ -23,7 +23,7 @@ import java.util.Arrays;
  * another testing framework.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class TestEnvironmentDetector {
 
@@ -90,4 +90,3 @@ public class TestEnvironmentDetector {
                 || className.startsWith("org.gradle.api.internal.tasks.testing"); // Gradle test runner
     }
 }
-

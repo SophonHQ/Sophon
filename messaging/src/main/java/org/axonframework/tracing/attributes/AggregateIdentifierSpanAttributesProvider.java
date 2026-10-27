@@ -30,7 +30,7 @@ import static java.util.Collections.singletonMap;
  * Adds the aggregate identifier to the Span if the current message being handled is a {@link DomainEventMessage}.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class AggregateIdentifierSpanAttributesProvider implements SpanAttributesProvider {
 

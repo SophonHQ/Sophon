@@ -87,7 +87,7 @@ import static org.axonframework.queryhandling.GenericQueryResponseMessage.asNull
  * @author Allard Buijze
  * @author Steven van Beelen
  * @author Milan Savic
- * @since 3.1
+ * @since axon-3.1
  */
 public class SimpleQueryBus implements QueryBus {
 

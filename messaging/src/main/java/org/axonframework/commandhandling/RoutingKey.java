@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * return value is converted.
  *
  * @author Steven van Beelen
- * @since 4.0
+ * @since axon-4.0
  */
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

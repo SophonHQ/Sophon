@@ -26,7 +26,7 @@ import org.axonframework.axonserver.connector.AxonServerConfiguration;
  * if there is a {@code ServiceConnection} annotated bean in the context, which is not a guarantee.
  *
  * @author Steven van Beelen
- * @since 4.9.4
+ * @since axon-4.9.4
  */
 public class PropertiesAxonServerConnectionDetails implements AxonServerConnectionDetails {
 

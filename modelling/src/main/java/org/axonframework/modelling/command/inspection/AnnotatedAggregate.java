@@ -64,7 +64,7 @@ import static java.lang.String.format;
  * @author Allard Buijze
  * @see AggregateLifecycle#apply(Object)
  * @see AggregateLifecycle#markDeleted()
- * @since 3.0
+ * @since axon-3.0
  */
 public class AnnotatedAggregate<T> extends AggregateLifecycle implements Aggregate<T>, ApplyMore {
 

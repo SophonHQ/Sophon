@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  * </ul>
  *
  * @author Reda.Housni-Alaoui
- * @since 3.1
+ * @since axon-3.1
  */
 public class DefaultEventMessageConverter implements EventMessageConverter {
 

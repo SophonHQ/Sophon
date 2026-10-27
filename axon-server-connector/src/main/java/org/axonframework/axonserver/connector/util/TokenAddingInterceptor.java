@@ -28,7 +28,7 @@ import io.grpc.MethodDescriptor;
  * Interceptor around a GRPC request to add a Token element to the metadata.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

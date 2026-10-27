@@ -57,7 +57,7 @@ import static org.axonframework.commandhandling.GenericCommandResultMessage.asCo
  * If an aggregate has been preloaded, it is set to the ThreadLocal.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class CommandHandlerInvoker implements EventHandler<CommandHandlingEntry>, LifecycleAware {
 

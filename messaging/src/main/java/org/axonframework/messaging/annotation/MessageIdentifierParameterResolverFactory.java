@@ -24,7 +24,7 @@ import org.axonframework.messaging.Message;
  * are annotated with the {@link MessageIdentifier} annotation and assigns the identifier of the Message.
  *
  * @author Steven van Beelen
- * @since 3.0
+ * @since axon-3.0
  */
 @Priority(Priority.HIGH)
 public final class MessageIdentifierParameterResolverFactory

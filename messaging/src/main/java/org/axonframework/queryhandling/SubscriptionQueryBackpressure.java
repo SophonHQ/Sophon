@@ -23,7 +23,7 @@ import reactor.core.publisher.FluxSink;
  * to express the type of back pressure.
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  * @deprecated since 3.4.0 Reactor version, Sinks API does not use FluxSink.OverflowStrategy
  */
 @Deprecated

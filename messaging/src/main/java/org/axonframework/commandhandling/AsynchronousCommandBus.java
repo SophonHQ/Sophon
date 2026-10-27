@@ -47,7 +47,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * the JVM to hang for up to 60 seconds on JVM shutdown.
  *
  * @author Allard Buijze
- * @since 1.3.4
+ * @since axon-1.3.4
  */
 public class AsynchronousCommandBus extends SimpleCommandBus {
 

@@ -23,7 +23,7 @@ import org.axonframework.common.AxonException;
  * same aggregate identifier to create an aggregate.
  *
  * @author Lucas Campos
- * @since 4.3
+ * @since axon-4.3
  */
 public class AggregateStreamCreationException extends AxonException {
 

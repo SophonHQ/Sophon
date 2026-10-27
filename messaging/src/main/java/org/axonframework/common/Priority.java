@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * those with lower priority.
  *
  * @author Allard Buijze
- * @since 2.1
+ * @since axon-2.1
  */
 @Inherited
 @Target(ElementType.TYPE)

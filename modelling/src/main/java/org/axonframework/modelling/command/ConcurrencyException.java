@@ -24,7 +24,7 @@ import org.axonframework.common.AxonTransientException;
  * same aggregate.
  *
  * @author Allard Buijze
- * @since 0.3
+ * @since axon-0.3
  */
 public class ConcurrencyException extends AxonTransientException {
 

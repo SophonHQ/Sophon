@@ -26,7 +26,7 @@ import java.util.stream.Stream;
  * @param <M> the type of {@link org.axonframework.messaging.Message} contained in this stream
  * @author Rene de Waele
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public interface BlockingStream<M> extends AutoCloseable {
 

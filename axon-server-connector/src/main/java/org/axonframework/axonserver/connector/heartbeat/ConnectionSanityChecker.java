@@ -20,7 +20,7 @@ package org.axonframework.axonserver.connector.heartbeat;
  * Sanity check that verify the state of the connection with AxonServer.
  *
  * @author Sara Pellegrini
- * @since 4.2.1
+ * @since axon-4.2.1
  * @deprecated in through use of the <a href="https://github.com/AxonIQ/axonserver-connector-java">AxonServer java
  * connector</a>
  */

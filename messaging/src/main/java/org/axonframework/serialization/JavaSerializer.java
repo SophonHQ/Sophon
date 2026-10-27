@@ -35,7 +35,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * {@link org.axonframework.serialization.xml.XStreamSerializer} might be a more suitable alternative.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  * @deprecated in favor of the {@link org.axonframework.serialization.xml.XStreamSerializer} and
  * {@link org.axonframework.serialization.json.JacksonSerializer}, as direct Java serialization is relatively error
  * prone. We hence strongly encourage to use either the XStream or Jackson solution in favor of this {@link Serializer}

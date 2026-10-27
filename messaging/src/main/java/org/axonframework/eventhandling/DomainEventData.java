@@ -23,7 +23,7 @@ package org.axonframework.eventhandling;
  *
  * @param <T> The content type of the serialized data
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public interface DomainEventData<T> extends EventData<T> {
 

@@ -20,7 +20,7 @@ package org.axonframework.modelling.saga;
  * Interface describing a mechanism to inject resources into Saga instances.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public interface ResourceInjector {
 

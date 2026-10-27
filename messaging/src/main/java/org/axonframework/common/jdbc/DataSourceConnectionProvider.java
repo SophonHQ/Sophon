@@ -24,7 +24,7 @@ import java.sql.SQLException;
  * ConnectionProvider implementation that obtains a connection from a given DataSource.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public class DataSourceConnectionProvider implements ConnectionProvider {
 

@@ -23,7 +23,7 @@ import org.axonframework.modelling.command.AggregateNotFoundException;
  * information of an aggregate was found, but the aggregate has been deleted.
  *
  * @author Allard Buijze
- * @since 0.4
+ * @since axon-0.4
  */
 public class AggregateDeletedException extends AggregateNotFoundException {
 

@@ -33,7 +33,7 @@ import java.util.Map;
  * methods if the method should only provide its bean if a bean of a given type does not exist yet.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  * @deprecated Use Spring Boot autoconfiguration or register the individual beans explicitly. Check the "See also" list
  * for which individual beans to register.
  */

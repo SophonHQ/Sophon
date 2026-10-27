@@ -32,7 +32,7 @@ import java.util.function.Function;
  * {@link #execute(Consumer)} or {@link #invoke(Function)} methods.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class AnnotatedSaga<T> extends SagaLifecycle implements Saga<T> {
 

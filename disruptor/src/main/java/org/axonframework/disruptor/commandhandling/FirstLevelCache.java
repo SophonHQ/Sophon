@@ -39,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @param <T> the type of the aggregate root
  * @author Premanand Chandrasekaran
- * @since 3.3.1
+ * @since axon-3.3.1
  */
 class FirstLevelCache<T> {
 

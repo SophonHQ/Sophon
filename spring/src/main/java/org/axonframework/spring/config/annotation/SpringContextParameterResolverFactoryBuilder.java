@@ -36,7 +36,7 @@ import javax.annotation.Nonnull;
  * such instance exists for each ApplicationContext.
  *
  * @author Allard Buijze
- * @since 2.1
+ * @since axon-2.1
  * @deprecated Use Spring Boot autoconfiguration or register the individual beans explicitly.
  */
 @Deprecated

@@ -28,7 +28,7 @@ import java.io.IOException;
  * 'META-INF/maven/&lt;groupId&gt;/&lt;artifactId&gt;/'.
  *
  * @author Allard Buijze
- * @since 2.1
+ * @since axon-2.1
  */
 public class MavenArtifactRevisionResolver implements RevisionResolver {
 

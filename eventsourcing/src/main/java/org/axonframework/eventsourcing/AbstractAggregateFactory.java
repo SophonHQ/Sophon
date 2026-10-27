@@ -29,7 +29,7 @@ import java.util.Set;
  *
  * @param <T> The type of Aggregate created by this factory
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public abstract class AbstractAggregateFactory<T> implements AggregateFactory<T> {
 

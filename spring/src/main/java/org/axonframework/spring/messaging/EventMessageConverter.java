@@ -23,7 +23,7 @@ import org.springframework.messaging.Message;
  * Interface describing a mechanism that converts Spring Messages from an Axon Event Messages and vice versa.
  *
  * @author Reda.Housni-Alaoui
- * @since 3.1
+ * @since axon-3.1
  */
 public interface EventMessageConverter {
 

@@ -47,7 +47,7 @@ import static org.axonframework.common.BuilderUtils.assertThat;
  * consumable message being found.
  *
  * @author Greg Woods
- * @since 4.2
+ * @since axon-4.2
  */
 public class MultiStreamableMessageSource implements StreamableMessageSource<TrackedEventMessage<?>> {
 

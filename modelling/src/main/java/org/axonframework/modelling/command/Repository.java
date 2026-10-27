@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  *
  * @param <T> The type of aggregate this repository stores.
  * @author Allard Buijze
- * @since 0.1
+ * @since axon-0.1
  */
 public interface Repository<T> extends ScopeAware {
 

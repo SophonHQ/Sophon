@@ -35,7 +35,7 @@ import static org.axonframework.commandhandling.GenericCommandResultMessage.asCo
  * @param <R> The return value of the Command
  * @param <C> The type of payload of the dispatched command
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class BlacklistDetectingCallback<C, R> implements CommandCallback<C, R> {
 

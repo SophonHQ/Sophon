@@ -24,7 +24,7 @@ import org.axonframework.common.Assert;
  * time.
  *
  * @author Allard Buijze
- * @since 1.3
+ * @since axon-1.3
  */
 public class SimpleEntityManagerProvider implements EntityManagerProvider {
 

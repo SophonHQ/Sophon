@@ -22,7 +22,7 @@ package org.axonframework.messaging.deadletter;
  *
  * @author Steven van Beelen
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface Cause {
 

@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
  * replaying an event processor.
  *
  * @author Mitchell Herrijgers
- * @since 4.7.0
+ * @since axon-4.7.0
  * @deprecated Various components have dedicated tracing SpanFactory interfaces since 4.9.0. This includes the {@link org.axonframework.commandhandling.CommandBus},
  * {@link org.axonframework.eventhandling.EventProcessor} and {@link org.axonframework.queryhandling.QueryBus}. Use the {@code distributedInSameTrace}
  * of these instead.

@@ -23,7 +23,7 @@ import org.axonframework.common.AxonException;
  * {@link DeadLetterEntry} or {@link org.axonframework.eventhandling.EventMessage} that needed to be converted.
  *
  * @author Mitchell Herrijgers
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class NoJpaConverterFoundException extends AxonException {
 

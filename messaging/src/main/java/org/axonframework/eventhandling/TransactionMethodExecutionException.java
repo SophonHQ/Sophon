@@ -23,7 +23,7 @@ import org.axonframework.common.AxonException;
  * might indicate that a transaction could not be committed successfully with a third party.
  *
  * @author Allard Buijze
- * @since 0.3
+ * @since axon-0.3
  */
 public class TransactionMethodExecutionException extends AxonException {
 

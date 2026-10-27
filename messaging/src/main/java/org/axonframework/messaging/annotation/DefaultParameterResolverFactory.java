@@ -30,7 +30,7 @@ import java.util.Optional;
  * MetaData and @MetaDataValue annotated parameters.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 @Priority(Priority.LOW)
 public class DefaultParameterResolverFactory implements ParameterResolverFactory {

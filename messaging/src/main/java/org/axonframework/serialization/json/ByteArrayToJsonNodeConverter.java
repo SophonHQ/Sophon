@@ -28,7 +28,7 @@ import java.io.IOException;
  * JSON string to a Jackson JsonNode.
  *
  * @author Allard Buijze
- * @since 2.2
+ * @since axon-2.2
  */
 public class ByteArrayToJsonNodeConverter implements ContentTypeConverter<byte[],JsonNode> {
 

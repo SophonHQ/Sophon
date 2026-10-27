@@ -49,7 +49,7 @@ import static java.util.stream.Collectors.toMap;
  * requested by Axon Server. Will delegate the calls to the {@link AxonServerConnectionManager} for further processing.
  *
  * @author Sara Pellegrini
- * @since 4.0
+ * @since axon-4.0
  */
 public class EventProcessorControlService implements Lifecycle {
 

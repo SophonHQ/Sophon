@@ -79,7 +79,7 @@ import static org.axonframework.common.jdbc.JdbcUtils.*;
  * @param <E> An implementation of {@link EventMessage} contained in the {@link DeadLetter dead-letters} within this
  *            queue.
  * @author Steven van Beelen
- * @since 4.8.0
+ * @since axon-4.8.0
  */
 public class JdbcSequencedDeadLetterQueue<E extends EventMessage<?>> implements SequencedDeadLetterQueue<E> {
 

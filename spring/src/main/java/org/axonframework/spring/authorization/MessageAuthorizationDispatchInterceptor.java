@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
  * A {@link MessageDispatchInterceptor} that adds the {$code authorities} from the authorized principle.
  *
  * @author Roald Bankras
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class MessageAuthorizationDispatchInterceptor<T extends Message<?>> implements MessageDispatchInterceptor<T> {
 

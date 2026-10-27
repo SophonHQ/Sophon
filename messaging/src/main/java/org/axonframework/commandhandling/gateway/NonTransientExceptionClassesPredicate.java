@@ -40,7 +40,7 @@ import java.util.function.Predicate;
  * </pre>
  *
  * @author Damir Murat
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class NonTransientExceptionClassesPredicate implements Predicate<Throwable> {
     private final List<Class<? extends Throwable>> nonTransientFailures;

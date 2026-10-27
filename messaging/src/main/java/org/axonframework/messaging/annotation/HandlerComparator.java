@@ -34,7 +34,7 @@ import java.util.function.ToIntFunction;
  * If the given {@code MessageHandlingMembers} both act on results rather, steps 2 through 4 are reversed.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public final class HandlerComparator {
 

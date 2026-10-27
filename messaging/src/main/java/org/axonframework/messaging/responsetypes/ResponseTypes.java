@@ -25,7 +25,7 @@ import java.util.Optional;
  * Utility class containing static methods to obtain instances of {@link ResponseType}.
  *
  * @author Steven van Beelen
- * @since 3.2
+ * @since axon-3.2
  */
 public abstract class ResponseTypes {
 

@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  * @param <R> The response type which will be matched against and converted to
  * @author Stefan Dragisic
  * @author Milan Savic
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class PublisherResponseType<R> extends AbstractResponseType<Publisher<R>> {
 

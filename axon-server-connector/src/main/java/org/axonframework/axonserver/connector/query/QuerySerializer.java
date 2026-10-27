@@ -44,7 +44,7 @@ import java.util.Optional;
  * io.axoniq.axonserver.grpc.query.Query} and {@link QueryResponse} messages.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public class QuerySerializer {
 

@@ -40,7 +40,7 @@ import javax.annotation.Nonnull;
  * is done at the {@code INFO} level.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class EventLoggingInterceptor implements MessageDispatchInterceptor<EventMessage<?>> {
 

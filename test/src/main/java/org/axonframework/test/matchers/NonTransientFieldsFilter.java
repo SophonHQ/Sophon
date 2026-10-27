@@ -24,7 +24,7 @@ import java.lang.reflect.Field;
  * FieldFilter implementation that only accepts non-transient Fields.
  *
  * @author Allard Buijze
- * @since 2.4.1
+ * @since axon-2.4.1
  */
 public class NonTransientFieldsFilter implements FieldFilter {
 

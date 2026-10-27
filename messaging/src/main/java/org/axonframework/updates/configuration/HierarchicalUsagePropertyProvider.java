@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  * value for each property from the list of providers, sorted by their priority.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class HierarchicalUsagePropertyProvider implements UsagePropertyProvider {
 

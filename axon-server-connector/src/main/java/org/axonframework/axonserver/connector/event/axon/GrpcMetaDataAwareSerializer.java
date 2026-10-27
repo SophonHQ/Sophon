@@ -30,7 +30,7 @@ import javax.annotation.Nonnull;
  * Wrapper around standard Axon Framework serializer that can deserialize Metadata from AxonServer events.
  *
  * @author Marc Gathier
- * @since 4.0
+ * @since axon-4.0
  */
 public final class GrpcMetaDataAwareSerializer implements Serializer {
 

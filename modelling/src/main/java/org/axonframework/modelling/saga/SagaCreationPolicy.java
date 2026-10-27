@@ -20,7 +20,7 @@ package org.axonframework.modelling.saga;
  * Enumeration containing the possible Creation Policies for Sagas.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 public enum SagaCreationPolicy {
 

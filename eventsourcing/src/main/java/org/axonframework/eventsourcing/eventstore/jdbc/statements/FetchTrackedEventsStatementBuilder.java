@@ -29,7 +29,7 @@ import java.sql.SQLException;
  * int)}
  *
  * @author Lucas Campos
- * @since 4.3
+ * @since axon-4.3
  */
 @FunctionalInterface
 public interface FetchTrackedEventsStatementBuilder {

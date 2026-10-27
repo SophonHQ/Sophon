@@ -29,7 +29,7 @@ import java.util.function.Function;
  * @param <M> An implementation of {@link Message} contained in the {@link DeadLetter dead letter} that's been made a
  *            decision on.
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class ShouldEnqueue<M extends Message<?>> implements EnqueueDecision<M> {
 

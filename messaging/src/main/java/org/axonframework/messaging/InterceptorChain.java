@@ -22,7 +22,7 @@ package org.axonframework.messaging;
  * Alternatively, they can block processing by returning without calling either of these methods.
  *
  * @author Allard Buijze
- * @since 0.5
+ * @since axon-0.5
  */
 @FunctionalInterface
 public interface InterceptorChain {

@@ -39,7 +39,7 @@ import static org.axonframework.common.ReflectionUtils.resolveMemberGenericType;
  * ChildEntity} is created that delegates to the entities in the annotated collection.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class AggregateMemberAnnotatedChildEntityCollectionDefinition extends AbstractChildEntityDefinition {
 

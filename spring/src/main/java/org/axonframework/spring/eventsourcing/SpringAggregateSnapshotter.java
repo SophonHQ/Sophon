@@ -47,7 +47,7 @@ import javax.annotation.Nonnull;
  *
  * @author Allard Buijze
  * @see SpringAggregateSnapshotterFactoryBean
- * @since 3.0
+ * @since axon-3.0
  */
 public class SpringAggregateSnapshotter extends AggregateSnapshotter implements ApplicationContextAware {
 

@@ -26,7 +26,7 @@ import java.util.Map;
  * Typically, this object should not live longer than the message object is is attached to.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class SerializedObjectHolder {
 

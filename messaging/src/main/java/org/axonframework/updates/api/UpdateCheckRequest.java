@@ -27,7 +27,7 @@ import java.util.Objects;
  * information, Kotlin version, and a list of library versions.
  *
  * @author Mitchell Herrijgers
- * @since 4.12.0
+ * @since axon-4.12.0
  */
 public class UpdateCheckRequest {
 

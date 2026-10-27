@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * ForwardToAll}, which forwards all incoming messages.
  *
  * @author Steven van Beelen
- * @since 3.1
+ * @since axon-3.1
  */
 public interface ForwardingMode<T extends Message<?>> {
 

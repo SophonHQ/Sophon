@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * @author Milan Savic
  * @author Steven van Beelen
  * @see MessageHandler
- * @since 3.3
+ * @since axon-3.3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})

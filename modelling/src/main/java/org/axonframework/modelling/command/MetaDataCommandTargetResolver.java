@@ -28,7 +28,7 @@ import javax.annotation.Nonnull;
  * more performing alternative to a reflection based CommandTargetResolvers.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class MetaDataCommandTargetResolver implements CommandTargetResolver {
 

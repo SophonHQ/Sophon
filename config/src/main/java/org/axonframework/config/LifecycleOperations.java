@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
  * @author Steven van Beelen
  * @see LifecycleHandler
  * @see org.axonframework.lifecycle.Phase
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public interface LifecycleOperations {
 

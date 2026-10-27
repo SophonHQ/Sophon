@@ -68,7 +68,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * @author Tom de Backer
  * @author Gerard Klijs
- * @since 4.7.0
+ * @since axon-4.7.0
  */
 public class JobRunrDeadlineManager extends AbstractDeadlineManager implements Lifecycle {
 

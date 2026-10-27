@@ -46,7 +46,7 @@ import static org.axonframework.common.BuilderUtils.assertNonNull;
  * or asynchronously.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public class SubscribingEventProcessor extends AbstractEventProcessor implements Lifecycle {
 

@@ -56,7 +56,7 @@ import static org.axonframework.common.ObjectUtils.getOrDefault;
  * Implementation of the {@link EventScheduler} that uses Axon Server to schedule the events.
  *
  * @author Marc Gathier
- * @since 4.4
+ * @since axon-4.4
  */
 public class AxonServerEventScheduler implements EventScheduler, Lifecycle {
 

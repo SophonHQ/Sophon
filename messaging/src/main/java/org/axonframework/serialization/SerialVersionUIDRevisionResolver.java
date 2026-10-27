@@ -23,7 +23,7 @@ import java.io.ObjectStreamClass;
  * class is not serializable, it returns {@code null} when asked for a revision.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class SerialVersionUIDRevisionResolver implements RevisionResolver {
 

@@ -24,7 +24,7 @@ import org.axonframework.messaging.annotation.MessageInterceptingMember;
  * @param <T> the type of entity to which the message handler will delegate tha actual interception
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  * @deprecated in favor of the more generic {@link MessageInterceptingMember}
  */
 @Deprecated

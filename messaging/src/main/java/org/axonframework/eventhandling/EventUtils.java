@@ -30,7 +30,7 @@ import java.util.stream.Stream;
  * Utility class for dealing with events.
  *
  * @author Rene de Waele
- * @since 3.0
+ * @since axon-3.0
  */
 public abstract class EventUtils {
 

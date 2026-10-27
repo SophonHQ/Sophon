@@ -29,7 +29,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  *
  * @author Mitchell Herrijgers
  * @see AxonTimeLimitedTask
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public class AxonTaskJanitor {
 

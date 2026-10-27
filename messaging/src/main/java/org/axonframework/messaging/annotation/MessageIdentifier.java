@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * Message. The parameter type must be assignable from {@link String}.
  *
  * @author Steven van Beelen
- * @since 3.0
+ * @since axon-3.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})

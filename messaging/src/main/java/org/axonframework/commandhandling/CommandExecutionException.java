@@ -27,7 +27,7 @@ import org.axonframework.messaging.HandlerExecutionException;
  * via the constructor accepting the {@code writableStackTrace} parameter.
  *
  * @author Allard Buijze
- * @since 1.3
+ * @since axon-1.3
  */
 public class CommandExecutionException extends HandlerExecutionException {
 

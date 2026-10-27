@@ -28,7 +28,7 @@ import org.axonframework.serialization.ContentTypeConverter;
  * Will succeed converting at all times as an {@code ObjectNode} is a {@code JsonNode} by definition.
  *
  * @author Steven van Beelen
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class ObjectNodeToJsonNodeConverter implements ContentTypeConverter<ObjectNode, JsonNode> {
 

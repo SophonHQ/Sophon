@@ -22,7 +22,7 @@ import java.util.stream.Stream;
  * Contract towards a mechanism to provide a {@link Stream} of components which are {@link ScopeAware}.
  *
  * @author Steven van Beelen
- * @since 3.3
+ * @since axon-3.3
  */
 public interface ScopeAwareProvider {
 

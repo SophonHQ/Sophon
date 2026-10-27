@@ -28,7 +28,7 @@ import org.axonframework.modelling.saga.AssociationValue;
  * JPA wrapper around an Association Value. This entity is used to store relevant Association Values for Sagas.
  *
  * @author Allard Buijze
- * @since 0.7
+ * @since axon-0.7
  */
 @Table(indexes = {
         @Index(columnList = "sagaType, associationKey, associationValue", unique = false),

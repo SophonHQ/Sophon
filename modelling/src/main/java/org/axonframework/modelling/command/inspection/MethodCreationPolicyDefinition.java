@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
  * Implementation of {@link HandlerEnhancerDefinition} used for {@link CreationPolicy} annotated methods.
  *
  * @author Marc Gathier
- * @since 4.3
+ * @since axon-4.3
  */
 public class MethodCreationPolicyDefinition implements HandlerEnhancerDefinition {
 

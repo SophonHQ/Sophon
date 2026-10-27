@@ -31,7 +31,7 @@ import static org.springframework.beans.factory.BeanFactoryUtils.beansOfTypeIncl
  * Registers Spring beans that implement {@link QueryHandlerAdapter} with the query bus.
  *
  * @author Marc Gathier
- * @since 3.1
+ * @since axon-3.1
  * @deprecated Replaced by the {@link MessageHandlerLookup} and {@link MessageHandlerConfigurer}.
  */
 @Deprecated

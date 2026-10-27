@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * lifecycle.
  *
  * @author Allard Buijze
- * @since 4.6.0
+ * @since axon-4.6.0
  */
 public class SpringAxonConfiguration implements FactoryBean<Configuration>, SmartLifecycle {
 

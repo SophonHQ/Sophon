@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
  * to register several Metrics Modules to the given {@link org.axonframework.config.Configurer}.
  *
  * @author Steven van Beelen
- * @since 3.2
+ * @since axon-3.2
  */
 public class MetricsConfigurerModule implements ConfigurerModule {
 

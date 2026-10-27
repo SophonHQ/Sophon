@@ -29,7 +29,7 @@ import java.util.Map;
  * with these keys are returned as correlation data.
  *
  * @author Allard Buijze
- * @since 2.3
+ * @since axon-2.3
  */
 public class SimpleCorrelationDataProvider implements CorrelationDataProvider {
 

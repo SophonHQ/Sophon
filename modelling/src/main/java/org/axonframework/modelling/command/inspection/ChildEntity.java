@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @param <T> defining the parent class this {@link ChildEntity} belongs to
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public interface ChildEntity<T> {
 

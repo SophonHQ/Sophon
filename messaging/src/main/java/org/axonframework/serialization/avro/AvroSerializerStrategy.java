@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  *
  * @author Simon Zambrovski
  * @author Jan Galinski
- * @since 4.11.0
+ * @since axon-4.11.0
  */
 public interface AvroSerializerStrategy extends Predicate<Class<?>> {
 

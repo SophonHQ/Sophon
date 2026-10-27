@@ -25,7 +25,7 @@ import java.time.Instant;
  * Used in {@link AppendEventsStatementBuilder} and {@link AppendSnapshotStatementBuilder}.
  *
  * @author Trond Marius Øvstetun
- * @since 4.4
+ * @since axon-4.4
  */
 @FunctionalInterface
 public interface TimestampWriter {

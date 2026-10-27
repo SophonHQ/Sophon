@@ -19,7 +19,7 @@ package org.axonframework.test.eventscheduler;
  * A consumer that allows implementations to throw exceptions.
  *
  * @author Steve Chernyak
- * @since 3.0
+ * @since axon-3.0
  */
 @FunctionalInterface
 public interface EventConsumer<T> {

@@ -128,7 +128,7 @@ import static org.axonframework.common.annotation.AnnotationUtils.findAnnotation
  * This factory is thread safe once configured, and so are the gateways it creates.
  *
  * @author Allard Buijze
- * @since 2.0
+ * @since axon-2.0
  */
 public class CommandGatewayFactory {
 

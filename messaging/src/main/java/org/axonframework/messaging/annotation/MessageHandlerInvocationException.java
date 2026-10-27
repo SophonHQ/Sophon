@@ -23,7 +23,7 @@ import org.axonframework.common.AxonException;
  * handler.
  *
  * @author Allard Buijze
- * @since 2.1
+ * @since axon-2.1
  */
 public class MessageHandlerInvocationException extends AxonException {
 

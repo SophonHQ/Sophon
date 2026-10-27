@@ -22,7 +22,7 @@ import java.util.Objects;
  * Utility methods for when dealing with {@link String}s.
  *
  * @author Steven van Beelen
- * @since 4.5
+ * @since axon-4.5
  */
 public abstract class StringUtils {
 
@@ -78,4 +78,3 @@ public abstract class StringUtils {
         return s.substring(0, 1).toLowerCase() + s.substring(1);
     }
 }
-

@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
  * typically an asynchronous process, implementations may to choose to create snapshots in the calling thread.
  *
  * @author Allard Buijze
- * @since 0.6
+ * @since axon-0.6
  */
 public interface Snapshotter {
 

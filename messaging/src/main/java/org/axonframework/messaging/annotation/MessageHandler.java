@@ -31,7 +31,7 @@ import java.lang.annotation.Target;
  * another annotation that expresses the type of message handled.
  *
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

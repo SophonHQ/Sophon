@@ -42,7 +42,7 @@ import java.util.Map;
  * Interface describing action to perform on a Saga Test Fixture during the configuration phase.
  *
  * @author Allard Buijze
- * @since 1.1
+ * @since axon-1.1
  */
 public interface FixtureConfiguration {
 
@@ -317,7 +317,7 @@ public interface FixtureConfiguration {
      * Indicates that no relevant activity has occurred in the past.
      *
      * @return an object that allows the definition of the activity to measure Saga behavior
-     * @since 2.1.1
+     * @since axon-2.1.1
      */
     WhenState givenNoPriorActivity();
 

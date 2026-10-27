@@ -33,7 +33,7 @@ import java.util.concurrent.Callable;
  * This can function only if there is an active {@link org.axonframework.messaging.unitofwork.UnitOfWork}.
  *
  * @author Milan Savic
- * @since 3.3
+ * @since axon-3.3
  */
 @Priority(Priority.FIRST)
 public class InterceptorChainParameterResolverFactory

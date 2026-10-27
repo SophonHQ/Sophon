@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * @param <AR> the aggregate root type
  * @param <A>  the {@link Aggregate} implementation type
  * @author Allard Buijze
- * @since 3.0
+ * @since axon-3.0
  */
 public class LockAwareAggregate<AR, A extends Aggregate<AR>> implements Aggregate<AR> {
 
