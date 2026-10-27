@@ -106,10 +106,10 @@ public class OutboundEventMessageChannelAdapter implements InitializingBean {
     }
 
     /**
-     * Transforms the given Axon {@code event} into a Spring Messaging Message. This method may be overridden to change
+     * Transforms the given Sophon {@code event} into a Spring Messaging Message. This method may be overridden to change
      * how this transformation should occur.
      *
-     * @param event The Axon EventMessage to transform
+     * @param event The Sophon EventMessage to transform
      * @return The Spring Messaging Message representing the Event Message
      */
     protected Message<?> transform(EventMessage<?> event) {

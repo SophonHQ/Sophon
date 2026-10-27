@@ -38,7 +38,7 @@ public class AggregateIdentifierSpanAttributesProvider implements SpanAttributes
     public @NonNull Map<String, String> provideForMessage(@NonNull Message<?> message) {
         if (message instanceof DomainEventMessage) {
             DomainEventMessage<?> domainEventMessage = (DomainEventMessage<?>) message;
-            return singletonMap("axon_aggregate_identifier", domainEventMessage.getAggregateIdentifier());
+            return singletonMap("sophon_aggregate_identifier", domainEventMessage.getAggregateIdentifier());
         }
         return emptyMap();
     }

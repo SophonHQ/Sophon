@@ -99,7 +99,7 @@ public interface SpanFactory {
 
     /**
      * Creates a new {@link Span} linked to asynchronously handling a {@link Message}, for example when handling a
-     * command from Axon Server. The message attributes will be added to the span, based on the provided
+     * command received from another node. The message attributes will be added to the span, based on the provided
      * {@link SpanAttributesProvider SpanAttributesProviders} for additional debug information.
      * <p>
      * In monitoring systems, this Span will be the root of the trace.
@@ -119,8 +119,8 @@ public interface SpanFactory {
                            Message<?>... linkedParents);
 
     /**
-     * Creates a new {@link Span} linked to dispatching a {@link Message}, for example when sending a command to Axon
-     * Server. The message attributes will be added to the span, based on the provided
+     * Creates a new {@link Span} linked to dispatching a {@link Message}, for example when sending a command to
+     * another node. The message attributes will be added to the span, based on the provided
      * {@link SpanAttributesProvider SpanAttributesProviders} for additional debug information.
      * <p>
      * In monitoring systems, this Span will be part of another trace.

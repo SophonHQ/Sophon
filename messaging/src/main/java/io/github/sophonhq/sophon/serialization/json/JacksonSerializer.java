@@ -24,8 +24,8 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ObjectUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MetaData;
 import io.github.sophonhq.sophon.serialization.AnnotationRevisionResolver;
 import io.github.sophonhq.sophon.serialization.ChainingConverter;
@@ -115,7 +115,7 @@ public class JacksonSerializer implements Serializer {
         this.objectMapper = builder.objectMapper;
 
         this.objectMapper.registerModule(
-                new SimpleModule("Axon-Jackson Module").addDeserializer(MetaData.class, new MetaDataDeserializer())
+                new SimpleModule("Sophon-Jackson Module").addDeserializer(MetaData.class, new MetaDataDeserializer())
         );
         this.objectMapper.registerModule(new JavaTimeModule());
         if (converter instanceof ChainingConverter) {
@@ -405,10 +405,10 @@ public class JacksonSerializer implements Serializer {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             // Method kept for overriding
         }
     }

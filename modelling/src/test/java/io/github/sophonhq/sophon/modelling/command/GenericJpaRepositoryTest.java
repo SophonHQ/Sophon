@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.command;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jpa.SimpleEntityManagerProvider;
 import io.github.sophonhq.sophon.eventhandling.DomainEventMessage;
 import io.github.sophonhq.sophon.eventhandling.DomainEventSequenceAware;
@@ -123,7 +123,7 @@ class GenericJpaRepositoryTest {
                 });
         testSubject.load(aggregateId);
         spanFactory.verifySpanCompleted("Repository.load");
-        spanFactory.verifySpanHasAttributeValue("Repository.load", "axon.aggregateId", aggregateId);
+        spanFactory.verifySpanHasAttributeValue("Repository.load", "sophon.aggregateId", aggregateId);
     }
 
     @Test
@@ -293,23 +293,23 @@ class GenericJpaRepositoryTest {
     }
 
     @Test
-    void buildWithNullSubtypesThrowsAxonConfigurationException() {
+    void buildWithNullSubtypesThrowsSophonConfigurationException() {
         GenericJpaRepository.Builder<StubJpaAggregate> builderTestSubject =
                 GenericJpaRepository.builder(StubJpaAggregate.class)
                                     .entityManagerProvider(new SimpleEntityManagerProvider(mockEntityManager))
                                     .eventBus(eventBus);
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.subtypes(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.subtypes(null));
     }
 
     @Test
-    void buildWithNullSubtypeThrowsAxonConfigurationException() {
+    void buildWithNullSubtypeThrowsSophonConfigurationException() {
         GenericJpaRepository.Builder<StubJpaAggregate> builderTestSubject =
                 GenericJpaRepository.builder(StubJpaAggregate.class)
                                     .entityManagerProvider(new SimpleEntityManagerProvider(mockEntityManager))
                                     .eventBus(eventBus);
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.subtype(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.subtype(null));
     }
 
     private class StubJpaAggregate {

@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.config;
 
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventProcessor;
 import io.github.sophonhq.sophon.eventhandling.ListenerInvocationErrorHandler;
 import io.github.sophonhq.sophon.modelling.saga.AbstractSagaManager;
@@ -117,7 +117,7 @@ public class SagaConfigurer<T> {
 
     private void verifyNotInitialized() {
         if (this.sagaConfig != null) {
-            throw new AxonConfigurationException(
+            throw new SophonConfigurationException(
                     "SagaConfiguration has already been created. Cannot make modifications.");
         }
     }

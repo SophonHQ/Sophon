@@ -55,7 +55,7 @@ public class AutoWiredEventSourcedAggregateTest {
         assertEquals(EventSourcingRepository.class, myAggregateRepository.getClass());
     }
 
-    @Import(SpringAxonAutoConfigurer.ImportSelector.class)
+    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
     @Scope
     @Configuration
     public static class Context {

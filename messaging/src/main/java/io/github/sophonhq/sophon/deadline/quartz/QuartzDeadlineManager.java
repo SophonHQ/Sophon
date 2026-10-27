@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.deadline.quartz;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.deadline.AbstractDeadlineManager;
@@ -101,9 +101,9 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
      * Instantiate a {@link QuartzDeadlineManager} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link Scheduler}, {@link ScopeAwareProvider}, {@link TransactionManager} and
-     * {@link Serializer} are not {@code null}, and will throw an {@link AxonConfigurationException} if any of them is
+     * {@link Serializer} are not {@code null}, and will throw an {@link SophonConfigurationException} if any of them is
      * {@code null}. The TransactionManager, ScopeAwareProvider and Serializer will be tied to the Scheduler's context.
-     * If this initialization step fails, this will too result in an AxonConfigurationException.
+     * If this initialization step fails, this will too result in an SophonConfigurationException.
      *
      * @param builder the {@link Builder} used to instantiate a {@link QuartzDeadlineManager} instance
      */
@@ -119,7 +119,7 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
         try {
             initialize();
         } catch (SchedulerException e) {
-            throw new AxonConfigurationException("Unable to initialize QuartzDeadlineManager", e);
+            throw new SophonConfigurationException("Unable to initialize QuartzDeadlineManager", e);
         }
     }
 
@@ -268,7 +268,7 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
         private TransactionManager transactionManager = NoTransactionManager.INSTANCE;
         private Supplier<Serializer> serializer;
         private Predicate<Throwable> refireImmediatelyPolicy =
-                throwable -> !findException(throwable, AxonNonTransientException.class::isInstance).isPresent();
+                throwable -> !findException(throwable, SophonNonTransientException.class::isInstance).isPresent();
         private DeadlineManagerSpanFactory spanFactory = DefaultDeadlineManagerSpanFactory.builder()
                                                                                           .spanFactory(NoOpSpanFactory.INSTANCE)
                                                                                           .build();
@@ -360,7 +360,7 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
         /**
          * Sets a {@link Predicate} taking a {@link Throwable} to decided whether a failed {@link DeadlineJob} should be
          * 'refired' immediately. Defaults to a Predicate which will refire immediately on
-         * non-{@link AxonNonTransientException}s.
+         * non-{@link SophonNonTransientException}s.
          *
          * @param refireImmediatelyPolicy a {@link Predicate} taking a {@link Throwable} to decided whether a failed
          *                                {@link DeadlineJob} should be 'refired' immediately
@@ -384,10 +384,10 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(scheduler, "The Scheduler is a hard requirement and should be provided");
             assertNonNull(scopeAwareProvider, "The ScopeAwareProvider is a hard requirement and should be provided");
             if (serializer == null) {

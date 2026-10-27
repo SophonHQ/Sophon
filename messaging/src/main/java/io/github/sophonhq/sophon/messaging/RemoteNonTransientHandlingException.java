@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import java.util.List;
  * @author Stefan Andjelkovic
  * @since axon-4.5
  */
-public class RemoteNonTransientHandlingException extends AxonNonTransientException {
+public class RemoteNonTransientHandlingException extends SophonNonTransientException {
 
     private static final long serialVersionUID = 7481427660341420212L;
     private final List<String> exceptionDescriptions;

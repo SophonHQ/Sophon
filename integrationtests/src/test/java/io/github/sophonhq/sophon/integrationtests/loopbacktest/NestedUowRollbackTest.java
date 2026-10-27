@@ -30,7 +30,7 @@ import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.app
 
 class NestedUowRollbackTest {
 
-    // This ensures we do not wire Axon Server components
+    // This ensures configurer modules on the classpath are not registered automatically
     private static final boolean DO_NOT_AUTO_LOCATE_CONFIGURER_MODULES = false;
 
     @Test

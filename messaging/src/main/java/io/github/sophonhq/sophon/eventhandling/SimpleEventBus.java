@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.monitoring.MessageMonitor;
 import io.github.sophonhq.sophon.monitoring.NoOpMessageMonitor;
 import io.github.sophonhq.sophon.tracing.SpanFactory;
@@ -90,11 +90,11 @@ public class SimpleEventBus extends AbstractEventBus {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
         }
     }

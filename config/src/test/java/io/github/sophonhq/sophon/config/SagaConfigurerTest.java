@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
 import io.github.sophonhq.sophon.eventhandling.ListenerInvocationErrorHandler;
 import io.github.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStore;
@@ -134,7 +134,7 @@ class SagaConfigurerTest {
         try {
             r.run();
             fail(message);
-        } catch (AxonConfigurationException ace) {
+        } catch (SophonConfigurationException ace) {
             // we expect this exception
         }
     }

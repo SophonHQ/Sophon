@@ -2224,7 +2224,7 @@ class TrackingEventProcessorTest {
     @Timeout(value = 15)
     void timeoutInterceptorRaceWithNonTimeoutExceptionDoesNotShutDownProcessor() throws Exception {
         // Regression test for: https://github.com/AxonFramework/AxonFramework/issues/4456
-        // AxonTimeLimitedTask's scheduled interrupt lambda can fire after detectInterruptionInsteadOfException
+        // SophonTimeLimitedTask's scheduled interrupt lambda can fire after detectInterruptionInsteadOfException
         // has already determined that the exception was NOT a timeout. The fix is that complete() is called
         // early in the catch block and is synchronized with the lambda — so either the lambda never fires,
         // or complete() clears the interrupt the lambda set before it can reach doSleepFor.

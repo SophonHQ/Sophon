@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.eventhandling.scheduling.quartz;
 
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
@@ -70,7 +70,7 @@ public class QuartzEventScheduler implements EventScheduler, Lifecycle {
     private static final Logger logger = LoggerFactory.getLogger(QuartzEventScheduler.class);
 
     private static final String JOB_NAME_PREFIX = "event-";
-    private static final String DEFAULT_GROUP_NAME = "AxonFramework-Events";
+    private static final String DEFAULT_GROUP_NAME = "Sophon-Events";
 
     private final Scheduler scheduler;
     private final EventBus eventBus;
@@ -84,9 +84,9 @@ public class QuartzEventScheduler implements EventScheduler, Lifecycle {
      * Instantiate a {@link QuartzEventScheduler} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link Scheduler} and {@link EventBus} are not {@code null},
-     * and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      * The EventBus, TransactionManager and EventJobDataBinder will be tied to the Scheduler's context. If this
-     * initialization step fails, this will too result in an AxonConfigurationException.
+     * initialization step fails, this will too result in an SophonConfigurationException.
      *
      * @param builder the {@link Builder} used to instantiate a {@link QuartzEventScheduler} instance
      */
@@ -100,7 +100,7 @@ public class QuartzEventScheduler implements EventScheduler, Lifecycle {
         try {
             initialize();
         } catch (SchedulerException e) {
-            throw new AxonConfigurationException("Unable to initialize QuartzEventScheduler", e);
+            throw new SophonConfigurationException("Unable to initialize QuartzEventScheduler", e);
         }
     }
 
@@ -201,7 +201,7 @@ public class QuartzEventScheduler implements EventScheduler, Lifecycle {
     }
 
     /**
-     * Sets the group identifier to use when scheduling jobs with Quartz. Defaults to "AxonFramework-Events".
+     * Sets the group identifier to use when scheduling jobs with Quartz. Defaults to "Sophon-Events".
      *
      * @param groupIdentifier the group identifier to use when scheduling jobs with Quartz
      */
@@ -439,10 +439,10 @@ public class QuartzEventScheduler implements EventScheduler, Lifecycle {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(scheduler, "The Scheduler is a hard requirement and should be provided");
             assertNonNull(eventBus, "The EventBus is a hard requirement and should be provided");
             if (jobDataBinderSupplier == null) {

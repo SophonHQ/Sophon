@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.test;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception indicating that an error occurred that prevented successful execution of a test fixture.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Allard Buijze
  * @since axon-0.6
  */
-public class FixtureExecutionException extends AxonNonTransientException {
+public class FixtureExecutionException extends SophonNonTransientException {
 
     private static final long serialVersionUID = 2867528683103491260L;
 

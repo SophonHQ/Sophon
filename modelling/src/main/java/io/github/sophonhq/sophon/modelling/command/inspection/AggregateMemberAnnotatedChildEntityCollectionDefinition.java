@@ -17,8 +17,8 @@
 package io.github.sophonhq.sophon.modelling.command.inspection;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ReflectionUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.property.Property;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.modelling.command.AggregateMember;
@@ -59,14 +59,14 @@ public class AggregateMemberAnnotatedChildEntityCollectionDefinition extends Abs
         Class<?> entityType = (Class<?>) attributes.get("type");
         if (Void.class.equals(entityType)) {
             entityType = resolveMemberGenericType(member, 0).orElseThrow(
-                    () -> new AxonConfigurationException(format(
+                    () -> new SophonConfigurationException(format(
                             "Unable to resolve entity type of member [%s]. Please provide type explicitly in @AggregateMember annotation.",
                             ReflectionUtils.getMemberGenericString(member)
                     )));
         }
 
         if (entityType.isInterface()) {
-            throw new AxonConfigurationException(
+            throw new SophonConfigurationException(
                     "Aggregate Member type should be a concrete implementation instead of [" + entityType + "]."
             );
         }

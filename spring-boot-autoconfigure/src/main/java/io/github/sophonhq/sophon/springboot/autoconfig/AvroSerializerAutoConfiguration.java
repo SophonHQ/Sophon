@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  * @since axon-4.11.0
  */
 @AutoConfiguration
-@AutoConfigureBefore(AxonAutoConfiguration.class)
+@AutoConfigureBefore(SophonAutoConfiguration.class)
 @ConditionalOnClass(name = {"org.apache.avro.message.SchemaStore"})
 public class AvroSerializerAutoConfiguration {
 
@@ -58,9 +58,9 @@ public class AvroSerializerAutoConfiguration {
      * @param schemas Avro schemas to put into the store.
      * @return schema store instance.
      */
-    @Bean("defaultAxonSchemaStore")
+    @Bean("defaultSophonSchemaStore")
     @Conditional({AvroConfiguredCondition.class, OnMissingDefaultSchemaStoreCondition.class})
-    public SchemaStore defaultAxonSchemaStore(Set<Schema> schemas) {
+    public SchemaStore defaultSophonSchemaStore(Set<Schema> schemas) {
         SchemaStore.Cache cachingSchemaStore = new SchemaStore.Cache();
         schemas.forEach(cachingSchemaStore::addSchema);
         return cachingSchemaStore;
@@ -118,13 +118,13 @@ public class AvroSerializerAutoConfiguration {
         }
 
         @SuppressWarnings("unused")
-        @ConditionalOnProperty(name = "axon.serializer.messages", havingValue = "avro")
+        @ConditionalOnProperty(name = "sophon.serializer.messages", havingValue = "avro")
         static class MessagesAvroCondition {
 
         }
 
         @SuppressWarnings("unused")
-        @ConditionalOnProperty(name = "axon.serializer.events", havingValue = "avro")
+        @ConditionalOnProperty(name = "sophon.serializer.events", havingValue = "avro")
         static class EventsAvroCondition {
 
         }

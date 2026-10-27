@@ -41,7 +41,7 @@ public class MessageNameSpanAttributesProvider implements SpanAttributesProvider
     public @NonNull Map<String, String> provideForMessage(@NonNull Message<?> message) {
         String name = determineName(message);
         if (name != null) {
-            return singletonMap("axon_message_name", name);
+            return singletonMap("sophon_message_name", name);
         }
         return emptyMap();
     }

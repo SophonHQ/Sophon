@@ -24,7 +24,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @author Steven van Beelen
  * @since axon-3.2
  */
-@ConfigurationProperties("axon.metrics")
+@ConfigurationProperties("sophon.metrics")
 public class MetricsProperties {
 
     private AutoConfiguration autoConfiguration = new AutoConfiguration();

@@ -22,7 +22,7 @@ import io.github.sophonhq.sophon.commandhandling.CommandExecutionException;
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.CommandResultMessage;
 import io.github.sophonhq.sophon.commandhandling.callbacks.FutureCallback;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MessageDispatchInterceptor;
 import io.github.sophonhq.sophon.messaging.annotation.MetaDataValue;
 import io.github.sophonhq.sophon.messaging.responsetypes.ResponseType;
@@ -140,7 +140,7 @@ public class CommandGatewayFactory {
     /**
      * Instantiate a {@link CommandGatewayFactory} based on the fields contained in the {@link Builder}.
      * <p>
-     * Will assert that the {@link CommandBus} is not {@code null}, and will throw an {@link AxonConfigurationException}
+     * Will assert that the {@link CommandBus} is not {@code null}, and will throw an {@link SophonConfigurationException}
      * if it is {@code null}.
      *
      * @param builder The {@link Builder} used to instantiate a {@link CommandGatewayFactory} instance.
@@ -324,11 +324,11 @@ public class CommandGatewayFactory {
     }
 
     /**
-     * Registers the {@code callback}, which is invoked for each sent command, unless Axon is able to detect that the
+     * Registers the {@code callback}, which is invoked for each sent command, unless Sophon is able to detect that the
      * result of the command does not match the type accepted by the callback.
      * <p/>
-     * Axon will check the signature of the {@link CommandCallback#onResult(CommandMessage, CommandResultMessage)}
-     * method and only invoke the callback if the actual result of the command is an instance of that type. If Axon is
+     * Sophon will check the signature of the {@link CommandCallback#onResult(CommandMessage, CommandResultMessage)}
+     * method and only invoke the callback if the actual result of the command is an instance of that type. If Sophon is
      * unable to detect the type, the callback is always invoked, potentially causing
      * {@link java.lang.ClassCastException}.
      *
@@ -878,10 +878,10 @@ public class CommandGatewayFactory {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException If one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException If one field is asserted to be incorrect according to the Builder's
          *                                    specifications.
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(commandBus, "The CommandBus is a hard requirement and should be provided");
         }
     }

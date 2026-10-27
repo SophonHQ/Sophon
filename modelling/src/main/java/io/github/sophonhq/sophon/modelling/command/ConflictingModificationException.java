@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.command;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Root of a hierarchy of exceptions indicating the detection of conflicting concurrent modifications. These conflicts
@@ -28,7 +28,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Allard Buijze
  * @since axon-0.6
  */
-public class ConflictingModificationException extends AxonNonTransientException {
+public class ConflictingModificationException extends SophonNonTransientException {
 
     private static final long serialVersionUID = -4333021767907264897L;
 

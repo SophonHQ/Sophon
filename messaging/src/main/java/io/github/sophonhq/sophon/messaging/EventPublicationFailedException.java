@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception indication that an error occurred while publishing an event to an AMQP Broker
@@ -26,7 +26,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @since axon-3.0
  */
 
-public class EventPublicationFailedException extends AxonException {
+public class EventPublicationFailedException extends SophonException {
 
     /**
      * Initialize the exception using given descriptive {@code message} and {@code cause}

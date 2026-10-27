@@ -14,4 +14,4 @@
 # limitations under the License.
 #
 
-io.github.sophonhq.sophon.config.AxonTaskJanitorShutdownConfigurerModule
+io.github.sophonhq.sophon.config.SophonTaskJanitorShutdownConfigurerModule

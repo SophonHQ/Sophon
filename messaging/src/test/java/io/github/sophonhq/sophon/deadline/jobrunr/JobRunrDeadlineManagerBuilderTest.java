@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.deadline.jobrunr;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.deadline.TestScopeDescriptor;
 import io.github.sophonhq.sophon.messaging.ScopeAwareProvider;
@@ -56,22 +56,22 @@ class JobRunrDeadlineManagerBuilderTest {
     void validateNeedsAllPropertiesSet() {
         builder.jobScheduler(jobScheduler)
                .transactionManager(transactionManager);
-        assertThrows(AxonConfigurationException.class, () -> builder.build());
+        assertThrows(SophonConfigurationException.class, () -> builder.build());
     }
 
     @Test
     void whenSettingSchedulerWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.jobScheduler(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.jobScheduler(null));
     }
 
     @Test
     void whenSettingTransactionManagerWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.transactionManager(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.transactionManager(null));
     }
 
     @Test
     void whenSettingScopeAwareProviderWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.scopeAwareProvider(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.scopeAwareProvider(null));
     }
 
     @Test

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.common.digest;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -44,7 +44,7 @@ public final class Digester {
         try {
             return new Digester(MessageDigest.getInstance(algorithm));
         } catch (NoSuchAlgorithmException e) {
-            throw new AxonConfigurationException("This environment doesn't support the MD5 hashing algorithm", e);
+            throw new SophonConfigurationException("This environment doesn't support the MD5 hashing algorithm", e);
         }
     }
 
@@ -67,7 +67,7 @@ public final class Digester {
         try {
             return newMD5Instance().update(input.getBytes("UTF-8")).digestHex();
         } catch (UnsupportedEncodingException e) {
-            throw new AxonConfigurationException("The UTF-8 encoding is not available on this environment", e);
+            throw new SophonConfigurationException("The UTF-8 encoding is not available on this environment", e);
         }
     }
 

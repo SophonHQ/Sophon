@@ -51,7 +51,7 @@ public class ApplicationContextEventPublisher implements InitializingBean, Appli
     }
 
     /**
-     * Converts the given Axon {@code eventMessage} to a Spring ApplicationEvent. This method may be overridden to
+     * Converts the given Sophon {@code eventMessage} to a Spring ApplicationEvent. This method may be overridden to
      * change the translation.
      * <p>
      * The default implementation creates a {@link PayloadApplicationEvent} with the Message's payload.
@@ -59,7 +59,7 @@ public class ApplicationContextEventPublisher implements InitializingBean, Appli
      * If this method returns {@code null}, no message is published
      *
      * @param eventMessage The EventMessage to transform
-     * @return the Spring ApplicationEvent representing the Axon EventMessage
+     * @return the Spring ApplicationEvent representing the Sophon EventMessage
      */
     protected ApplicationEvent convert(EventMessage<?> eventMessage) {
         return new PayloadApplicationEvent<>(messageSource, eventMessage.getPayload());

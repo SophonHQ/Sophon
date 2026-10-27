@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.deadline;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
-import io.github.sophonhq.sophon.common.AxonThreadFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonThreadFactory;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -82,7 +82,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
      * Instantiate a Builder to be able to create a {@link SimpleDeadlineManager}.
      * <p>
      * The {@link ScheduledExecutorService} is defaulted to an {@link Executors#newSingleThreadScheduledExecutor()}
-     * which contains an {@link AxonThreadFactory}, the {@link TransactionManager} defaults to a
+     * which contains an {@link SophonThreadFactory}, the {@link TransactionManager} defaults to a
      * {@link NoTransactionManager}, and the {@link DeadlineManagerSpanFactory} is defaulted to a
      * {@link DefaultDeadlineManagerSpanFactory} backed by a {@link NoOpSpanFactory}. The {@link ScopeAwareProvider} is
      * a <b>hard requirement</b> and as such should be provided.
@@ -98,7 +98,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
      * process around scheduling and triggering a {@link DeadlineMessage}.
      * <p>
      * Will assert that the {@link ScopeAwareProvider}, {@link ScheduledExecutorService} and {@link TransactionManager}
-     * are not {@code null}, and will throw an {@link AxonConfigurationException} if either of them is {@code null}.
+     * are not {@code null}, and will throw an {@link SophonConfigurationException} if either of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link SimpleDeadlineManager} instance
      */
@@ -241,7 +241,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
      * Builder class to instantiate a {@link SimpleDeadlineManager}.
      * <p>
      * The {@link ScheduledExecutorService} is defaulted to an {@link Executors#newSingleThreadScheduledExecutor()}
-     * which contains an {@link AxonThreadFactory}, the {@link TransactionManager} defaults to a
+     * which contains an {@link SophonThreadFactory}, the {@link TransactionManager} defaults to a
      * {@link NoTransactionManager}, and the {@link SpanFactory} defaults to a {@link DefaultDeadlineManagerSpanFactory}
      * backed by a {@link NoOpSpanFactory}. The {@link ScopeAwareProvider} is a <b>hard requirement</b> and as such
      * should be provided.
@@ -250,7 +250,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
 
         private ScopeAwareProvider scopeAwareProvider;
         private ScheduledExecutorService scheduledExecutorService =
-                Executors.newSingleThreadScheduledExecutor(new AxonThreadFactory(THREAD_FACTORY_GROUP_NAME));
+                Executors.newSingleThreadScheduledExecutor(new SophonThreadFactory(THREAD_FACTORY_GROUP_NAME));
         private TransactionManager transactionManager = NoTransactionManager.INSTANCE;
         private DeadlineManagerSpanFactory spanFactory = DefaultDeadlineManagerSpanFactory.builder()
                                                                                           .spanFactory(NoOpSpanFactory.INSTANCE)
@@ -273,7 +273,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
 
         /**
          * Sets the {@link ScheduledExecutorService} used for scheduling and triggering deadlines. Defaults to a
-         * {@link Executors#newSingleThreadScheduledExecutor()}, containing an {@link AxonThreadFactory}.
+         * {@link Executors#newSingleThreadScheduledExecutor()}, containing an {@link SophonThreadFactory}.
          *
          * @param scheduledExecutorService a {@link ScheduledExecutorService} used for scheduling and triggering
          *                                 deadlines
@@ -340,10 +340,10 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(scopeAwareProvider, "The ScopeAwareProvider is a hard requirement and should be provided");
         }
     }

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.scheduling;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception indicating a problem in the Event Scheduling mechanism.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @author Allard Buijze
  * @since axon-0.7
  */
-public class SchedulingException extends AxonTransientException {
+public class SchedulingException extends SophonTransientException {
 
     private static final long serialVersionUID = -3633716643792480973L;
 

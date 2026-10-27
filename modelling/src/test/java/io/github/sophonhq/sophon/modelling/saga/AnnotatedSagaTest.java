@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.saga;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
 import io.github.sophonhq.sophon.eventhandling.ResetNotSupportedException;
@@ -71,7 +71,7 @@ class AnnotatedSagaTest {
     void invokeSagaAssociationPropertyNotExistingInPayload() {
         AnnotationSagaMetaModelFactory testSubject = new AnnotationSagaMetaModelFactory();
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> testSubject.modelOf(SagaAssociationPropertyNotExistingInPayload.class)
         );
     }
@@ -79,7 +79,7 @@ class AnnotatedSagaTest {
     @Test
     void invokeSagaAssociationPropertyEmpty() {
         AnnotationSagaMetaModelFactory testSubject = new AnnotationSagaMetaModelFactory();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.modelOf(SagaAssociationPropertyEmpty.class));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.modelOf(SagaAssociationPropertyEmpty.class));
     }
 
     @Test
@@ -96,7 +96,7 @@ class AnnotatedSagaTest {
     @Test
     void invokeSagaResolverWithoutNoArgConstructor() {
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> new AnnotationSagaMetaModelFactory().modelOf(SagaUsingResolverWithoutNoArgConstructor.class)
         );
     }

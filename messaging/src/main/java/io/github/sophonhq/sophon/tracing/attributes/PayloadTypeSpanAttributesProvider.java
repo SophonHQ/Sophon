@@ -34,6 +34,6 @@ public class PayloadTypeSpanAttributesProvider implements SpanAttributesProvider
 
     @Override
     public @NonNull Map<String, String> provideForMessage(@NonNull Message<?> message) {
-        return Collections.singletonMap("axon_payload_type", message.getPayloadType().getName());
+        return Collections.singletonMap("sophon_payload_type", message.getPayloadType().getName());
     }
 }

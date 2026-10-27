@@ -44,6 +44,6 @@ public class Cat extends Animal {
     }
 
     public Cat() {
-        // Required by Axon
+        // Required by Sophon
     }
 }

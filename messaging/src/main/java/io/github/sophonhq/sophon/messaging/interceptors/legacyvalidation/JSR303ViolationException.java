@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging.interceptors.legacyvalidation;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 import javax.validation.ConstraintViolation;
 import java.util.Iterator;
@@ -35,7 +35,7 @@ import java.util.TreeSet;
  * to jakarta.
  */
 @Deprecated
-public class JSR303ViolationException extends AxonNonTransientException {
+public class JSR303ViolationException extends SophonNonTransientException {
 
     private static final long serialVersionUID = -1585918243998401966L;
 

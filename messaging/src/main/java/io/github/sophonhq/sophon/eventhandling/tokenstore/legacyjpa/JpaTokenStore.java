@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.tokenstore.legacyjpa;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.legacyjpa.EntityManagerProvider;
 import io.github.sophonhq.sophon.eventhandling.Segment;
 import io.github.sophonhq.sophon.eventhandling.TrackingToken;
@@ -97,7 +97,7 @@ public class JpaTokenStore implements TokenStore {
      * Instantiate a {@link JpaTokenStore} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link EntityManager}, {@link Serializer}, {@code claimTimeout} and {@code nodeId} are not
-     * {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link JpaTokenStore} instance
      */
@@ -492,10 +492,10 @@ public class JpaTokenStore implements TokenStore {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(entityManagerProvider,
                           "The EntityManagerProvider is a hard requirement and should be provided");
             assertNonNull(serializer, "The Serializer is a hard requirement and should be provided");

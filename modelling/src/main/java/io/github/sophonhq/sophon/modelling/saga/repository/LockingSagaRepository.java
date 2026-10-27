@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.saga.repository;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.lock.Lock;
 import io.github.sophonhq.sophon.common.lock.LockFactory;
 import io.github.sophonhq.sophon.common.lock.PessimisticLockFactory;
@@ -42,7 +42,7 @@ public abstract class LockingSagaRepository<T> implements SagaRepository<T> {
     /**
      * Instantiate a {@link LockingSagaRepository} based on the fields contained in the {@link Builder}.
      * <p>
-     * Will assert that the {@link LockFactory} is not {@code null}. Will throw an {@link AxonConfigurationException} if
+     * Will assert that the {@link LockFactory} is not {@code null}. Will throw an {@link SophonConfigurationException} if
      * it is.
      *
      * @param builder the {@link Builder} used to instantiate a {@link LockingSagaRepository} instance
@@ -130,10 +130,10 @@ public abstract class LockingSagaRepository<T> implements SagaRepository<T> {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             // Method kept for overriding
         }
     }

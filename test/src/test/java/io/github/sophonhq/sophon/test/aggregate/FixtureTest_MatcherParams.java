@@ -19,7 +19,7 @@ package io.github.sophonhq.sophon.test.aggregate;
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.messaging.MessageHandler;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.junit.jupiter.api.*;
@@ -92,7 +92,7 @@ class FixtureTest_MatcherParams {
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
 
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
@@ -112,7 +112,7 @@ class FixtureTest_MatcherParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture.registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new TestCommand("aggregateId"))
@@ -133,7 +133,7 @@ class FixtureTest_MatcherParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture.registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new TestCommand("aggregateId"))
@@ -154,7 +154,7 @@ class FixtureTest_MatcherParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture.registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new StrangeCommand("aggregateId"))
@@ -176,7 +176,7 @@ class FixtureTest_MatcherParams {
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
 
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
@@ -216,7 +216,7 @@ class FixtureTest_MatcherParams {
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
 
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)

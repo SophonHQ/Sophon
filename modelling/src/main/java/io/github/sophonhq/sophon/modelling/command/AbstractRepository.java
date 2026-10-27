@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.modelling.command;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.deadline.DeadlineMessage;
 import io.github.sophonhq.sophon.messaging.Message;
 import io.github.sophonhq.sophon.messaging.ScopeDescriptor;
@@ -74,7 +74,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
      * To instantiate this AggregateModel, either an {@link AggregateModel} can be provided directly or an
      * {@code aggregateType} of type {@link Class} can be used. The latter will internally resolve to an
      * AggregateModel. Thus, either the AggregateModel <b>or</b> the {@code aggregateType} should be provided. An
-     * {@link io.github.sophonhq.sophon.common.AxonConfigurationException} is thrown if this criteria is not met.
+     * {@link io.github.sophonhq.sophon.common.SophonConfigurationException} is thrown if this criteria is not met.
      *
      * @param builder the {@link Builder} used to instantiate a {@link AbstractRepository} instance
      */
@@ -589,10 +589,10 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             if (aggregateModel == null) {
                 assertNonNull(
                         aggregateType,

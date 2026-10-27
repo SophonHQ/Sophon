@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.disruptor.commandhandling;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception indicating that the changes in an aggregate (generated events) are ignored by the DisruptorCommandBus,
@@ -33,7 +33,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @author Allard Buijze
  * @since axon-2.0
  */
-public class AggregateStateCorruptedException extends AxonTransientException {
+public class AggregateStateCorruptedException extends SophonTransientException {
 
     private static final long serialVersionUID = 133015394552568435L;
 

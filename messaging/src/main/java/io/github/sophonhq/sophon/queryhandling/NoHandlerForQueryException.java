@@ -15,7 +15,7 @@
  */
 package io.github.sophonhq.sophon.queryhandling;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 import static java.lang.String.format;
 
@@ -26,7 +26,7 @@ import static java.lang.String.format;
  * @author Marc Gathier
  * @since axon-3.1
  */
-public class NoHandlerForQueryException extends AxonNonTransientException {
+public class NoHandlerForQueryException extends SophonNonTransientException {
 
     private static final long serialVersionUID = 7525883085990429064L;
 

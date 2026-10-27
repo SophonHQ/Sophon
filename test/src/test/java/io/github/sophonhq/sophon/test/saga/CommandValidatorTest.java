@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.test.saga;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.GenericCommandMessage;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import io.github.sophonhq.sophon.test.matchers.AllFieldsFilter;
 import io.github.sophonhq.sophon.test.utils.RecordingCommandBus;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,14 +66,14 @@ class CommandValidatorTest {
     void matchWithUnexpectedNullValue() {
         when(commandBus.getDispatchedCommands()).thenReturn(listOfOneCommandMessage(new SomeCommand(null)));
 
-        assertThrows(AxonAssertionError.class, () -> testSubject.assertDispatchedEqualTo(new SomeCommand("test")));
+        assertThrows(SophonAssertionError.class, () -> testSubject.assertDispatchedEqualTo(new SomeCommand("test")));
     }
 
     @Test
     void matchPrimitiveTypedCommands() {
         when(commandBus.getDispatchedCommands()).thenReturn(listOfOneCommandMessage("some-string"));
 
-        assertThrows(AxonAssertionError.class, () -> testSubject.assertDispatchedEqualTo("some-other-string"));
+        assertThrows(SophonAssertionError.class, () -> testSubject.assertDispatchedEqualTo("some-other-string"));
     }
 
     private List<CommandMessage<?>> emptyCommandMessageList() {

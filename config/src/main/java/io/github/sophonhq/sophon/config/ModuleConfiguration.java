@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.config;
 
 /**
- * Interface describing a module for the Axon Configuration API. These modules are relatively independent, but have
+ * Interface describing a module for the Sophon Configuration API. These modules are relatively independent, but have
  * access to the component available in the main Configuration.
  * <p>
  * Modules have callback methods for the initialization, start and shutdown phases of the application's lifecycle.

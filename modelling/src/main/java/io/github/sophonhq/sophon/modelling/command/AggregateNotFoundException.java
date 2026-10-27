@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.command;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception indicating that the an aggregate could not be found in the repository.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Allard Buijze
  * @since axon-0.4
  */
-public class AggregateNotFoundException extends AxonNonTransientException {
+public class AggregateNotFoundException extends SophonNonTransientException {
 
     private static final long serialVersionUID = 1343530021245649274L;
     private final String aggregateIdentifier;

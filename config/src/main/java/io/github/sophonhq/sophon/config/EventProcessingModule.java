@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
-import io.github.sophonhq.sophon.common.AxonThreadFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonThreadFactory;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.DirectEventProcessingStrategy;
@@ -652,7 +652,7 @@ public class EventProcessingModule
     public EventProcessingConfigurer registerEventProcessor(String name,
                                                             EventProcessorBuilder eventProcessorBuilder) {
         if (this.eventProcessorBuilders.containsKey(name)) {
-            throw new AxonConfigurationException(format("Event processor with name %s already exists", name));
+            throw new SophonConfigurationException(format("Event processor with name %s already exists", name));
         }
         this.eventProcessorBuilders.put(name, eventProcessorBuilder);
         return this;
@@ -1000,7 +1000,7 @@ public class EventProcessingModule
      *
      * @param name                   of the processor
      * @param eventHandlerInvoker    used by the processor for the event handling
-     * @param config                 main configuration providing access for Axon components
+     * @param config                 main configuration providing access for Sophon components
      * @param messageSource          where to retrieve events from
      * @param processorConfiguration for the pooled event processor construction
      * @return Default {@link PooledStreamingEventProcessor} configuration based on this configure module.
@@ -1044,7 +1044,7 @@ public class EventProcessingModule
     }
 
     private ScheduledExecutorService defaultExecutor(int poolSize, String factoryName) {
-        return Executors.newScheduledThreadPool(poolSize, new AxonThreadFactory(factoryName));
+        return Executors.newScheduledThreadPool(poolSize, new SophonThreadFactory(factoryName));
     }
 
     /**

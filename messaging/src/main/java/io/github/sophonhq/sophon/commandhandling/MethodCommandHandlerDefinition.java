@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.commandhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.Message;
 import io.github.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
 import io.github.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
@@ -57,7 +57,7 @@ public class MethodCommandHandlerDefinition implements HandlerEnhancerDefinition
             super(delegate);
             this.routingKey = "".equals(annotationAttributes.get("routingKey")) ? null :
                     (String) annotationAttributes.get("routingKey");
-            Executable executable = delegate.unwrap(Executable.class).orElseThrow(() -> new AxonConfigurationException(
+            Executable executable = delegate.unwrap(Executable.class).orElseThrow(() -> new SophonConfigurationException(
                     "The @CommandHandler annotation must be put on an Executable (either directly or as Meta " +
                             "Annotation)"));
             if ("".equals(annotationAttributes.get("commandName"))) {
@@ -68,7 +68,7 @@ public class MethodCommandHandlerDefinition implements HandlerEnhancerDefinition
             final boolean factoryMethod = executable instanceof Method && Modifier.isStatic(executable.getModifiers());
             if (factoryMethod && !executable.getDeclaringClass()
                                             .isAssignableFrom(((Method) executable).getReturnType())) {
-                throw new AxonConfigurationException("static @CommandHandler methods must declare a return value " +
+                throw new SophonConfigurationException("static @CommandHandler methods must declare a return value " +
                                                              "which is equal to or a subclass of the declaring type");
             }
             isFactoryHandler = executable instanceof Constructor || factoryMethod;

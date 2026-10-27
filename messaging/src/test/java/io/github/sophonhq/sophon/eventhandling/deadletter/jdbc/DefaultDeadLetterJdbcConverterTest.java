@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.DateTimeUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -213,41 +213,41 @@ class DefaultDeadLetterJdbcConverterTest {
     }
 
     @Test
-    void buildWithNullSchemaThrowsAxonConfigurationException() {
+    void buildWithNullSchemaThrowsSophonConfigurationException() {
         DefaultDeadLetterJdbcConverter.Builder<?> testBuilder = DefaultDeadLetterJdbcConverter.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.schema(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.schema(null));
     }
 
     @Test
-    void buildWithNullGenericSerializerThrowsAxonConfigurationException() {
+    void buildWithNullGenericSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterJdbcConverter.Builder<?> testBuilder = DefaultDeadLetterJdbcConverter.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.genericSerializer(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.genericSerializer(null));
     }
 
     @Test
-    void buildWithNullEventSerializerThrowsAxonConfigurationException() {
+    void buildWithNullEventSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterJdbcConverter.Builder<?> testBuilder = DefaultDeadLetterJdbcConverter.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.eventSerializer(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventSerializer(null));
     }
 
     @Test
-    void buildWithoutTheGenericSerializerThrowsAxonConfigurationException() {
+    void buildWithoutTheGenericSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterJdbcConverter.Builder<?> testBuilder =
                 DefaultDeadLetterJdbcConverter.builder()
                                               .eventSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 
     @Test
-    void buildWithoutTheEventSerializerThrowsAxonConfigurationException() {
+    void buildWithoutTheEventSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterJdbcConverter.Builder<?> testBuilder =
                 DefaultDeadLetterJdbcConverter.builder()
                                               .genericSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 }

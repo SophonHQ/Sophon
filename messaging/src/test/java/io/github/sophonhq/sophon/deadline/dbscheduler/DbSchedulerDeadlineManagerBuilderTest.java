@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.deadline.dbscheduler;
 
 import com.github.kagkarlsson.scheduler.Scheduler;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.messaging.ScopeAwareProvider;
 import io.github.sophonhq.sophon.serialization.TestSerializer;
@@ -53,21 +53,21 @@ class DbSchedulerDeadlineManagerBuilderTest {
     void validateNeedsAllPropertiesSet() {
         builder.scheduler(scheduler)
                .transactionManager(transactionManager);
-        assertThrows(AxonConfigurationException.class, () -> builder.build());
+        assertThrows(SophonConfigurationException.class, () -> builder.build());
     }
 
     @Test
     void whenSettingSchedulerWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.scheduler(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.scheduler(null));
     }
 
     @Test
     void whenSettingTransactionManagerWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.transactionManager(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.transactionManager(null));
     }
 
     @Test
     void whenSettingScopeAwareProviderWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.scopeAwareProvider(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.scopeAwareProvider(null));
     }
 }

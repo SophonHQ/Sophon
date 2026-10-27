@@ -117,9 +117,9 @@ class SagaManagerTest {
             return null;
         });
         spanFactory.verifySpanCompleted("SagaManager.invokeSaga(Object)");
-        spanFactory.verifySpanHasAttributeValue("SagaManager.invokeSaga(Object)", "axon.sagaIdentifier", "saga1");
+        spanFactory.verifySpanHasAttributeValue("SagaManager.invokeSaga(Object)", "sophon.sagaIdentifier", "saga1");
         spanFactory.verifySpanCompleted("SagaManager.invokeSaga(Object)");
-        spanFactory.verifySpanHasAttributeValue("SagaManager.invokeSaga(Object)", "axon.sagaIdentifier", "saga2");
+        spanFactory.verifySpanHasAttributeValue("SagaManager.invokeSaga(Object)", "sophon.sagaIdentifier", "saga2");
     }
 
     @Test
@@ -141,7 +141,7 @@ class SagaManagerTest {
         testSubject.handle(event, Segment.ROOT_SEGMENT);
         spanFactory.verifySpanCompleted("SagaManager.createSaga(Object)");
         spanFactory.verifySpanCompleted("SagaManager.invokeSaga(Object)");
-        spanFactory.verifySpanHasAttributeValue("SagaManager.invokeSaga(Object)", "axon.sagaIdentifier", "saga1");
+        spanFactory.verifySpanHasAttributeValue("SagaManager.invokeSaga(Object)", "sophon.sagaIdentifier", "saga1");
     }
 
     @Test

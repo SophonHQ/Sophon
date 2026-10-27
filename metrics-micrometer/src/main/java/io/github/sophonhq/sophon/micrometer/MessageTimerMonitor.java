@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.micrometer;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.Message;
 import io.github.sophonhq.sophon.monitoring.MessageMonitor;
 import io.micrometer.core.instrument.Clock;
@@ -68,7 +68,7 @@ public class MessageTimerMonitor implements MessageMonitor<Message<?>> {
      * Instantiate a {@link MessageTimerMonitor} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@code meterNamePrefix} and {@link MeterRegistry} are not {@code null} and will throw an
-     * {@link AxonConfigurationException} if this is the case.
+     * {@link SophonConfigurationException} if this is the case.
      *
      * @param builder the {@link Builder} used to instantiate a {@link MessageTimerMonitor} instance
      */
@@ -293,7 +293,7 @@ public class MessageTimerMonitor implements MessageMonitor<Message<?>> {
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

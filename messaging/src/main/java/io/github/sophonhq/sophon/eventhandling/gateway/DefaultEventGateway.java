@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.gateway;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.messaging.MessageDispatchInterceptor;
@@ -38,7 +38,7 @@ public class DefaultEventGateway extends AbstractEventGateway implements EventGa
     /**
      * Instantiate a {@link DefaultEventGateway} based on the fields contained in the {@link Builder}.
      * <p>
-     * Will assert that the {@link EventBus} is not {@code null} and will throw an {@link AxonConfigurationException}
+     * Will assert that the {@link EventBus} is not {@code null} and will throw an {@link SophonConfigurationException}
      * if this is the case.
      *
      * @param builder the {@link Builder} used to instantiate a {@link DefaultEventGateway}

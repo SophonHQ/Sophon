@@ -27,7 +27,7 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 
 /**
- * Spring @Configuration related class that adds Axon Annotation PostProcessors to the BeanDefinitionRegistry.
+ * Spring @Configuration related class that adds Sophon Annotation PostProcessors to the BeanDefinitionRegistry.
  *
  * @author Allard Buijze
  * @see AnnotationDriven
@@ -41,8 +41,8 @@ public class AnnotationDrivenRegistrar implements ImportBeanDefinitionRegistrar 
     /**
      * The bean name used for registering the {@link AnnotationCommandHandlerBeanPostProcessor}.
      */
-    private static final String COMMAND_HANDLER_BEAN_NAME = "__axon-annotation-command-handler-bean-post-processor";
-    private static final String QUERY_HANDLER_BEAN_NAME = "__axon-annotation-query-handler-bean-post-processor";
+    private static final String COMMAND_HANDLER_BEAN_NAME = "__sophon-annotation-command-handler-bean-post-processor";
+    private static final String QUERY_HANDLER_BEAN_NAME = "__sophon-annotation-query-handler-bean-post-processor";
 
 
     @Override

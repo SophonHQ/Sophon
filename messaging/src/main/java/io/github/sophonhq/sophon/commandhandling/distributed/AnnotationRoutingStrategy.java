@@ -18,8 +18,8 @@ package io.github.sophonhq.sophon.commandhandling.distributed;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.RoutingKey;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ReflectionUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.annotation.AnnotationUtils;
 import org.jspecify.annotations.NonNull;
 
@@ -38,7 +38,7 @@ import static io.github.sophonhq.sophon.common.ReflectionUtils.*;
  * RoutingStrategy that expects an {@link RoutingKey} (meta-)annotation on the command message's payload. Commands are
  * routed based on an identifier annotated with the {@code RoutingKey}. This approach ensures that commands with the
  * same identifier, thus dealt with by the same target, are dispatched to the same node in a distributed Command Bus
- * (e.g. {@code AxonServerCommandBus} or {@link DistributedCommandBus}).
+ * (e.g. the {@link DistributedCommandBus}).
  * <p>
  * An example would be the {@code TargetAggregateIdentifier} annotation, which is meta-annotated with {@code
  * RoutingKey}. See the AnnotationCommandTargetResolver for more details on this approach.
@@ -153,11 +153,11 @@ public class AnnotationRoutingStrategy extends AbstractRoutingStrategy {
         try {
             routingKey = findIdentifier(command);
         } catch (InvocationTargetException e) {
-            throw new AxonConfigurationException(
+            throw new SophonConfigurationException(
                     "An exception occurred while extracting routing information form a command", e
             );
         } catch (IllegalAccessException e) {
-            throw new AxonConfigurationException(
+            throw new SophonConfigurationException(
                     "The current security context does not allow extraction of routing information from the given command.",
                     e
             );
@@ -261,7 +261,7 @@ public class AnnotationRoutingStrategy extends AbstractRoutingStrategy {
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

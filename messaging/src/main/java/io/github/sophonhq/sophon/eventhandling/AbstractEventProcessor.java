@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.DefaultInterceptorChain;
 import io.github.sophonhq.sophon.messaging.MessageHandlerInterceptor;
 import io.github.sophonhq.sophon.messaging.ResultMessage;
@@ -71,7 +71,7 @@ public abstract class AbstractEventProcessor implements EventProcessor {
      * Instantiate a {@link AbstractEventProcessor} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the Event Processor {@code name}, {@link EventHandlerInvoker} and {@link ErrorHandler} are not
-     * {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link AbstractEventProcessor} instance
      */
@@ -346,10 +346,10 @@ public abstract class AbstractEventProcessor implements EventProcessor {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertEventProcessorName(name, "The EventProcessor name is a hard requirement and should be provided");
             assertNonNull(eventHandlerInvoker, "The EventHandlerInvoker is a hard requirement and should be provided");
             assertNonNull(rollbackConfiguration,

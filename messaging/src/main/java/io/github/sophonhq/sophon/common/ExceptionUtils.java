@@ -76,7 +76,7 @@ public abstract class ExceptionUtils {
      * @return {@code true} if the exception is clearly non-transient
      */
     public static boolean isExplicitlyNonTransient(Throwable failure) {
-        return failure instanceof AxonNonTransientException
+        return failure instanceof SophonNonTransientException
                 || (failure.getCause() != null && isExplicitlyNonTransient(failure.getCause()));
     }
 }

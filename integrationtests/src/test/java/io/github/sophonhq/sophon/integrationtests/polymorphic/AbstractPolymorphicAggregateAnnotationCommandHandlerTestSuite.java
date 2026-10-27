@@ -63,7 +63,7 @@ public abstract class AbstractPolymorphicAggregateAnnotationCommandHandlerTestSu
     @BeforeEach
     void setUp() {
         Map<String, String> persistenceProperties = new HashMap<>(2);
-        persistenceProperties.put("hibernate.connection.url", "jdbc:hsqldb:mem:axontest");
+        persistenceProperties.put("hibernate.connection.url", "jdbc:hsqldb:mem:sophontest");
         persistenceProperties.put("hibernate.hbm2ddl.auto", "create-drop");
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("polymorphic", persistenceProperties);
         entityManager = emf.createEntityManager();

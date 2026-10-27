@@ -27,7 +27,7 @@ import java.lang.annotation.*;
  * Annotation to be placed on methods that can handle events. The parameters of the annotated method are resolved using
  * parameter resolvers.
  * <p>
- * Axon provides a number of parameter resolvers that allow you to use the following parameter types:<ul>
+ * Sophon provides a number of parameter resolvers that allow you to use the following parameter types:<ul>
  * <li>The first parameter is always the payload of the Event message</li>
  * <li>Parameters annotated with {@code @MetaDataValue} will resolve to the Meta Data value with the key as indicated
  * on the annotation. If required is false (default), null is passed when the meta data value is not present. If
@@ -41,9 +41,9 @@ import java.lang.annotation.*;
  * <li>Parameters assignable to {@link Message} will have the entire {@link
  * EventMessage} injected (if the message is assignable to that parameter). If the first
  * parameter is of type message, it effectively matches an Event of any type, even if generic parameters would suggest
- * otherwise. Due to type erasure, Axon cannot detect what parameter is expected. In such case, it is best to declare a
+ * otherwise. Due to type erasure, Sophon cannot detect what parameter is expected. In such case, it is best to declare a
  * parameter of the payload type, followed by a parameter of type Message.</li>
- * <li>When using Spring and {@code &lt;axon:annotation-config/&gt;} is declared, any other parameters will
+ * <li>When using Spring, any other parameters will
  * resolve to autowired beans, if exactly one autowire candidate is available in the application context. This allows
  * you to inject resources directly into {@code @EventHandler} annotated methods.</li>
  * </ul>

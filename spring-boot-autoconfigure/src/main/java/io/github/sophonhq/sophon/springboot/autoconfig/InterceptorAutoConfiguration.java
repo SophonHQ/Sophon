@@ -38,11 +38,11 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Interceptor autoconfiguration class for Axon Framework application. Discovers {@link MessageHandlerInterceptor}s and
+ * Interceptor autoconfiguration class for Sophon application. Discovers {@link MessageHandlerInterceptor}s and
  * {@link MessageDispatchInterceptor} and registers them with the respective buses and gateways.
  * <p>
  * Note: This class use a hack approach! Because some gateways/buses (or custom interceptors provided by the framework
- * user) need an axonConfiguration to initialize, the usual way of registering interceptors in the
+ * user) need an sophonConfiguration to initialize, the usual way of registering interceptors in the
  * ConfigurerModule.onInitialize method does not work for them. This is due to a circular reference caused e.g. by
  * JpaJavaxEventStoreAutoConfiguration. So we register them by injecting gateway/bus components in to the
  * InitializingBean function and register the interceptors there.
@@ -53,7 +53,7 @@ import java.util.Optional;
 @AutoConfiguration
 @ConditionalOnClass(SpringConfigurer.class)
 @AutoConfigureAfter({
-        AxonAutoConfiguration.class,
+        SophonAutoConfiguration.class,
         JpaAutoConfiguration.class,
         JpaEventStoreAutoConfiguration.class,
         NoOpTransactionAutoConfiguration.class,

@@ -22,7 +22,7 @@ import io.github.sophonhq.sophon.deadline.DeadlineMessage;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.modelling.saga.repository.inmemory.InMemorySagaStore;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import io.github.sophonhq.sophon.test.deadline.DeadlineManagerValidator;
 import io.github.sophonhq.sophon.test.deadline.StubDeadlineManager;
 import io.github.sophonhq.sophon.test.eventscheduler.EventSchedulerValidator;
@@ -89,7 +89,7 @@ public class FixtureExecutionResultImpl<T> implements FixtureExecutionResult {
      * Registers a callback to be invoked when the fixture execution starts recording. This happens right before
      * invocation of the 'when' step (stimulus) of the fixture.
      * <p/>
-     * Use this to manage Saga dependencies which are not an Axon first class citizen, but do require monitoring of
+     * Use this to manage Saga dependencies which are not a Sophon first class citizen, but do require monitoring of
      * their interactions. For example, register the callback to set a mock in recording mode.
      *
      * @param onStartRecordingCallback callback to invoke
@@ -418,7 +418,7 @@ public class FixtureExecutionResultImpl<T> implements FixtureExecutionResult {
     public FixtureExecutionResult expectSuccessfulHandlerExecution() {
         Optional<Exception> throwableOptional = recordingListenerInvocationErrorHandler.getException();
         if (throwableOptional.isPresent()) {
-            throw new AxonAssertionError(String.format("An exception occurred during event handling: [%s]",
+            throw new SophonAssertionError(String.format("An exception occurred during event handling: [%s]",
                                                        throwableOptional.get().getMessage()));
         }
         return this;

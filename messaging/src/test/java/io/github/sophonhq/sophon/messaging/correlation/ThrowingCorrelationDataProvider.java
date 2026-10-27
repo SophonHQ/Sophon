@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging.correlation;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.Message;
 
 import java.util.Map;
@@ -24,6 +24,6 @@ import java.util.Map;
 public class ThrowingCorrelationDataProvider implements CorrelationDataProvider{
     @Override
     public Map<String, ?> correlationDataFor(Message<?> message) {
-        throw new AxonConfigurationException("correlation is not clear");
+        throw new SophonConfigurationException("correlation is not clear");
     }
 }

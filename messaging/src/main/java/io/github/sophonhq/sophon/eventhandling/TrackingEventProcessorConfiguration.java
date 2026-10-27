@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.eventhandling;
 
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonThreadFactory;
+import io.github.sophonhq.sophon.common.SophonThreadFactory;
 import io.github.sophonhq.sophon.messaging.StreamableMessageSource;
 import org.jspecify.annotations.NonNull;
 
@@ -81,7 +81,7 @@ public class TrackingEventProcessorConfiguration {
         this.batchSize = DEFAULT_BATCH_SIZE;
         this.initialSegmentCount = numberOfSegments;
         this.maxThreadCount = numberOfSegments;
-        this.threadFactory = pn -> new AxonThreadFactory("EventProcessor[" + pn + "]");
+        this.threadFactory = pn -> new SophonThreadFactory("EventProcessor[" + pn + "]");
         this.tokenClaimInterval = DEFAULT_TOKEN_CLAIM_INTERVAL;
         this.autoStart = true;
         this.workerTerminationTimeout = DEFAULT_WORKER_TERMINATION_TIMEOUT_MS;

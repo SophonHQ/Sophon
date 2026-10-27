@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.command;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception indicating that an aggregate has been part of a Unit of Work that was rolled back and that the validity of
@@ -26,7 +26,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * these Units of Work has been rolled back. In such case, the parent Unit of Work cannot guarantee that the state of
  * the Aggregate is correct, and should (in such case) be rolled back.
  */
-public class AggregateRolledBackException extends AxonException {
+public class AggregateRolledBackException extends SophonException {
 
     private final String aggregateIdentifier;
 

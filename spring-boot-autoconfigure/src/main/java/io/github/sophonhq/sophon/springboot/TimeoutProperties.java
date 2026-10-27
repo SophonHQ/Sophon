@@ -27,12 +27,12 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 /**
- * Configuration properties for time limits of processing transactions and handlers in Axon Framework.
+ * Configuration properties for time limits of processing transactions and handlers in Sophon.
  *
  * @author Mitchell Herrijgers
  * @since axon-4.11.0
  */
-@ConfigurationProperties(prefix = "axon.timeout")
+@ConfigurationProperties(prefix = "sophon.timeout")
 public class TimeoutProperties {
 
     /**

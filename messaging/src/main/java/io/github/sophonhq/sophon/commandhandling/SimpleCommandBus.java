@@ -18,8 +18,8 @@ package io.github.sophonhq.sophon.commandhandling;
 
 import io.github.sophonhq.sophon.commandhandling.callbacks.LoggingCallback;
 import io.github.sophonhq.sophon.commandhandling.callbacks.NoOpCallback;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.messaging.DefaultInterceptorChain;
@@ -87,7 +87,7 @@ public class SimpleCommandBus implements CommandBus {
      * {@link DuplicateCommandHandlerResolution#logAndOverride()} and the {@link CommandBusSpanFactory} defaults to a
      * {@link DefaultCommandBusSpanFactory} with a {@link NoOpSpanFactory}. The {@link TransactionManager},
      * {@link MessageMonitor} and {@link RollbackConfiguration} are <b>hard requirements</b>. Thus setting them to
-     * {@code null} will result in an {@link AxonConfigurationException}.
+     * {@code null} will result in an {@link SophonConfigurationException}.
      *
      * @return a Builder to be able to create a {@link SimpleCommandBus}
      */
@@ -99,7 +99,7 @@ public class SimpleCommandBus implements CommandBus {
      * Instantiate a {@link SimpleCommandBus} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link TransactionManager}, {@link MessageMonitor} and {@link RollbackConfiguration} are not
-     * {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link SimpleCommandBus} instance
      */
@@ -275,7 +275,7 @@ public class SimpleCommandBus implements CommandBus {
      * {@link DefaultCommandBusSpanFactory} with a {@link NoOpSpanFactory}.
      * <p>
      * The {@link TransactionManager}, {@link MessageMonitor} and {@link RollbackConfiguration} are <b>hard
-     * requirements</b>. Thus setting them to {@code null} will result in an {@link AxonConfigurationException}.
+     * requirements</b>. Thus setting them to {@code null} will result in an {@link SophonConfigurationException}.
      */
     public static class Builder {
 
@@ -398,7 +398,7 @@ public class SimpleCommandBus implements CommandBus {
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

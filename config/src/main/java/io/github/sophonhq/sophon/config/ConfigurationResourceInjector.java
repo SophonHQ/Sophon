@@ -21,7 +21,7 @@ import io.github.sophonhq.sophon.modelling.saga.AbstractResourceInjector;
 import java.util.Optional;
 
 /**
- * ResourceInjector implementation that injects resources defined in the Axon Configuration.
+ * ResourceInjector implementation that injects resources defined in the Sophon Configuration.
  */
 public class ConfigurationResourceInjector extends AbstractResourceInjector {
 

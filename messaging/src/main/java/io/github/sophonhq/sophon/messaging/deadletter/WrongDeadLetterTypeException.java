@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging.deadletter;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception representing that a wrong dead letter was provided to the queue. All
@@ -28,7 +28,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Mitchell Herrijgers
  * @since axon-4.6.0
  */
-public class WrongDeadLetterTypeException extends AxonException {
+public class WrongDeadLetterTypeException extends SophonException {
 
     /**
      * Constructs a {@code WrongDeadLetterTypeException} with the provided {@code message}.

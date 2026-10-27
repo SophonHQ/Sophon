@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.deadline.jobrunr;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.deadline.AbstractDeadlineManager;
@@ -73,7 +73,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class JobRunrDeadlineManager extends AbstractDeadlineManager implements Lifecycle {
 
     private static final Logger logger = getLogger(JobRunrDeadlineManager.class);
-    protected static final String DELETE_REASON = "Deleted via Axon DeadlineManager API";
+    protected static final String DELETE_REASON = "Deleted via Sophon DeadlineManager API";
     private static final String NOT_SUPPORTED_MSG =
             "The '%s' method is not supported without using JobRunrPro with the JobRunrProDeadlineManager.\n"
                     + "Move to the pro version and the extension or use 'cancelSchedule' method instead.\n"
@@ -106,7 +106,7 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
      * {@link JobRunrDeadlineManager.Builder}.
      * <p>
      * Will assert that the {@link ScopeAwareProvider}, {@link JobScheduler} and {@link Serializer} are not
-     * {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link QuartzDeadlineManager.Builder} used to instantiate a {@link QuartzDeadlineManager}
      *                instance
@@ -402,10 +402,10 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(scopeAwareProvider, "The ScopeAwareProvider is a hard requirement and should be provided.");
             assertNonNull(jobScheduler, "The JobScheduler is a hard requirement and should be provided.");
             assertNonNull(serializer, "The Serializer is a hard requirement and should be provided.");

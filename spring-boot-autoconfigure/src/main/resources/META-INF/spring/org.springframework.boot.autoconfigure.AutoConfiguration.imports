@@ -1,9 +1,9 @@
 io.github.sophonhq.sophon.springboot.autoconfig.AvroSerializerAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.AxonAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.AxonTimeoutAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.AxonDbSchedulerAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.AxonJobRunrAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.AxonTracingAutoConfiguration
+io.github.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration
+io.github.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration
+io.github.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration
+io.github.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration
+io.github.sophonhq.sophon.springboot.autoconfig.SophonTracingAutoConfiguration
 io.github.sophonhq.sophon.springboot.autoconfig.EventProcessingAutoConfiguration
 io.github.sophonhq.sophon.springboot.autoconfig.InfraConfiguration
 io.github.sophonhq.sophon.springboot.autoconfig.InterceptorAutoConfiguration

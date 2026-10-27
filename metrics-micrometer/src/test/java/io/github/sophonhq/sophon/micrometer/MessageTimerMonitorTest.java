@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.micrometer;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.messaging.Message;
 import io.github.sophonhq.sophon.monitoring.MessageMonitor;
@@ -233,52 +233,52 @@ class MessageTimerMonitorTest {
     }
 
     @Test
-    void buildWithNullMeterNamePrefixThrowsAxonConfigurationException() {
+    void buildWithNullMeterNamePrefixThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.meterNamePrefix(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.meterNamePrefix(null));
     }
 
     @Test
-    void buildWithEmptyMeterNamePrefixThrowsAxonConfigurationException() {
+    void buildWithEmptyMeterNamePrefixThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.meterNamePrefix(""));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.meterNamePrefix(""));
     }
 
     @Test
-    void buildWithoutMeterNamePrefixThrowsAxonConfigurationException() {
+    void buildWithoutMeterNamePrefixThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder()
                                                                      .meterRegistry(meterRegistry);
-        assertThrows(AxonConfigurationException.class, testSubject::build);
+        assertThrows(SophonConfigurationException.class, testSubject::build);
     }
 
     @Test
-    void buildWithNullMeterRegistryThrowsAxonConfigurationException() {
+    void buildWithNullMeterRegistryThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.meterRegistry(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.meterRegistry(null));
     }
 
     @Test
-    void buildWithoutMeterRegistryThrowsAxonConfigurationException() {
+    void buildWithoutMeterRegistryThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder()
                                                                      .meterNamePrefix(METER_NAME_PREFIX);
-        assertThrows(AxonConfigurationException.class, testSubject::build);
+        assertThrows(SophonConfigurationException.class, testSubject::build);
     }
 
     @Test
-    void buildWithNullClockThrowsAxonConfigurationException() {
+    void buildWithNullClockThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.clock(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.clock(null));
     }
 
     @Test
-    void buildWithNullTagsBuilderThrowsAxonConfigurationException() {
+    void buildWithNullTagsBuilderThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.tagsBuilder(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.tagsBuilder(null));
     }
 
     @Test
-    void buildWithNullTimerCustomizationThrowsAxonConfigurationException() {
+    void buildWithNullTimerCustomizationThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.timerCustomization(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.timerCustomization(null));
     }
 }

@@ -155,7 +155,7 @@ class FixtureTest_Hierarchy {
 
         @SuppressWarnings("unused")
         public TopAggregate() {
-            // Required by Axon
+            // Required by Sophon
         }
     }
 

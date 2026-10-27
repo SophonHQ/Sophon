@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.commandhandling.gateway;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.GenericCommandMessage;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jdbc.JdbcException;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -110,6 +110,6 @@ class IntervalRetrySchedulerTest {
     @Test
     void buildingWhilstMissingScheduledExecutorServiceThrowsConfigurationException() {
         IntervalRetryScheduler.Builder builder = IntervalRetryScheduler.builder();
-        assertThrows(AxonConfigurationException.class, builder::build);
+        assertThrows(SophonConfigurationException.class, builder::build);
     }
 }

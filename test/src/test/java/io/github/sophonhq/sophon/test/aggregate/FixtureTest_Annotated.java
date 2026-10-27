@@ -24,8 +24,8 @@ import io.github.sophonhq.sophon.eventsourcing.eventstore.EventStoreException;
 import io.github.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import io.github.sophonhq.sophon.modelling.command.CommandTargetResolver;
 import io.github.sophonhq.sophon.modelling.command.VersionedAggregateIdentifier;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
 import io.github.sophonhq.sophon.test.FixtureExecutionException;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.jupiter.api.*;
@@ -65,7 +65,7 @@ class FixtureTest_Annotated {
 
     @Test
     void nullIdentifierIsRejected() {
-        AxonAssertionError error = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError error = assertThrows(SophonAssertionError.class, () ->
                 fixture.given(new MyEvent(null, 0))
                        .when(new TestCommand("test"))
                        .expectEvents(new MyEvent("test", 1))

@@ -25,8 +25,8 @@ import com.github.kagkarlsson.scheduler.task.TaskDescriptor;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import com.github.kagkarlsson.scheduler.task.TaskWithDataDescriptor;
 import com.github.kagkarlsson.scheduler.task.helper.Tasks;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.IdentifierFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.deadline.AbstractDeadlineManager;
@@ -122,7 +122,7 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
      * {@link DbSchedulerDeadlineManager.Builder}.
      * <p>
      * Will assert that the {@link ScopeAwareProvider}, {@link Scheduler} and {@link Serializer} are not {@code null},
-     * and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link DbSchedulerDeadlineManager.Builder} used to instantiate a
      *                {@link DbSchedulerDeadlineManager} instance
@@ -599,10 +599,10 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(scopeAwareProvider, "The ScopeAwareProvider is a hard requirement and should be provided.");
             assertNonNull(scheduler, "The Scheduler is a hard requirement and should be provided.");
             assertNonNull(serializer, "The Serializer is a hard requirement and should be provided.");

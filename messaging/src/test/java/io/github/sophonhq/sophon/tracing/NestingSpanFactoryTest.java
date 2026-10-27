@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.tracing;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
 import io.github.sophonhq.sophon.messaging.Message;
@@ -119,7 +119,7 @@ class NestingSpanFactoryTest {
         NestingSpanFactory.Builder builder = NestingSpanFactory.builder()
                                                                .clock(clock)
                                                                .timeLimit(Duration.ZERO);
-        assertThrows(AxonConfigurationException.class, () -> {
+        assertThrows(SophonConfigurationException.class, () -> {
             builder.build();
         });
     }
@@ -127,7 +127,7 @@ class NestingSpanFactoryTest {
     @Test
     void builderThrowsExceptionWhenNullDelegateIsSet() {
         NestingSpanFactory.Builder builder = NestingSpanFactory.builder();
-        assertThrows(AxonConfigurationException.class, () -> {
+        assertThrows(SophonConfigurationException.class, () -> {
             builder.delegate(null);
         });
     }
@@ -135,7 +135,7 @@ class NestingSpanFactoryTest {
     @Test
     void builderThrowsExceptionWhenNullTimeLimitIsSet() {
         NestingSpanFactory.Builder builder = NestingSpanFactory.builder();
-        assertThrows(AxonConfigurationException.class, () -> {
+        assertThrows(SophonConfigurationException.class, () -> {
             builder.timeLimit(null);
         });
     }
@@ -143,7 +143,7 @@ class NestingSpanFactoryTest {
     @Test
     void builderThrowsExceptionWhenNullClockIsSet() {
         NestingSpanFactory.Builder builder = NestingSpanFactory.builder();
-        assertThrows(AxonConfigurationException.class, () -> {
+        assertThrows(SophonConfigurationException.class, () -> {
             builder.clock(null);
         });
     }

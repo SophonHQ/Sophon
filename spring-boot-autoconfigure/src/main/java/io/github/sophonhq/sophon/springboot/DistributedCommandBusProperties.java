@@ -21,7 +21,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * Defines the properties for the Distributed Command Bus, when automatically configured in the Application Context.
  */
-@ConfigurationProperties(prefix = "axon.distributed")
+@ConfigurationProperties(prefix = "sophon.distributed")
 public class DistributedCommandBusProperties {
 
     /**
@@ -120,9 +120,9 @@ public class DistributedCommandBusProperties {
         private Gossip gossip = new Gossip();
 
         /**
-         * The name of the JGroups cluster to connect to. Defaults to "Axon".
+         * The name of the JGroups cluster to connect to. Defaults to "Sophon".
          */
-        private String clusterName = "Axon";
+        private String clusterName = "Sophon";
 
         /**
          * The JGroups configuration file to use. Defaults to a TCP Gossip based configuration.
@@ -159,7 +159,7 @@ public class DistributedCommandBusProperties {
         }
 
         /**
-         * Returns the Cluster Name of the JGroups Cluster to connect with (defaults to "Axon").
+         * Returns the Cluster Name of the JGroups Cluster to connect with (defaults to "Sophon").
          *
          * @return the Cluster Name of the JGroups Cluster to connect with.
          */
@@ -168,7 +168,7 @@ public class DistributedCommandBusProperties {
         }
 
         /**
-         * Sets the Cluster Name of the JGroups Cluster to connect with (defaults to "Axon").
+         * Sets the Cluster Name of the JGroups Cluster to connect with (defaults to "Sophon").
          *
          * @param clusterName the Cluster Name of the JGroups Cluster to connect with.
          */
@@ -295,13 +295,13 @@ public class DistributedCommandBusProperties {
 
         /**
          * Enable a HTTP GET fallback strategy for retrieving the message routing information from other nodes in a
-         * distributed Axon set up. Defaults to "true".
+         * distributed Sophon set up. Defaults to "true".
          */
         private boolean fallbackToHttpGet = true;
 
         /**
          * The URL used to perform HTTP GET requests on for retrieving another nodes message routing information in a
-         * distributed Axon set up. Defaults to "/message-routing-information".
+         * distributed Sophon set up. Defaults to "/message-routing-information".
          */
         private String fallbackUrl = "/message-routing-information";
 

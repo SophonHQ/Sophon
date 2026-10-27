@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.command;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception indicating that concurrent access to a repository was detected. Most likely, two threads were modifying
@@ -26,7 +26,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @author Allard Buijze
  * @since axon-0.3
  */
-public class ConcurrencyException extends AxonTransientException {
+public class ConcurrencyException extends SophonTransientException {
 
     private static final long serialVersionUID = -739879545165860129L;
 

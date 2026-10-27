@@ -32,7 +32,7 @@ import java.util.function.Predicate;
  *      .retryExecutor(new ScheduledThreadPoolExecutor(1))
  *      .nonTransientFailurePredicate(
  *          new NonTransientExceptionClassesPredicate(
- *              AxonNonTransientException.class, NullPointerException.class, IllegalArgumentException.class,
+ *              SophonNonTransientException.class, NullPointerException.class, IllegalArgumentException.class,
  *              IllegalStateException.class
  *          )
  *      )

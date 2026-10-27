@@ -69,7 +69,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public abstract class AbstractSubscriptionQueryTestSuite {
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
     private static final String FOUND = "found";
-    private static final String TEST_PAYLOAD = "axonFrameworkCR";
+    private static final String TEST_PAYLOAD = "sophonFrameworkCR";
 
     private QueryBus queryBus;
     private QueryUpdateEmitter queryUpdateEmitter;

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging.deadletter;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 import java.util.Objects;
 
@@ -27,7 +27,7 @@ import java.util.Objects;
  * @author Mitchel Herrijgers
  * @since axon-4.6.0
  */
-public class ThrowableCause extends AxonException implements Cause {
+public class ThrowableCause extends SophonException implements Cause {
 
     /**
      * The default size of {@code 1023} to truncate a {@link Throwable#getMessage()} to, to fit into typical dead-letter

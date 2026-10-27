@@ -63,7 +63,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public abstract class CachingIntegrationTestSuite {
 
-    // This ensures we do not wire Axon Server components
+    // This ensures configurer modules on the classpath are not registered automatically
     private static final boolean DO_NOT_AUTO_LOCATE_CONFIGURER_MODULES = false;
     private static final int NUMBER_OF_UPDATES = 4096;
     private static final int NUMBER_OF_CONCURRENT_PUBLISHERS = 8;
@@ -442,7 +442,7 @@ public abstract class CachingIntegrationTestSuite {
 
     /**
      * {@link io.github.sophonhq.sophon.common.caching.Cache.EntryListener} implementation used for validating the correct
-     * workings of caching within Axon Framework. Used instead of validating the {@link Cache} directly, as it may have
+     * workings of caching within Sophon. Used instead of validating the {@link Cache} directly, as it may have
      * changed while the given and/or when phase of a test is processing.
      *
      * @param <V> The type of value listened to through the {@link Cache}.

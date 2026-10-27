@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.tracing.opentelemetry;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
 import io.github.sophonhq.sophon.messaging.Message;
@@ -215,24 +215,24 @@ class OpenTelemetrySpanFactoryTest {
     @Test
     void builderRejectsNullTracer() {
         OpenTelemetrySpanFactory.Builder builder = OpenTelemetrySpanFactory.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.tracer(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.tracer(null));
     }
 
     @Test
     void builderRejectsNullSpanAttributeProviders() {
         OpenTelemetrySpanFactory.Builder builder = OpenTelemetrySpanFactory.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.addSpanAttributeProviders(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.addSpanAttributeProviders(null));
     }
 
     @Test
     void builderRejectsNullTextMapGetter() {
         OpenTelemetrySpanFactory.Builder builder = OpenTelemetrySpanFactory.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.textMapGetter(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.textMapGetter(null));
     }
 
     @Test
     void builderRejectsNullTextMapSetter() {
         OpenTelemetrySpanFactory.Builder builder = OpenTelemetrySpanFactory.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.textMapSetter(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.textMapSetter(null));
     }
 }

@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventsourcing;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.DirectExecutor;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.DomainEventMessage;
@@ -65,7 +65,7 @@ public abstract class AbstractSnapshotter implements Snapshotter {
     /**
      * Instantiate a {@link AbstractSnapshotter} based on the fields contained in the {@link Builder}.
      * <p>
-     * Will assert that the {@link EventStore} is not {@code null}, and will throw an {@link AxonConfigurationException}
+     * Will assert that the {@link EventStore} is not {@code null}, and will throw an {@link SophonConfigurationException}
      * if it is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link AbstractSnapshotter} instance
@@ -277,10 +277,10 @@ public abstract class AbstractSnapshotter implements Snapshotter {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(eventStore, "The EventStore is a hard requirement and should be provided");
         }
     }

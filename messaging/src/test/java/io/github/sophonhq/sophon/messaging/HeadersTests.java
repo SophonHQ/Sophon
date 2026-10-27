@@ -55,42 +55,42 @@ class HeadersTests {
 
     @Test
     void messageIdText() {
-        assertThat(MESSAGE_ID, is("axon-message-id"));
+        assertThat(MESSAGE_ID, is("sophon-message-id"));
     }
 
     @Test
     void messageTypeText() {
-        assertThat(MESSAGE_TYPE, is("axon-message-type"));
+        assertThat(MESSAGE_TYPE, is("sophon-message-type"));
     }
 
     @Test
     void messageRevisionText() {
-        assertThat(MESSAGE_REVISION, is("axon-message-revision"));
+        assertThat(MESSAGE_REVISION, is("sophon-message-revision"));
     }
 
     @Test
     void messageTimeStampText() {
-        assertThat(MESSAGE_TIMESTAMP, is("axon-message-timestamp"));
+        assertThat(MESSAGE_TIMESTAMP, is("sophon-message-timestamp"));
     }
 
     @Test
     void messageAggregateIdText() {
-        assertThat(AGGREGATE_ID, is("axon-message-aggregate-id"));
+        assertThat(AGGREGATE_ID, is("sophon-message-aggregate-id"));
     }
 
     @Test
     void messageAggregateSeqText() {
-        assertThat(AGGREGATE_SEQ, is("axon-message-aggregate-seq"));
+        assertThat(AGGREGATE_SEQ, is("sophon-message-aggregate-seq"));
     }
 
     @Test
     void messageAggregateTypeText() {
-        assertThat(AGGREGATE_TYPE, is("axon-message-aggregate-type"));
+        assertThat(AGGREGATE_TYPE, is("sophon-message-aggregate-type"));
     }
 
     @Test
     void messageMetadataText() {
-        assertThat(MESSAGE_METADATA, is("axon-metadata"));
+        assertThat(MESSAGE_METADATA, is("sophon-metadata"));
     }
 
     @Test

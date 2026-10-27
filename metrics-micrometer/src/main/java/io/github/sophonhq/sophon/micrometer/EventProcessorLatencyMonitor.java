@@ -78,7 +78,7 @@ public class EventProcessorLatencyMonitor implements MessageMonitor<EventMessage
      * Instantiate a {@link EventProcessorLatencyMonitor} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@code meterNamePrefix} and {@link MeterRegistry} are not {@code null} and will throw an
-     * {@link io.github.sophonhq.sophon.common.AxonConfigurationException} if this is the case.
+     * {@link io.github.sophonhq.sophon.common.SophonConfigurationException} if this is the case.
      *
      * @param builder the {@link Builder} used to instantiate a {@link EventProcessorLatencyMonitor} instance
      */
@@ -220,7 +220,7 @@ public class EventProcessorLatencyMonitor implements MessageMonitor<EventMessage
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws io.github.sophonhq.sophon.common.AxonConfigurationException if one field is asserted to be incorrect
+         * @throws io.github.sophonhq.sophon.common.SophonConfigurationException if one field is asserted to be incorrect
          *                                                             according to the Builder's specifications
          */
         protected void validate() {

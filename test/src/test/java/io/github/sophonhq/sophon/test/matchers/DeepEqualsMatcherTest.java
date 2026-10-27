@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.test.matchers;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
 import org.junit.jupiter.api.*;
@@ -81,7 +81,7 @@ class DeepEqualsMatcherTest {
     @Test
     void matchesIsNullSafe() {
         assertFalse(new DeepEqualsMatcher<>("foo").matches(null));
-        assertThrows(AxonConfigurationException.class, () -> new DeepEqualsMatcher<>(null).matches("foo"));
+        assertThrows(SophonConfigurationException.class, () -> new DeepEqualsMatcher<>(null).matches("foo"));
     }
 
     @Test

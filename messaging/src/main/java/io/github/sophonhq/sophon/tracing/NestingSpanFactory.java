@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.tracing;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.BuilderUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.messaging.Message;
 import org.jspecify.annotations.NonNull;
@@ -195,7 +195,7 @@ public class NestingSpanFactory implements SpanFactory {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect, according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect, according to the Builder's
          *                                    specifications
          */
         protected void validate() {

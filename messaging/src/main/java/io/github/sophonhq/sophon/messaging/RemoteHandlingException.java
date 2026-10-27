@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ import java.util.List;
  * @author Allard Buijze
  * @since axon-2.0
  */
-public class RemoteHandlingException extends AxonException {
+public class RemoteHandlingException extends SophonException {
 
     private static final long serialVersionUID = 7310513417002285205L;
 

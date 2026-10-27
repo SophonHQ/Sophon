@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventhandling.scheduling.java;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.IdentifierFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
@@ -71,7 +71,7 @@ public class SimpleEventScheduler implements EventScheduler, Lifecycle {
      * Instantiate a {@link SimpleEventScheduler} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link ScheduledExecutorService}, {@link EventBus} and {@link TransactionManager} are not
-     * {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link SimpleEventScheduler} instance
      */
@@ -240,10 +240,10 @@ public class SimpleEventScheduler implements EventScheduler, Lifecycle {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(eventBus, "The EventBus is a hard requirement and should be provided");
             assertNonNull(scheduledExecutorService,
                           "The ScheduledExecutorService is a hard requirement and should be provided");

@@ -19,7 +19,7 @@ package io.github.sophonhq.sophon.commandhandling.distributed;
 import io.github.sophonhq.sophon.commandhandling.CommandExecutionException;
 import io.github.sophonhq.sophon.commandhandling.CommandResultMessage;
 import io.github.sophonhq.sophon.commandhandling.GenericCommandResultMessage;
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 import io.github.sophonhq.sophon.messaging.MetaData;
 import io.github.sophonhq.sophon.messaging.RemoteExceptionDescription;
 import io.github.sophonhq.sophon.messaging.RemoteHandlingException;
@@ -101,7 +101,7 @@ public abstract class ReplyMessage implements Serializable {
         return new GenericCommandResultMessage<>(payload, metaData);
     }
 
-    private AxonException convertToRemoteException(RemoteExceptionDescription exceptionDescription) {
+    private SophonException convertToRemoteException(RemoteExceptionDescription exceptionDescription) {
         return exceptionDescription.isPersistent() ?
                 new RemoteNonTransientHandlingException(exceptionDescription) :
                 new RemoteHandlingException(exceptionDescription);

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.spring.eventhandling.scheduling.java;
 
-import io.github.sophonhq.sophon.common.AxonThreadFactory;
+import io.github.sophonhq.sophon.common.SophonThreadFactory;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.eventhandling.scheduling.java.SimpleEventScheduler;
 import io.github.sophonhq.sophon.spring.messaging.unitofwork.SpringTransactionManager;
@@ -74,7 +74,7 @@ public class SimpleEventSchedulerFactoryBean implements FactoryBean<SimpleEventS
     @Override
     public void afterPropertiesSet() {
         if (executorService == null) {
-            executorService = Executors.newSingleThreadScheduledExecutor(new AxonThreadFactory(SimpleEventSchedulerFactoryBean.class.getSimpleName()));
+            executorService = Executors.newSingleThreadScheduledExecutor(new SophonThreadFactory(SimpleEventSchedulerFactoryBean.class.getSimpleName()));
             executorServiceToShutDown = executorService;
         }
         if (eventBus == null) {

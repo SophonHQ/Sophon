@@ -44,7 +44,7 @@ import java.util.function.Function;
 import static io.github.sophonhq.sophon.micrometer.TagsUtil.*;
 
 /**
- * Registry for application metrics with convenient ways to register Axon components.
+ * Registry for application metrics with convenient ways to register Sophon components.
  *
  * @author Rene de Waele
  * @author Marijn van Zelst

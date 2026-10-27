@@ -30,7 +30,7 @@ import org.springframework.beans.factory.FactoryBean;
  *
  * @author Mitchell Herrijgers
  * @since axon-4.6.1
- * @deprecated Instead of using a factory bean, consider retrieving the Repository directly from the Axon Configuration.
+ * @deprecated Instead of using a factory bean, consider retrieving the Repository directly from the Sophon Configuration.
  * Alternatively, when building a BeanDefinition, use the {@link BeanHelper} factory methods to retrieve it.
  */
 @Deprecated

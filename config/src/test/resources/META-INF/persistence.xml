@@ -21,7 +21,7 @@
         <class>io.github.sophonhq.sophon.modelling.saga.repository.jpa.AssociationValueEntry</class>
         <class>io.github.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry</class>
         <properties>
-            <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:axontest"/>
+            <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:sophontest"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
         </properties>
     </persistence-unit>

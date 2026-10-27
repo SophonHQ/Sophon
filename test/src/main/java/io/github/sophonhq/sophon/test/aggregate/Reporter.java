@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.test.aggregate;
 
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
 
@@ -59,7 +59,7 @@ public class Reporter {
         appendEventOverview(sb, expectedEvents, actualEvents);
         appendProbableCause(probableCause, sb);
 
-        throw new AxonAssertionError(sb.toString());
+        throw new SophonAssertionError(sb.toString());
     }
 
     /**
@@ -95,7 +95,7 @@ public class Reporter {
         }
         appendProbableCause(probableCause, sb);
 
-        throw new AxonAssertionError(sb.toString());
+        throw new SophonAssertionError(sb.toString());
     }
 
     /**
@@ -133,7 +133,7 @@ public class Reporter {
         }
         appendProbableCause(probableCause, sb);
 
-        throw new AxonAssertionError(sb.toString());
+        throw new SophonAssertionError(sb.toString());
 
     }
         
@@ -160,7 +160,7 @@ public class Reporter {
           .append(NEWLINE);
         writeStackTrace(actualException, sb);
         sb.append(NEWLINE);
-        throw new AxonAssertionError(sb.toString());
+        throw new SophonAssertionError(sb.toString());
     }
 
     /**
@@ -181,7 +181,7 @@ public class Reporter {
         describe(actual, sb);
         sb.append(">.")
           .append(NEWLINE);
-        throw new AxonAssertionError(sb.toString());
+        throw new SophonAssertionError(sb.toString());
     }
 
     /**
@@ -202,7 +202,7 @@ public class Reporter {
         describe(actualReturnValue, sb);
         sb.append(">.")
           .append(NEWLINE);
-        throw new AxonAssertionError(sb.toString());
+        throw new SophonAssertionError(sb.toString());
     }
 
     /**
@@ -227,7 +227,7 @@ public class Reporter {
                 .append(NEWLINE);
         writeStackTrace(actualException, sb);
         sb.append(NEWLINE);
-        throw new AxonAssertionError(sb.toString());
+        throw new SophonAssertionError(sb.toString());
     }
 
     /**
@@ -237,7 +237,7 @@ public class Reporter {
      * @param description     A description describing the expected value
      */
     public void reportWrongExceptionMessage(Throwable actualException, Description description) {
-        throw new AxonAssertionError("The command handler threw an exception, but not with expected message"
+        throw new SophonAssertionError("The command handler threw an exception, but not with expected message"
                                              + NEWLINE
                                              + NEWLINE
                                              + "Expected <"
@@ -258,7 +258,7 @@ public class Reporter {
      * @param description A description describing the expected value
      */
     public void reportWrongExceptionDetails(Object details, Description description) {
-        throw new AxonAssertionError("The command handler threw an exception, but not with expected details"
+        throw new SophonAssertionError("The command handler threw an exception, but not with expected details"
                                              + NEWLINE
                                              + NEWLINE
                                              + "Expected <"
@@ -280,7 +280,7 @@ public class Reporter {
      * @param expected    The expected value of the payload.
      */
     public void reportDifferentPayloads(Class<?> messageType, Object actual, Object expected) {
-        throw new AxonAssertionError("One of the messages contained a different payload than expected"
+        throw new SophonAssertionError("One of the messages contained a different payload than expected"
                                              + NEWLINE
                                              + NEWLINE
                                              + "The message of type [" + messageType.getSimpleName() + "] "
@@ -330,7 +330,7 @@ public class Reporter {
           .append(nullSafeToString(actual))
           .append(">.")
           .append(NEWLINE);
-        throw new AxonAssertionError(sb.toString());
+        throw new SophonAssertionError(sb.toString());
     }
 
     /**
@@ -374,7 +374,7 @@ public class Reporter {
               .append(NEWLINE)
               .append("were expected but not seen.");
         }
-        throw new AxonAssertionError(sb.toString());
+        throw new SophonAssertionError(sb.toString());
     }
 
     /**
@@ -385,9 +385,9 @@ public class Reporter {
      */
     public void reportIncorrectDeletedState(boolean expectedDeletedState) {
         if (expectedDeletedState) {
-            throw new AxonAssertionError("Aggregate should have been marked for deletion, but this did not happen");
+            throw new SophonAssertionError("Aggregate should have been marked for deletion, but this did not happen");
         } else {
-            throw new AxonAssertionError("Aggregate has been marked for deletion, but this was not expected");
+            throw new SophonAssertionError("Aggregate has been marked for deletion, but this was not expected");
         }
     }
 

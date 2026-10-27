@@ -17,8 +17,8 @@
 package io.github.sophonhq.sophon.eventsourcing.eventstore.jdbc;
 
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.DateTimeUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jdbc.ConnectionProvider;
 import io.github.sophonhq.sophon.common.jdbc.JdbcUtils;
 import io.github.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
@@ -134,7 +134,7 @@ public class JdbcEventStorageEngine extends BatchingEventStorageEngine {
      * Instantiate a {@link JdbcEventStorageEngine} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the event and snapshot {@link Serializer}, the {@link ConnectionProvider} and {@link
-     * TransactionManager} are not {@code null}, and will throw an {@link AxonConfigurationException} if any of them is
+     * TransactionManager} are not {@code null}, and will throw an {@link SophonConfigurationException} if any of them is
      * {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link JdbcEventStorageEngine} instance
@@ -1307,11 +1307,11 @@ public class JdbcEventStorageEngine extends BatchingEventStorageEngine {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
             assertNonNull(connectionProvider, "The ConnectionProvider is a hard requirement and should be provided");
             assertNonNull(transactionManager, "The TransactionManager is a hard requirement and should be provided");

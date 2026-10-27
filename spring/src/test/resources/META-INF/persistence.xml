@@ -15,7 +15,7 @@
   -->
 
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
-    <persistence-unit name="AxonSpringTest" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="SophonSpringTest" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.DomainEventEntry</class>
         <class>io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>

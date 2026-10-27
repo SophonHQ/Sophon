@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging.deadletter;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception signaling a {@link SequencedDeadLetterQueue} is overflowing.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Steven van Beelen
  * @since axon-4.6.0
  */
-public class DeadLetterQueueOverflowException extends AxonException {
+public class DeadLetterQueueOverflowException extends SophonException {
 
     private static final long serialVersionUID = -5062977764457680918L;
 

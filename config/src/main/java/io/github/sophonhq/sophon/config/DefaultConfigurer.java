@@ -25,8 +25,8 @@ import io.github.sophonhq.sophon.commandhandling.LoggingDuplicateCommandHandlerR
 import io.github.sophonhq.sophon.commandhandling.SimpleCommandBus;
 import io.github.sophonhq.sophon.commandhandling.gateway.CommandGateway;
 import io.github.sophonhq.sophon.commandhandling.gateway.DefaultCommandGateway;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.IdentifierFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
 import io.github.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
@@ -130,8 +130,8 @@ import static io.github.sophonhq.sophon.common.BuilderUtils.assertStrictPositive
 import static io.github.sophonhq.sophon.util.HandlerTypeResolver.*;
 
 /**
- * Entry point of the Axon Configuration API. It implements the Configurer interface, providing access to the methods to
- * configure the default Axon components.
+ * Entry point of the Sophon Configuration API. It implements the Configurer interface, providing access to the methods to
+ * configure the default Sophon components.
  * <p>
  * Using {@link #defaultConfiguration()}, you will get a Configurer instance with default components configured. You
  * will need to register your Aggregates (using {@link #configureAggregate(AggregateConfiguration)} and provide a
@@ -781,7 +781,7 @@ public class DefaultConfigurer implements Configurer {
             case 1:
                 return eventProcessingConfigurers.get(0);
             default:
-                throw new AxonConfigurationException(
+                throw new SophonConfigurationException(
                         "There are several EventProcessingConfigurers defined. "
                                 + "The `eventProcessing()` method is used to retrieve a 'singleton' EventProcessingConfigurer."
                 );

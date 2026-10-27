@@ -22,7 +22,7 @@ import io.github.sophonhq.sophon.eventhandling.Timestamp;
 import io.github.sophonhq.sophon.modelling.saga.EndSaga;
 import io.github.sophonhq.sophon.modelling.saga.SagaEventHandler;
 import io.github.sophonhq.sophon.modelling.saga.StartSaga;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import org.junit.jupiter.api.*;
 
 import java.time.Duration;
@@ -161,8 +161,8 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        AxonAssertionError result = assertThrows(
-                AxonAssertionError.class,
+        SophonAssertionError result = assertThrows(
+                SophonAssertionError.class,
                 () -> given.expectTriggeredDeadlines(NONE_OCCURRING_DEADLINE_PAYLOAD)
         );
 
@@ -177,8 +177,8 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        AxonAssertionError result = assertThrows(
-                AxonAssertionError.class,
+        SophonAssertionError result = assertThrows(
+                SophonAssertionError.class,
                 () -> given.expectTriggeredDeadlines(DEADLINE_PAYLOAD, NONE_OCCURRING_DEADLINE_PAYLOAD)
         );
 
@@ -200,8 +200,8 @@ class FixtureTest_Deadlines {
         FixtureExecutionResult given = fixture.givenAggregate(AGGREGATE_ID)
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
-        AxonAssertionError result = assertThrows(
-                AxonAssertionError.class,
+        SophonAssertionError result = assertThrows(
+                SophonAssertionError.class,
                 () -> given.expectTriggeredDeadlinesWithName(NONE_OCCURRING_DEADLINE_PAYLOAD)
         );
 
@@ -216,8 +216,8 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        AxonAssertionError result = assertThrows(
-                AxonAssertionError.class,
+        SophonAssertionError result = assertThrows(
+                SophonAssertionError.class,
                 () -> given.expectTriggeredDeadlinesWithName(DEADLINE_NAME, NONE_OCCURRING_DEADLINE_PAYLOAD)
         );
 
@@ -240,8 +240,8 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        AxonAssertionError result = assertThrows(
-                AxonAssertionError.class,
+        SophonAssertionError result = assertThrows(
+                SophonAssertionError.class,
                 () -> given.expectTriggeredDeadlinesOfType(Integer.class)
         );
 
@@ -256,8 +256,8 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        AxonAssertionError result = assertThrows(
-                AxonAssertionError.class,
+        SophonAssertionError result = assertThrows(
+                SophonAssertionError.class,
                 () -> given.expectTriggeredDeadlinesOfType(String.class, String.class)
         );
 

@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.test.saga;
 
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
 import io.github.sophonhq.sophon.messaging.MetaData;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import io.github.sophonhq.sophon.test.matchers.Matchers;
 import io.github.sophonhq.sophon.test.utils.CallbackBehavior;
 import org.hamcrest.CoreMatchers;
@@ -386,7 +386,7 @@ class AnnotatedSagaTest {
                 fixture.givenAPublished(new TriggerSagaStartEvent(identifier))
                        .whenAggregate(identifier)
                        .publishes(new TriggerExceptionWhileHandlingEvent(identifier));
-        assertThrows(AxonAssertionError.class, fixtureExecutionResult::expectSuccessfulHandlerExecution);
+        assertThrows(SophonAssertionError.class, fixtureExecutionResult::expectSuccessfulHandlerExecution);
     }
 
     @Test

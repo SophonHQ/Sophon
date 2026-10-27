@@ -41,7 +41,7 @@ import org.springframework.beans.factory.support.ManagedList;
 @Deprecated
 public final class SpringContextParameterResolverFactoryBuilder {
 
-    private static final String PARAMETER_RESOLVER_FACTORY_BEAN_NAME = "__axon-parameter-resolver-factory";
+    private static final String PARAMETER_RESOLVER_FACTORY_BEAN_NAME = "__sophon-parameter-resolver-factory";
 
     private SpringContextParameterResolverFactoryBuilder() {
     }

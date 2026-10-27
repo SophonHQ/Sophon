@@ -17,10 +17,10 @@
 package io.github.sophonhq.sophon.eventhandling;
 
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
 import io.github.sophonhq.sophon.common.ExceptionUtils;
 import io.github.sophonhq.sophon.common.ProcessUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 import io.github.sophonhq.sophon.common.stream.BlockingStream;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
@@ -129,7 +129,7 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
      * <p>
      * Will assert that the Event Processor {@code name}, {@link EventHandlerInvoker}, {@link StreamableMessageSource},
      * {@link TokenStore} and {@link TransactionManager} are not {@code null}, and will throw an {@link
-     * AxonConfigurationException} if any of them is {@code null}.
+     * SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link TrackingEventProcessor} instance
      */
@@ -1102,11 +1102,11 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
             if (storeTokenBeforeProcessing == null) {
                 storeTokenBeforeProcessing = false;
@@ -1341,7 +1341,7 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
                                             singletonMap(segmentId, new RemovedTrackerStatus(removedStatus))
                                     );
                                 }
-                                if (AxonNonTransientException.isCauseOf(e)) {
+                                if (SophonNonTransientException.isCauseOf(e)) {
                                     logger.error(
                                             "An unrecoverable error has occurred wile attempting to claim a token "
                                                     + "for segment: {}. Shutting down processor [{}].",

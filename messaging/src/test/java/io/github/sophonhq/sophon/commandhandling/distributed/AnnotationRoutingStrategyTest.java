@@ -19,7 +19,7 @@ package io.github.sophonhq.sophon.commandhandling.distributed;
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import io.github.sophonhq.sophon.commandhandling.RoutingKey;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -123,13 +123,13 @@ class AnnotationRoutingStrategyTest {
     @Test
     void buildAnnotationRoutingStrategyFailsForNullFallbackRoutingStrategy() {
         AnnotationRoutingStrategy.Builder builderTestSubject = AnnotationRoutingStrategy.builder();
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.fallbackRoutingStrategy(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.fallbackRoutingStrategy(null));
     }
 
     @Test
     void buildAnnotationRoutingStrategyFailsForNullAnnotationType() {
         AnnotationRoutingStrategy.Builder builderTestSubject = AnnotationRoutingStrategy.builder();
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.annotationType(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.annotationType(null));
     }
 
     public static class SomeFieldAnnotatedCommand {

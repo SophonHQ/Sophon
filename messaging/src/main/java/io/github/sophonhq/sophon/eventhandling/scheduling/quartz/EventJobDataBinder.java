@@ -19,7 +19,7 @@ package io.github.sophonhq.sophon.eventhandling.scheduling.quartz;
 import org.quartz.JobDataMap;
 
 /**
- * Strategy towards reading/writing an Axon EventMessage from/to a Quartz {@link JobDataMap}.
+ * Strategy towards reading/writing a Sophon EventMessage from/to a Quartz {@link JobDataMap}.
  * <p>
  * Implementors may choose how to store the event message as serializable data in {@link JobDataMap}.
  * This is useful when one does not want to be limited to event payloads requiring to be {@link java.io.Serializable}

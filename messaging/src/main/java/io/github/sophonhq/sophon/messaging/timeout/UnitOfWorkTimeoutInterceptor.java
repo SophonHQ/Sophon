@@ -49,7 +49,7 @@ public class UnitOfWorkTimeoutInterceptor implements MessageHandlerInterceptor<M
     /**
      * Creates a new {@link UnitOfWorkTimeoutInterceptor} for the given {@code componentName} with the given
      * {@code timeout}, {@code warningThreshold} and {@code warningInterval}. The warnings and timeout will be scheduled
-     * on the {@link AxonTaskJanitor#INSTANCE}. If you want to use a different {@link ScheduledExecutorService} or
+     * on the {@link SophonTaskJanitor#INSTANCE}. If you want to use a different {@link ScheduledExecutorService} or
      * {@link Logger} to log on, use the other
      * {@link #UnitOfWorkTimeoutInterceptor(String, int, int, int, ScheduledExecutorService, Logger)}.
      *
@@ -68,8 +68,8 @@ public class UnitOfWorkTimeoutInterceptor implements MessageHandlerInterceptor<M
              timeout,
              warningThreshold,
              warningInterval,
-             AxonTaskJanitor.INSTANCE,
-             AxonTaskJanitor.LOGGER);
+             SophonTaskJanitor.INSTANCE,
+             SophonTaskJanitor.LOGGER);
     }
 
     /**
@@ -106,7 +106,7 @@ public class UnitOfWorkTimeoutInterceptor implements MessageHandlerInterceptor<M
         UnitOfWork<?> root = unitOfWork.root();
         String taskName = "UnitOfWork of " + componentName;
         if (!root.resources().containsKey(TRANSACTION_TIME_LIMIT_RESOURCE_KEY)) {
-            AxonTimeLimitedTask taskTimeout = new AxonTimeLimitedTask(
+            SophonTimeLimitedTask taskTimeout = new SophonTimeLimitedTask(
                     taskName,
                     timeout,
                     warningThreshold,
@@ -120,7 +120,7 @@ public class UnitOfWorkTimeoutInterceptor implements MessageHandlerInterceptor<M
             unitOfWork.onRollback(u -> taskTimeout.complete());
         }
 
-        AxonTimeLimitedTask task = (AxonTimeLimitedTask) root.resources().get(TRANSACTION_TIME_LIMIT_RESOURCE_KEY);
+        SophonTimeLimitedTask task = (SophonTimeLimitedTask) root.resources().get(TRANSACTION_TIME_LIMIT_RESOURCE_KEY);
         try {
             Object proceed = interceptorChain.proceed();
             task.ensureNoInterruptionWasSwallowed();
@@ -137,7 +137,7 @@ public class UnitOfWorkTimeoutInterceptor implements MessageHandlerInterceptor<M
         }
     }
 
-    private static void completeSafely(AxonTimeLimitedTask task) {
+    private static void completeSafely(SophonTimeLimitedTask task) {
         try {
             try {
                 task.ensureNoInterruptionWasSwallowed();

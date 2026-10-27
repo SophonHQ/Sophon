@@ -119,8 +119,6 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      *
      * {@link org.reactivestreams.Publisher} is used for backwards compatibility reason,
      * for clients that don't have Project Reactor on class path.
-     * Check <a href="https://docs.axoniq.io/reference-guide/extensions/reactor">Reactor Extension</a>
-     * for native Flux type and more.
      *
      * Use {@code Flux.from(publisher)} to convert to Flux stream.
      *
@@ -147,8 +145,6 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      *
      * {@link org.reactivestreams.Publisher} is used for backwards compatibility reason,
      * for clients that don't have Project Reactor on class path.
-     * Check <a href="https://docs.axoniq.io/reference-guide/extensions/reactor">Reactor Extension</a>
-     * for native Flux type and more.
      *
      * Use {@code Flux.from(publisher)} to convert to Flux stream.
      *

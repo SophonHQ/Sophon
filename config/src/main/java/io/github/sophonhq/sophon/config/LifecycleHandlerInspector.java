@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ReflectionUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.annotation.AnnotationUtils;
 import io.github.sophonhq.sophon.lifecycle.Lifecycle;
 import io.github.sophonhq.sophon.lifecycle.LifecycleHandlerInvocationException;
@@ -101,7 +101,7 @@ public abstract class LifecycleHandlerInspector {
             AnnotationUtils.findAnnotationAttributes(method, lifecycleAnnotation)
                            .ifPresent(lifecycleAnnotationAttributes -> {
                                if (method.getParameterCount() > 0) {
-                                   throw new AxonConfigurationException(format(
+                                   throw new SophonConfigurationException(format(
                                            "The @%s annotated method [%s] should not contain any parameters"
                                                    + " as none are allowed on lifecycle handlers",
                                            lifecycleAnnotation.getSimpleName(), method

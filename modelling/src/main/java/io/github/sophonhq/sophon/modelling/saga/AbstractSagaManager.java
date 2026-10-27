@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.modelling.saga;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.IdentifierFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventHandlerInvoker;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.ListenerInvocationErrorHandler;
@@ -66,7 +66,7 @@ public abstract class AbstractSagaManager<T> implements EventHandlerInvoker, Sco
      * <p>
      * Will assert that the {@code sagaType}, {@code sagaFactory}, {@link SagaRepository},
      * {@link SagaManagerSpanFactory} and {@link ListenerInvocationErrorHandler} are not {@code null}, and will throw an
-     * {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link AbstractSagaManager} instance
      */
@@ -357,10 +357,10 @@ public abstract class AbstractSagaManager<T> implements EventHandlerInvoker, Sco
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(spanFactory, "The SpanFactory is a hard requirement and should be provided");
             assertNonNull(sagaRepository, "The SagaRepository is a hard requirement and should be provided");
             assertNonNull(sagaType, "The sagaType is a hard requirement and should be provided");

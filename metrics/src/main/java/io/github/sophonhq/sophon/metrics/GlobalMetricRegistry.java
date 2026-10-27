@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
- * Registry for application metrics with convenient ways to register Axon components.
+ * Registry for application metrics with convenient ways to register Sophon components.
  *
  * @author Rene de Waele
  * @since axon-3.0

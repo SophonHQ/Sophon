@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.spring.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ReflectionUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.annotation.ClasspathHandlerDefinition;
 import io.github.sophonhq.sophon.messaging.annotation.ClasspathParameterResolverFactory;
 import io.github.sophonhq.sophon.messaging.annotation.HandlerDefinition;
@@ -107,7 +107,7 @@ public abstract class AbstractAnnotationHandlerBeanPostProcessor<I, T extends I>
                 return createAdapterProxy(proxyInvokingBean, adapter, getAdapterInterfaces(), false,
                                           classLoader);
             } catch (Exception e) {
-                throw new AxonConfigurationException("Unable to wrap annotated handler.", e);
+                throw new SophonConfigurationException("Unable to wrap annotated handler.", e);
             }
         }
         return bean;

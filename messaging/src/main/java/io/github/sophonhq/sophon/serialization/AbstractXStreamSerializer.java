@@ -26,8 +26,8 @@ import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.Mapper;
 import io.github.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import io.github.sophonhq.sophon.commandhandling.GenericCommandResultMessage;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ObjectUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.deadline.GenericDeadlineMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -207,7 +207,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
      * Add an alias for a package. This allows long package names to be shortened considerably. Will also use the alias
      * for sub-packages of the provided package.
      * <p/>
-     * E.g. an alias of "axon-modelling" for the package "io.github.sophonhq.sophon.modelling" will use "axon-modelling.command"
+     * E.g. an alias of "sophon-modelling" for the package "io.github.sophonhq.sophon.modelling" will use "sophon-modelling.command"
      * for the package "io.github.sophonhq.sophon.modelling.command".
      *
      * @param alias   The alias to use.
@@ -277,8 +277,8 @@ public abstract class AbstractXStreamSerializer implements Serializer {
      * The {@link Charset} is defaulted to a {@link Charset#forName(String)} using the {@code UTF-8} character set, the
      * {@link RevisionResolver} defaults to an {@link AnnotationRevisionResolver} and the {@link Converter} defaults to
      * a {@link ChainingConverter}. The {@link XStream} is a <b>hard requirement</b> and as such should be provided.
-     * Lastly, the builder adds Axon types for XStream's security settings by including {@code "io.github.sophonhq.sophon.**} as
-     * a wildcard type. This can be disabled with the {@link Builder#disableAxonTypeSecurity()} operation when
+     * Lastly, the builder adds Sophon types for XStream's security settings by including {@code "io.github.sophonhq.sophon.**} as
+     * a wildcard type. This can be disabled with the {@link Builder#disableSophonTypeSecurity()} operation when
      * required.
      * <p>
      * Upon instantiation, several defaults aliases are added to the XStream instance, for example for the {@link
@@ -295,7 +295,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
         private RevisionResolver revisionResolver = new AnnotationRevisionResolver();
         private Converter converter = new ChainingConverter();
         private boolean lenientDeserialization = false;
-        private boolean axonTypeSecurity = true;
+        private boolean sophonTypeSecurity = true;
         private ClassLoader classLoader;
         private boolean cacheUnknownClasses = true;
 
@@ -379,7 +379,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
         }
 
         /**
-         * Configures the underlying {@link XStream} instance to <b>not</b> include Axon's classes by default.
+         * Configures the underlying {@link XStream} instance to <b>not</b> include Sophon's classes by default.
          * Concretely, the {@link XStream#allowTypesByWildcard(String[])} method will not be invoked with {@code
          * "io.github.sophonhq.sophon.**"}.
          * <p>
@@ -388,8 +388,8 @@ public abstract class AbstractXStreamSerializer implements Serializer {
          *
          * @return the current Builder instance for fluent interfacing
          */
-        public Builder disableAxonTypeSecurity() {
-            this.axonTypeSecurity = false;
+        public Builder disableSophonTypeSecurity() {
+            this.sophonTypeSecurity = false;
             return this;
         }
 
@@ -409,10 +409,10 @@ public abstract class AbstractXStreamSerializer implements Serializer {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(xStream, "The XStream instance is a hard requirement and should be provided");
             if (lenientDeserialization) {
                 xStream.ignoreUnknownElements();
@@ -420,7 +420,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
             if (classLoader != null) {
                 xStream.setClassLoader(classLoader);
             }
-            if (axonTypeSecurity) {
+            if (sophonTypeSecurity) {
                 xStream.allowTypesByWildcard(new String[]{"io.github.sophonhq.sophon.**"});
             }
         }

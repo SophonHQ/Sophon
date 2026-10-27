@@ -54,7 +54,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class LoopBackWithInterwovenCommandsAndEventsTest {
 
-    // This ensures we do not wire Axon Server components
+    // This ensures configurer modules on the classpath are not registered automatically
     private static final boolean DO_NOT_AUTO_LOCATE_CONFIGURER_MODULES = false;
 
     private final String aggregateIdentifier = "Aggregate";

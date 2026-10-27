@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.queryhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MessageDispatchInterceptor;
 import io.github.sophonhq.sophon.messaging.responsetypes.MultipleInstancesResponseType;
 import io.github.sophonhq.sophon.messaging.responsetypes.OptionalResponseType;
@@ -378,10 +378,10 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             // Method kept for overriding
         }
     }

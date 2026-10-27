@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.test.aggregate;
 
 import io.github.sophonhq.sophon.modelling.command.AggregateNotFoundException;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.*;
 
@@ -118,7 +118,7 @@ class FixtureTest_RegularParams {
                                             new MyEvent("aggregateId", 2),
                                             new MyEvent("aggregateId", 3));
 
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture.registerAnnotatedCommandHandler(new MyCommandHandler(fixture.getRepository(),
                                                                              fixture.getEventBus()))
                        .given(givenEvents)
@@ -145,7 +145,7 @@ class FixtureTest_RegularParams {
         List<?> givenEvents = Arrays.asList(new MyEvent("aggregateId", 1),
                                             new MyEvent("aggregateId", 2),
                                             new MyEvent("aggregateId", 3));
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture.registerAnnotatedCommandHandler(new MyCommandHandler(fixture.getRepository(),
                                                                              fixture.getEventBus()))
                         .given(givenEvents)
@@ -230,7 +230,7 @@ class FixtureTest_RegularParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture.registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new TestCommand("aggregateId"))
@@ -247,7 +247,7 @@ class FixtureTest_RegularParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
@@ -265,7 +265,7 @@ class FixtureTest_RegularParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
@@ -286,7 +286,7 @@ class FixtureTest_RegularParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
@@ -310,7 +310,7 @@ class FixtureTest_RegularParams {
                                             new MyEvent("aggregateId", 2),
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(), fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture.registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new TestCommand("aggregateId"))
@@ -330,7 +330,7 @@ class FixtureTest_RegularParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture.registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new StrangeCommand("aggregateId"))
@@ -356,8 +356,8 @@ class FixtureTest_RegularParams {
                                                                     .given(givenEvents)
                                                                     .when(new TestCommand("aggregateId"));
         // Should be 4 instead of 5.
-        AxonAssertionError e = assertThrows(
-                AxonAssertionError.class, () -> resultValidator.expectEvents(new MyEvent("aggregateId", 5))
+        SophonAssertionError e = assertThrows(
+                SophonAssertionError.class, () -> resultValidator.expectEvents(new MyEvent("aggregateId", 5))
         );
         assertTrue(e.getMessage().contains(
                 "The message of type [MyEvent] was not as expected."));
@@ -377,8 +377,8 @@ class FixtureTest_RegularParams {
                                                                     .given(givenEvents)
                                                                     .when(new TestCommand("aggregateId"));
         // Should be 4 instead of null.
-        AxonAssertionError e = assertThrows(
-                AxonAssertionError.class, () -> resultValidator.expectEvents(new MyEvent("aggregateId", null))
+        SophonAssertionError e = assertThrows(
+                SophonAssertionError.class, () -> resultValidator.expectEvents(new MyEvent("aggregateId", null))
         );
         assertTrue(e.getMessage().contains("The message of type [MyEvent] was not as expected."));
         assertTrue(e.getMessage().contains("Expected <MyEvent{someValue=null"));
@@ -392,7 +392,7 @@ class FixtureTest_RegularParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        AxonAssertionError e = assertThrows(AxonAssertionError.class, () ->
+        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)

@@ -28,7 +28,7 @@ import java.util.function.Function;
  * {@link CommandMessage commands}. Implementations of this interface defer the actual handling of commands to a wrapped
  * instance of type {@code T} or one of its entities.
  * <p>
- * When a command is dispatched to an aggregate Axon will load the aggregate instance and invoke the related command
+ * When a command is dispatched to an aggregate Sophon will load the aggregate instance and invoke the related command
  * handler method. It is rarely necessary to interact with {@link Aggregate aggregates} directly. Though it is not
  * recommended it is possible to invoke methods on the wrapped instance using {@link #invoke(Function)} and {@link
  * #execute(Consumer)}.

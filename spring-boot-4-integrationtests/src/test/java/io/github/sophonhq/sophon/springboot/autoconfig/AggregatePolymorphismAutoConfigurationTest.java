@@ -134,7 +134,7 @@ class AggregatePolymorphismAutoConfigurationTest {
 
     /**
      * Although snapshot creation on aggregate creation typically isn't realistic, the snapshot creation path is
-     * different enough to merit a test. However, Axon Framework will disregard snapshots at event position zero as an
+     * different enough to merit a test. However, Sophon will disregard snapshots at event position zero as an
      * optimization. Hence, we validate the first event <b>not</b> to be a snapshot.
      */
     @Test

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.common.annotation;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -256,7 +256,7 @@ public abstract class AnnotationUtils {
                         attributes.put(key, value);
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new AxonConfigurationException("Error while inspecting annotation values", e);
+                    throw new SophonConfigurationException("Error while inspecting annotation values", e);
                 }
             }
         }

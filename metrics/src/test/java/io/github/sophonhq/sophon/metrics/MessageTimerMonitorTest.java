@@ -19,7 +19,7 @@ package io.github.sophonhq.sophon.metrics;
 import com.codahale.metrics.Metric;
 import com.codahale.metrics.SlidingTimeWindowReservoir;
 import com.codahale.metrics.Timer;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.monitoring.MessageMonitor;
 import org.junit.jupiter.api.*;
 
@@ -133,14 +133,14 @@ class MessageTimerMonitorTest {
     }
 
     @Test
-    void buildWithNullClockThrowsAxonConfigurationException() {
+    void buildWithNullClockThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.clock(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.clock(null));
     }
 
     @Test
-    void buildWithNullReservoirFactoryThrowsAxonConfigurationException() {
+    void buildWithNullReservoirFactoryThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.reservoirFactory(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.reservoirFactory(null));
     }
 }

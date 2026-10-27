@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.EventHandlerInvoker;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
@@ -395,7 +395,7 @@ public class DeadLetteringEventHandlerInvoker
         /**
          * Validate whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException When one field asserts to be incorrect according to the Builder's
+         * @throws SophonConfigurationException When one field asserts to be incorrect according to the Builder's
          *                                    specifications.
          */
         @Override

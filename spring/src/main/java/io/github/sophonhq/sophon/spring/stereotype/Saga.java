@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation that informs Axon's auto configurer for Spring that a given {@link Component} is a saga instance.
+ * Annotation that informs Sophon's auto configurer for Spring that a given {@link Component} is a saga instance.
  */
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -35,7 +35,7 @@ public @interface Saga {
 
     /**
      * Selects the name of the SagaStore bean. If left empty the saga will be stored in the Saga Store configured in the
-     * global Axon Configuration.
+     * global Sophon Configuration.
      */
     String sagaStore() default "";
 }

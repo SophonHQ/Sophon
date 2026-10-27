@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventsourcing.snapshotting;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.DomainEventData;
 import io.github.sophonhq.sophon.eventhandling.DomainEventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -128,31 +128,31 @@ class RevisionSnapshotFilterTest {
     }
 
     @Test
-    void buildWithNullOrEmptyTypeThrowsAxonConfigurationException() {
+    void buildWithNullOrEmptyTypeThrowsSophonConfigurationException() {
         RevisionSnapshotFilter.Builder builderTestSubject = RevisionSnapshotFilter.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.type(""));
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.type((String) null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.type(""));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.type((String) null));
     }
 
     @Test
-    void buildWithNullOrEmptyRevisionThrowsAxonConfigurationException() {
+    void buildWithNullOrEmptyRevisionThrowsSophonConfigurationException() {
         RevisionSnapshotFilter.Builder builderTestSubject = RevisionSnapshotFilter.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.revision(""));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.revision(""));
     }
 
     @Test
-    void buildWithoutTypeThrowsAxonConfigurationException() {
+    void buildWithoutTypeThrowsSophonConfigurationException() {
         RevisionSnapshotFilter.Builder builderTestSubject = RevisionSnapshotFilter.builder()
                                                                                   .revision(EXPECTED_REVISION);
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithBlankRevisionThrowsAxonConfigurationException() {
-        assertThrows(AxonConfigurationException.class, () -> RevisionSnapshotFilter.builder()
+    void buildWithBlankRevisionThrowsSophonConfigurationException() {
+        assertThrows(SophonConfigurationException.class, () -> RevisionSnapshotFilter.builder()
                                                                                    .type(AggregateWithExpectedRevision.class)
                                                                                    .revision("")
                                                                                    .build());

@@ -453,7 +453,7 @@ class FixtureTest_CommandInterceptors {
         private InterceptorEntity entity;
 
         private AggregateWithAggregateMemberInterceptorOnly() {
-            // No-arg constructor required by Axon
+            // No-arg constructor required by Sophon
         }
 
         @CommandHandler

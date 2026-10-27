@@ -49,7 +49,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 /**
- * Autoconfiguration class for Axon's JPA specific infrastructure components.
+ * Autoconfiguration class for Sophon's JPA specific infrastructure components.
  *
  * @author Allard Buijze
  * @since axon-3.0.3

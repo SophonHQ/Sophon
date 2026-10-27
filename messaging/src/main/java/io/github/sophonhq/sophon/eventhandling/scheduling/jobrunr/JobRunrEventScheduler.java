@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.scheduling.jobrunr;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
@@ -69,7 +69,7 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
      * {@link JobRunrEventScheduler.Builder}.
      * <p>
      * Will assert that the {@link JobScheduler}, {@link Serializer} and {@link EventBus} are not {@code null}, and will
-     * throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link JobRunrEventScheduler} instance
      */
@@ -159,7 +159,7 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
             throw new IllegalArgumentException("The given ScheduleToken was not provided by this scheduler.");
         }
         JobRunrScheduleToken reference = (JobRunrScheduleToken) scheduleToken;
-        jobScheduler.delete(reference.getJobIdentifier(), "Deleted via Axon EventScheduler API");
+        jobScheduler.delete(reference.getJobIdentifier(), "Deleted via Sophon EventScheduler API");
     }
 
     @Override
@@ -271,7 +271,7 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
 
         private JobScheduler jobScheduler;
 
-        private String jobName = "AxonScheduledEvent";
+        private String jobName = "SophonScheduledEvent";
         private Serializer serializer;
         private TransactionManager transactionManager = NoTransactionManager.INSTANCE;
         private EventBus eventBus;
@@ -290,7 +290,7 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
 
         /**
          * Sets the {@link String} used for creating the scheduled jobs in JobRunr. Defaults to
-         * {@code AxonScheduledEvent}.
+         * {@code SophonScheduledEvent}.
          *
          * @param jobName a {@link JobScheduler} used for naming the job
          * @return the current Builder instance, for fluent interfacing
@@ -353,10 +353,10 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(jobScheduler, "The JobScheduler is a hard requirement and should be provided.");
             assertNonNull(serializer, "The Serializer is a hard requirement and should be provided.");
             assertNonNull(eventBus, "The EventBus is a hard requirement and should be provided.");

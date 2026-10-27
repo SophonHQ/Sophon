@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.test.saga;
 
 import io.github.sophonhq.sophon.modelling.saga.AssociationValue;
 import io.github.sophonhq.sophon.modelling.saga.repository.inmemory.InMemorySagaStore;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 
 import java.util.Set;
 
@@ -57,7 +57,7 @@ public class RepositoryContentValidator<T> {
         Set<String> associatedSagas =
                 sagaStore.findSagas(sagaType, new AssociationValue(associationKey, associationValue));
         if (associatedSagas.isEmpty()) {
-            throw new AxonAssertionError(format(
+            throw new SophonAssertionError(format(
                     "Expected a saga to be associated with key:<%s> value:<%s>, but found <none>",
                     associationKey,
                     associationValue));
@@ -75,7 +75,7 @@ public class RepositoryContentValidator<T> {
         Set<String> associatedSagas =
                 sagaStore.findSagas(sagaType, new AssociationValue(associationKey, associationValue));
         if (!associatedSagas.isEmpty()) {
-            throw new AxonAssertionError(format(
+            throw new SophonAssertionError(format(
                     "Expected no sagas to be associated with key:<%s> value:<%s>, but found <%s>",
                     associationKey,
                     associationValue,
@@ -90,7 +90,7 @@ public class RepositoryContentValidator<T> {
      */
     public void assertActiveSagas(int expected) {
         if (expected != sagaStore.size()) {
-            throw new AxonAssertionError(format(
+            throw new SophonAssertionError(format(
                     "Wrong number of active sagas.\nExpected <%s>,\n but got <%s>.", expected, sagaStore.size()
             ));
         }

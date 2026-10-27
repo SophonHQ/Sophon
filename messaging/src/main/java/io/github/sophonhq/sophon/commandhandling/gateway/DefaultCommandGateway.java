@@ -24,8 +24,8 @@ import io.github.sophonhq.sophon.commandhandling.CommandResultMessage;
 import io.github.sophonhq.sophon.commandhandling.GenericCommandResultMessage;
 import io.github.sophonhq.sophon.commandhandling.callbacks.FailureLoggingCallback;
 import io.github.sophonhq.sophon.commandhandling.callbacks.FutureCallback;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MessageDispatchInterceptor;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ public class DefaultCommandGateway extends AbstractCommandGateway implements Com
     /**
      * Instantiate a {@link DefaultCommandGateway} based on the fields contained in the {@link Builder}.
      * <p>
-     * Will assert that the {@link CommandBus} is not {@code null} and will throw an {@link AxonConfigurationException}
+     * Will assert that the {@link CommandBus} is not {@code null} and will throw an {@link SophonConfigurationException}
      * if this is the case.
      *
      * @param builder the {@link DefaultCommandGateway.Builder} used to instantiate a {@link DefaultCommandGateway}

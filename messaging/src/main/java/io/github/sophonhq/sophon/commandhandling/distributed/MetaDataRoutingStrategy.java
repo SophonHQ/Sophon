@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.commandhandling.distributed;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.jspecify.annotations.NonNull;
 
 import static io.github.sophonhq.sophon.common.BuilderUtils.assertNonEmpty;
@@ -51,7 +51,7 @@ public class MetaDataRoutingStrategy extends AbstractRoutingStrategy {
      * Instantiate a {@link MetaDataRoutingStrategy} based on the fields contained in the give {@code builder}.
      * <p>
      * Will assert that the {@code metaDataKey} is not an empty {@link String} or {@code null} and will throw an {@link
-     * AxonConfigurationException} if this is the case.
+     * SophonConfigurationException} if this is the case.
      *
      * @param builder the {@link Builder} used to instantiate a {@link MetaDataRoutingStrategy} instance
      */
@@ -145,7 +145,7 @@ public class MetaDataRoutingStrategy extends AbstractRoutingStrategy {
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

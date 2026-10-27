@@ -16,12 +16,12 @@
 
 package io.github.sophonhq.sophon.modelling.command;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception thrown when an invocation on a method of an aggregate gives rise to an exception.
  */
-public class AggregateInvocationException extends AxonException {
+public class AggregateInvocationException extends SophonException {
     /**
      * Initializes the exception using the given {@code message} and {@code cause}.
      *

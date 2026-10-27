@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.async;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.property.Property;
 import io.github.sophonhq.sophon.common.property.PropertyAccessStrategy;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
@@ -47,7 +47,7 @@ public class PropertySequencingPolicy<T, K> implements SequencingPolicy<EventMes
      * Instantiate a {@link PropertySequencingPolicy} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@code propertyExtractor} is not {@code null} and will throw an {@link
-     * AxonConfigurationException} if this is the case.
+     * SophonConfigurationException} if this is the case.
      *
      * @param builder the {@link Builder} used to instantiate a {@link PropertySequencingPolicy} instance
      */

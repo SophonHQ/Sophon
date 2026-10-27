@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Tags configuration labeling Axon Node represented by key-value pairs.
+ * Tags configuration labeling Sophon Node represented by key-value pairs.
  *
  * @author Milan Savic
  * @since axon-4.2

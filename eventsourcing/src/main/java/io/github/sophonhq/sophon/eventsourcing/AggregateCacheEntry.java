@@ -37,7 +37,7 @@ public class AggregateCacheEntry<T> implements Serializable {
 
     /**
      * Creates a cache entry with an explicit version. Intended for event stores that assign sequence numbers at
-     * transaction commit time rather than at event-apply time (e.g. DCB-mode AxonServer), where the
+     * transaction commit time rather than at event-apply time, where the
      * locally-predicted sequence number on the aggregate may differ from the one actually stored.
      */
     public AggregateCacheEntry(EventSourcedAggregate<T> aggregate, Long version) {

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.queryhandling;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception indicating that {@link QueryUpdateEmitter} is completed, thus cannot be used to emit messages and report
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Milan Savic
  * @since axon-3.3
  */
-public class CompletedEmitterException extends AxonNonTransientException {
+public class CompletedEmitterException extends SophonNonTransientException {
 
     /**
      * Initializes the exception with given {@code message}.

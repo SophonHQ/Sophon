@@ -19,7 +19,7 @@ package io.github.sophonhq.sophon.test.saga;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.EventMessageHandler;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import io.github.sophonhq.sophon.test.matchers.FieldFilter;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
@@ -66,7 +66,7 @@ public class EventValidator implements EventMessageHandler {
             StringDescription actualDescription = new StringDescription();
             matcher.describeTo(expectedDescription);
             describe(publishedEvents, actualDescription);
-            throw new AxonAssertionError(format("Published events did not match.\nExpected <%s>,\n but got <%s>\n",
+            throw new SophonAssertionError(format("Published events did not match.\nExpected <%s>,\n but got <%s>\n",
                                                 expectedDescription, actualDescription));
         }
     }
@@ -78,7 +78,7 @@ public class EventValidator implements EventMessageHandler {
      */
     public void assertPublishedEvents(Object... expected) {
         if (publishedEvents.size() != expected.length) {
-            throw new AxonAssertionError(format(
+            throw new SophonAssertionError(format(
                     "Got wrong number of events published.\nExpected <%s>,\n but got <%s>.",
                     expected.length, publishedEvents.size()
             ));

@@ -285,7 +285,7 @@ public class OpenTelemetrySpanFactory implements SpanFactory {
          */
         public OpenTelemetrySpanFactory build() {
             if (tracer == null) {
-                tracer = GlobalOpenTelemetry.getTracer("AxonFramework-OpenTelemetry");
+                tracer = GlobalOpenTelemetry.getTracer("Sophon-OpenTelemetry");
             }
             if (textMapPropagator == null) {
                 textMapPropagator = GlobalOpenTelemetry.getPropagators().getTextMapPropagator();

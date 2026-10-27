@@ -87,7 +87,7 @@ class StandardAggregate {
 
     @Override
     public int hashCode() {
-        // This hashCode implementation is EVIL! But it's on purpose, because it shouldn't matter for Axon.
+        // This hashCode implementation is EVIL! But it's on purpose, because it shouldn't matter for Sophon.
         int result = counter;
         result = 31 * result + (lastNumber != null ? lastNumber.hashCode() : 0);
         result = 31 * result + (identifier != null ? identifier.hashCode() : 0);

@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventsourcing.eventstore;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
-import io.github.sophonhq.sophon.common.AxonThreadFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonThreadFactory;
 import io.github.sophonhq.sophon.common.io.IOUtils;
 import io.github.sophonhq.sophon.eventhandling.EventBusSpanFactory;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
@@ -96,7 +96,7 @@ public class EmbeddedEventStore extends AbstractEventStore implements Lifecycle 
      * Instantiate a {@link EmbeddedEventStore} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link EventStorageEngine} is not {@code null}, and will throw an {@link
-     * AxonConfigurationException} if it is {@code null}.
+     * SophonConfigurationException} if it is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link EmbeddedEventStore} instance
      */
@@ -121,7 +121,7 @@ public class EmbeddedEventStore extends AbstractEventStore implements Lifecycle 
      * <li>The {@code fetchDelay} is defaulted to {@code 1000}.</li>
      * <li>The {@code cleanupDelay} is defaulted to {@code 10000}.</li>
      * <li>The {@link TimeUnit} is defaulted to {@link TimeUnit#MILLISECONDS}.</li>
-     * <li>The {@link ThreadFactory} is defaulted to {@link AxonThreadFactory} with {@link ThreadGroup} {@link
+     * <li>The {@link ThreadFactory} is defaulted to {@link SophonThreadFactory} with {@link ThreadGroup} {@link
      * EmbeddedEventStore#THREAD_GROUP}.</li>
      * <li>The {@code optimizeEventConsumption} is defaulted to {@code true}.</li>
      * </ul>
@@ -488,7 +488,7 @@ public class EmbeddedEventStore extends AbstractEventStore implements Lifecycle 
      * <li>The {@code fetchDelay} is defaulted to {@code 1000}.</li>
      * <li>The {@code cleanupDelay} is defaulted to {@code 10000}.</li>
      * <li>The {@link TimeUnit} is defaulted to {@link TimeUnit#MILLISECONDS}.</li>
-     * <li>The {@link ThreadFactory} is defaulted to {@link AxonThreadFactory} with {@link ThreadGroup} {@link
+     * <li>The {@link ThreadFactory} is defaulted to {@link SophonThreadFactory} with {@link ThreadGroup} {@link
      * EmbeddedEventStore#THREAD_GROUP}.</li>
      * <li>The {@code optimizeEventConsumption} is defaulted to {@code true}.</li>
      * </ul>
@@ -500,7 +500,7 @@ public class EmbeddedEventStore extends AbstractEventStore implements Lifecycle 
         private long fetchDelay = 1000L;
         private long cleanupDelay = 10000L;
         private TimeUnit timeUnit = TimeUnit.MILLISECONDS;
-        private ThreadFactory threadFactory = new AxonThreadFactory(THREAD_GROUP);
+        private ThreadFactory threadFactory = new SophonThreadFactory(THREAD_GROUP);
         private boolean optimizeEventConsumption = fetchEventConsumptionSystemPropertyOrDefault();
 
         // Default to optimize event consumption if no property has been set
@@ -602,7 +602,7 @@ public class EmbeddedEventStore extends AbstractEventStore implements Lifecycle 
 
         /**
          * Sets the {@link ThreadFactory} used to create threads for consuming, producing and cleaning up. Defaults to a
-         * {@link AxonThreadFactory} with {@link ThreadGroup} {@link EmbeddedEventStore#THREAD_GROUP}.
+         * {@link SophonThreadFactory} with {@link ThreadGroup} {@link EmbeddedEventStore#THREAD_GROUP}.
          *
          * @param threadFactory a {@link ThreadFactory} used to create threads for consuming, producing and cleaning up
          * @return the current Builder instance, for fluent interfacing
@@ -643,11 +643,11 @@ public class EmbeddedEventStore extends AbstractEventStore implements Lifecycle 
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
         }
     }

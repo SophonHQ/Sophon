@@ -59,8 +59,8 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.eventhandling.processors.first.mode=tracking",
-                        "axon.eventhandling.processors.first.sequencingPolicy=customPolicy"
+                        "sophon.eventhandling.processors.first.mode=tracking",
+                        "sophon.eventhandling.processors.first.sequencingPolicy=customPolicy"
                 )
                 .run(context -> {
                     assertThat(context).hasSingleBean(EventProcessingModule.class);
@@ -100,9 +100,9 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.eventhandling.processors.non_default_token_claim_interval.mode=tracking",
-                        "axon.eventhandling.processors.non_default_token_claim_interval.tokenClaimInterval=1000",
-                        "axon.eventhandling.processors.non_default_token_claim_interval.tokenClaimIntervalTimeUnit=MINUTES"
+                        "sophon.eventhandling.processors.non_default_token_claim_interval.mode=tracking",
+                        "sophon.eventhandling.processors.non_default_token_claim_interval.tokenClaimInterval=1000",
+                        "sophon.eventhandling.processors.non_default_token_claim_interval.tokenClaimIntervalTimeUnit=MINUTES"
                 )
                 .run(context -> {
                     assertThat(context).hasSingleBean(EventProcessingModule.class);
@@ -129,11 +129,11 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.eventhandling.processors.second.mode=pooled",
-                        "axon.eventhandling.processors.second.initialSegmentCount=12",
-                        "axon.eventhandling.processors.second.tokenClaimInterval=1000",
-                        "axon.eventhandling.processors.second.tokenClaimIntervalTimeUnit=MINUTES",
-                        "axon.eventhandling.processors.second.batchSize=1024"
+                        "sophon.eventhandling.processors.second.mode=pooled",
+                        "sophon.eventhandling.processors.second.initialSegmentCount=12",
+                        "sophon.eventhandling.processors.second.tokenClaimInterval=1000",
+                        "sophon.eventhandling.processors.second.tokenClaimIntervalTimeUnit=MINUTES",
+                        "sophon.eventhandling.processors.second.batchSize=1024"
                 )
                 .run(context -> {
                     assertThat(context).hasSingleBean(EventProcessingModule.class);
@@ -167,7 +167,7 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.eventhandling.processors.first.dlq.enabled=true"
+                        "sophon.eventhandling.processors.first.dlq.enabled=true"
                 )
                 .run(context -> {
                     assertThat(context).hasSingleBean(EventProcessingModule.class);
@@ -183,9 +183,9 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.eventhandling.processors.first.dlq.enabled=true",
-                        "axon.eventhandling.processors.first.dlq.cache.enabled=true",
-                        "axon.eventhandling.processors.first.dlq.cache.size=10"
+                        "sophon.eventhandling.processors.first.dlq.enabled=true",
+                        "sophon.eventhandling.processors.first.dlq.cache.enabled=true",
+                        "sophon.eventhandling.processors.first.dlq.cache.size=10"
                 )
                 .run(context -> {
                     assertThat(context).hasSingleBean(EventProcessingModule.class);

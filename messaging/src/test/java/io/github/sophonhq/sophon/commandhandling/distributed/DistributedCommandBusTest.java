@@ -27,8 +27,8 @@ import io.github.sophonhq.sophon.commandhandling.GenericCommandResultMessage;
 import io.github.sophonhq.sophon.commandhandling.NoHandlerForCommandException;
 import io.github.sophonhq.sophon.commandhandling.callbacks.NoOpCallback;
 import io.github.sophonhq.sophon.commandhandling.distributed.commandfilter.DenyAll;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MessageHandler;
 import io.github.sophonhq.sophon.messaging.MessageHandlerInterceptor;
 import io.github.sophonhq.sophon.monitoring.MessageMonitor;
@@ -294,7 +294,7 @@ class DistributedCommandBusTest {
     @Test
     void shouldThrowWithNullDefaultCommandCallback() {
         DistributedCommandBus.Builder builder = DistributedCommandBus.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.defaultCommandCallback(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.defaultCommandCallback(null));
     }
 
     private static class StubCommandBusConnector implements CommandBusConnector {

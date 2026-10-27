@@ -87,7 +87,7 @@ class JpaAutoConfigurationTest {
 
     @Test
     void setTokenStoreClaimTimeout() {
-        testContext.withPropertyValues("axon.eventhandling.tokenstore.claim-timeout=3000")
+        testContext.withPropertyValues("sophon.eventhandling.tokenstore.claim-timeout=3000")
                    .run(context -> {
                        Map<String, TokenStore> tokenStores =
                                context.getBeansOfType(TokenStore.class);
@@ -102,7 +102,7 @@ class JpaAutoConfigurationTest {
 
     @Test
     void sequencedDeadLetterQueueCanBeSetViaSpringConfiguration() {
-        testContext.withPropertyValues("axon.eventhandling.processors.first.dlq.enabled=true")
+        testContext.withPropertyValues("sophon.eventhandling.processors.first.dlq.enabled=true")
                    .run(context -> {
                        assertNotNull(context.getBean(DeadLetterQueueProviderConfigurerModule.class));
 

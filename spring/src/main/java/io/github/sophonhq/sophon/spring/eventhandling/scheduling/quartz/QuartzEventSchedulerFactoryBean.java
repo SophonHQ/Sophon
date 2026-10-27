@@ -122,7 +122,7 @@ public class QuartzEventSchedulerFactoryBean implements FactoryBean<QuartzEventS
     }
 
     /**
-     * Sets the group identifier to use when scheduling jobs with Quartz. Defaults to "AxonFramework-Events".
+     * Sets the group identifier to use when scheduling jobs with Quartz. Defaults to "Sophon-Events".
      *
      * @param groupIdentifier the group identifier to use when scheduling jobs with Quartz
      */

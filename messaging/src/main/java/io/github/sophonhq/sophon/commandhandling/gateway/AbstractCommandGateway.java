@@ -20,8 +20,8 @@ import io.github.sophonhq.sophon.commandhandling.CommandBus;
 import io.github.sophonhq.sophon.commandhandling.CommandCallback;
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.callbacks.LoggingCallback;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MessageDispatchInterceptor;
 import org.jspecify.annotations.NonNull;
 
@@ -48,7 +48,7 @@ public abstract class AbstractCommandGateway {
     /**
      * Instantiate an {@link AbstractCommandGateway} based on the fields contained in the {@link Builder}.
      * <p>
-     * Will assert that the {@link CommandBus} is not {@code null} and throws an {@link AxonConfigurationException}
+     * Will assert that the {@link CommandBus} is not {@code null} and throws an {@link SophonConfigurationException}
      * if it is.
      *
      * @param builder the {@link Builder} used to instantiate a {@link AbstractCommandGateway} instance
@@ -194,7 +194,7 @@ public abstract class AbstractCommandGateway {
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

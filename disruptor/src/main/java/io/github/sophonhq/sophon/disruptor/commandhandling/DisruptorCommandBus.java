@@ -31,10 +31,10 @@ import io.github.sophonhq.sophon.commandhandling.MonitorAwareCallback;
 import io.github.sophonhq.sophon.commandhandling.NoHandlerForCommandException;
 import io.github.sophonhq.sophon.commandhandling.callbacks.NoOpCallback;
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
-import io.github.sophonhq.sophon.common.AxonThreadFactory;
 import io.github.sophonhq.sophon.common.IdentifierFactory;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonThreadFactory;
 import io.github.sophonhq.sophon.common.caching.Cache;
 import io.github.sophonhq.sophon.common.caching.NoCache;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
@@ -189,10 +189,10 @@ public class DisruptorCommandBus implements CommandBus {
      * <p>
      * The {@link CommandTargetResolver}, {@link MessageMonitor}, {@link RollbackConfiguration}, {@link ProducerType},
      * {@link WaitStrategy} and {@link Cache} are a <b>hard requirements</b>. Thus setting them to {@code null} will
-     * result in an {@link AxonConfigurationException}.
+     * result in an {@link SophonConfigurationException}.
      * Additionally, the {@code coolingDownPeriod}, {@code publisherThreadCount}, {@code bufferSize} and
      * {@code invokerThreadCount} have a positive number constraint, thus will also result in an
-     * AxonConfigurationException if set otherwise.
+     * SophonConfigurationException if set otherwise.
      *
      * @return a Builder to be able to create a {@link DisruptorCommandBus}
      */
@@ -209,7 +209,7 @@ public class DisruptorCommandBus implements CommandBus {
      * ProducerType}, {@link WaitStrategy} and {@link Cache} are not {@code null}. Additional verification is done on
      * the the {@code coolingDownPeriod}, {@code publisherThreadCount}, {@code bufferSize} and {@code
      * invokerThreadCount} to check whether they are positive numbers. If any of these checks fails, an {@link
-     * AxonConfigurationException} will be thrown.
+     * SophonConfigurationException} will be thrown.
      *
      * @param builder the {@link Builder} used to instantiate a {@link DisruptorCommandBus} instance
      */
@@ -222,7 +222,7 @@ public class DisruptorCommandBus implements CommandBus {
 
         Executor executor = builder.executor;
         if (executor == null) {
-            executorService = Executors.newCachedThreadPool(new AxonThreadFactory("DisruptorCommandBus"));
+            executorService = Executors.newCachedThreadPool(new SophonThreadFactory("DisruptorCommandBus"));
             executor = executorService;
         } else {
             executorService = null;
@@ -628,10 +628,10 @@ public class DisruptorCommandBus implements CommandBus {
      * <p>
      * The {@link CommandTargetResolver}, {@link MessageMonitor}, {@link RollbackConfiguration}, {@link ProducerType},
      * {@link WaitStrategy} and {@link Cache} are a <b>hard requirements</b>. Thus setting them to {@code null} will
-     * result in an {@link AxonConfigurationException}.
+     * result in an {@link SophonConfigurationException}.
      * Additionally, the {@code coolingDownPeriod}, {@code publisherThreadCount}, {@code bufferSize} and
      * {@code invokerThreadCount} have a positive number constraint, thus will also result in an
-     * AxonConfigurationException if set otherwise.
+     * SophonConfigurationException if set otherwise.
      */
     public static class Builder {
 
@@ -967,7 +967,7 @@ public class DisruptorCommandBus implements CommandBus {
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

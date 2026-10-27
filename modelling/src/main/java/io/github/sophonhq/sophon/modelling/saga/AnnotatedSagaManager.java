@@ -57,7 +57,7 @@ public class AnnotatedSagaManager<T> extends AbstractSagaManager<T> {
      * <p>
      * Will assert that the {@link SagaRepository}, {@code sagaType}, {@code sagaFactory} and
      * {@link ListenerInvocationErrorHandler} are not {@code null}, and will throw an
-     * {@link io.github.sophonhq.sophon.common.AxonConfigurationException} if any of them is {@code null}. Additionally, the
+     * {@link io.github.sophonhq.sophon.common.SophonConfigurationException} if any of them is {@code null}. Additionally, the
      * provided Builder's goal is to either build a {@link SagaModel} specifying generic {@code T} as the Saga type to
      * be stored or derive it based on the given {@code sagaType}. All Sagas managed by this Saga manager must be
      * {@code instanceOf} this Saga type.

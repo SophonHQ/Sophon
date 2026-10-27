@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.commandhandling;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 import io.github.sophonhq.sophon.messaging.MessageHandler;
 
 /**
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.messaging.MessageHandler;
  * @author Steven van Beelen
  * @since axon-4.2
  */
-public class DuplicateCommandHandlerSubscriptionException extends AxonNonTransientException {
+public class DuplicateCommandHandlerSubscriptionException extends SophonNonTransientException {
 
     private static final long serialVersionUID = 7168111526309151296L;
 

@@ -360,7 +360,7 @@ public class AnnotatedAggregateMetaModelFactory implements AggregateMetaModelFac
             List<Member> persistenceIdMembers = new ArrayList<>();
             List<Member> aggregateVersionMembers = new ArrayList<>();
             for (Class<?> handledType : handlerInspector.getAllInspectedTypes()) {
-                // Navigate fields for Axon related annotations
+                // Navigate fields for Sophon related annotations
                 for (Field field : ReflectionUtils.fieldsOf(handledType, NOT_RECURSIVE)) {
                     createChildDefinitions(childEntityDefinitions, handledType, field);
                     findAnnotationAttributes(field, EntityId.class).ifPresent(attributes -> entityIdMembers.add(field));
@@ -374,7 +374,7 @@ public class AnnotatedAggregateMetaModelFactory implements AggregateMetaModelFac
                             attributes -> aggregateVersionMembers.add(field)
                     );
                 }
-                // Navigate methods for Axon related annotations
+                // Navigate methods for Sophon related annotations
                 for (Method method : ReflectionUtils.methodsOf(handledType, NOT_RECURSIVE)) {
                     createChildDefinitions(childEntityDefinitions, handledType, method);
                     findAnnotationAttributes(method, EntityId.class).ifPresent(attributes -> {

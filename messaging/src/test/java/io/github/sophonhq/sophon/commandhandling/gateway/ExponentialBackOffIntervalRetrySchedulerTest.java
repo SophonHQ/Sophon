@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.commandhandling.gateway;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -57,6 +57,6 @@ class ExponentialBackOffIntervalRetrySchedulerTest {
     @Test
     void buildingWhilstMissingScheduledExecutorServiceThrowsConfigurationException() {
         ExponentialBackOffIntervalRetryScheduler.Builder builder = ExponentialBackOffIntervalRetryScheduler.builder();
-        assertThrows(AxonConfigurationException.class, builder::build);
+        assertThrows(SophonConfigurationException.class, builder::build);
     }
 }

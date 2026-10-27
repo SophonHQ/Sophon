@@ -20,7 +20,7 @@ import io.github.sophonhq.sophon.config.Configuration;
 import io.github.sophonhq.sophon.modelling.command.Repository;
 
 /**
- * Helper class to simplify the creation of bean definitions for components configured in Axon Configuration.
+ * Helper class to simplify the creation of bean definitions for components configured in Sophon Configuration.
  *
  * @author Allard Buijze
  * @since axon-4.7.4

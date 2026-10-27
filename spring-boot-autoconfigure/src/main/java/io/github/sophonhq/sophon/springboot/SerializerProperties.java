@@ -20,7 +20,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * A group of properties that allows easy configuration of the serializers used for different types of objects that
- * Axon needs to serialize.
+ * Sophon needs to serialize.
  * <p>
  * The Event serializer, if specified, is used to serialize the payload and meta-data of EventMessages as they are
  * stored in the event store and published. If no Event Serializer is specified, it defaults to the Message Serializer.
@@ -34,7 +34,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * If no General Serializer is specified, it defaults to an XStream based serializer (see
  * {@link io.github.sophonhq.sophon.serialization.xml.XStreamSerializer}).
  */
-@ConfigurationProperties("axon.serializer")
+@ConfigurationProperties("sophon.serializer")
 public class SerializerProperties {
 
     /**
@@ -116,7 +116,7 @@ public class SerializerProperties {
     }
 
     /**
-     * Enumerates different possible standard serializers, available in Axon.
+     * Enumerates different possible standard serializers, available in Sophon.
      */
     public enum SerializerType {
         /**

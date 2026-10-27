@@ -46,17 +46,17 @@ import static io.github.sophonhq.sophon.springboot.util.XStreamSecurityTypeUtili
  * @since axon-4.5.4
  */
 @AutoConfiguration
-@AutoConfigureBefore(AxonAutoConfiguration.class)
+@AutoConfigureBefore(SophonAutoConfiguration.class)
 @ConditionalOnClass(name = "com.thoughtworks.xstream.XStream")
 @EnableConfigurationProperties(value = SerializerProperties.class)
 public class XStreamAutoConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    @Bean("defaultAxonXStream")
+    @Bean("defaultSophonXStream")
     @ConditionalOnMissingBean
     @Conditional(XStreamConfiguredCondition.class)
-    public XStream defaultAxonXStream(ApplicationContext applicationContext) {
+    public XStream defaultSophonXStream(ApplicationContext applicationContext) {
         logger.info("Initializing an XStream instance since none was found. The auto configuration base packages will be used as wildcards for the XStream security settings.");
         XStream xStream = new XStream(new CompactDriver());
         xStream.allowTypesByWildcard(autoConfigBasePackages(applicationContext));
@@ -66,7 +66,7 @@ public class XStreamAutoConfiguration {
     /**
      * An {@link AnyNestedCondition} implementation, to support the following use cases:
      * <ul>
-     *     <li>The {@code general} serializer property is not set. This means Axon defaults to XStream</li>
+     *     <li>The {@code general} serializer property is not set. This means Sophon defaults to XStream</li>
      *     <li>The {@code general} serializer property is set to {@code default}. This means XStream will be used</li>
      *     <li>The {@code general} serializer property is set to {@code xstream}</li>
      *     <li>The {@code messages} serializer property is set to {@code xstream}</li>
@@ -80,25 +80,25 @@ public class XStreamAutoConfiguration {
         }
 
         @SuppressWarnings("unused")
-        @ConditionalOnProperty(name = "axon.serializer.general", havingValue = "default", matchIfMissing = true)
+        @ConditionalOnProperty(name = "sophon.serializer.general", havingValue = "default", matchIfMissing = true)
         static class GeneralDefaultCondition {
 
         }
 
         @SuppressWarnings("unused")
-        @ConditionalOnProperty(name = "axon.serializer.general", havingValue = "xstream", matchIfMissing = true)
+        @ConditionalOnProperty(name = "sophon.serializer.general", havingValue = "xstream", matchIfMissing = true)
         static class GeneralXStreamCondition {
 
         }
 
         @SuppressWarnings("unused")
-        @ConditionalOnProperty(name = "axon.serializer.messages", havingValue = "xstream")
+        @ConditionalOnProperty(name = "sophon.serializer.messages", havingValue = "xstream")
         static class MessagesXStreamCondition {
 
         }
 
         @SuppressWarnings("unused")
-        @ConditionalOnProperty(name = "axon.serializer.events", havingValue = "xstream")
+        @ConditionalOnProperty(name = "sophon.serializer.events", havingValue = "xstream")
         static class EventsXStreamCondition {
 
         }

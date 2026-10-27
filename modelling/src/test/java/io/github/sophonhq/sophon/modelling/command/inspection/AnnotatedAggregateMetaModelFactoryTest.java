@@ -20,7 +20,7 @@ import io.github.sophonhq.sophon.commandhandling.CommandHandler;
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.CommandMessageHandlingMember;
 import io.github.sophonhq.sophon.commandhandling.GenericCommandMessage;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventHandler;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
 import io.github.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
@@ -352,7 +352,7 @@ class AnnotatedAggregateMetaModelFactoryTest {
     @Test
     void illegalFactoryMethodThrowsExceptionClass() {
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> AnnotatedAggregateMetaModelFactory
                         .inspectAggregate(SomeIllegalAnnotatedFactoryMethodClass.class));
     }
@@ -360,7 +360,7 @@ class AnnotatedAggregateMetaModelFactoryTest {
     @Test
     void typedAggregateIdentifier() {
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TypedIdentifierAggregate.class)
         );
     }
@@ -368,27 +368,27 @@ class AnnotatedAggregateMetaModelFactoryTest {
     @Test
     void getterTypedAggregateIdentifier() {
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(GetterTypedIdentifierAggregate.class)
         );
     }
 
     @Test
     void illegalDoubleIdentifiers() {
-        assertThrows(AxonConfigurationException.class, () ->
+        assertThrows(SophonConfigurationException.class, () ->
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalDoubleIdFieldsAnnotatedAggregate.class)
         );
-        assertThrows(AxonConfigurationException.class, () ->
+        assertThrows(SophonConfigurationException.class, () ->
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalDoubleIdMixedAnnotatedAggregate.class)
         );
-        assertThrows(AxonConfigurationException.class, () ->
+        assertThrows(SophonConfigurationException.class, () ->
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalDoubleIdMethodsAnnotatedAggregate.class)
         );
     }
 
     @Test
     void voidMethodIdentifier() {
-        assertThrows(AxonConfigurationException.class, () ->
+        assertThrows(SophonConfigurationException.class, () ->
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalVoidIdMethodAnnotatedAggregate.class)
         );
     }

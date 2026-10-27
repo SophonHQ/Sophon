@@ -35,7 +35,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 
 /**
- * Autoconfiguration class for Axon's JPA specific event store components.
+ * Autoconfiguration class for Sophon's JPA specific event store components.
  *
  * @author Sara Pelligrini
  * @since axon-4.0
@@ -47,7 +47,7 @@ import org.springframework.context.annotation.Bean;
     "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration",
     "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration"
 })
-@AutoConfigureBefore(AxonAutoConfiguration.class)
+@AutoConfigureBefore(SophonAutoConfiguration.class)
 @RegisterDefaultEntities(packages = {
         "io.github.sophonhq.sophon.eventsourcing.eventstore.jpa"
 })

@@ -33,6 +33,6 @@ public class MessageTypeSpanAttributesProvider implements SpanAttributesProvider
 
     @Override
     public @NonNull Map<String, String> provideForMessage(@NonNull Message<?> message) {
-        return Collections.singletonMap("axon_message_type", message.getClass().getSimpleName());
+        return Collections.singletonMap("sophon_message_type", message.getClass().getSimpleName());
     }
 }

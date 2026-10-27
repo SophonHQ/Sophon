@@ -25,8 +25,8 @@ import io.github.sophonhq.sophon.eventsourcing.AggregateFactory;
 import io.github.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStore;
 import io.github.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
 import io.github.sophonhq.sophon.spring.config.SpringAggregateLookup;
-import io.github.sophonhq.sophon.spring.config.SpringAxonConfiguration;
 import io.github.sophonhq.sophon.spring.config.SpringConfigurer;
+import io.github.sophonhq.sophon.spring.config.SpringSophonConfiguration;
 import io.github.sophonhq.sophon.spring.eventsourcing.context.SpringWiredAggregate;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -105,12 +105,12 @@ class SpringPrototypeAggregateFactoryTest {
         }
 
         @Bean
-        public SpringAxonConfiguration springAxonConfiguration(Configurer configurer) {
-            return new SpringAxonConfiguration(configurer);
+        public SpringSophonConfiguration springSophonConfiguration(Configurer configurer) {
+            return new SpringSophonConfiguration(configurer);
         }
 
         @Bean
-        public SpringConfigurer springAxonConfigurer(ConfigurableListableBeanFactory beanFactory,
+        public SpringConfigurer springSophonConfigurer(ConfigurableListableBeanFactory beanFactory,
                                                      List<ConfigurerModule> configurerModules,
                                                      List<ModuleConfiguration> moduleConfigurations) {
             SpringConfigurer configurer = new SpringConfigurer(beanFactory);

@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 /**
  * Meta-annotation indicating the meta-annotated annotation is used for {@link io.github.sophonhq.sophon.messaging.annotation.MessageHandlingMember}s.
  * As such it carries specific attributes which are important to the {@code MessageHandlingMember} in an annotation
- * driven Axon application.
+ * driven Sophon application.
  * <p>
  * These attributes can be extracted into an {@link AnnotatedHandlerAttributes} objects through its constructor.
  *

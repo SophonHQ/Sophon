@@ -31,17 +31,17 @@ import static org.mockito.Mockito.*;
 
 class EventHandlerRegistrarTest {
 
-    private AxonConfiguration axonConfig;
+    private SophonConfiguration sophonConfig;
     private ModuleConfiguration eventConfiguration;
     private EventProcessingConfigurer eventConfigurer;
     private EventHandlerRegistrar testSubject;
 
     @BeforeEach
     void setUp() {
-        axonConfig = mock(AxonConfiguration.class);
+        sophonConfig = mock(SophonConfiguration.class);
         eventConfiguration = mock(ModuleConfiguration.class);
         eventConfigurer = mock(EventProcessingConfigurer.class);
-        testSubject = new EventHandlerRegistrar(axonConfig, eventConfiguration, eventConfigurer);
+        testSubject = new EventHandlerRegistrar(sophonConfig, eventConfiguration, eventConfigurer);
     }
 
     @Test
@@ -56,7 +56,7 @@ class EventHandlerRegistrarTest {
 
     private Function<Configuration, Object> returns(Class<?> type) {
         return argThat(x -> {
-            Object actual = x.apply(axonConfig);
+            Object actual = x.apply(sophonConfig);
             return type.isInstance(actual);
         });
     }

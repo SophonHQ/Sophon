@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.tracing;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.Message;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -51,7 +51,7 @@ public abstract class IntermediateSpanFactoryTest<BI, SI> {
 
     @Test
     void cannotSetNullSpanFactory() {
-        Assertions.assertThrows(AxonConfigurationException.class, () -> createBuilder(null));
+        Assertions.assertThrows(SophonConfigurationException.class, () -> createBuilder(null));
     }
 
     /**

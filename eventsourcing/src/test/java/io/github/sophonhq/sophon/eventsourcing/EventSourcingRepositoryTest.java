@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventsourcing;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.DomainEventMessage;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -132,7 +132,7 @@ class EventSourcingRepositoryTest {
 
         Aggregate<TestAggregate> aggregate = testSubject.load(identifier, null);
         testSpanFactory.verifySpanCompleted("Repository.load");
-        testSpanFactory.verifySpanHasAttributeValue("Repository.load", "axon.aggregateId", identifier);
+        testSpanFactory.verifySpanHasAttributeValue("Repository.load", "sophon.aggregateId", identifier);
         testSpanFactory.verifySpanCompleted("Repository.obtainLock");
         testSpanFactory.verifySpanCompleted("Repository.initializeState(type)");
 
@@ -233,21 +233,21 @@ class EventSourcingRepositoryTest {
     }
 
     @Test
-    void buildWithNullSubtypesThrowsAxonConfigurationException() {
+    void buildWithNullSubtypesThrowsSophonConfigurationException() {
         EventSourcingRepository.Builder<TestAggregate> builderTestSubject =
                 EventSourcingRepository.builder(TestAggregate.class)
                                        .eventStore(mockEventStore);
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.subtypes(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.subtypes(null));
     }
 
     @Test
-    void buildWithNullSubtypeThrowsAxonConfigurationException() {
+    void buildWithNullSubtypeThrowsSophonConfigurationException() {
         EventSourcingRepository.Builder<TestAggregate> builderTestSubject =
                 EventSourcingRepository.builder(TestAggregate.class)
                                        .eventStore(mockEventStore);
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.subtype(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.subtype(null));
     }
 
     private static class StubAggregateFactory extends AbstractAggregateFactory<TestAggregate> {

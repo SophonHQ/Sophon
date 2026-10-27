@@ -38,7 +38,7 @@ public enum UnresolvedRoutingKeyPolicy implements RoutingStrategy {
      * policy is unable to resolve a routing key.
      * <p>
      * Note that when the routing key is based on static content in the {@code CommandMessage}, the exception raised
-     * should extend from {@link io.github.sophonhq.sophon.common.AxonNonTransientException} to indicate that retries do not
+     * should extend from {@link io.github.sophonhq.sophon.common.SophonNonTransientException} to indicate that retries do not
      * have a chance to succeed.
      *
      * @see io.github.sophonhq.sophon.commandhandling.gateway.RetryScheduler

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception thrown to indicate that execution of a task has failed. Depending on the cause of the execution exception
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @author Rene de Waele
  * @since axon-3.0
  */
-public class ExecutionException extends AxonTransientException {
+public class ExecutionException extends SophonTransientException {
 
     /**
      * Initialize an ExecutionException with the given {@code message} and {@code cause}.

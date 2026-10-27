@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.commandhandling.distributed;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception indicating that an error has occurred while trying to dispatch a command to another (potentially remote)
@@ -28,7 +28,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Allard Buijze
  * @since axon-2.0
  */
-public class CommandDispatchException extends AxonException {
+public class CommandDispatchException extends SophonException {
 
     private static final long serialVersionUID = 4587368927394283730L;
 

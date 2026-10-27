@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.serialization.avro;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MetaData;
 import io.github.sophonhq.sophon.serialization.*;
 import io.github.sophonhq.sophon.serialization.avro.test.ComplexObject;
@@ -81,14 +81,14 @@ public class AvroSerializerTest {
     @Test
     void testBuilderMandatoryValues() {
         assertEquals("SchemaStore is mandatory",
-                assertThrows(AxonConfigurationException.class,
+                assertThrows(SophonConfigurationException.class,
                         () -> AvroSerializer.builder()
                                 .build())
                         .getMessage()
         );
 
         assertEquals("SerializerDelegate is mandatory",
-                assertThrows(AxonConfigurationException.class,
+                assertThrows(SophonConfigurationException.class,
                         () -> AvroSerializer.builder()
                                 .schemaStore(new SchemaStore.Cache())
                                 .build())
@@ -96,7 +96,7 @@ public class AvroSerializerTest {
         );
 
         assertEquals("At least one AvroSerializerStrategy must be provided.",
-                assertThrows(AxonConfigurationException.class,
+                assertThrows(SophonConfigurationException.class,
                         () -> AvroSerializer
                                 .builder()
                                 .serializerDelegate(serializer)
@@ -128,7 +128,7 @@ public class AvroSerializerTest {
     void testBuilderSetterContracts() {
 
         assertEquals("RevisionResolver may not be null",
-                assertThrows(AxonConfigurationException.class,
+                assertThrows(SophonConfigurationException.class,
                         () -> AvroSerializer.builder()
                                 .revisionResolver(null)
                 ).getMessage()
@@ -136,21 +136,21 @@ public class AvroSerializerTest {
 
 
         assertEquals("SchemaStore may not be null",
-                assertThrows(AxonConfigurationException.class,
+                assertThrows(SophonConfigurationException.class,
                         () -> AvroSerializer.builder().schemaStore(null)
                 ).getMessage()
         );
 
 
         assertEquals("Serializer delegate may not be null",
-                assertThrows(AxonConfigurationException.class,
+                assertThrows(SophonConfigurationException.class,
                         () -> AvroSerializer.builder()
                                 .serializerDelegate(null))
                         .getMessage()
         );
 
         assertEquals("AvroSerializerStrategy may not be null",
-                assertThrows(AxonConfigurationException.class,
+                assertThrows(SophonConfigurationException.class,
                         () -> AvroSerializer.builder()
                                 .addSerializerStrategy(
                                         null))

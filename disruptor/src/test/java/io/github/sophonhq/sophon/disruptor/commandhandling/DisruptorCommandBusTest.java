@@ -25,8 +25,8 @@ import io.github.sophonhq.sophon.commandhandling.DuplicateCommandHandlerResoluti
 import io.github.sophonhq.sophon.commandhandling.DuplicateCommandHandlerResolver;
 import io.github.sophonhq.sophon.commandhandling.NoHandlerForCommandException;
 import io.github.sophonhq.sophon.commandhandling.callbacks.FutureCallback;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.Transaction;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.deadline.DeadlineMessage;
@@ -783,19 +783,19 @@ class DisruptorCommandBusTest {
     }
 
     @Test
-    void buildWithZeroOrNegativeCoolingDownPeriodThrowsAxonConfigurationException() {
+    void buildWithZeroOrNegativeCoolingDownPeriodThrowsSophonConfigurationException() {
         DisruptorCommandBus.Builder builderTestSubject = DisruptorCommandBus.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.coolingDownPeriod(0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.coolingDownPeriod(0));
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.coolingDownPeriod(-1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.coolingDownPeriod(-1));
     }
 
     @Test
-    void buildWithNullCommandTargetResolverThrowsAxonConfigurationException() {
+    void buildWithNullCommandTargetResolverThrowsSophonConfigurationException() {
         DisruptorCommandBus.Builder builderTestSubject = DisruptorCommandBus.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.commandTargetResolver(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.commandTargetResolver(null));
     }
 
     private static class DeadlinePayload {

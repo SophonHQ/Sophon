@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.pooled;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.eventhandling.DefaultEventProcessorSpanFactory;
 import io.github.sophonhq.sophon.eventhandling.EventHandlerInvoker;
@@ -1000,41 +1000,41 @@ class PooledStreamingEventProcessorTest {
     }
 
     @Test
-    void buildWithNullSpanFactoryThrowsAxonConfigurationException() {
+    void buildWithNullSpanFactoryThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.spanFactory((SpanFactory) null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.spanFactory((SpanFactory) null));
     }
 
     @Test
-    void buildWithNullMessageSourceThrowsAxonConfigurationException() {
+    void buildWithNullMessageSourceThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.messageSource(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.messageSource(null));
     }
 
     @Test
-    void buildWithoutMessageSourceThrowsAxonConfigurationException() {
+    void buildWithoutMessageSourceThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject =
                 PooledStreamingEventProcessor.builder()
                                              .tokenStore(new InMemoryTokenStore())
                                              .transactionManager(NoTransactionManager.INSTANCE);
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithNullTokenStoreThrowsAxonConfigurationException() {
+    void buildWithNullTokenStoreThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.tokenStore(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.tokenStore(null));
     }
 
     @Test
-    void buildWithoutTokenStoreThrowsAxonConfigurationException() {
+    void buildWithoutTokenStoreThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject =
                 PooledStreamingEventProcessor.builder()
                                              .name(PROCESSOR_NAME)
@@ -1042,19 +1042,19 @@ class PooledStreamingEventProcessorTest {
                                              .messageSource(stubMessageSource)
                                              .transactionManager(NoTransactionManager.INSTANCE);
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithNullTransactionManagerThrowsAxonConfigurationException() {
+    void buildWithNullTransactionManagerThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.transactionManager(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.transactionManager(null));
     }
 
     @Test
-    void buildWithoutTransactionManagerThrowsAxonConfigurationException() {
+    void buildWithoutTransactionManagerThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject =
                 PooledStreamingEventProcessor.builder()
                                              .name(PROCESSOR_NAME)
@@ -1062,33 +1062,33 @@ class PooledStreamingEventProcessorTest {
                                              .messageSource(stubMessageSource)
                                              .tokenStore(new InMemoryTokenStore());
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithNullCoordinatorExecutorThrowsAxonConfigurationException() {
+    void buildWithNullCoordinatorExecutorThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> builderTestSubject.coordinatorExecutor((ScheduledExecutorService) null)
         );
     }
 
     @Test
-    void buildWithNullCoordinatorExecutorBuilderThrowsAxonConfigurationException() {
+    void buildWithNullCoordinatorExecutorBuilderThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> builderTestSubject.coordinatorExecutor((Function<String, ScheduledExecutorService>) null)
         );
     }
 
     @Test
-    void buildWithoutCoordinatorExecutorThrowsAxonConfigurationException() {
+    void buildWithoutCoordinatorExecutorThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject =
                 PooledStreamingEventProcessor.builder()
                                              .name(PROCESSOR_NAME)
@@ -1097,33 +1097,33 @@ class PooledStreamingEventProcessorTest {
                                              .tokenStore(new InMemoryTokenStore())
                                              .transactionManager(NoTransactionManager.instance());
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithNullWorkerExecutorThrowsAxonConfigurationException() {
+    void buildWithNullWorkerExecutorThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> builderTestSubject.workerExecutor((ScheduledExecutorService) null)
         );
     }
 
     @Test
-    void buildWithNullWorkerExecutorBuilderThrowsAxonConfigurationException() {
+    void buildWithNullWorkerExecutorBuilderThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> builderTestSubject.workerExecutor((Function<String, ScheduledExecutorService>) null)
         );
     }
 
     @Test
-    void buildWithoutWorkerExecutorThrowsAxonConfigurationException() {
+    void buildWithoutWorkerExecutorThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject =
                 PooledStreamingEventProcessor.builder()
                                              .name(PROCESSOR_NAME)
@@ -1133,55 +1133,55 @@ class PooledStreamingEventProcessorTest {
                                              .transactionManager(NoTransactionManager.instance())
                                              .coordinatorExecutor(coordinatorExecutor);
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithZeroOrNegativeInitialSegmentCountThrowsAxonConfigurationException() {
+    void buildWithZeroOrNegativeInitialSegmentCountThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.initialSegmentCount(0));
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.initialSegmentCount(-1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.initialSegmentCount(0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.initialSegmentCount(-1));
     }
 
     @Test
-    void buildWithNullInitialTokenThrowsAxonConfigurationException() {
+    void buildWithNullInitialTokenThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.initialToken(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.initialToken(null));
     }
 
     @Test
-    void buildWithZeroOrNegativeTokenClaimIntervalThrowsAxonConfigurationException() {
+    void buildWithZeroOrNegativeTokenClaimIntervalThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.tokenClaimInterval(0));
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.tokenClaimInterval(-1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.tokenClaimInterval(0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.tokenClaimInterval(-1));
     }
 
     @Test
-    void buildWithZeroOrNegativeMaxCapacityThrowsAxonConfigurationException() {
+    void buildWithZeroOrNegativeMaxCapacityThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSegmentProvider(e -> 0));
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSegmentProvider(e -> -1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSegmentProvider(e -> 0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSegmentProvider(e -> -1));
     }
 
     @Test
-    void buildWithZeroOrNegativeClaimExtensionThresholdThrowsAxonConfigurationException() {
+    void buildWithZeroOrNegativeClaimExtensionThresholdThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.claimExtensionThreshold(0));
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.claimExtensionThreshold(-1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.claimExtensionThreshold(0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.claimExtensionThreshold(-1));
     }
 
     @Test
-    void buildWithZeroOrNegativeBatchSizeThrowsAxonConfigurationException() {
+    void buildWithZeroOrNegativeBatchSizeThrowsSophonConfigurationException() {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.batchSize(0));
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.batchSize(-1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.batchSize(0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.batchSize(-1));
     }
 
     @Test

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.serialization.upcasting.event;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.AbstractEventEntry;
 import io.github.sophonhq.sophon.eventhandling.EventData;
 import io.github.sophonhq.sophon.serialization.SerializedType;
@@ -64,21 +64,21 @@ class EventTypeUpcasterTest {
     @Test
     void upcasterBuilderFailsForNullExpectedPayloadTypeClass() {
         assertThrows(
-                AxonConfigurationException.class, () -> EventTypeUpcaster.from((Class<?>) null, EXPECTED_REVISION)
+                SophonConfigurationException.class, () -> EventTypeUpcaster.from((Class<?>) null, EXPECTED_REVISION)
         );
     }
 
     @Test
     void upcasterBuilderFailsForNullExpectedPayloadType() {
         assertThrows(
-                AxonConfigurationException.class, () -> EventTypeUpcaster.from((String) null, EXPECTED_REVISION)
+                SophonConfigurationException.class, () -> EventTypeUpcaster.from((String) null, EXPECTED_REVISION)
         );
     }
 
     @Test
     void upcasterBuilderFailsForEmptyExpectedPayloadType() {
         assertThrows(
-                AxonConfigurationException.class, () -> EventTypeUpcaster.from("", EXPECTED_REVISION)
+                SophonConfigurationException.class, () -> EventTypeUpcaster.from("", EXPECTED_REVISION)
         );
     }
 
@@ -86,7 +86,7 @@ class EventTypeUpcasterTest {
     void upcasterBuilderFailsForNullUpcastedPayloadTypeClass() {
         EventTypeUpcaster.Builder testSubject = EventTypeUpcaster.from(EXPECTED_PAYLOAD_TYPE, EXPECTED_REVISION);
         assertThrows(
-                AxonConfigurationException.class, () -> testSubject.to((Class<?>) null, UPCASTED_REVISION)
+                SophonConfigurationException.class, () -> testSubject.to((Class<?>) null, UPCASTED_REVISION)
         );
     }
 
@@ -94,7 +94,7 @@ class EventTypeUpcasterTest {
     void upcasterBuilderFailsForNullUpcastedPayloadType() {
         EventTypeUpcaster.Builder testSubject = EventTypeUpcaster.from(EXPECTED_PAYLOAD_TYPE, EXPECTED_REVISION);
         assertThrows(
-                AxonConfigurationException.class, () -> testSubject.to((String) null, UPCASTED_REVISION)
+                SophonConfigurationException.class, () -> testSubject.to((String) null, UPCASTED_REVISION)
         );
     }
 
@@ -102,7 +102,7 @@ class EventTypeUpcasterTest {
     void upcasterBuilderFailsForEmptyUpcastedPayloadType() {
         EventTypeUpcaster.Builder testSubject = EventTypeUpcaster.from(EXPECTED_PAYLOAD_TYPE, EXPECTED_REVISION);
         assertThrows(
-                AxonConfigurationException.class, () -> testSubject.to("", UPCASTED_REVISION)
+                SophonConfigurationException.class, () -> testSubject.to("", UPCASTED_REVISION)
         );
     }
 

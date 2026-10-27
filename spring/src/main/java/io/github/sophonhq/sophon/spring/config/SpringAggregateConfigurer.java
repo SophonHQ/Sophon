@@ -39,7 +39,7 @@ import org.springframework.context.ApplicationContextAware;
 import java.util.Set;
 
 /**
- * A {@link ConfigurerModule} implementation that will configure an Aggregate with the Axon {@link
+ * A {@link ConfigurerModule} implementation that will configure an Aggregate with the Sophon {@link
  * io.github.sophonhq.sophon.config.Configuration}.
  *
  * @param <T> The type of Aggregate to configure

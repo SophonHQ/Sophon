@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.tokenstore;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception indicating that the TokenStore was unable to initialize a Token for a tracking processor and Segment.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @author Allard Buijze
  * @since axon-4.1
  */
-public class UnableToInitializeTokenException extends AxonTransientException {
+public class UnableToInitializeTokenException extends SophonTransientException {
 
     private static final long serialVersionUID = -1224243390860214161L;
 

@@ -183,7 +183,7 @@ class FixtureWhenPhaseAggregateInvocationTest {
 
         @SuppressWarnings("unused")
         public MyAggregate() {
-            // Required by Axon Framework
+            // Required by Sophon
         }
     }
 

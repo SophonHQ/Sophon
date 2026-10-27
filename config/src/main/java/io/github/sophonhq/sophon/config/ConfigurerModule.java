@@ -19,7 +19,7 @@ package io.github.sophonhq.sophon.config;
 import org.jspecify.annotations.NonNull;
 
 /**
- * Interface describing a configurer for a module in the Axon Configuration API. Allows the registration of modules on
+ * Interface describing a configurer for a module in the Sophon Configuration API. Allows the registration of modules on
  * the {@link io.github.sophonhq.sophon.config.Configurer} like the {@link io.github.sophonhq.sophon.monitoring.MessageMonitor}.
  *
  * @author Steven van Beelen

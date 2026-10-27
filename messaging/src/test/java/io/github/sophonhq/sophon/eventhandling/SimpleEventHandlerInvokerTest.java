@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
@@ -98,53 +98,53 @@ class SimpleEventHandlerInvokerTest {
     }
 
     @Test
-    void buildWithNullEventHandlersListThrowsAxonConfigurationException() {
+    void buildWithNullEventHandlersListThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.eventHandlers((List<?>) null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.eventHandlers((List<?>) null));
     }
 
     @Test
-    void buildWithEmptyEventHandlersListThrowsAxonConfigurationException() {
+    void buildWithEmptyEventHandlersListThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         List<Object> testEventHandlers = Collections.emptyList();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.eventHandlers(testEventHandlers));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.eventHandlers(testEventHandlers));
     }
 
     @Test
-    void buildWithoutEventHandlersListThrowsAxonConfigurationException() {
+    void buildWithoutEventHandlersListThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithNullParameterResolverFactoryThrowsAxonConfigurationException() {
-        SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
-        //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.parameterResolverFactory(null));
-    }
-
-    @Test
-    void buildWithNullHandlerDefinitionThrowsAxonConfigurationException() {
+    void buildWithNullParameterResolverFactoryThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.handlerDefinition(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.parameterResolverFactory(null));
     }
 
     @Test
-    void buildWithNullListenerInvocationErrorHandlerThrowsAxonConfigurationException() {
+    void buildWithNullHandlerDefinitionThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.listenerInvocationErrorHandler(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.handlerDefinition(null));
     }
 
     @Test
-    void buildWithNullSequencingPolicyThrowsAxonConfigurationException() {
+    void buildWithNullListenerInvocationErrorHandlerThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.sequencingPolicy(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.listenerInvocationErrorHandler(null));
+    }
+
+    @Test
+    void buildWithNullSequencingPolicyThrowsSophonConfigurationException() {
+        SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
+        //noinspection ConstantConditions
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.sequencingPolicy(null));
     }
 
     @Test

@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.tracing;
 
 import io.github.sophonhq.sophon.commandhandling.gateway.CommandGateway;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.Message;
 import io.github.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.junit.jupiter.api.*;
@@ -113,13 +113,13 @@ class TracingHandlerEnhancerDefinitionTest {
     @Test
     void canNotSetSpanFactoryToNull() {
         TracingHandlerEnhancerDefinition.Builder builder = TracingHandlerEnhancerDefinition.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.spanFactory(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.spanFactory(null));
     }
 
     @Test
     void canNotBuildeWithoutSpanFactory() {
         TracingHandlerEnhancerDefinition.Builder builder = TracingHandlerEnhancerDefinition.builder();
-        assertThrows(AxonConfigurationException.class, builder::build);
+        assertThrows(SophonConfigurationException.class, builder::build);
     }
 
     private class MyEvent {

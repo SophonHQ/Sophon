@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,17 +40,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullDeadLetterTableThrowsAxonConfigurationException() {
+    void buildWithNullDeadLetterTableThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.deadLetterTable(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.deadLetterTable(null));
     }
 
     @Test
-    void buildWithEmptyDeadLetterTableThrowsAxonConfigurationException() {
+    void buildWithEmptyDeadLetterTableThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.deadLetterTable(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.deadLetterTable(""));
     }
 
     @Test
@@ -63,17 +63,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullDeadLetterIdentifierColumnThrowsAxonConfigurationException() {
+    void buildWithNullDeadLetterIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.deadLetterIdentifierColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.deadLetterIdentifierColumn(null));
     }
 
     @Test
-    void buildWithEmptyDeadLetterIdentifierColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyDeadLetterIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.deadLetterIdentifierColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.deadLetterIdentifierColumn(""));
     }
 
     @Test
@@ -86,17 +86,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullProcessingGroupColumnThrowsAxonConfigurationException() {
+    void buildWithNullProcessingGroupColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.processingGroupColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingGroupColumn(null));
     }
 
     @Test
-    void buildWithEmptyProcessingGroupColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyProcessingGroupColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.processingGroupColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingGroupColumn(""));
     }
 
     @Test
@@ -109,17 +109,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullSequenceIdentifierColumnThrowsAxonConfigurationException() {
+    void buildWithNullSequenceIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.sequenceIdentifierColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceIdentifierColumn(null));
     }
 
     @Test
-    void buildWithEmptySequenceIdentifierColumnThrowsAxonConfigurationException() {
+    void buildWithEmptySequenceIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.sequenceIdentifierColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceIdentifierColumn(""));
     }
 
     @Test
@@ -132,17 +132,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullSequenceIndexColumnThrowsAxonConfigurationException() {
+    void buildWithNullSequenceIndexColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.sequenceIndexColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceIndexColumn(null));
     }
 
     @Test
-    void buildWithEmptySequenceIndexColumnThrowsAxonConfigurationException() {
+    void buildWithEmptySequenceIndexColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.sequenceIndexColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceIndexColumn(""));
     }
 
     @Test
@@ -155,17 +155,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullMessageTypeColumnThrowsAxonConfigurationException() {
+    void buildWithNullMessageTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.messageTypeColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.messageTypeColumn(null));
     }
 
     @Test
-    void buildWithEmptyMessageTypeColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyMessageTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.messageTypeColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.messageTypeColumn(""));
     }
 
     @Test
@@ -178,17 +178,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullEventIdentifierColumnThrowsAxonConfigurationException() {
+    void buildWithNullEventIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.eventIdentifierColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventIdentifierColumn(null));
     }
 
     @Test
-    void buildWithEmptyEventIdentifierColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyEventIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.eventIdentifierColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventIdentifierColumn(""));
     }
 
     @Test
@@ -201,17 +201,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullTimeStampColumnThrowsAxonConfigurationException() {
+    void buildWithNullTimeStampColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.timestampColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.timestampColumn(null));
     }
 
     @Test
-    void buildWithEmptyTimeStampColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyTimeStampColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.timestampColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.timestampColumn(""));
     }
 
     @Test
@@ -224,17 +224,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullPayloadTypeColumnThrowsAxonConfigurationException() {
+    void buildWithNullPayloadTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.payloadTypeColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadTypeColumn(null));
     }
 
     @Test
-    void buildWithEmptyPayloadTypeColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyPayloadTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.payloadTypeColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadTypeColumn(""));
     }
 
     @Test
@@ -247,17 +247,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullPayloadRevisionColumnThrowsAxonConfigurationException() {
+    void buildWithNullPayloadRevisionColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.payloadRevisionColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadRevisionColumn(null));
     }
 
     @Test
-    void buildWithEmptyPayloadRevisionColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyPayloadRevisionColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.payloadRevisionColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadRevisionColumn(""));
     }
 
     @Test
@@ -270,17 +270,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullPayloadColumnThrowsAxonConfigurationException() {
+    void buildWithNullPayloadColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.payloadColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadColumn(null));
     }
 
     @Test
-    void buildWithEmptyPayloadColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyPayloadColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.payloadColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadColumn(""));
     }
 
     @Test
@@ -293,17 +293,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullMetaDataColumnThrowsAxonConfigurationException() {
+    void buildWithNullMetaDataColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.metaDataColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.metaDataColumn(null));
     }
 
     @Test
-    void buildWithEmptyMetaDataColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyMetaDataColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.metaDataColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.metaDataColumn(""));
     }
 
     @Test
@@ -316,17 +316,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullAggregateTypeColumnThrowsAxonConfigurationException() {
+    void buildWithNullAggregateTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.aggregateTypeColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.aggregateTypeColumn(null));
     }
 
     @Test
-    void buildWithEmptyAggregateTypeColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyAggregateTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.aggregateTypeColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.aggregateTypeColumn(""));
     }
 
     @Test
@@ -339,17 +339,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullAggregateIdentifierColumnThrowsAxonConfigurationException() {
+    void buildWithNullAggregateIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.aggregateIdentifierColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.aggregateIdentifierColumn(null));
     }
 
     @Test
-    void buildWithEmptyAggregateIdentifierColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyAggregateIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.aggregateIdentifierColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.aggregateIdentifierColumn(""));
     }
 
     @Test
@@ -362,17 +362,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullSequenceNumberColumnThrowsAxonConfigurationException() {
+    void buildWithNullSequenceNumberColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.sequenceNumberColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceNumberColumn(null));
     }
 
     @Test
-    void buildWithEmptySequenceNumberColumnThrowsAxonConfigurationException() {
+    void buildWithEmptySequenceNumberColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.sequenceNumberColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceNumberColumn(""));
     }
 
     @Test
@@ -385,17 +385,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullTokenTypeColumnThrowsAxonConfigurationException() {
+    void buildWithNullTokenTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.tokenTypeColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.tokenTypeColumn(null));
     }
 
     @Test
-    void buildWithEmptyTokenTypeColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyTokenTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.tokenTypeColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.tokenTypeColumn(""));
     }
 
     @Test
@@ -408,17 +408,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullTokenColumnThrowsAxonConfigurationException() {
+    void buildWithNullTokenColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.tokenColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.tokenColumn(null));
     }
 
     @Test
-    void buildWithEmptyTokenColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyTokenColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.tokenColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.tokenColumn(""));
     }
 
     @Test
@@ -431,17 +431,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullEnqueuedAtColumnThrowsAxonConfigurationException() {
+    void buildWithNullEnqueuedAtColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.enqueuedAtColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.enqueuedAtColumn(null));
     }
 
     @Test
-    void buildWithEmptyEnqueuedAtColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyEnqueuedAtColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.enqueuedAtColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.enqueuedAtColumn(""));
     }
 
     @Test
@@ -454,17 +454,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullLastTouchedColumnThrowsAxonConfigurationException() {
+    void buildWithNullLastTouchedColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.lastTouchedColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.lastTouchedColumn(null));
     }
 
     @Test
-    void buildWithEmptyLastTouchedColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyLastTouchedColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.lastTouchedColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.lastTouchedColumn(""));
     }
 
     @Test
@@ -477,17 +477,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullProcessingStartedColumnThrowsAxonConfigurationException() {
+    void buildWithNullProcessingStartedColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.processingStartedColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingStartedColumn(null));
     }
 
     @Test
-    void buildWithEmptyProcessingStartedColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyProcessingStartedColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.processingStartedColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingStartedColumn(""));
     }
 
     @Test
@@ -500,17 +500,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullCauseTypeColumnThrowsAxonConfigurationException() {
+    void buildWithNullCauseTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.causeTypeColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.causeTypeColumn(null));
     }
 
     @Test
-    void buildWithEmptyCauseTypeColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyCauseTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.causeTypeColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.causeTypeColumn(""));
     }
 
     @Test
@@ -523,17 +523,17 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullCauseMessageColumnThrowsAxonConfigurationException() {
+    void buildWithNullCauseMessageColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.causeMessageColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.causeMessageColumn(null));
     }
 
     @Test
-    void buildWithEmptyCauseMessageColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyCauseMessageColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.causeMessageColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.causeMessageColumn(""));
     }
 
     @Test
@@ -546,16 +546,16 @@ class DeadLetterSchemaTest {
     }
 
     @Test
-    void buildWithNullDiagnosticsColumnThrowsAxonConfigurationException() {
+    void buildWithNullDiagnosticsColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.diagnosticsColumn(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.diagnosticsColumn(null));
     }
 
     @Test
-    void buildWithEmptyDiagnosticsColumnThrowsAxonConfigurationException() {
+    void buildWithEmptyDiagnosticsColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.diagnosticsColumn(""));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.diagnosticsColumn(""));
     }
 }

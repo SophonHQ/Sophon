@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 import java.util.Optional;
 
@@ -31,7 +31,7 @@ import java.util.Optional;
  * @author Allard Buize
  * @since axon-4.2
  */
-public abstract class HandlerExecutionException extends AxonException {
+public abstract class HandlerExecutionException extends SophonException {
 
     private static final long serialVersionUID = -5368112947651744952L;
     private final Object details;

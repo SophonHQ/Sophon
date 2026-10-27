@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.commandhandling.gateway;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
@@ -42,7 +42,7 @@ public class IntervalRetryScheduler extends AbstractRetryScheduler {
      * <p>
      * Will assert that the {@code retryInterval} and {@code maxRetryCount} are positive numbers, and that the
      * {@link ScheduledExecutorService} is not {@code null}. If any of these does not hold, an
-     * {@link AxonConfigurationException} will be thrown.
+     * {@link SophonConfigurationException} will be thrown.
      *
      * @param builder the {@link Builder} used to instantiate a {@link IntervalRetryScheduler} instance
      */
@@ -63,7 +63,7 @@ public class IntervalRetryScheduler extends AbstractRetryScheduler {
      * Instantiate a Builder to be able to create a {@link IntervalRetryScheduler}.
      * <p>
      * The default for {@code maxRetryCount} is set to a single retry, the {@code backoffFactor} defaults to 100ms and
-     * the {@code nonTransientFailurePredicate} defaults to {@link AxonNonTransientExceptionClassesPredicate}.
+     * the {@code nonTransientFailurePredicate} defaults to {@link SophonNonTransientExceptionClassesPredicate}.
      * The {@link ScheduledExecutorService} is a <b>hard requirement</b> and as such should be provided.
      *
      * @return a Builder to be able to create a {@link IntervalRetryScheduler}
@@ -76,7 +76,7 @@ public class IntervalRetryScheduler extends AbstractRetryScheduler {
      * Builder class to instantiate a {@link IntervalRetryScheduler}.
      * <p>
      * The default for {@code maxRetryCount} is set to a single retry, the {@code backoffFactor} defaults to 100ms and
-     * the {@code nonTransientFailurePredicate} defaults to {@link AxonNonTransientExceptionClassesPredicate}.
+     * the {@code nonTransientFailurePredicate} defaults to {@link SophonNonTransientExceptionClassesPredicate}.
      * The {@link ScheduledExecutorService} is a <b>hard requirement</b> and as such should be provided.
      */
     public static class Builder extends AbstractRetryScheduler.Builder<Builder> {

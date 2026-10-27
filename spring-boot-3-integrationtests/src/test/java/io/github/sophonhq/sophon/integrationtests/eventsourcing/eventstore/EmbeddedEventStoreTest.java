@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.integrationtests.eventsourcing.eventstore;
 
-import io.github.sophonhq.sophon.common.AxonThreadFactory;
+import io.github.sophonhq.sophon.common.SophonThreadFactory;
 import io.github.sophonhq.sophon.common.transaction.NoOpTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.*;
@@ -78,7 +78,7 @@ public abstract class EmbeddedEventStoreTest {
         spanFactory = new TestSpanFactory();
         transactionManager = getTransactionManager();
         storageEngine = spy(createStorageEngine());
-        threadFactory = spy(new AxonThreadFactory(EmbeddedEventStore.class.getSimpleName()));
+        threadFactory = spy(new SophonThreadFactory(EmbeddedEventStore.class.getSimpleName()));
         newTestSubject(CACHED_EVENTS, FETCH_DELAY, CLEANUP_DELAY, OPTIMIZE_EVENT_CONSUMPTION);
     }
 

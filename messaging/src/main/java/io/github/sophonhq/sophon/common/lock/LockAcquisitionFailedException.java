@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.common.lock;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception indicating that a lock could not be obtained. Typically, operations failing with this exception can be
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @author Allard Buijze
  * @since axon-2.0
  */
-public class LockAcquisitionFailedException extends AxonTransientException {
+public class LockAcquisitionFailedException extends SophonTransientException {
 
     private static final long serialVersionUID = 4453369833513201587L;
 

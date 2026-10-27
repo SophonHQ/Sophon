@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventsourcing;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception indicating that an aggregate was not compatible with the requirements of the {@link
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Allard Buijze
  * @since axon-0.5
  */
-public class IncompatibleAggregateException extends AxonNonTransientException {
+public class IncompatibleAggregateException extends SophonNonTransientException {
 
     private static final long serialVersionUID = -3045725345744416856L;
 

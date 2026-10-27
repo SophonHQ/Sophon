@@ -22,7 +22,7 @@ package io.github.sophonhq.sophon.common;
  * @author Gerard Klijs
  * @since axon-4.5.13
  */
-public class ProcessRetriesExhaustedException extends AxonException {
+public class ProcessRetriesExhaustedException extends SophonException {
 
     private static final long serialVersionUID = 6920545831431694106L;
 

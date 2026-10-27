@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.test.matchers;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception indicating that an error occurred that prevented successful execution of a matcher. This exception does
@@ -26,7 +26,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Allard Buijze
  * @since axon-1.1
  */
-public class MatcherExecutionException extends AxonNonTransientException {
+public class MatcherExecutionException extends SophonNonTransientException {
 
     private static final long serialVersionUID = 2867528683103491260L;
 

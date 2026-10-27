@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.integrationtests.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.Transaction;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
@@ -129,10 +129,10 @@ class SubscribingEventProcessorTest {
     }
 
     @Test
-    void buildWithNullTransactionManagerThrowsAxonConfigurationException() {
+    void buildWithNullTransactionManagerThrowsSophonConfigurationException() {
         SubscribingEventProcessor.Builder builder = SubscribingEventProcessor.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builder.transactionManager(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.transactionManager(null));
     }
 
     @Test

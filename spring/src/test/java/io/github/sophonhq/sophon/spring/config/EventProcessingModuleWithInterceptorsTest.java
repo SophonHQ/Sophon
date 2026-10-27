@@ -61,7 +61,7 @@ public class EventProcessingModuleWithInterceptorsTest {
         assertEquals("myMetaDataValue", myEventHandler.getMetaDataValue());
     }
 
-    @Import(SpringAxonAutoConfigurer.ImportSelector.class)
+    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
     @Configuration
     public static class Context {
 

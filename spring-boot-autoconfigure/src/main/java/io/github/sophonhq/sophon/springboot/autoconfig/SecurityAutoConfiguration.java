@@ -19,10 +19,14 @@ package io.github.sophonhq.sophon.springboot.autoconfig;
 import io.github.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
 import io.github.sophonhq.sophon.spring.authorization.SecuredMessageHandlerDefinition;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 
+// Ordered after SophonTimeoutAutoConfiguration so the secured-handler enhancer is registered after the timeout
+// enhancer, independent of auto-configuration class names.
 @AutoConfiguration
+@AutoConfigureAfter(SophonTimeoutAutoConfiguration.class)
 @ConditionalOnClass(name = "org.springframework.security.access.annotation.Secured")
 public class SecurityAutoConfiguration {
 

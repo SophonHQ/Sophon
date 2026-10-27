@@ -49,7 +49,7 @@ class MetaDataDeserializerTest {
     private static ObjectMapper objectMapper(ObjectMapper.DefaultTyping defaultTyping) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(
-                new SimpleModule("Axon-Jackson Module").addDeserializer(MetaData.class, new MetaDataDeserializer()));
+                new SimpleModule("Sophon-Jackson Module").addDeserializer(MetaData.class, new MetaDataDeserializer()));
 
         if (defaultTyping != null) {
             objectMapper.enableDefaultTyping(defaultTyping);

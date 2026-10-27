@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.saga;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception indicating that an error has occurred while storing a Saga.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @author Allard Buijze
  * @since axon-0.7
  */
-public class SagaStorageException extends AxonTransientException {
+public class SagaStorageException extends SophonTransientException {
 
     private static final long serialVersionUID = -225936398184084287L;
 

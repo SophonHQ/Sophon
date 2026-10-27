@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.springboot.autoconfig;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.serialization.SerializationException;
 import io.github.sophonhq.sophon.serialization.SerializedObject;
 import io.github.sophonhq.sophon.serialization.Serializer;
@@ -65,14 +65,14 @@ class AvroSerializerAutoConfigurationTest {
         testApplicationContext
                 .withUserConfiguration(DefaultContext.class)
                 .withPropertyValues(
-                        "axon.serializer.general=jackson",
-                        "axon.serializer.messages=jackson",
-                        "axon.serializer.events=avro"
+                        "sophon.serializer.general=jackson",
+                        "sophon.serializer.messages=jackson",
+                        "sophon.serializer.events=avro"
                 )
                 .run(context -> {
                     assertThat(context).hasSingleBean(SchemaStore.class);
-                    assertThat(context).getBean("defaultAxonSchemaStore").isInstanceOf(SchemaStore.class);
-                    SchemaStore schemaStore = (SchemaStore) context.getBean("defaultAxonSchemaStore");
+                    assertThat(context).getBean("defaultSophonSchemaStore").isInstanceOf(SchemaStore.class);
+                    SchemaStore schemaStore = (SchemaStore) context.getBean("defaultSophonSchemaStore");
                     assertThat(
                             schemaStore.findByFingerprint(
                                     AvroUtil.fingerprint(ComplexObject.getClassSchema())
@@ -89,14 +89,14 @@ class AvroSerializerAutoConfigurationTest {
         testApplicationContext
                 .withUserConfiguration(ContextWithCustomSchemaStore.class)
                 .withPropertyValues(
-                        "axon.serializer.general=jackson",
-                        "axon.serializer.messages=jackson",
-                        "axon.serializer.events=avro"
+                        "sophon.serializer.general=jackson",
+                        "sophon.serializer.messages=jackson",
+                        "sophon.serializer.events=avro"
                 )
                 .run(context -> {
                     assertThat(context).hasSingleBean(SchemaStore.class);
-                    assertThat(context).getBean("defaultAxonSchemaStore").isInstanceOf(SchemaStore.class);
-                    SchemaStore schemaStore = (SchemaStore) context.getBean("defaultAxonSchemaStore");
+                    assertThat(context).getBean("defaultSophonSchemaStore").isInstanceOf(SchemaStore.class);
+                    SchemaStore schemaStore = (SchemaStore) context.getBean("defaultSophonSchemaStore");
                     assertThat(schemaStore).isEqualTo(ContextWithCustomSchemaStore.store); // ours
                     assertThat(
                             schemaStore.findByFingerprint(
@@ -110,13 +110,13 @@ class AvroSerializerAutoConfigurationTest {
     }
 
     @Test
-    void axonAutoConfigurationConstructsAvroSerializerThatIsAbleToSerializeBecauseOfAnnotationScanRegisteredSchema() {
+    void sophonAutoConfigurationConstructsAvroSerializerThatIsAbleToSerializeBecauseOfAnnotationScanRegisteredSchema() {
         testApplicationContext
                 .withUserConfiguration(DefaultContext.class)
                 .withPropertyValues(
-                        "axon.serializer.general=jackson",
-                        "axon.serializer.messages=jackson",
-                        "axon.serializer.events=avro")
+                        "sophon.serializer.general=jackson",
+                        "sophon.serializer.messages=jackson",
+                        "sophon.serializer.events=avro")
                 .run(context -> {
                     Serializer serializer = context.getBean("eventSerializer", Serializer.class);
                     assertInstanceOf(AvroSerializer.class, serializer);
@@ -151,13 +151,13 @@ class AvroSerializerAutoConfigurationTest {
 
 
     @Test
-    void axonAutoConfigurationConstructsAvroSerializerThatIsNotAbleToSerializeBecauseNoSchemasAreFound() {
+    void sophonAutoConfigurationConstructsAvroSerializerThatIsNotAbleToSerializeBecauseNoSchemasAreFound() {
         testApplicationContext
                 .withUserConfiguration(ContextWithoutSchemaScan.class)
                 .withPropertyValues(
-                        "axon.serializer.general=jackson",
-                        "axon.serializer.messages=jackson",
-                        "axon.serializer.events=avro")
+                        "sophon.serializer.general=jackson",
+                        "sophon.serializer.messages=jackson",
+                        "sophon.serializer.events=avro")
                 .run(context -> {
                     Serializer serializer = context.getBean("eventSerializer", Serializer.class);
                     assertInstanceOf(AvroSerializer.class, serializer);
@@ -181,13 +181,13 @@ class AvroSerializerAutoConfigurationTest {
 
 
     @Test
-    void axonAutoConfigurationDoesNotConstructAnythingIfNotEnabled() {
+    void sophonAutoConfigurationDoesNotConstructAnythingIfNotEnabled() {
         testApplicationContext
                 .withUserConfiguration(DefaultContext.class)
                 .withPropertyValues(
-                        "axon.serializer.general=jackson",
-                        "axon.serializer.messages=jackson",
-                        "axon.serializer.events=jackson"
+                        "sophon.serializer.general=jackson",
+                        "sophon.serializer.messages=jackson",
+                        "sophon.serializer.events=jackson"
                 )
                 .run(context -> {
                     assertThat(context).getBean(SchemaStore.class).isNull();
@@ -196,13 +196,13 @@ class AvroSerializerAutoConfigurationTest {
     }
 
     @Test
-    void axonAutoConfigurationFailsToConfigureGeneralAvroSerializer() {
+    void sophonAutoConfigurationFailsToConfigureGeneralAvroSerializer() {
         testApplicationContext
                 .withUserConfiguration(DefaultContext.class)
                 .withPropertyValues(
-                        "axon.serializer.general=avro",
-                        "axon.serializer.messages=jackson",
-                        "axon.serializer.events=jackson"
+                        "sophon.serializer.general=avro",
+                        "sophon.serializer.messages=jackson",
+                        "sophon.serializer.events=jackson"
                 )
                 .run(context -> {
                     assertThat(context.getStartupFailure()).isNotNull().isInstanceOf(BeanCreationException.class);
@@ -211,7 +211,7 @@ class AvroSerializerAutoConfigurationTest {
                     assertThat((BeanCreationException) context.getStartupFailure().getCause())
                             .extracting("cause")
                             .extracting("cause")
-                            .isInstanceOf(AxonConfigurationException.class)
+                            .isInstanceOf(SophonConfigurationException.class)
                             .extracting("message").isEqualTo(
                                     "Invalid serializer type [AVRO] configured as general serializer. "
                                             + "The Avro Serializer can be used as message or event serializer only.")
@@ -221,12 +221,12 @@ class AvroSerializerAutoConfigurationTest {
     }
 
     @Test
-    void axonAutoConfigurationReturnsSameSerializerIfOfTheSameType() {
+    void sophonAutoConfigurationReturnsSameSerializerIfOfTheSameType() {
         testApplicationContext
                 .withUserConfiguration(DefaultContext.class)
                 .withPropertyValues(
-                        "axon.serializer.general=jackson",
-                        "axon.serializer.messages=avro"
+                        "sophon.serializer.general=jackson",
+                        "sophon.serializer.messages=avro"
                 )
                 .run(context -> {
 
@@ -242,9 +242,9 @@ class AvroSerializerAutoConfigurationTest {
         testApplicationContext
                 .withUserConfiguration(DefaultContext.class)
                 .withPropertyValues(
-                        "axon.serializer.general=jackson",
-                        "axon.serializer.messages=avro",
-                        "axon.serializer.event=avro"
+                        "sophon.serializer.general=jackson",
+                        "sophon.serializer.messages=avro",
+                        "sophon.serializer.event=avro"
                 )
                 .run(context -> {
 
@@ -295,7 +295,7 @@ class AvroSerializerAutoConfigurationTest {
         }
 
         @Bean
-        public SchemaStore defaultAxonSchemaStore() {
+        public SchemaStore defaultSophonSchemaStore() {
             return store;
         }
 

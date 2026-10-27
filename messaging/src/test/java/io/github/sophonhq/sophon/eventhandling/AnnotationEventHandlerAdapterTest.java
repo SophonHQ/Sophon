@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 import io.github.sophonhq.sophon.messaging.InterceptorChain;
 import io.github.sophonhq.sophon.messaging.MetaData;
 import io.github.sophonhq.sophon.messaging.annotation.ClasspathParameterResolverFactory;
@@ -208,7 +208,7 @@ class AnnotationEventHandlerAdapterTest {
         }
 
         @ExceptionHandler
-        public void handle(@MetaDataValue(value = "key", required = true) String value, AxonException e) {
+        public void handle(@MetaDataValue(value = "key", required = true) String value, SophonException e) {
             throw new RuntimeException(value, e);
         }
 

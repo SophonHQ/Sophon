@@ -94,7 +94,7 @@ class JdbcDeadLetteringEventIntegrationTest extends DeadLetteringEventIntegratio
 
     private DataSource dataSource() {
         JDBCDataSource dataSource = new JDBCDataSource();
-        dataSource.setUrl("jdbc:hsqldb:mem:axontest");
+        dataSource.setUrl("jdbc:hsqldb:mem:sophontest");
         dataSource.setUser("sa");
         dataSource.setPassword("");
         return dataSource;

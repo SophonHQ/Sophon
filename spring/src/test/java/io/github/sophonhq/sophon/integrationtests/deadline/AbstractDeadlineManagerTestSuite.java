@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.integrationtests.deadline;
 
 import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 import io.github.sophonhq.sophon.config.Configuration;
 import io.github.sophonhq.sophon.config.Configurer;
 import io.github.sophonhq.sophon.config.DefaultConfigurer;
@@ -95,7 +95,7 @@ public abstract class AbstractDeadlineManagerTestSuite {
     private static final UUID SAGA_ENDED = UUID.randomUUID();
     private static final boolean LIVE = false;
     private static final boolean CLOSED = true;
-    // This ensures we do not wire Axon Server components
+    // This ensures configurer modules on the classpath are not registered automatically
     private static final boolean DO_NOT_AUTO_LOCATE_CONFIGURER_MODULES = false;
     private static final String CUSTOM_CORRELATION_DATA_KEY = "custom-correlation-data";
 
@@ -185,10 +185,10 @@ public abstract class AbstractDeadlineManagerTestSuite {
         assertPublishedEvents(new MyAggregateCreatedEvent(IDENTIFIER),
                               new DeadlineOccurredEvent(new DeadlinePayload(IDENTIFIER)));
         spanFactory.verifySpanCompleted("DeadlineManager.scheduleDeadline(deadlineName)");
-        spanFactory.verifySpanHasAttributeValue("DeadlineManager.scheduleDeadline(deadlineName)", "axon.deadlineId", scheduledDeadlineId);
+        spanFactory.verifySpanHasAttributeValue("DeadlineManager.scheduleDeadline(deadlineName)", "sophon.deadlineId", scheduledDeadlineId);
         await().pollDelay(Duration.ofMillis(50)).atMost(Duration.ofMillis(100))
                .untilAsserted(() -> spanFactory.verifySpanCompleted("DeadlineManager.executeDeadline(deadlineName)"));
-        spanFactory.verifySpanHasAttributeValue("DeadlineManager.executeDeadline(deadlineName)", "axon.deadlineId", scheduledDeadlineId);
+        spanFactory.verifySpanHasAttributeValue("DeadlineManager.executeDeadline(deadlineName)", "sophon.deadlineId", scheduledDeadlineId);
     }
 
 
@@ -340,7 +340,7 @@ public abstract class AbstractDeadlineManagerTestSuite {
         //noinspection resource
         configuration.deadlineManager().registerHandlerInterceptor((uow, interceptorChain) -> {
             interceptorChain.proceed();
-            throw new AxonNonTransientException("Simulating handling error") {
+            throw new SophonNonTransientException("Simulating handling error") {
             };
         });
         configuration.commandGateway().sendAndWait(new CreateMyAggregateCommand(IDENTIFIER));

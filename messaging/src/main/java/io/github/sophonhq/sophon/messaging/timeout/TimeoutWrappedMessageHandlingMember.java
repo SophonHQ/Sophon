@@ -24,7 +24,7 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * Represents a {@link MessageHandlingMember} that wraps another {@link MessageHandlingMember} and enforces a timeout on
- * the invocation of the wrapped member. It does this by starting a {@link AxonTimeLimitedTask} and completes this upon
+ * the invocation of the wrapped member. It does this by starting a {@link SophonTimeLimitedTask} and completes this upon
  * completion. When the execution takes too long, it will throw a {@link TimeoutException}.
  * <p>
  * If the {@code warningThreshold} is lower than the {@code timeout}, warnings will be logged at the configured
@@ -65,7 +65,7 @@ class TimeoutWrappedMessageHandlingMember<T> extends WrappedMessageHandlingMembe
         String taskName = String.format("Message [%s] for handler [%s]",
                                         message.getPayloadType().getName(),
                                         target != null ? target.getClass().getName() : null);
-        AxonTimeLimitedTask task = new AxonTimeLimitedTask(
+        SophonTimeLimitedTask task = new SophonTimeLimitedTask(
                 taskName,
                 timeout,
                 warningThreshold,

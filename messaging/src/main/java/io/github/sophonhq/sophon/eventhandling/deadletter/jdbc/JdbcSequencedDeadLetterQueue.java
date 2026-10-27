@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jdbc.ConnectionProvider;
 import io.github.sophonhq.sophon.common.jdbc.JdbcException;
 import io.github.sophonhq.sophon.common.jdbc.PagingJdbcIterable;
@@ -106,7 +106,7 @@ public class JdbcSequencedDeadLetterQueue<E extends EventMessage<?>> implements 
      * {@link Builder#transactionManager(TransactionManager) TransactionManager},
      * {@link Builder#statementFactory(DeadLetterStatementFactory) DeadLetterStatementFactory} and
      * {@link Builder#converter(DeadLetterJdbcConverter) DeadLetterJdbcConverter} are set. If for any this is not the
-     * case an {@link AxonConfigurationException} is thrown.
+     * case an {@link SophonConfigurationException} is thrown.
      *
      * @param builder The {@link Builder} used to instantiate a {@link JdbcSequencedDeadLetterQueue} instance.
      */
@@ -899,7 +899,7 @@ public class JdbcSequencedDeadLetterQueue<E extends EventMessage<?>> implements 
         /**
          * Validate whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException When one field asserts to be incorrect according to the Builder's
+         * @throws SophonConfigurationException When one field asserts to be incorrect according to the Builder's
          *                                    specifications.
          */
         protected void validate() {

@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.test.aggregate;
 
 import io.github.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ class FixtureTest_MarkDeleted {
     void createAggregateYieldsLiveAggregateInverted() {
         fixture.registerInjectableResource(new HardToCreateResource());
 
-        assertThrows(AxonAssertionError.class, () ->
+        assertThrows(SophonAssertionError.class, () ->
                 fixture.givenNoPriorActivity()
                         .when(new CreateAggregateCommand("id"))
                         .expectEvents(new MyEvent("id", 0))
@@ -76,7 +76,7 @@ class FixtureTest_MarkDeleted {
 
     @Test
     void deletedAggregateYieldsAggregateMarkedDeletedInverted() {
-        assertThrows(AxonAssertionError.class, () ->
+        assertThrows(SophonAssertionError.class, () ->
                 fixture.given(new MyEvent("id", 0))
                         .when(new DeleteCommand("id", false))
                         .expectEvents(new MyAggregateDeletedEvent(false))

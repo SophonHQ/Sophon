@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventsourcing.eventstore;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Indicates that the given events stream could not be stored or read due to an underlying exception.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Allard Buijze
  * @since axon-0.1
  */
-public class EventStoreException extends AxonNonTransientException {
+public class EventStoreException extends SophonNonTransientException {
 
     private static final long serialVersionUID = -4514732518167514479L;
 

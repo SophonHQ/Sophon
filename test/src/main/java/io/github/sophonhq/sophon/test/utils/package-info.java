@@ -15,6 +15,6 @@
  */
 
 /**
- * A collection of classes which may prove useful when testing Axon-based classes.
+ * A collection of classes which may prove useful when testing Sophon-based classes.
  */
 package io.github.sophonhq.sophon.test.utils;

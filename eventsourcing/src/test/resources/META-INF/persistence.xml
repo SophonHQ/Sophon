@@ -30,7 +30,7 @@
             <property name="hibernate.connection.username" value="sa"/>
             <property name="hibernate.connection.password" value=""/>
             <property name="hibernate.connection.url"
-                      value="jdbc:hsqldb:mem:axontest"/>
+                      value="jdbc:hsqldb:mem:sophontest"/>
         </properties>
     </persistence-unit>
 </persistence>

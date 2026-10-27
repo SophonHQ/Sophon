@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.commandhandling.distributed;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.GenericCommandMessage;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MetaData;
 import org.junit.jupiter.api.*;
 
@@ -73,18 +73,18 @@ class MetaDataRoutingStrategyTest {
     @Test
     void buildMetaDataRoutingStrategyFailsForNullFallbackRoutingStrategy() {
         MetaDataRoutingStrategy.Builder builderTestSubject = MetaDataRoutingStrategy.builder();
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.fallbackRoutingStrategy(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.fallbackRoutingStrategy(null));
     }
 
     @Test
     void buildMetaDataRoutingStrategyFailsForNullMetaDataKey() {
         MetaDataRoutingStrategy.Builder builderTestSubject = MetaDataRoutingStrategy.builder();
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.metaDataKey(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.metaDataKey(null));
     }
 
     @Test
     void buildMetaDataRoutingStrategyFailsForEmptyMetaDataKey() {
         MetaDataRoutingStrategy.Builder builderTestSubject = MetaDataRoutingStrategy.builder();
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.metaDataKey(""));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.metaDataKey(""));
     }
 }

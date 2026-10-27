@@ -33,7 +33,7 @@ import java.util.List;
  * An implementation of a {@link ConfigurerModule} that will register a list of beans as handlers for a specific type of
  * message.
  * <p>
- * The beans will be lazily resolved to avoid circular dependencies if any these beans relies on the Axon {@link
+ * The beans will be lazily resolved to avoid circular dependencies if any these beans relies on the Sophon {@link
  * io.github.sophonhq.sophon.config.Configuration} to be available in the Application Context.
  * <p>
  * Typically, an application context would have an instance of this class registered for each type of message to
@@ -49,7 +49,7 @@ public class MessageHandlerConfigurer implements ConfigurerModule, ApplicationCo
     private ApplicationContext applicationContext;
 
     /**
-     * Registers the beans identified in given {@code beanRefs} as the given {@code type} of handler with the Axon
+     * Registers the beans identified in given {@code beanRefs} as the given {@code type} of handler with the Sophon
      * {@link io.github.sophonhq.sophon.config.Configuration}.
      *
      * @param type     The type of handler to register the beans as.

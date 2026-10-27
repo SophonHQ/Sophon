@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter.legacyjpa;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.IdentifierFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.legacyjpa.EntityManagerProvider;
 import io.github.sophonhq.sophon.common.legacyjpa.SimpleEntityManagerProvider;
 import io.github.sophonhq.sophon.common.transaction.NoOpTransactionManager;
@@ -147,43 +147,43 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
     }
 
     @Test
-    void buildWithNegativeMaxQueuesThrowsAxonConfigurationException() {
+    void buildWithNegativeMaxQueuesThrowsSophonConfigurationException() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject = JpaSequencedDeadLetterQueue.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSequences(-1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequences(-1));
     }
 
     @Test
-    void buildWithZeroMaxQueuesThrowsAxonConfigurationException() {
+    void buildWithZeroMaxQueuesThrowsSophonConfigurationException() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject = JpaSequencedDeadLetterQueue.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSequences(0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequences(0));
     }
 
     @Test
-    void buildWithNegativeMaxQueueSizeThrowsAxonConfigurationException() {
+    void buildWithNegativeMaxQueueSizeThrowsSophonConfigurationException() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject = JpaSequencedDeadLetterQueue.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(-1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(-1));
     }
 
     @Test
-    void buildWithZeroMaxQueueSizeThrowsAxonConfigurationException() {
+    void buildWithZeroMaxQueueSizeThrowsSophonConfigurationException() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject = JpaSequencedDeadLetterQueue.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(0));
     }
 
     @Test
     void canNotSetNegativeQueryPageSize() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builder = JpaSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.queryPageSize(-1));
+        assertThrows(SophonConfigurationException.class, () -> builder.queryPageSize(-1));
     }
 
     @Test
     void canNotSetZeroQueryPageSize() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builder = JpaSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.queryPageSize(0));
+        assertThrows(SophonConfigurationException.class, () -> builder.queryPageSize(0));
     }
 
     @Test
@@ -203,13 +203,13 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
     @Test
     void canNotSetProcessingGroupToEmpty() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builder = JpaSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.processingGroup(""));
+        assertThrows(SophonConfigurationException.class, () -> builder.processingGroup(""));
     }
 
     @Test
     void canNotSetProcessingGroupToNull() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builder = JpaSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> builder.processingGroup(""));
+        assertThrows(SophonConfigurationException.class, () -> builder.processingGroup(""));
     }
 
     @Test
@@ -219,7 +219,7 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
                 .transactionManager(transactionManager)
                 .entityManagerProvider(() -> entityManager)
                 .serializer(TestSerializer.JACKSON.getSerializer());
-        assertThrows(AxonConfigurationException.class, builder::build);
+        assertThrows(SophonConfigurationException.class, builder::build);
     }
 
     @Test
@@ -230,7 +230,7 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
                 .entityManagerProvider(() -> entityManager)
                 .serializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, builder::build);
+        assertThrows(SophonConfigurationException.class, builder::build);
     }
 
     @Test
@@ -241,12 +241,12 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
                 .transactionManager(transactionManager)
                 .serializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, builder::build);
+        assertThrows(SophonConfigurationException.class, builder::build);
     }
 
     @Test
     void canNotAddNullConverterWhileBuilding() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject = JpaSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.addConverter(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.addConverter(null));
     }
 }

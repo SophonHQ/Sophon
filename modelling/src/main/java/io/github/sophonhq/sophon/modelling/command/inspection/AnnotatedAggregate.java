@@ -19,7 +19,7 @@ package io.github.sophonhq.sophon.modelling.command.inspection;
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.NoHandlerForCommandException;
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.DomainEventMessage;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
@@ -321,7 +321,7 @@ public class AnnotatedAggregate<T> extends AggregateLifecycle implements Aggrega
     @Override
     protected <R> Aggregate<R> doCreateNew(Class<R> aggregateType, Callable<R> factoryMethod) throws Exception {
         if (repositoryProvider == null) {
-            throw new AxonConfigurationException(format(
+            throw new SophonConfigurationException(format(
                     "Since repository provider is not provided, we cannot spawn a new aggregate for %s",
                     aggregateType.getName()));
         }

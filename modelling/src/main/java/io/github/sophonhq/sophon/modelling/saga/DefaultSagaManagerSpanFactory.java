@@ -48,7 +48,7 @@ public class DefaultSagaManagerSpanFactory implements SagaManagerSpanFactory {
     /**
      * Creates a new {@link Builder} to build a {@link DefaultSagaManagerSpanFactory} with. The default values are:
      * <ul>
-     *     <li>{@code sagaIdentifierAttribute} defaults to {@code axon.sagaIdentifier}</li>
+     *     <li>{@code sagaIdentifierAttribute} defaults to {@code sophon.sagaIdentifier}</li>
      * </ul>
      * The {@code spanFactory} is a required field and should be provided.
      *
@@ -74,14 +74,14 @@ public class DefaultSagaManagerSpanFactory implements SagaManagerSpanFactory {
     /**
      * Builder class to instantiate a {@link DefaultSagaManagerSpanFactory}. The default values are:
      * <ul>
-     *     <li>{@code sagaIdentifierAttribute} defaults to {@code axon.sagaIdentifier}</li>
+     *     <li>{@code sagaIdentifierAttribute} defaults to {@code sophon.sagaIdentifier}</li>
      * </ul>
      * The {@code spanFactory} is a required field and should be provided.
      */
     public static class Builder {
 
         private SpanFactory builderSpanFactory;
-        private String builderSagaIdentifierAttribute = "axon.sagaIdentifier";
+        private String builderSagaIdentifierAttribute = "sophon.sagaIdentifier";
 
         /**
          * Sets the {@link SpanFactory} to use to create the spans. This is a required field.
@@ -96,7 +96,7 @@ public class DefaultSagaManagerSpanFactory implements SagaManagerSpanFactory {
         }
 
         /**
-         * Sets the attribute name to use for the saga identifier. Defaults to {@code axon.sagaIdentifier}.
+         * Sets the attribute name to use for the saga identifier. Defaults to {@code sophon.sagaIdentifier}.
          *
          * @param sagaIdentifierAttribute The attribute name to use for the saga identifier.
          * @return The current Builder instance, for fluent interfacing.

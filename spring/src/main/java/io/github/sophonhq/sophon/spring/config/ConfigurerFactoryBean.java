@@ -36,7 +36,7 @@ import java.util.List;
  * are initialized <em>before</em> the Configurer is made available in the application context. This ensures that
  * any customizations made by autowiring the Configurer will override any defaults set by a ConfigurerModule.
  * <p>
- * The ConfigurerFactoryBean is wired by the {@link SpringAxonAutoConfigurer} as part of Spring Boot Auto-Configuration
+ * The ConfigurerFactoryBean is wired by the {@link SpringSophonAutoConfigurer} as part of Spring Boot Auto-Configuration
  * and should not be wired "manually" in an Application Context.
  *
  * @author Allard Buijze

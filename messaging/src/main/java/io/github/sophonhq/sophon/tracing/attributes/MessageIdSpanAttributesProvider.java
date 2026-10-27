@@ -34,6 +34,6 @@ public class MessageIdSpanAttributesProvider implements SpanAttributesProvider {
 
     @Override
     public @NonNull Map<String, String> provideForMessage(@NonNull Message<?> message) {
-        return singletonMap("axon_message_id", message.getIdentifier());
+        return singletonMap("sophon_message_id", message.getIdentifier());
     }
 }

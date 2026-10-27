@@ -37,7 +37,7 @@ import java.util.List;
 
 /**
  * Spring factory bean that creates a HandlerDefinition instance that is capable of resolving parameter values as Spring
- * Beans, in addition to the default behavior defined by Axon.
+ * Beans, in addition to the default behavior defined by Sophon.
  *
  * @author Tyler Thrailkill
  * @author Milan Savic

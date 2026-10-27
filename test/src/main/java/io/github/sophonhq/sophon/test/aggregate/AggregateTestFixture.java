@@ -71,8 +71,8 @@ import io.github.sophonhq.sophon.modelling.command.RepositoryProvider;
 import io.github.sophonhq.sophon.modelling.command.inspection.AggregateModel;
 import io.github.sophonhq.sophon.modelling.command.inspection.AnnotatedAggregate;
 import io.github.sophonhq.sophon.modelling.command.inspection.AnnotatedAggregateMetaModelFactory;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
 import io.github.sophonhq.sophon.test.FixtureExecutionException;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import io.github.sophonhq.sophon.test.deadline.StubDeadlineManager;
 import io.github.sophonhq.sophon.test.matchers.FieldFilter;
 import io.github.sophonhq.sophon.test.matchers.IgnoreField;
@@ -665,7 +665,7 @@ public class AggregateTestFixture<T> implements FixtureConfiguration<T>, TestExe
             try {
                 Aggregate<T> aggregate2 = repository.delegate.load(aggregateIdentifier);
                 if (workingAggregate.isDeleted()) {
-                    throw new AxonAssertionError("The working aggregate was considered deleted, " +
+                    throw new SophonAssertionError("The working aggregate was considered deleted, " +
                                                          "but the Repository still contains a non-deleted copy of " +
                                                          "the aggregate. Make sure the aggregate explicitly marks " +
                                                          "itself as deleted in an EventHandler.");
@@ -674,7 +674,7 @@ public class AggregateTestFixture<T> implements FixtureConfiguration<T>, TestExe
             } catch (AggregateNotFoundException notFound) {
                 // The identifier == null if an aggregate creating command handler decided not to create the aggregate.
                 if (!workingAggregate.isDeleted() && workingAggregate.identifier() != null) {
-                    throw new AxonAssertionError("The working aggregate was not considered deleted, " //NOSONAR
+                    throw new SophonAssertionError("The working aggregate was not considered deleted, " //NOSONAR
                                                          + "but the Repository cannot recover the state of the " +
                                                          "aggregate, as it is considered deleted there.");
                 }
@@ -694,7 +694,7 @@ public class AggregateTestFixture<T> implements FixtureConfiguration<T>, TestExe
                                                   Aggregate<T> workingAggregate) {
         HashSet<ComparationEntry> comparedEntries = new HashSet<>();
         if (!workingAggregate.rootType().equals(eventSourcedAggregate.rootType())) {
-            throw new AxonAssertionError(String.format("The aggregate loaded based on the generated events seems to " +
+            throw new SophonAssertionError(String.format("The aggregate loaded based on the generated events seems to " +
                                                                "be of another type than the original.\n" +
                                                                "Working type: <%s>\nEvent Sourced type: <%s>",
                                                        workingAggregate.rootType().getName(),
@@ -747,7 +747,7 @@ public class AggregateTestFixture<T> implements FixtureConfiguration<T>, TestExe
     }
 
     private void failIllegalStateChange(Object workingValue, Object eventSourcedValue, String propertyPath) {
-        throw new AxonAssertionError(format("Illegal state change detected! " +
+        throw new SophonAssertionError(format("Illegal state change detected! " +
                                                     "Property \"%s\" has different value when sourcing events.\n" +
                                                     "Working aggregate value:     <%s>\n" +
                                                     "Value after applying events: <%s>", propertyPath, workingValue,

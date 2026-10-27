@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.queryhandling.registration;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 import io.github.sophonhq.sophon.messaging.MessageHandler;
 import io.github.sophonhq.sophon.queryhandling.QuerySubscription;
 
@@ -28,7 +28,7 @@ import java.lang.reflect.Type;
  * @author Mitchell Herrijgers
  * @since axon-4.6.0
  */
-public class DuplicateQueryHandlerSubscriptionException extends AxonNonTransientException {
+public class DuplicateQueryHandlerSubscriptionException extends SophonNonTransientException {
     private static final long serialVersionUID = -3275563671982758910L;
 
     /**

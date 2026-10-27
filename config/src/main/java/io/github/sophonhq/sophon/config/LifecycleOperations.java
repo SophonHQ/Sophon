@@ -19,11 +19,11 @@ package io.github.sophonhq.sophon.config;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Interface describing the configuration of start and shutdown handlers within Axon's configuration.
+ * Interface describing the configuration of start and shutdown handlers within Sophon's configuration.
  * <p>
  * Both {@link Runnable Runnables} or {@link LifecycleHandler LifecycleHandlers} can be configured. The invocation order
  * is defined through the (optional) {@code phase} parameter. The {@link io.github.sophonhq.sophon.lifecycle.Phase} enumeration
- * may be used as a guidance to add operations before/after Axon's regular steps.
+ * may be used as a guidance to add operations before/after Sophon's regular steps.
  *
  * @author Steven van Beelen
  * @see LifecycleHandler

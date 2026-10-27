@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.scheduling.dbscheduler;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception indicating a problem in the Event Scheduling mechanism, more precisely the
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Gerard Klijs
  * @since axon-4.8.0
  */
-public class EventSchedulerNotSuppliedException extends AxonException {
+public class EventSchedulerNotSuppliedException extends SophonException {
 
     /**
      * Initialize a EventSchedulerNotSuppliedException.

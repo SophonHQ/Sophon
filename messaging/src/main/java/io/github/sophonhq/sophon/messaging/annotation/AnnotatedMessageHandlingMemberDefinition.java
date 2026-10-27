@@ -25,8 +25,8 @@ import java.util.Optional;
 import static io.github.sophonhq.sophon.common.annotation.AnnotationUtils.findAnnotationAttributes;
 
 /**
- * The default HandlerDefinition implementation in Axon. It implements the rules of annotated handlers used
- * in all the different types of handlers in Axon.
+ * The default HandlerDefinition implementation in Sophon. It implements the rules of annotated handlers used
+ * in all the different types of handlers in Sophon.
  * <p>
  * For this implementation to recognize a handler method, it should be (meta)annotated with {@link MessageHandler}. It
  * is recommended to meta-annotated members, and preconfigure the expected {@code messageType}. For example, and event

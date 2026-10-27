@@ -32,11 +32,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * An {@link EventMessageConverter} that will convert an Axon event message into a Spring message by:
+ * An {@link EventMessageConverter} that will convert a Sophon event message into a Spring message by:
  * <ul>
- * <li>Copying axon event payload into Spring message payload</li>
- * <li>Copying axon event metadata into Spring message headers</li>
- * <li>Adding axon event message specific attributes - that are not part of axon metadata - to the Spring message Headers.
+ * <li>Copying Sophon event payload into Spring message payload</li>
+ * <li>Copying Sophon event metadata into Spring message headers</li>
+ * <li>Adding Sophon event message specific attributes - that are not part of Sophon metadata - to the Spring message Headers.
  * Among those specific attributes are {@link DomainEventMessage} specific properties</li>
  * </ul>
  *
@@ -45,11 +45,11 @@ import java.util.stream.Collectors;
  */
 public class DefaultEventMessageConverter implements EventMessageConverter {
 
-    private static final String AXON_MESSAGE_PREFIX = "axon-message-";
-    private static final String MESSAGE_ID = AXON_MESSAGE_PREFIX + "id";
-    private static final String AGGREGATE_ID = AXON_MESSAGE_PREFIX + "aggregate-id";
-    private static final String AGGREGATE_SEQ = AXON_MESSAGE_PREFIX + "aggregate-seq";
-    private static final String AGGREGATE_TYPE = AXON_MESSAGE_PREFIX + "aggregate-type";
+    private static final String SOPHON_MESSAGE_PREFIX = "sophon-message-";
+    private static final String MESSAGE_ID = SOPHON_MESSAGE_PREFIX + "id";
+    private static final String AGGREGATE_ID = SOPHON_MESSAGE_PREFIX + "aggregate-id";
+    private static final String AGGREGATE_SEQ = SOPHON_MESSAGE_PREFIX + "aggregate-seq";
+    private static final String AGGREGATE_TYPE = SOPHON_MESSAGE_PREFIX + "aggregate-type";
 
     @Override
     public <T> Message<T> convertToOutboundMessage(EventMessage<T> event) {
@@ -69,7 +69,7 @@ public class DefaultEventMessageConverter implements EventMessageConverter {
         MessageHeaders headers = message.getHeaders();
         Map<String, ?> metaData = headers.entrySet()
                 .stream()
-                .filter(entry -> !entry.getKey().startsWith(AXON_MESSAGE_PREFIX))
+                .filter(entry -> !entry.getKey().startsWith(SOPHON_MESSAGE_PREFIX))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         String messageId = Objects.toString(headers.get(MESSAGE_ID));

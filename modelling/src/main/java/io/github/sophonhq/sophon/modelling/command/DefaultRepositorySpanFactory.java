@@ -46,7 +46,7 @@ public class DefaultRepositorySpanFactory implements RepositorySpanFactory {
     /**
      * Creates a new {@link Builder} to build a {@link DefaultRepositorySpanFactory} with. The default values are:
      * <ul>
-     *     <li>{@code aggregateIdAttribute} defaults to {@code axon.aggregateId}</li>
+     *     <li>{@code aggregateIdAttribute} defaults to {@code sophon.aggregateId}</li>
      * </ul>
      * The {@code spanFactory} is a required field and should be provided.
      *
@@ -77,14 +77,14 @@ public class DefaultRepositorySpanFactory implements RepositorySpanFactory {
     /**
      * Builder class to instantiate a {@link DefaultRepositorySpanFactory}. The default values are:
      * <ul>
-     *     <li>{@code aggregateIdAttribute} defaults to {@code axon.aggregateId}</li>
+     *     <li>{@code aggregateIdAttribute} defaults to {@code sophon.aggregateId}</li>
      * </ul>
      * The {@code spanFactory} is a required field and should be provided.
      */
     public static class Builder {
 
         private SpanFactory builderSpanFactory;
-        private String builderAggregateIdAttribute = "axon.aggregateId";
+        private String builderAggregateIdAttribute = "sophon.aggregateId";
 
         /**
          * Sets the {@link SpanFactory} to use to create the spans. This is a required field.
@@ -99,7 +99,7 @@ public class DefaultRepositorySpanFactory implements RepositorySpanFactory {
         }
 
         /**
-         * Sets the attribute name to use for the aggregate id. Defaults to {@code axon.aggregateId}.
+         * Sets the attribute name to use for the aggregate id. Defaults to {@code sophon.aggregateId}.
          * @param aggregateIdAttribute The attribute name to use for the aggregate id.
          * @return The current Builder instance, for fluent interfacing.
          */

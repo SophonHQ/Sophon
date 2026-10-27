@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.serialization;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 
 /**
  * Exception indicating that a conversion is required between to upcasters, but there is no converter capable of doing
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonConfigurationException;
  * @author Allard Buijze
  * @since axon-2.0
  */
-public class CannotConvertBetweenTypesException extends AxonConfigurationException {
+public class CannotConvertBetweenTypesException extends SophonConfigurationException {
 
     private static final long serialVersionUID = 2707247238103378855L;
 

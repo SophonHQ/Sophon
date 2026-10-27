@@ -36,7 +36,7 @@ class BuilderUtilsTest {
         try {
             r.run();
             fail(failureMsg);
-        } catch (AxonConfigurationException e) {
+        } catch (SophonConfigurationException e) {
             //Good!
         }
     }

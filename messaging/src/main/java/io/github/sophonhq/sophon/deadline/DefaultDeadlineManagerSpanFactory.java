@@ -38,8 +38,8 @@ public class DefaultDeadlineManagerSpanFactory implements DeadlineManagerSpanFac
     /**
      * Creates a new {@link DefaultDeadlineManagerSpanFactory} using the provided {@code builder}. The default values are:
      * <ul>
-     *     <li>{@code deadlineIdAttribute} defaults to {@code axon.deadlineId}</li>
-     *     <li>{@code scopeAttribute} defaults to {@code axon.deadlineScope}</li>
+     *     <li>{@code deadlineIdAttribute} defaults to {@code sophon.deadlineId}</li>
+     *     <li>{@code scopeAttribute} defaults to {@code sophon.deadlineScope}</li>
      * </ul>
      * The {@code spanFactory} is a required field and should be provided.
      *
@@ -55,8 +55,8 @@ public class DefaultDeadlineManagerSpanFactory implements DeadlineManagerSpanFac
     /**
      * Creates a new {@link Builder} to build a {@link DefaultDeadlineManagerSpanFactory} with. The default values are:
      * <ul>
-     *     <li>{@code deadlineIdAttribute} defaults to {@code axon.deadlineId}</li>
-     *     <li>{@code scopeAttribute} defaults to {@code axon.deadlineScope}</li>
+     *     <li>{@code deadlineIdAttribute} defaults to {@code sophon.deadlineId}</li>
+     *     <li>{@code scopeAttribute} defaults to {@code sophon.deadlineScope}</li>
      * </ul>
      * The {@code spanFactory} is a required field and should be provided.
      *
@@ -115,8 +115,8 @@ public class DefaultDeadlineManagerSpanFactory implements DeadlineManagerSpanFac
     public static class Builder {
 
         private SpanFactory builderSpanFactory;
-        private String builderDeadlineIdAttribute = "axon.deadlineId";
-        private String builderScopeAttribute = "axon.deadlineScope";
+        private String builderDeadlineIdAttribute = "sophon.deadlineId";
+        private String builderScopeAttribute = "sophon.deadlineScope";
 
         /**
          * Sets the {@link SpanFactory} to use to create the spans. This is a required field.
@@ -131,7 +131,7 @@ public class DefaultDeadlineManagerSpanFactory implements DeadlineManagerSpanFac
         }
 
         /**
-         * Sets the attribute key to use for the deadline id. Defaults to {@code axon.deadlineId}.
+         * Sets the attribute key to use for the deadline id. Defaults to {@code sophon.deadlineId}.
          *
          * @param deadlineIdAttribute The attribute key to use for the deadline id.
          * @return The current Builder instance, for fluent interfacing.
@@ -143,7 +143,7 @@ public class DefaultDeadlineManagerSpanFactory implements DeadlineManagerSpanFac
         }
 
         /**
-         * Sets the attribute key to use for the deadline scope. Defaults to {@code axon.deadlineScope}.
+         * Sets the attribute key to use for the deadline scope. Defaults to {@code sophon.deadlineScope}.
          *
          * @param scopeAttribute The attribute key to use for the deadline scope.
          * @return The current Builder instance, for fluent interfacing.

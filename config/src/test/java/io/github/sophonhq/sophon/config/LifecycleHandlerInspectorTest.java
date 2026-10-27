@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.lifecycle.Lifecycle;
 import io.github.sophonhq.sophon.lifecycle.LifecycleHandlerInvocationException;
 import io.github.sophonhq.sophon.lifecycle.ShutdownHandler;
@@ -53,10 +53,10 @@ class LifecycleHandlerInspectorTest {
     }
 
     @Test
-    void axonConfigurationExceptionIsThrownForLifecycleHandlerMethodWithParameters(
+    void sophonConfigurationExceptionIsThrownForLifecycleHandlerMethodWithParameters(
             @Mock Configuration configuration) {
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> LifecycleHandlerInspector.registerLifecycleHandlers(
                         configuration, new ComponentWithFaultyLifecycleHandler()
                 )

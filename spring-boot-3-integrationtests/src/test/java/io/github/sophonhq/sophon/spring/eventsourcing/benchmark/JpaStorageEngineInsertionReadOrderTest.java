@@ -234,7 +234,7 @@ class JpaStorageEngineInsertionReadOrderTest {
         public ComboPooledDataSource dataSource() throws PropertyVetoException {
             ComboPooledDataSource dataSource = new ComboPooledDataSource();
             dataSource.setDriverClass("org.hsqldb.jdbcDriver");
-            dataSource.setJdbcUrl("jdbc:hsqldb:mem:axontest");
+            dataSource.setJdbcUrl("jdbc:hsqldb:mem:sophontest");
             dataSource.setUser("sa");
             dataSource.setMaxPoolSize(50);
             dataSource.setMinPoolSize(1);

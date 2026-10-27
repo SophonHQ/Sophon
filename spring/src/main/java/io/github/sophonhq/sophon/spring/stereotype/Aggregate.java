@@ -28,7 +28,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation that informs Axon's auto configurer for Spring that a given {@link Component} is an aggregate instance.
+ * Annotation that informs Sophon's auto configurer for Spring that a given {@link Component} is an aggregate instance.
  *
  * @author Allard Buijze
  * @since axon-3.0

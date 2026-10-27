@@ -32,7 +32,7 @@ import java.util.List;
 
 /**
  * Spring factory bean that creates a ParameterResolverFactory instance that is capable of resolving parameter values as
- * Spring Beans, in addition to the default behavior defined by Axon.
+ * Spring Beans, in addition to the default behavior defined by Sophon.
  *
  * @author Allard Buijze
  * @see SpringBeanParameterResolverFactory

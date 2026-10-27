@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.saga.repository;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.caching.Cache;
 import io.github.sophonhq.sophon.modelling.saga.AssociationValue;
 import io.github.sophonhq.sophon.modelling.saga.AssociationValues;
@@ -50,7 +50,7 @@ public class CachingSagaStore<T> implements SagaStore<T> {
      * Instantiate a {@link CachingSagaStore} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@code delegate} {@link SagaStore}, Saga {@code associationsCache} and {@code sagaCache} are
-     * not {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * not {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link CachingSagaStore} instance
      */
@@ -226,10 +226,10 @@ public class CachingSagaStore<T> implements SagaStore<T> {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(delegateSagaStore, "The delegate SagaStore is a hard requirement and should be provided");
             assertNonNull(associationsCache, "The associationsCache is a hard requirement and should be provided");
             assertNonNull(sagaCache, "The sagaCache is a hard requirement and should be provided");

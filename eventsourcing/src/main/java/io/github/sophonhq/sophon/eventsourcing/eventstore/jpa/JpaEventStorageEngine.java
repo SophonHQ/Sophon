@@ -17,8 +17,8 @@
 package io.github.sophonhq.sophon.eventsourcing.eventstore.jpa;
 
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.DateTimeUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
 import io.github.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
@@ -91,7 +91,7 @@ public class JpaEventStorageEngine extends BatchingEventStorageEngine {
      * Instantiate a {@link JpaEventStorageEngine} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the event and snapshot {@link Serializer}, the {@link EntityManagerProvider} and {@link
-     * TransactionManager} are not {@code null}, and will throw an {@link AxonConfigurationException} if any of them is
+     * TransactionManager} are not {@code null}, and will throw an {@link SophonConfigurationException} if any of them is
      * {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link JpaEventStorageEngine} instance
@@ -726,11 +726,11 @@ public class JpaEventStorageEngine extends BatchingEventStorageEngine {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
             assertNonNull(entityManagerProvider,
                           "The EntityManagerProvider is a hard requirement and should be provided");

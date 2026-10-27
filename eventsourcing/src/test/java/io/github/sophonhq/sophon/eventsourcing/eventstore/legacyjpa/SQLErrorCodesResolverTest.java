@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventsourcing.eventstore.legacyjpa;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -157,7 +157,7 @@ class SQLErrorCodesResolverTest {
     @Test
     void initialization_UnknownProductName() throws Exception {
         DataSource dataSource = createMockDataSource("Some weird unknown DB type");
-        assertThrows(AxonConfigurationException.class, () -> new SQLErrorCodesResolver(dataSource));
+        assertThrows(SophonConfigurationException.class, () -> new SQLErrorCodesResolver(dataSource));
     }
 
     @Test

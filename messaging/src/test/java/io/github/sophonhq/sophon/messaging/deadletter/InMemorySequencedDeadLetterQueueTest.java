@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging.deadletter;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.messaging.MetaData;
 import org.junit.jupiter.api.*;
@@ -85,34 +85,34 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
     }
 
     @Test
-    void buildWithNegativeMaxSequencesThrowsAxonConfigurationException() {
+    void buildWithNegativeMaxSequencesThrowsSophonConfigurationException() {
         InMemorySequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject =
                 InMemorySequencedDeadLetterQueue.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSequences(-1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequences(-1));
     }
 
     @Test
-    void buildWithZeroMaxSequencesThrowsAxonConfigurationException() {
+    void buildWithZeroMaxSequencesThrowsSophonConfigurationException() {
         InMemorySequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject =
                 InMemorySequencedDeadLetterQueue.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSequences(0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequences(0));
     }
 
     @Test
-    void buildWithNegativeMaxSequenceSizeThrowsAxonConfigurationException() {
+    void buildWithNegativeMaxSequenceSizeThrowsSophonConfigurationException() {
         InMemorySequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject =
                 InMemorySequencedDeadLetterQueue.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(-1));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(-1));
     }
 
     @Test
-    void buildWithZeroMaxSequenceSizeThrowsAxonConfigurationException() {
+    void buildWithZeroMaxSequenceSizeThrowsSophonConfigurationException() {
         InMemorySequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject =
                 InMemorySequencedDeadLetterQueue.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(0));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(0));
     }
 }

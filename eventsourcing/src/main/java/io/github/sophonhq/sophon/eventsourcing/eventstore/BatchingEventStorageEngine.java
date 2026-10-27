@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventsourcing.eventstore;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.BuilderUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
 import io.github.sophonhq.sophon.eventhandling.DomainEventData;
 import io.github.sophonhq.sophon.eventhandling.TrackedEventData;
@@ -64,7 +64,7 @@ public abstract class BatchingEventStorageEngine extends AbstractEventStorageEng
      * Instantiate a {@link BatchingEventStorageEngine} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the event and snapshot {@link Serializer} are not {@code null}, and will throw an {@link
-     * AxonConfigurationException} if any of them is {@code null}.
+     * SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link BatchingEventStorageEngine} instance
      */
@@ -254,11 +254,11 @@ public abstract class BatchingEventStorageEngine extends AbstractEventStorageEng
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
         }
     }

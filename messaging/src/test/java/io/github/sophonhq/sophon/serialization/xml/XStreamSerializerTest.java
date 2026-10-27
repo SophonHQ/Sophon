@@ -121,15 +121,15 @@ class XStreamSerializerTest {
 
     @Test
     void packageAlias() {
-        testSubject.addPackageAlias("axon-eh", "io.github.sophonhq.sophon.utils");
-        testSubject.addPackageAlias("axon", "io.github.sophonhq.sophon");
+        testSubject.addPackageAlias("sophon-eh", "io.github.sophonhq.sophon.utils");
+        testSubject.addPackageAlias("sophon", "io.github.sophonhq.sophon");
 
         SerializedObject<byte[]> serialized = testSubject.serialize(new StubDomainEvent(), byte[].class);
         String asString = new String(serialized.getData(), StandardCharsets.UTF_8);
         assertFalse(asString.contains("io.github.sophonhq.sophon.domain"), "Package name found in:" + asString);
         StubDomainEvent deserialized = testSubject.deserialize(serialized);
         assertEquals(StubDomainEvent.class, deserialized.getClass());
-        assertTrue(asString.contains("axon-eh"));
+        assertTrue(asString.contains("sophon-eh"));
     }
 
     @Test
@@ -249,17 +249,17 @@ class XStreamSerializerTest {
     }
 
     @Test
-    void disableAxonTypeSecurity() {
+    void disableSophonTypeSecurity() {
         XStream xStream = mock(XStream.class);
 
         XStreamSerializer.builder()
                          .xStream(xStream)
-                         .disableAxonTypeSecurity()
+                         .disableSophonTypeSecurity()
                          .build();
 
         verify(xStream, times(0)).allowTypesByWildcard(new String[]{"io.github.sophonhq.sophon.**"});
 
-        // Axon types are added as wildcards by default.
+        // Sophon types are added as wildcards by default.
         XStreamSerializer.builder()
                          .xStream(xStream)
                          .build();

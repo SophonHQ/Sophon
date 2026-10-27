@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.lifecycle;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 import java.lang.reflect.Method;
 
@@ -30,7 +30,7 @@ import static java.lang.String.format;
  * @see ShutdownHandler
  * @since axon-4.3
  */
-public class LifecycleHandlerInvocationException extends AxonNonTransientException {
+public class LifecycleHandlerInvocationException extends SophonNonTransientException {
 
     private static final String DEFAULT_FAILURE_MESSAGE =
             "Failed during invocation of lifecycle handler [%s] on component [%s]";

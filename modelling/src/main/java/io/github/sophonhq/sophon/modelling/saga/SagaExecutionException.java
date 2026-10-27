@@ -16,12 +16,12 @@
 
 package io.github.sophonhq.sophon.modelling.saga;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception triggered by a saga while it is processing an event or processing a task.
  */
-public class SagaExecutionException extends AxonException {
+public class SagaExecutionException extends SophonException {
 
     /**
      * Initializes the exception using the given {@code message} and {@code cause}.

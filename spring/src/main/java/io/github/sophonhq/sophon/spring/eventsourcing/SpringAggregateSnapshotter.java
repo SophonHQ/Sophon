@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.spring.eventsourcing;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventsourcing.*;
 import io.github.sophonhq.sophon.eventsourcing.eventstore.EventStore;
@@ -58,7 +58,7 @@ public class SpringAggregateSnapshotter extends AggregateSnapshotter implements 
      * {@link AggregateFactory} instances are lazily retrieved by the {@link ApplicationContext}.
      * <p>
      * Will assert that the {@link EventStore}, {@link ParameterResolverFactory} and {@link HandlerDefinition} are not
-     * {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link SpringAggregateSnapshotter} instance
      */
@@ -203,11 +203,11 @@ public class SpringAggregateSnapshotter extends AggregateSnapshotter implements 
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
         }
     }

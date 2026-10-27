@@ -43,7 +43,7 @@ import org.springframework.context.annotation.Bean;
         "org.springframework.boot.actuate.autoconfigure.metrics.CompositeMeterRegistryAutoConfiguration",
         "org.springframework.boot.actuate.autoconfigure.metrics.export.simple.SimpleMetricsExportAutoConfiguration"
 })
-@AutoConfigureBefore({AxonAutoConfiguration.class, MetricsAutoConfiguration.class})
+@AutoConfigureBefore({SophonAutoConfiguration.class, MetricsAutoConfiguration.class})
 @ConditionalOnClass(name = {
         "io.micrometer.core.instrument.MeterRegistry",
         "io.github.sophonhq.sophon.micrometer.GlobalMetricRegistry"
@@ -67,7 +67,7 @@ public class MicrometerMetricsAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(MetricsConfigurerModule.class)
     @ConditionalOnBean(GlobalMetricRegistry.class)
-    @ConditionalOnProperty(value = "axon.metrics.auto-configuration.enabled", matchIfMissing = true)
+    @ConditionalOnProperty(value = "sophon.metrics.auto-configuration.enabled", matchIfMissing = true)
     public static MetricsConfigurerModule metricsConfigurerModule(GlobalMetricRegistry globalMetricRegistry,
                                                                   MetricsProperties metricsProperties) {
         return new MetricsConfigurerModule(globalMetricRegistry, metricsProperties.getMicrometer().isDimensional());

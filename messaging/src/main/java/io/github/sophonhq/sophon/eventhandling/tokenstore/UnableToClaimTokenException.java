@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.tokenstore;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception indicating that a processor tried to claim a Token (either by retrieving or updating it) that has already
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * <p>
  * Processes may retry obtaining the claim, preferably after a brief waiting period.
  */
-public class UnableToClaimTokenException extends AxonTransientException {
+public class UnableToClaimTokenException extends SophonTransientException {
 
     /**
      * Initialize the exception with given {@code message}.

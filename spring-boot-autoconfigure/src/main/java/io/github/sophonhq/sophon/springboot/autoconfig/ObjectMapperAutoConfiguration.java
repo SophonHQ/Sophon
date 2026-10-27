@@ -27,17 +27,19 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
+// Ordered before CBORMapperAutoConfiguration: a CBORMapper is an ObjectMapper and would otherwise satisfy the
+// @ConditionalOnMissingBean of the default ObjectMapper below.
 @AutoConfiguration
-@AutoConfigureBefore(AxonAutoConfiguration.class)
+@AutoConfigureBefore({SophonAutoConfiguration.class, CBORMapperAutoConfiguration.class})
 @AutoConfigureAfter(name = "org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration")
 @ConditionalOnClass(name = "com.fasterxml.jackson.databind.ObjectMapper")
 @EnableConfigurationProperties(value = SerializerProperties.class)
 public class ObjectMapperAutoConfiguration {
 
-    @Bean("defaultAxonObjectMapper")
+    @Bean("defaultSophonObjectMapper")
     @ConditionalOnMissingBean
-    @ConditionalOnExpression("'${axon.serializer.general}' == 'jackson' || '${axon.serializer.events}' == 'jackson' || '${axon.serializer.messages}' == 'jackson'")
-    public ObjectMapper defaultAxonObjectMapper() {
+    @ConditionalOnExpression("'${sophon.serializer.general}' == 'jackson' || '${sophon.serializer.events}' == 'jackson' || '${sophon.serializer.messages}' == 'jackson'")
+    public ObjectMapper defaultSophonObjectMapper() {
         return new ObjectMapper().findAndRegisterModules();
     }
 }

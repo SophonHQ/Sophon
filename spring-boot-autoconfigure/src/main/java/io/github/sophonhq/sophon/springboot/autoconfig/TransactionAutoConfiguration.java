@@ -37,7 +37,7 @@ public class TransactionAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(PlatformTransactionManager.class)
-    public TransactionManager axonTransactionManager(PlatformTransactionManager transactionManager) {
+    public TransactionManager sophonTransactionManager(PlatformTransactionManager transactionManager) {
         return new SpringTransactionManager(transactionManager);
     }
 }

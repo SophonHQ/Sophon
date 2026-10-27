@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter.jpa;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Indicates that the {@link JpaSequencedDeadLetterQueue} could not resolve a converter based on the
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Mitchell Herrijgers
  * @since axon-4.6.0
  */
-public class NoJpaConverterFoundException extends AxonException {
+public class NoJpaConverterFoundException extends SophonException {
 
     /**
      * Constructs a {@code NoJpaConverterFoundException} with the provided {@code message}.

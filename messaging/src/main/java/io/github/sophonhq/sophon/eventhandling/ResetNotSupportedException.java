@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception indicating that a reset is not supported by a component.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Allard Buijze
  * @since axon-3.2
  */
-public class ResetNotSupportedException extends AxonNonTransientException {
+public class ResetNotSupportedException extends SophonNonTransientException {
 
     private static final long serialVersionUID = 6915875633006978877L;
 

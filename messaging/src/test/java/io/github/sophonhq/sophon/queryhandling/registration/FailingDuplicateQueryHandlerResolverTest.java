@@ -35,7 +35,7 @@ class FailingDuplicateQueryHandlerResolverTest {
         QuerySubscription addedHandler = mockSubscription();
 
         Assertions.assertThrows(DuplicateQueryHandlerSubscriptionException.class, () -> {
-            resolver.resolve("org.axon.MyQuery",
+            resolver.resolve("com.example.MyQuery",
                              MyQuery.class,
                              Collections.singletonList(existingHandler),
                              addedHandler);

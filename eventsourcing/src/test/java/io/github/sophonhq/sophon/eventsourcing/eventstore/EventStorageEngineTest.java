@@ -40,8 +40,8 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Base test class for {@link EventStorageEngine} implementations.
  * <p>
- * Methods are public so they can be overridden by {@link EventStorageEngine} implementation test cases in different
- * repository, like the [Mongo Extension](https://github.com/AxonFramework/extension-mongo).
+ * Methods are public so they can be overridden by {@link EventStorageEngine} implementation test cases in other
+ * repositories.
  *
  * @author Rene de Waele
  */

@@ -23,9 +23,9 @@ import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.CommandMessageHandler;
 import io.github.sophonhq.sophon.commandhandling.CommandMessageHandlingMember;
 import io.github.sophonhq.sophon.commandhandling.NoHandlerForCommandException;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ReflectionUtils;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MessageHandler;
 import io.github.sophonhq.sophon.messaging.annotation.ClasspathParameterResolverFactory;
 import io.github.sophonhq.sophon.messaging.annotation.HandlerDefinition;
@@ -95,11 +95,11 @@ public class AggregateAnnotationCommandHandler<T> implements CommandMessageHandl
      * Instantiate a {@link AggregateAnnotationCommandHandler} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link Repository} and {@link CommandTargetResolver} are not {@code null}, and will throw an
-     * {@link AxonConfigurationException} if either of them is {@code null}. Next to that, the provided Builder's goal
+     * {@link SophonConfigurationException} if either of them is {@code null}. Next to that, the provided Builder's goal
      * is to create an {@link AggregateModel} (describing the structure of a given aggregate). To instantiate this
      * AggregateModel, either an {@link AggregateModel} can be provided directly or an {@code aggregateType} of type
      * {@link Class} can be used. The latter will internally resolve to an AggregateModel. Thus, either the
-     * AggregateModel <b>or</b> the {@code aggregateType} should be provided. An AxonConfigurationException is thrown if
+     * AggregateModel <b>or</b> the {@code aggregateType} should be provided. An SophonConfigurationException is thrown if
      * this criteria is not met.
      *
      * @param builder the {@link Builder} used to instantiate a {@link AggregateAnnotationCommandHandler} instance
@@ -425,10 +425,10 @@ public class AggregateAnnotationCommandHandler<T> implements CommandMessageHandl
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(repository, "The Repository is a hard requirement and should be provided");
             if (aggregateModel == null) {
                 assertNonNull(

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventsourcing;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.DomainEventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -65,7 +65,7 @@ public class AggregateSnapshotter extends AbstractSnapshotter {
      * Instantiate a {@link AggregateSnapshotter} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link EventStore}, {@link ParameterResolverFactory} and {@link HandlerDefinition} are not
-     * {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}. The
+     * {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}. The
      * {@link SpanFactory} is defaulted to a {@link io.github.sophonhq.sophon.tracing.NoOpSpanFactory}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link AggregateSnapshotter} instance
@@ -318,11 +318,11 @@ public class AggregateSnapshotter extends AbstractSnapshotter {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
         }
     }

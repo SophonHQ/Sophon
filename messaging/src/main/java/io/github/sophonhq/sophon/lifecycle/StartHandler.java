@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation indicating that a member method should be a part of the start cycle of an Axon application. The operation
+ * Annotation indicating that a member method should be a part of the start cycle of a Sophon application. The operation
  * can be made asynchronous by defining a return type of {@link java.util.concurrent.CompletableFuture} on the annotated
  * method.
  * <p>

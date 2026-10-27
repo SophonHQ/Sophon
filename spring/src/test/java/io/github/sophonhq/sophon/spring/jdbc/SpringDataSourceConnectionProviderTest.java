@@ -110,7 +110,7 @@ class SpringDataSourceConnectionProviderTest {
         @Bean
         public DataSource dataSource() {
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setUrl("jdbc:hsqldb:mem:axontest");
+            dataSource.setUrl("jdbc:hsqldb:mem:sophontest");
             dataSource.setUsername("sa");
             dataSource.setPassword("");
             dataSource.setDriverClassName("org.hsqldb.jdbcDriver");

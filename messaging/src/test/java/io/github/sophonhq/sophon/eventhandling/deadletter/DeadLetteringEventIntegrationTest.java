@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.eventhandling.deadletter;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 import io.github.sophonhq.sophon.common.transaction.NoOpTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.EventHandler;
@@ -876,7 +876,7 @@ public abstract class DeadLetteringEventIntegrationTest {
         };
     }
 
-    private static class ReferenceException extends AxonException {
+    private static class ReferenceException extends SophonException {
 
         private static final long serialVersionUID = 1380362964599517107L;
 

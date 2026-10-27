@@ -26,7 +26,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * A Component used in the Axon Configurer. A Component describes an object that needs to be created, possibly based on
+ * A Component used in the Sophon Configurer. A Component describes an object that needs to be created, possibly based on
  * other components in the configuration, and initialized as part of a Configuration. Components are lazily initialized
  * when they are accessed. During the initialization, they may trigger initialization of components they depend on.
  *

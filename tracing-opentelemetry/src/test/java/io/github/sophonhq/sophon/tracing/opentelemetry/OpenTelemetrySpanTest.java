@@ -89,11 +89,11 @@ class OpenTelemetrySpanTest {
 
     @Test
     void endsSpanEventWhenSpansAreStillCurrent() {
-        Span axonSpan = openTelemetrySpan.start();
-        axonSpan.start();
-        axonSpan.makeCurrent();
+        Span sophonSpan = openTelemetrySpan.start();
+        sophonSpan.start();
+        sophonSpan.makeCurrent();
 
-        axonSpan.end();
+        sophonSpan.end();
         verify(span, times(1)).end();
     }
 

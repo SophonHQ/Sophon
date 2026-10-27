@@ -27,7 +27,7 @@ import java.time.Duration;
  * @author Gerard Klijs
  * @since axon-4.8.0
  */
-@ConfigurationProperties("axon.eventhandling.tokenstore")
+@ConfigurationProperties("sophon.eventhandling.tokenstore")
 public class TokenStoreProperties {
 
     /**

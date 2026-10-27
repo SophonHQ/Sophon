@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.saga;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
 import io.github.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.jspecify.annotations.NonNull;
@@ -97,7 +97,7 @@ public class SagaMethodMessageHandlerDefinition implements HandlerEnhancerDefini
             return associationResolverClass.getConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
                  InvocationTargetException e) {
-            throw new AxonConfigurationException(format(
+            throw new SophonConfigurationException(format(
                     "`AssociationResolver` %s must define an accessible no-args constructor.",
                     associationResolverClass.getName()
             ), e);

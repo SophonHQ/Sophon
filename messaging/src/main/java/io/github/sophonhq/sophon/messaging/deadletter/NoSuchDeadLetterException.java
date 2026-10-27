@@ -16,16 +16,16 @@
 
 package io.github.sophonhq.sophon.messaging.deadletter;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
- * An {@link AxonException} describing that there is no such {@link DeadLetter dead letter} present in a
+ * An {@link SophonException} describing that there is no such {@link DeadLetter dead letter} present in a
  * {@link SequencedDeadLetterQueue}.
  *
  * @author Steven van Beelen
  * @since axon-4.6.0
  */
-public class NoSuchDeadLetterException extends AxonException {
+public class NoSuchDeadLetterException extends SophonException {
 
     private static final long serialVersionUID = 2199691939768333102L;
 

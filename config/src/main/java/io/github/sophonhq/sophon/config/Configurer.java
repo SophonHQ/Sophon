@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.config;
 
 import io.github.sophonhq.sophon.commandhandling.CommandBus;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.deadline.DeadlineManager;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
@@ -44,7 +44,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Entry point of the Axon Configuration API.
+ * Entry point of the Sophon Configuration API.
  * <p>
  * Using {@link DefaultConfigurer#defaultConfiguration()}, you will get a Configurer instance with default components
  * configured. You will need to register your Aggregates (using {@link #configureAggregate(AggregateConfiguration)} and
@@ -188,7 +188,7 @@ public interface Configurer extends LifecycleOperations {
             @NonNull Function<Configuration, List<CorrelationDataProvider>> correlationDataProviderBuilder);
 
     /**
-     * Registers an Axon module with this configuration. The module is initialized when the configuration is created and
+     * Registers a Sophon module with this configuration. The module is initialized when the configuration is created and
      * has access to the global configuration when initialized.
      * <p>
      * Typically, modules are registered for Event Handling components or Sagas.
@@ -531,19 +531,19 @@ public interface Configurer extends LifecycleOperations {
     /**
      * Retrieve the {@link EventProcessingConfigurer} registered as a module with this Configurer. If there aren't
      * any, it will create an {@link EventProcessingModule} and register it as a module. If there are multiple,
-     * an {@link AxonConfigurationException} is thrown.
+     * an {@link SophonConfigurationException} is thrown.
      *
      * @return an instance of Event Processing Configurer
      *
-     * @throws AxonConfigurationException thrown if there are multiple {@link EventProcessingConfigurer}s
+     * @throws SophonConfigurationException thrown if there are multiple {@link EventProcessingConfigurer}s
      */
-    EventProcessingConfigurer eventProcessing() throws AxonConfigurationException;
+    EventProcessingConfigurer eventProcessing() throws SophonConfigurationException;
 
     /**
      * Locates the {@link EventProcessingConfigurer} registered as a module with this Configurer and provides it to the
      * given consumer for configuration. If there aren't any pre-registered instances of
      * {@link EventProcessingConfigurer}, it will create an {@link EventProcessingModule} and register it as a module.
-     * If there are multiple, an {@link AxonConfigurationException} is thrown.
+     * If there are multiple, an {@link SophonConfigurationException} is thrown.
      *
      * This method is identical to using {@link #eventProcessing()}, except that this variant allows for easier fluent
      * interfacing.
@@ -551,10 +551,10 @@ public interface Configurer extends LifecycleOperations {
      * @param eventProcessingConfigurer a consumer to configure the
      * @return an instance of Event Processing Configurer
      *
-     * @throws AxonConfigurationException thrown if there are multiple {@link EventProcessingConfigurer}s
+     * @throws SophonConfigurationException thrown if there are multiple {@link EventProcessingConfigurer}s
      */
     default Configurer eventProcessing(@NonNull Consumer<EventProcessingConfigurer> eventProcessingConfigurer)
-            throws AxonConfigurationException {
+            throws SophonConfigurationException {
         eventProcessingConfigurer.accept(eventProcessing());
         return this;
     }

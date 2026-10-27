@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.common.jdbc;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception indicating an error occurred while interacting with a JDBC resource.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @author Allard Buijze
  * @since axon-2.2
  */
-public class JdbcException extends AxonTransientException {
+public class JdbcException extends SophonTransientException {
 
     private static final long serialVersionUID = -4361376818435729797L;
 

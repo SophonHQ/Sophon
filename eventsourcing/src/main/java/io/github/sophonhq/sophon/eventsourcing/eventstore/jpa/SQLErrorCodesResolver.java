@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventsourcing.eventstore.jpa;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.io.IOUtils;
 import io.github.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
 import jakarta.persistence.EntityExistsException;
@@ -85,7 +85,7 @@ public class SQLErrorCodesResolver implements PersistenceExceptionResolver {
      *
      * @param dataSource The data source providing the information about the backing database.
      * @throws java.sql.SQLException      when retrieving the database product name fails
-     * @throws AxonConfigurationException is the dataSource returns an unknown database product name. Use {@link
+     * @throws SophonConfigurationException is the dataSource returns an unknown database product name. Use {@link
      *                                    #SQLErrorCodesResolver(java.util.Properties, javax.sql.DataSource)} instead.
      */
     public SQLErrorCodesResolver(DataSource dataSource) throws SQLException {
@@ -99,7 +99,7 @@ public class SQLErrorCodesResolver implements PersistenceExceptionResolver {
      * databaseDuplicateKeyCodes
      *
      * @param databaseProductName The product name of the database
-     * @throws AxonConfigurationException is the dataSource returns an unknown database product name. Use {@link
+     * @throws SophonConfigurationException is the dataSource returns an unknown database product name. Use {@link
      *                                    #SQLErrorCodesResolver(java.util.Properties, String)} instead.
      */
     public SQLErrorCodesResolver(String databaseProductName) {
@@ -208,7 +208,7 @@ public class SQLErrorCodesResolver implements PersistenceExceptionResolver {
                 }
             }
             if (property == null) {
-                throw new AxonConfigurationException(String.format(
+                throw new SophonConfigurationException(String.format(
                         "The database product name '%s' is unknown. No SQLCode configuration is known for that database.",
                         databaseProductName));
             }
@@ -228,7 +228,7 @@ public class SQLErrorCodesResolver implements PersistenceExceptionResolver {
             resources = SQLErrorCodesResolver.class.getResourceAsStream(SQL_ERROR_CODES_PROPERTIES);
             properties.load(resources);
         } catch (IOException e) {
-            throw new AxonConfigurationException("Unable to read from a file that should be ", e);
+            throw new SophonConfigurationException("Unable to read from a file that should be ", e);
         } finally {
             IOUtils.closeQuietly(resources);
         }

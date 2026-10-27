@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.spring.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.config.Configuration;
 import io.github.sophonhq.sophon.config.DefaultConfigurer;
 import org.springframework.beans.factory.BeanFactoryUtils;
@@ -68,7 +68,7 @@ public class SpringConfigurer extends DefaultConfigurer {
             } else {
                 Optional<T> primary = findPrimary(componentType, candidates);
                 if (!primary.isPresent()) {
-                    throw new AxonConfigurationException("Expected single candidate for component [" + componentType.getSimpleName() + "]. Found candidates: " + Arrays.deepToString(candidates));
+                    throw new SophonConfigurationException("Expected single candidate for component [" + componentType.getSimpleName() + "]. Found candidates: " + Arrays.deepToString(candidates));
                 }
                 return primary;
             }

@@ -42,7 +42,7 @@ class MysqlJdbcEventStorageEngineTest {
 
     @Container
     private static final MySQLContainer<?> MYSQL_CONTAINER = new MySQLContainer<>("mysql:8.0")
-            .withDatabaseName("axon")
+            .withDatabaseName("sophon")
             .withUsername("admin")
             .withPassword("some-password");
 

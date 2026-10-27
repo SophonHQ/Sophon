@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.test.deadline;
 
 import io.github.sophonhq.sophon.deadline.DeadlineMessage;
 import io.github.sophonhq.sophon.messaging.Message;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import io.github.sophonhq.sophon.test.matchers.FieldFilter;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -97,7 +97,7 @@ public class DeadlineManagerValidator {
         Description actual = new StringDescription();
         matcher.describeTo(expected);
         describe(scheduledDeadlines, actual);
-        throw new AxonAssertionError(format(
+        throw new SophonAssertionError(format(
                 "Did not find a deadline at the given deadline manager.\n"
                         + "Expected <%s> at <%s>,\n but got <%s>.\n",
                 expected, scheduledTime, actual
@@ -114,7 +114,7 @@ public class DeadlineManagerValidator {
             if (matcher.matches(scheduledDeadline.deadlineMessage())) {
                 Description unexpected = new StringDescription();
                 matcher.describeTo(unexpected);
-                throw new AxonAssertionError(format(
+                throw new SophonAssertionError(format(
                         "Unexpected matching deadline found at the given deadline manager.\nGot <%s>.\n",
                         unexpected
                 ));
@@ -148,7 +148,7 @@ public class DeadlineManagerValidator {
             Description actual = new StringDescription();
             matcher.describeTo(expected);
             describe(triggeredDeadlines, actual);
-            throw new AxonAssertionError(format(
+            throw new SophonAssertionError(format(
                     "Expected deadlines were not triggered at the given deadline manager.\n"
                             + "Expected <%s>,\n but got <%s>.\n",
                     expected, actual
@@ -235,7 +235,7 @@ public class DeadlineManagerValidator {
                                                           Matcher<? extends Iterable<?>> deadlinesMatcher) {
         List<ScheduledDeadlineInfo> triggeredDeadlines = deadlineManager.getTriggeredDeadlines();
         if (triggeredDeadlines.size() != numberOfExpectedDeadlines) {
-            throw new AxonAssertionError(format(
+            throw new SophonAssertionError(format(
                     "Got wrong number of triggered deadlines.\nExpected <%s>,\n but got <%s>.",
                     numberOfExpectedDeadlines, triggeredDeadlines.size()
             ));
@@ -249,7 +249,7 @@ public class DeadlineManagerValidator {
     public void assertNoScheduledDeadlines() {
         List<ScheduledDeadlineInfo> scheduledDeadlines = deadlineManager.getScheduledDeadlines();
         if (scheduledDeadlines != null && !scheduledDeadlines.isEmpty()) {
-            throw new AxonAssertionError(
+            throw new SophonAssertionError(
                     "Expected no scheduled deadlines, but got " + scheduledDeadlines.size() + " deadlines."
             );
         }

@@ -45,10 +45,10 @@ class XStreamAutoConfigurationTest {
     @Test
     void xStreamAutoConfigurationConstructsXStreamInstanceWhenGeneralSerializerPropertyIsXStream() {
         testApplicationContext.withUserConfiguration(DefaultContext.class)
-                              .withPropertyValues("axon.serializer.general:xstream")
+                              .withPropertyValues("sophon.serializer.general:xstream")
                               .run(context -> {
                                   assertThat(context).hasSingleBean(XStream.class);
-                                  assertThat(context).getBean("defaultAxonXStream")
+                                  assertThat(context).getBean("defaultSophonXStream")
                                                      .isInstanceOf(XStream.class);
                               });
     }
@@ -56,10 +56,10 @@ class XStreamAutoConfigurationTest {
     @Test
     void xStreamAutoConfigurationConstructsXStreamInstanceWhenGeneralSerializerPropertyIsDefault() {
         testApplicationContext.withUserConfiguration(DefaultContext.class)
-                              .withPropertyValues("axon.serializer.general:default")
+                              .withPropertyValues("sophon.serializer.general:default")
                               .run(context -> {
                                   assertThat(context).hasSingleBean(XStream.class);
-                                  assertThat(context).getBean("defaultAxonXStream")
+                                  assertThat(context).getBean("defaultSophonXStream")
                                                      .isInstanceOf(XStream.class);
                               });
     }
@@ -67,10 +67,10 @@ class XStreamAutoConfigurationTest {
     @Test
     void xStreamAutoConfigurationConstructsXStreamInstanceWhenMessagesSerializerPropertyIsXStream() {
         testApplicationContext.withUserConfiguration(DefaultContext.class)
-                              .withPropertyValues("axon.serializer.messages:xstream")
+                              .withPropertyValues("sophon.serializer.messages:xstream")
                               .run(context -> {
                                   assertThat(context).hasSingleBean(XStream.class);
-                                  assertThat(context).getBean("defaultAxonXStream")
+                                  assertThat(context).getBean("defaultSophonXStream")
                                                      .isInstanceOf(XStream.class);
                               });
     }
@@ -78,10 +78,10 @@ class XStreamAutoConfigurationTest {
     @Test
     void xStreamAutoConfigurationConstructsXStreamInstanceWhenEventsSerializerPropertyIsXStream() {
         testApplicationContext.withUserConfiguration(DefaultContext.class)
-                              .withPropertyValues("axon.serializer.events:xstream")
+                              .withPropertyValues("sophon.serializer.events:xstream")
                               .run(context -> {
                                   assertThat(context).hasSingleBean(XStream.class);
-                                  assertThat(context).getBean("defaultAxonXStream")
+                                  assertThat(context).getBean("defaultSophonXStream")
                                                      .isInstanceOf(XStream.class);
                               });
     }
@@ -90,9 +90,9 @@ class XStreamAutoConfigurationTest {
     void xStreamAutoConfigurationDoesNotConstructXStreamInstanceWhenNoPropertyIsXStream() {
         testApplicationContext.withUserConfiguration(DefaultContext.class)
                               .withPropertyValues(
-                                      "axon.serializer.general:jackson",
-                                      "axon.serializer.messages:jackson",
-                                      "axon.serializer.events:jackson"
+                                      "sophon.serializer.general:jackson",
+                                      "sophon.serializer.messages:jackson",
+                                      "sophon.serializer.events:jackson"
                               )
                               .run(context -> assertThat(context).getBean(XStream.class).isNull());
     }
@@ -102,7 +102,7 @@ class XStreamAutoConfigurationTest {
         testApplicationContext.withUserConfiguration(ContextWithXStreamInstance.class)
                               .run(context -> {
                                   assertThat(context).hasSingleBean(XStream.class);
-                                  assertThat(context).getBean("defaultAxonXStream")
+                                  assertThat(context).getBean("defaultSophonXStream")
                                                      .isNull();
                               });
     }

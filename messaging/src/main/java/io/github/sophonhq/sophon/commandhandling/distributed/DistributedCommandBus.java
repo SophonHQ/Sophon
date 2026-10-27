@@ -27,8 +27,8 @@ import io.github.sophonhq.sophon.commandhandling.callbacks.LoggingCallback;
 import io.github.sophonhq.sophon.commandhandling.distributed.commandfilter.CommandNameFilter;
 import io.github.sophonhq.sophon.commandhandling.distributed.commandfilter.DenyAll;
 import io.github.sophonhq.sophon.commandhandling.distributed.commandfilter.DenyCommandNameFilter;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.lifecycle.Lifecycle;
 import io.github.sophonhq.sophon.lifecycle.Phase;
 import io.github.sophonhq.sophon.messaging.Distributed;
@@ -107,7 +107,7 @@ public class DistributedCommandBus implements CommandBus, Distributed<CommandBus
      * Instantiate a {@link DistributedCommandBus} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link CommandRouter}, {@link CommandBusConnector} and {@link MessageMonitor} are not
-     * {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link DistributedCommandBus} instance
      */
@@ -384,7 +384,7 @@ public class DistributedCommandBus implements CommandBus, Distributed<CommandBus
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

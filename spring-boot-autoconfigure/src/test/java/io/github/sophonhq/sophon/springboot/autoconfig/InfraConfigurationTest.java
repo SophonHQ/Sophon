@@ -32,9 +32,9 @@ import io.github.sophonhq.sophon.serialization.upcasting.event.EventUpcasterChai
 import io.github.sophonhq.sophon.serialization.upcasting.event.IntermediateEventRepresentation;
 import io.github.sophonhq.sophon.spring.config.MessageHandlerLookup;
 import io.github.sophonhq.sophon.spring.config.SpringAggregateLookup;
-import io.github.sophonhq.sophon.spring.config.SpringAxonConfiguration;
 import io.github.sophonhq.sophon.spring.config.SpringConfigurer;
 import io.github.sophonhq.sophon.spring.config.SpringSagaLookup;
+import io.github.sophonhq.sophon.spring.config.SpringSophonConfiguration;
 import io.github.sophonhq.sophon.springboot.utils.TestSerializer;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
@@ -77,15 +77,15 @@ class InfraConfigurationTest {
     }
 
     @Test
-    void infraConfigurationConstructsSpringConfigurerAndSpringAxonConfiguration() {
+    void infraConfigurationConstructsSpringConfigurerAndSpringSophonConfiguration() {
         testApplicationContext.run(context -> {
             assertThat(context).hasSingleBean(SpringConfigurer.class);
-            assertThat(context).getBean("springAxonConfigurer")
+            assertThat(context).getBean("springSophonConfigurer")
                                .isInstanceOf(SpringConfigurer.class);
-            assertThat(context).hasSingleBean(SpringAxonConfiguration.class);
-            // The SpringAxonConfiguration is a factory for the DefaultConfigurer.ConfigurationImpl that is private.
+            assertThat(context).hasSingleBean(SpringSophonConfiguration.class);
+            // The SpringSophonConfiguration is a factory for the DefaultConfigurer.ConfigurationImpl that is private.
             // Hence, we perform a non-null check.
-            assertThat(context).getBean("springAxonConfiguration")
+            assertThat(context).getBean("springSophonConfiguration")
                                .isNotNull();
         });
     }
@@ -110,7 +110,7 @@ class InfraConfigurationTest {
             assertThat(context).getBean("secondUpcasterChain")
                                .isInstanceOf(EventUpcasterChain.class);
 
-            EventUpcasterChain result = context.getBean("springAxonConfiguration", Configuration.class)
+            EventUpcasterChain result = context.getBean("springSophonConfiguration", Configuration.class)
                                                .upcasterChain();
             assertThat(result).isNotNull();
 
@@ -164,12 +164,12 @@ class InfraConfigurationTest {
     }
 
     @Test
-    void customSpringAxonConfigurationOvertakesDefaultSpringAxonConfiguration() {
+    void customSpringSophonConfigurationOvertakesDefaultSpringSophonConfiguration() {
         testApplicationContext.withUserConfiguration(CustomizedConfigurerContext.class).run(context -> {
-            assertThat(context).hasSingleBean(SpringAxonConfiguration.class);
+            assertThat(context).hasSingleBean(SpringSophonConfiguration.class);
 
-            SpringAxonConfiguration result = context.getBean(SpringAxonConfiguration.class);
-            assertThat(result).isInstanceOf(CustomizedConfigurerContext.CustomSpringAxonConfiguration.class);
+            SpringSophonConfiguration result = context.getBean(SpringSophonConfiguration.class);
+            assertThat(result).isInstanceOf(CustomizedConfigurerContext.CustomSpringSophonConfiguration.class);
         });
     }
 
@@ -343,16 +343,16 @@ class InfraConfigurationTest {
 
     static class CustomizedConfigurerContext {
 
-        static class CustomSpringAxonConfiguration extends SpringAxonConfiguration {
+        static class CustomSpringSophonConfiguration extends SpringSophonConfiguration {
 
-            public CustomSpringAxonConfiguration(Configurer configurer) {
+            public CustomSpringSophonConfiguration(Configurer configurer) {
                 super(configurer);
             }
         }
 
         @Bean
-        public CustomSpringAxonConfiguration customSpringAxonConfiguration(Configurer configurer) {
-            return new CustomSpringAxonConfiguration(configurer);
+        public CustomSpringSophonConfiguration customSpringSophonConfiguration(Configurer configurer) {
+            return new CustomSpringSophonConfiguration(configurer);
         }
 
         static class CustomSpringConfigurer extends SpringConfigurer {

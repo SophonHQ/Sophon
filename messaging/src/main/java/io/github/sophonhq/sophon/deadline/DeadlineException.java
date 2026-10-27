@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.deadline;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception which occurs during deadline message processing.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @author Milan Savic
  * @since axon-3.3
  */
-public class DeadlineException extends AxonTransientException {
+public class DeadlineException extends SophonTransientException {
 
     private static final long serialVersionUID = 6419272092915164035L;
 

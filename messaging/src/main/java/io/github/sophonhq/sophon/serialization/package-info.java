@@ -15,6 +15,6 @@
  */
 
 /**
- * Classes related to message processing in Axon Framework.
+ * Classes related to message processing in Sophon.
  */
 package io.github.sophonhq.sophon.serialization;

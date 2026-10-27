@@ -42,22 +42,22 @@ import java.util.List;
 @Deprecated
 public class EventHandlerRegistrar implements InitializingBean {
 
-    private final AxonConfiguration axonConfiguration;
+    private final SophonConfiguration sophonConfiguration;
     private final EventProcessingConfigurer eventProcessingConfigurer;
     private final ModuleConfiguration eventProcessingConfiguration;
     private volatile boolean initialized;
 
     /**
      * Initialize the registrar to register beans discovered with the given {@code eventProcessing}. The registrar will
-     * also initialize the EventHandlerConfiguration using the given {@code axonConfiguration} and start it.
+     * also initialize the EventHandlerConfiguration using the given {@code sophonConfiguration} and start it.
      *
-     * @param axonConfiguration         The main Axon Configuration instance
-     * @param eventProcessingConfigurer The main Axon Configuration
+     * @param sophonConfiguration         The main Sophon Configuration instance
+     * @param eventProcessingConfigurer The main Sophon Configuration
      */
-    public EventHandlerRegistrar(AxonConfiguration axonConfiguration,
+    public EventHandlerRegistrar(SophonConfiguration sophonConfiguration,
                                  ModuleConfiguration eventProcessingConfiguration,
                                  EventProcessingConfigurer eventProcessingConfigurer) {
-        this.axonConfiguration = axonConfiguration;
+        this.sophonConfiguration = sophonConfiguration;
         this.eventProcessingConfiguration = eventProcessingConfiguration;
         this.eventProcessingConfigurer = eventProcessingConfigurer;
     }
@@ -77,7 +77,7 @@ public class EventHandlerRegistrar implements InitializingBean {
     public void afterPropertiesSet() {
         if (!initialized) {
             initialized = true;
-            eventProcessingConfiguration.initialize(axonConfiguration);
+            eventProcessingConfiguration.initialize(sophonConfiguration);
         }
     }
 }

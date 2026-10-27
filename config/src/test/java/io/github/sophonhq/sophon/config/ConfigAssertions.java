@@ -22,7 +22,7 @@ import static java.util.Arrays.stream;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * Assertion utils for axon {@link Configuration}.
+ * Assertion utils for Sophon {@link Configuration}.
  *
  * @author Milan Savic
  * @since axon-3.3
@@ -36,7 +36,7 @@ public class ConfigAssertions {
     /**
      * Asserts whether given {@code modules} are present in the provided {@code configuration}.
      *
-     * @param configuration Axon configuration
+     * @param configuration Sophon configuration
      * @param moduleTypes   expected module configuration types present in {@code configuration}
      */
     @SafeVarargs

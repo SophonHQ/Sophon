@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.ErrorHandler;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
@@ -130,7 +130,7 @@ public interface EventProcessingConfigurer {
         return registerTrackingEventProcessor(name, c -> {
             EventBus eventBus = c.eventBus();
             if (!(eventBus instanceof StreamableMessageSource)) {
-                throw new AxonConfigurationException(
+                throw new SophonConfigurationException(
                         "Cannot create Tracking Event Processor with name '" + name + "'. " +
                                 "The available EventBus does not support tracking processors."
                 );
@@ -598,7 +598,7 @@ public interface EventProcessingConfigurer {
         return registerPooledStreamingEventProcessor(name, c -> {
             EventBus eventBus = c.eventBus();
             if (!(eventBus instanceof StreamableMessageSource)) {
-                throw new AxonConfigurationException(
+                throw new SophonConfigurationException(
                         "Cannot create Pooled Streaming Event Processor with name '" + name + "'. " +
                                 "The available EventBus does not support tracking processors."
                 );

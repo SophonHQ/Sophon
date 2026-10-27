@@ -467,24 +467,24 @@ class InterceptorConfigurationTest {
             private final String name;
             private final CountDownLatch invocation;
             private final Queue<String> handlingOutcome;
-            private final Configuration axonConfiguration;
+            private final Configuration sophonConfiguration;
 
             public MyHandlerInterceptor(
                     String name,
                     CountDownLatch invocation,
                     Queue<String> handlingOutcome,
-                    Configuration axonConfiguration
+                    Configuration sophonConfiguration
             ) {
                 this.name = name;
                 this.invocation = invocation;
                 this.handlingOutcome = handlingOutcome;
-                this.axonConfiguration = axonConfiguration;
+                this.sophonConfiguration = sophonConfiguration;
             }
 
             @Override
             public Object handle(UnitOfWork<? extends T> unitOfWork, InterceptorChain interceptorChain) throws Exception {
                 invocation.countDown();
-                axonConfiguration.tags();
+                sophonConfiguration.tags();
                 handlingOutcome.add(name + ": " + unitOfWork.getMessage());
                 return interceptorChain.proceed();
             }
@@ -495,24 +495,24 @@ class InterceptorConfigurationTest {
             private final String name;
             private final CountDownLatch invocation;
             private final Queue<String> handlingOutcome;
-            private final Configuration axonConfiguration;
+            private final Configuration sophonConfiguration;
 
             public MyDispatchInterceptor(
                     String name,
                     CountDownLatch invocation,
                     Queue<String> handlingOutcome,
-                    Configuration axonConfiguration
+                    Configuration sophonConfiguration
             ) {
                 this.name = name;
                 this.invocation = invocation;
                 this.handlingOutcome = handlingOutcome;
-                this.axonConfiguration = axonConfiguration;
+                this.sophonConfiguration = sophonConfiguration;
             }
 
             @NonNull
             @Override
             public BiFunction<Integer, T, T> handle(@NonNull List<? extends T> messages) {
-                axonConfiguration.tags();
+                sophonConfiguration.tags();
                 return (index, message) -> {
                     invocation.countDown();
                     handlingOutcome.add(name + ": " + message);

@@ -16,13 +16,13 @@
 
 package io.github.sophonhq.sophon.commandhandling.distributed;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception that is triggered when an error occurs that is related to the registration or deregistration of a member to
  * the distributed command bus service registry.
  */
-public class ServiceRegistryException extends AxonException {
+public class ServiceRegistryException extends SophonException {
 
     /**
      * Initializes the exception using the given {@code message}.

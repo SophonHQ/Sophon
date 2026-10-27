@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.serialization.jackson3;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ObjectUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.MetaData;
 import io.github.sophonhq.sophon.serialization.AnnotationRevisionResolver;
 import io.github.sophonhq.sophon.serialization.ChainingConverter;
@@ -64,7 +64,7 @@ public class Jackson3Serializer implements Serializer {
         .allowIfBaseType(Object.class)
         .build();
 
-    private static final PolymorphicTypeValidator AXON_ONLY = BasicPolymorphicTypeValidator.builder()
+    private static final PolymorphicTypeValidator SOPHON_ONLY = BasicPolymorphicTypeValidator.builder()
         .allowIfSubType("io.github.sophonhq.sophon.")
         .build();
 
@@ -121,7 +121,7 @@ public class Jackson3Serializer implements Serializer {
 
         JsonMapper.Builder jmb = JsonMapper.builder();
 
-        jmb.addModule(new SimpleModule("Axon-Jackson3 Module").addDeserializer(MetaData.class, new MetaDataDeserializer()));
+        jmb.addModule(new SimpleModule("Sophon-Jackson3 Module").addDeserializer(MetaData.class, new MetaDataDeserializer()));
         jmb.findAndAddModules();
         if (builder.lenientDeserialization) {
             jmb.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
@@ -129,7 +129,7 @@ public class Jackson3Serializer implements Serializer {
             jmb.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         }
 
-        PolymorphicTypeValidator typeValidator = builder.defaultTyping ? ALLOW_ALL : AXON_ONLY;
+        PolymorphicTypeValidator typeValidator = builder.defaultTyping ? ALLOW_ALL : SOPHON_ONLY;
 
         if (builder.defaultTyping) {
             jmb.activateDefaultTyping(typeValidator, DefaultTyping.NON_CONCRETE_AND_ARRAYS);
@@ -347,7 +347,7 @@ public class Jackson3Serializer implements Serializer {
 
         /**
          * Sets a customizer for the {@link JsonMapper.Builder} used to construct the final {@link ObjectMapper}.
-         * This customizer is called after all Axon configuration has been applied. Setting this value to
+         * This customizer is called after all Sophon configuration has been applied. Setting this value to
          * {@code null} removes a previous customizer if any.
          *
          * @param customizer a customizer that is called just before the final {@link ObjectMapper} is constructed
@@ -431,10 +431,10 @@ public class Jackson3Serializer implements Serializer {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             // Method kept for overriding
         }
     }

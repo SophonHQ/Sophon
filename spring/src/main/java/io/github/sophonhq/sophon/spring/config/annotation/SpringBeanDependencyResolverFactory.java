@@ -49,7 +49,7 @@ public class SpringBeanDependencyResolverFactory implements ParameterResolverFac
     private final ApplicationContext applicationContext;
 
     /**
-     * Default constructor requiring an application context, for use internally by Axon.
+     * Default constructor requiring an application context, for use internally by Sophon.
      *
      * @param applicationContext The Spring application context for the executing application
      */

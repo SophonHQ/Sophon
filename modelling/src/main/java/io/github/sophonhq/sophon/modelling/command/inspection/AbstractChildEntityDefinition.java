@@ -18,8 +18,8 @@ package io.github.sophonhq.sophon.modelling.command.inspection;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
 import io.github.sophonhq.sophon.commandhandling.CommandMessageHandlingMember;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ReflectionUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.property.Property;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.modelling.command.AggregateMember;
@@ -115,7 +115,7 @@ public abstract class AbstractChildEntityDefinition implements ChildEntityDefini
             forwardingMode = forwardingModeClass.getDeclaredConstructor().newInstance();
             forwardingMode.initialize(member, childEntityModel);
         } catch (ReflectiveOperationException e) {
-            throw new AxonConfigurationException(
+            throw new SophonConfigurationException(
                     String.format("Failed to instantiate ForwardingMode of type [%s].", forwardingModeClass)
             );
         }
@@ -172,7 +172,7 @@ public abstract class AbstractChildEntityDefinition implements ChildEntityDefini
 
         String routingKey = getOrDefault(commandHandler.routingKey(), childEntityModel.routingKey());
         if (routingKey == null) {
-            throw new AxonConfigurationException(format(
+            throw new SophonConfigurationException(format(
                     "Unable to route command of type [%s] since no routing key was defined. "
                             + "Either specify an entity id on the Aggregate Member [%s] "
                             + "or define a routing key on the command handler annotation",
@@ -183,7 +183,7 @@ public abstract class AbstractChildEntityDefinition implements ChildEntityDefini
 
         Property<Object> property = getProperty(commandPayloadType, routingKey);
         if (property == null) {
-            throw new AxonConfigurationException(format(
+            throw new SophonConfigurationException(format(
                     "Command of type [%s] doesn't have a property matching the routing key [%s] necessary to route through member [%s]",
                     commandPayloadType,
                     routingKey,

@@ -22,7 +22,7 @@ import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricSet;
 import com.codahale.metrics.Reservoir;
 import com.codahale.metrics.Timer;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.Message;
 import io.github.sophonhq.sophon.monitoring.MessageMonitor;
 import org.jspecify.annotations.NonNull;
@@ -187,7 +187,7 @@ public class MessageTimerMonitor implements MessageMonitor<Message<?>>, MetricSe
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

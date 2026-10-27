@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.async;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import org.jspecify.annotations.NonNull;
 
@@ -39,7 +39,7 @@ public class MetaDataSequencingPolicy implements SequencingPolicy<EventMessage<?
      * Instantiate a {@link MetaDataSequencingPolicy} based on the fields contained in the
      * {@link MetaDataSequencingPolicy.Builder}.
      * <p>
-     * Will assert that the {@code metaDataKey} is not {@code null} and will throw an {@link AxonConfigurationException}
+     * Will assert that the {@code metaDataKey} is not {@code null} and will throw an {@link SophonConfigurationException}
      * if this is the case.
      *
      * @param builder The {@link MetaDataSequencingPolicy.Builder} used to instantiate a

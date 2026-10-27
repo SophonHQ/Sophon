@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.spring.config;
 
 import io.github.sophonhq.sophon.commandhandling.CommandBus;
 import io.github.sophonhq.sophon.commandhandling.SimpleCommandBus;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.config.Configuration;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -80,7 +80,7 @@ class SpringConfigurerTest {
         SpringConfigurer configurer = new SpringConfigurer(context);
 
         Configuration configuration = configurer.buildConfiguration();
-        assertThrows(AxonConfigurationException.class, configuration::commandBus);
+        assertThrows(SophonConfigurationException.class, configuration::commandBus);
 
         //noinspection unchecked
         verify(context, never()).getBean(anyString(), any(Class.class));
@@ -97,7 +97,7 @@ class SpringConfigurerTest {
         SpringConfigurer configurer = new SpringConfigurer(context);
 
         Configuration configuration = configurer.buildConfiguration();
-        assertThrows(AxonConfigurationException.class, configuration::commandBus);
+        assertThrows(SophonConfigurationException.class, configuration::commandBus);
 
         //noinspection unchecked
         verify(context, never()).getBean(anyString(), any(Class.class));

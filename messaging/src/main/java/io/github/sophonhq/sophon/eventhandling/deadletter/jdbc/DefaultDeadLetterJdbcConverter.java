@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.DateTimeUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -71,7 +71,7 @@ public class DefaultDeadLetterJdbcConverter<E extends EventMessage<?>>
      * <p>
      * Will validate whether the {@link Builder#genericSerializer(Serializer) generic Serializer} and
      * {@link Builder#eventSerializer(Serializer) event Serializer} are set. If for either this is not the case an
-     * {@link AxonConfigurationException} is thrown.
+     * {@link SophonConfigurationException} is thrown.
      *
      * @param builder The {@link Builder} used to instantiate a {@link DefaultDeadLetterJdbcConverter} instance.
      */
@@ -265,7 +265,7 @@ public class DefaultDeadLetterJdbcConverter<E extends EventMessage<?>>
         /**
          * Validate whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException When one field asserts to be incorrect according to the Builder's
+         * @throws SophonConfigurationException When one field asserts to be incorrect according to the Builder's
          *                                    specifications.
          */
         protected void validate() {

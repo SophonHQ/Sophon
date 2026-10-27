@@ -52,7 +52,7 @@ import org.springframework.context.annotation.Bean;
 import javax.sql.DataSource;
 
 /**
- * Autoconfiguration class for Axon's JDBC specific infrastructure components.
+ * Autoconfiguration class for Sophon's JDBC specific infrastructure components.
  *
  * @author Allard Buijze
  * @since axon-3.1
@@ -61,7 +61,7 @@ import javax.sql.DataSource;
 @ConditionalOnBean(DataSource.class)
 @EnableConfigurationProperties(TokenStoreProperties.class)
 @AutoConfigureAfter({JpaAutoConfiguration.class, JpaEventStoreAutoConfiguration.class})
-@AutoConfigureBefore(AxonAutoConfiguration.class)
+@AutoConfigureBefore(SophonAutoConfiguration.class)
 public class JdbcAutoConfiguration {
 
     private final TokenStoreProperties tokenStoreProperties;

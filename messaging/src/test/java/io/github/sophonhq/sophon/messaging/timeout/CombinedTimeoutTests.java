@@ -44,8 +44,8 @@ class CombinedTimeoutTests {
 
     @AfterEach
     void tearDown() throws InterruptedException {
-        //noinspection ResultOfMethodCallIgnored | Awaiting termination to ensure none of the AxonTimeLimitedTask hang
-        AxonTaskJanitor.INSTANCE
+        //noinspection ResultOfMethodCallIgnored | Awaiting termination to ensure none of the SophonTimeLimitedTask hang
+        SophonTaskJanitor.INSTANCE
                 .awaitTermination(250, TimeUnit.MILLISECONDS);
     }
 
@@ -65,7 +65,7 @@ class CombinedTimeoutTests {
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
 
         await().until(uow::isRolledBack);
-        assertInstanceOf(AxonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
+        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
         assertFalse(Thread.interrupted());
     }
 
@@ -85,7 +85,7 @@ class CombinedTimeoutTests {
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
 
         await().until(uow::isRolledBack);
-        assertInstanceOf(AxonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
+        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
         assertFalse(Thread.interrupted());
     }
 
@@ -103,7 +103,7 @@ class CombinedTimeoutTests {
         List<EventMessage<?>> batch = generateBatch(2);
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
         await().until(uow::isRolledBack);
-        assertInstanceOf(AxonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
+        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
         assertFalse(Thread.interrupted());
     }
 
@@ -121,7 +121,7 @@ class CombinedTimeoutTests {
         List<EventMessage<?>> batch = generateBatch(2);
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
         await().until(uow::isRolledBack);
-        assertInstanceOf(AxonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
+        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
         assertFalse(Thread.interrupted());
     }
 
@@ -139,7 +139,7 @@ class CombinedTimeoutTests {
         List<EventMessage<?>> batch = generateBatch(2);
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
         await().until(uow::isRolledBack);
-        assertInstanceOf(AxonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
+        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
         assertFalse(Thread.interrupted());
     }
 
@@ -157,7 +157,7 @@ class CombinedTimeoutTests {
         List<EventMessage<?>> batch = generateBatch(2);
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
         await().until(uow::isRolledBack);
-        assertInstanceOf(AxonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
+        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
         assertFalse(Thread.interrupted());
     }
 
@@ -211,8 +211,8 @@ class CombinedTimeoutTests {
                 timeout,
                 500,
                 100,
-                AxonTaskJanitor.INSTANCE,
-                AxonTaskJanitor.LOGGER
+                SophonTaskJanitor.INSTANCE,
+                SophonTaskJanitor.LOGGER
         );
     }
 

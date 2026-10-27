@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Indicates situations when access to the Payload of a Message is not allowed.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Milan Savic
  * @since axon-4.0
  */
-public class IllegalPayloadAccessException extends AxonNonTransientException {
+public class IllegalPayloadAccessException extends SophonNonTransientException {
 
     /**
      * Creates the exception with given {@code message}.

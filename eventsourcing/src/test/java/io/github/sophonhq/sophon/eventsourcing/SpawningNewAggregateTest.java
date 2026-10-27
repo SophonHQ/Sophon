@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.eventsourcing;
 
 import io.github.sophonhq.sophon.commandhandling.CommandHandler;
 import io.github.sophonhq.sophon.commandhandling.SimpleCommandBus;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventsourcing.eventstore.EventStore;
 import io.github.sophonhq.sophon.modelling.command.AggregateAnnotationCommandHandler;
@@ -140,7 +140,7 @@ class SpawningNewAggregateTest {
                             (commandMessage, commandResultMessage) -> {
                                 if (commandResultMessage.isExceptional()) {
                                     Throwable cause = commandResultMessage.exceptionResult();
-                                    assertTrue(cause instanceof AxonConfigurationException);
+                                    assertTrue(cause instanceof SophonConfigurationException);
                                     assertEquals(
                                             "Since repository provider is not provided, we cannot spawn a new aggregate for io.github.sophonhq.sophon.eventsourcing.SpawningNewAggregateTest$Aggregate2",
                                             cause.getMessage());

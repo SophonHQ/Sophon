@@ -137,7 +137,7 @@ class LockingRepositoryTest {
         Aggregate<StubAggregate> loadedAggregate = testSubject.load(aggregate.getIdentifier(), 0L);
         spanFactory.verifySpanCompleted("Repository.obtainLock");
         spanFactory.verifySpanCompleted("Repository.load");
-        spanFactory.verifySpanHasAttributeValue("Repository.load", "axon.aggregateId", aggregate.getIdentifier());
+        spanFactory.verifySpanHasAttributeValue("Repository.load", "sophon.aggregateId", aggregate.getIdentifier());
         //noinspection resource
         verify(lockFactory).obtainLock(aggregate.getIdentifier());
 

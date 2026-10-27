@@ -16,12 +16,12 @@
 
 package io.github.sophonhq.sophon.modelling.saga.repository;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception triggered when a new saga instance could not be instantiated.
  */
-public class SagaCreationException extends AxonNonTransientException {
+public class SagaCreationException extends SophonNonTransientException {
 
     /**
      * Initializes the exception using the given {@code message} and {@code cause}.

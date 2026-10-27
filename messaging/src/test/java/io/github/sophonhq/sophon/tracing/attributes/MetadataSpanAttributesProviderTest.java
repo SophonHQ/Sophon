@@ -38,8 +38,8 @@ class MetadataSpanAttributesProviderTest {
                 .andMetaData(singletonMap("someOtherKey_2", "someValue"));
         Map<String, String> map = provider.provideForMessage(message);
         assertEquals(3, map.size());
-        assertEquals("valueOne", map.get("axon_metadata_myKeyOne"));
-        assertEquals("2", map.get("axon_metadata_myNumberKey"));
-        assertEquals("someValue", map.get("axon_metadata_someOtherKey_2"));
+        assertEquals("valueOne", map.get("sophon_metadata_myKeyOne"));
+        assertEquals("2", map.get("sophon_metadata_myNumberKey"));
+        assertEquals("someValue", map.get("sophon_metadata_someOtherKey_2"));
     }
 }

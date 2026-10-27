@@ -36,43 +36,43 @@ public abstract class Headers {
     /**
      * Key pointing to a message identifier.
      */
-    public static final String MESSAGE_ID = "axon-message-id";
+    public static final String MESSAGE_ID = "sophon-message-id";
     /**
      * Key pointing to the serialized payload of a message.
      */
-    public static final String SERIALIZED_MESSAGE_PAYLOAD = "axon-serialized-message-payload";
+    public static final String SERIALIZED_MESSAGE_PAYLOAD = "sophon-serialized-message-payload";
     /**
      * Key pointing to the payload type of a message.
      */
-    public static final String MESSAGE_TYPE = "axon-message-type";
+    public static final String MESSAGE_TYPE = "sophon-message-type";
     /**
      * Key pointing to the revision of a message.
      */
-    public static final String MESSAGE_REVISION = "axon-message-revision";
+    public static final String MESSAGE_REVISION = "sophon-message-revision";
     /**
      * Key pointing to the timestamp of a message.
      */
-    public static final String MESSAGE_TIMESTAMP = "axon-message-timestamp";
+    public static final String MESSAGE_TIMESTAMP = "sophon-message-timestamp";
     /**
      * Key pointing to the aggregate identifier of a message.
      */
-    public static final String AGGREGATE_ID = "axon-message-aggregate-id";
+    public static final String AGGREGATE_ID = "sophon-message-aggregate-id";
     /**
      * Key pointing to the aggregate sequence of a message.
      */
-    public static final String AGGREGATE_SEQ = "axon-message-aggregate-seq";
+    public static final String AGGREGATE_SEQ = "sophon-message-aggregate-seq";
     /**
      * Key pointing to the aggregate type of a message.
      */
-    public static final String AGGREGATE_TYPE = "axon-message-aggregate-type";
+    public static final String AGGREGATE_TYPE = "sophon-message-aggregate-type";
     /**
      * Key pointing to the {@link MetaData} of a message.
      */
-    public static final String MESSAGE_METADATA = "axon-metadata";
+    public static final String MESSAGE_METADATA = "sophon-metadata";
     /**
      * Key pointing to the deadline name of a {@link io.github.sophonhq.sophon.deadline.DeadlineMessage}.
      */
-    public static final String DEADLINE_NAME = "axon-deadline-name";
+    public static final String DEADLINE_NAME = "sophon-deadline-name";
 
     private Headers() {
     }

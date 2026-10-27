@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.async;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.DomainEventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import io.github.sophonhq.sophon.messaging.MetaData;
@@ -60,7 +60,7 @@ public class MetaDataSequencingPolicyTest {
 
     @Test
     void missingHardRequirementShouldThrowException() {
-        assertThrows(AxonConfigurationException.class,
+        assertThrows(SophonConfigurationException.class,
                      () -> MetaDataSequencingPolicy
                              .builder()
                              .build());

@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.commandhandling.gateway;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +97,7 @@ public abstract class AbstractRetryScheduler implements RetryScheduler {
      * <p/>
      * In this implementation, given {@code failure} (and its causes) is tested against configured composable
      * {@code nonTransientFailurePredicate}. By default, {@code nonTransientFailurePredicate} is configured only
-     * with {@link AxonNonTransientExceptionClassesPredicate}.
+     * with {@link SophonNonTransientExceptionClassesPredicate}.
      *
      * @param failure the exception that occurred while processing a command
      * @return {@code true} if the exception is clearly non-transient and the command should <em>not</em> be
@@ -155,14 +155,14 @@ public abstract class AbstractRetryScheduler implements RetryScheduler {
     /**
      * A builder class for the {@link RetryScheduler} implementations.
      * <p>
-     * The default for {@code maxRetryCount} is set to a single retry and the {@code nonTransientFailurePredicate} defaults to {@link AxonNonTransientExceptionClassesPredicate}.
+     * The default for {@code maxRetryCount} is set to a single retry and the {@code nonTransientFailurePredicate} defaults to {@link SophonNonTransientExceptionClassesPredicate}.
      * The {@link ScheduledExecutorService} is a <b>hard requirement</b> and as such should be provided.
      */
     public abstract static class Builder<B extends Builder> {
 
         private ScheduledExecutorService retryExecutor;
         private int maxRetryCount = DEFAULT_MAX_RETRIES;
-        private Predicate<Throwable> nonTransientFailurePredicate = new AxonNonTransientExceptionClassesPredicate();
+        private Predicate<Throwable> nonTransientFailurePredicate = new SophonNonTransientExceptionClassesPredicate();
 
         /**
          * Sets the {@link ScheduledExecutorService} used to schedule a command retry.
@@ -298,9 +298,9 @@ public abstract class AbstractRetryScheduler implements RetryScheduler {
         /**
          * Validate the fields. This method is called in the {@link AbstractRetryScheduler}'s constructor.
          *
-         * @throws AxonConfigurationException if validation fails.
+         * @throws SophonConfigurationException if validation fails.
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(retryExecutor, "The ScheduledExecutorService is a hard requirement and should be provided");
         }
     }

@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging.annotation;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 
 import java.lang.reflect.Member;
 
@@ -27,7 +27,7 @@ import java.lang.reflect.Member;
  * @author Allard Buijze
  * @since axon-2.0
  */
-public class UnsupportedHandlerException extends AxonConfigurationException {
+public class UnsupportedHandlerException extends SophonConfigurationException {
 
     private final Member violatingMethod;
     private static final long serialVersionUID = 7991150193173243668L;

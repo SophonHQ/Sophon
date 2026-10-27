@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.io.IOUtils;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
@@ -60,7 +60,7 @@ public class SubscribingEventProcessor extends AbstractEventProcessor implements
      * Instantiate a {@link SubscribingEventProcessor} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the Event Processor {@code name}, {@link EventHandlerInvoker} and
-     * {@link SubscribableMessageSource} are not {@code null}, and will throw an {@link AxonConfigurationException} if
+     * {@link SubscribableMessageSource} are not {@code null}, and will throw an {@link SophonConfigurationException} if
      * any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link SubscribingEventProcessor} instance
@@ -301,11 +301,11 @@ public class SubscribingEventProcessor extends AbstractEventProcessor implements
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
             assertNonNull(messageSource, "The SubscribableMessageSource is a hard requirement and should be provided");
         }

@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.commandhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
-import io.github.sophonhq.sophon.common.AxonThreadFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonThreadFactory;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.messaging.MessageHandler;
@@ -57,7 +57,7 @@ public class AsynchronousCommandBus extends SimpleCommandBus {
      * Instantiate a {@link AsynchronousCommandBus} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link TransactionManager}, {@link MessageMonitor}, {@link RollbackConfiguration} and
-     * {@link Executor} are not {@code null}, and will throw an {@link AxonConfigurationException} if any of them is
+     * {@link Executor} are not {@code null}, and will throw an {@link SophonConfigurationException} if any of them is
      * {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link AsynchronousCommandBus} instance
@@ -76,9 +76,9 @@ public class AsynchronousCommandBus extends SimpleCommandBus {
      * {@link DuplicateCommandHandlerResolution#logAndOverride()}, the {@link Executor} defaults to a
      * {@link Executors#newCachedThreadPool} and the {@link CommandBusSpanFactory} defaults to a
      * {@link DefaultCommandBusSpanFactory} backed by a {@link io.github.sophonhq.sophon.tracing.NoOpSpanFactory}. The
-     * default{@code executor} uses an {@link AxonThreadFactory} to create threads with a sensible naming scheme. The
+     * default{@code executor} uses an {@link SophonThreadFactory} to create threads with a sensible naming scheme. The
      * TransactionManager, MessageMonitor, RollbackConfiguration and Executor are <b>hard requirements</b>. Thus setting
-     * them to {@code null} will result in an {@link AxonConfigurationException}.
+     * them to {@code null} will result in an {@link SophonConfigurationException}.
      *
      * @return a Builder to be able to create a {@link AsynchronousCommandBus}
      */
@@ -118,15 +118,15 @@ public class AsynchronousCommandBus extends SimpleCommandBus {
      * a {@link NoTransactionManager}, a {@link NoOpMessageMonitor}, a
      * {@link RollbackConfigurationType#UNCHECKED_EXCEPTIONS}, a
      * {@link DuplicateCommandHandlerResolution#logAndOverride()}, {@link io.github.sophonhq.sophon.tracing.NoOpSpanFactory} and
-     * a {@link Executors#newCachedThreadPool}. The default {@code executor} uses an {@link AxonThreadFactory} to create
+     * a {@link Executors#newCachedThreadPool}. The default {@code executor} uses an {@link SophonThreadFactory} to create
      * threads with a sensible naming scheme. The TransactionManager, MessageMonitor, RollbackConfiguration and Executor
      * are <b>hard requirements</b>. Thus setting them to {@code null} will result in an
-     * {@link AxonConfigurationException}.
+     * {@link SophonConfigurationException}.
      */
     public static class Builder extends SimpleCommandBus.Builder {
 
         private Executor executor = Executors.newCachedThreadPool(
-                new AxonThreadFactory(AsynchronousCommandBus.class.getSimpleName())
+                new SophonThreadFactory(AsynchronousCommandBus.class.getSimpleName())
         );
 
         @Override

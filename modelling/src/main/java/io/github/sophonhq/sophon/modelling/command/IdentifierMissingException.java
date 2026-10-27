@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.command;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception indicating that a required identifier is missing in the processed message.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Stefan Andjelkovic
  * @since axon-4.6.0
  */
-public class IdentifierMissingException extends AxonException {
+public class IdentifierMissingException extends SophonException {
 
     /**
      * Constructs an exception based on the given {@code message}.

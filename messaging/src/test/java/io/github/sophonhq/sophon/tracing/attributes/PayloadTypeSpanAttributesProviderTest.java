@@ -35,7 +35,7 @@ class PayloadTypeSpanAttributesProviderTest {
 
         Map<String, String> map = provider.provideForMessage(message);
         assertEquals(1, map.size());
-        assertEquals("java.lang.String", map.get("axon_payload_type"));
+        assertEquals("java.lang.String", map.get("sophon_payload_type"));
     }
 
     @Test
@@ -45,7 +45,7 @@ class PayloadTypeSpanAttributesProviderTest {
         Map<String, String> map = provider.provideForMessage(message);
         assertEquals(1, map.size());
         assertEquals("io.github.sophonhq.sophon.tracing.attributes.PayloadTypeSpanAttributesProviderTest$MyEvent",
-                     map.get("axon_payload_type"));
+                     map.get("sophon_payload_type"));
     }
 
     private static class MyEvent {

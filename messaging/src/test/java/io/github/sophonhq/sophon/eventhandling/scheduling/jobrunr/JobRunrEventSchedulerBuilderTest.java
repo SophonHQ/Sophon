@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.scheduling.jobrunr;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.serialization.TestSerializer;
@@ -53,31 +53,31 @@ class JobRunrEventSchedulerBuilderTest {
     void validateNeedsAllPropertiesSet() {
         builder.jobScheduler(jobScheduler)
                .transactionManager(transactionManager);
-        assertThrows(AxonConfigurationException.class, () -> builder.build());
+        assertThrows(SophonConfigurationException.class, () -> builder.build());
     }
 
     @Test
     void whenSettingSchedulerWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.jobScheduler(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.jobScheduler(null));
     }
 
     @Test
     void whenSettingNameWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.jobName(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.jobName(null));
     }
 
     @Test
     void whenSettingTransactionManagerWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.transactionManager(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.transactionManager(null));
     }
 
     @Test
     void whenSettingSerializerWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.serializer(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.serializer(null));
     }
 
     @Test
     void whenSettingEventBusWithNullThrowError() {
-        assertThrows(AxonConfigurationException.class, () -> builder.eventBus(null));
+        assertThrows(SophonConfigurationException.class, () -> builder.eventBus(null));
     }
 }

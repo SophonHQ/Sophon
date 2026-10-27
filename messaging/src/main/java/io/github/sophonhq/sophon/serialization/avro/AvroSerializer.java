@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.serialization.avro;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.serialization.*;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.message.SchemaStore;
@@ -356,10 +356,10 @@ public class AvroSerializer implements Serializer {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(revisionResolver, "RevisionResolver is mandatory");
             assertNonNull(schemaStore, "SchemaStore is mandatory");
             assertNonNull(serializerDelegate, "SerializerDelegate is mandatory");

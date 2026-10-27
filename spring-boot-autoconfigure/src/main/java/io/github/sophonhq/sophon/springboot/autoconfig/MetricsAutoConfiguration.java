@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Bean;
  * @since axon-3.2
  */
 @AutoConfiguration
-@AutoConfigureBefore(AxonAutoConfiguration.class)
+@AutoConfigureBefore(SophonAutoConfiguration.class)
 @ConditionalOnMissingBean(MicrometerMetricsAutoConfiguration.class)
 @ConditionalOnClass(name = {
         "com.codahale.metrics.MetricRegistry",
@@ -61,7 +61,7 @@ public class MetricsAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnBean(GlobalMetricRegistry.class)
-    @ConditionalOnProperty(value = "axon.metrics.auto-configuration.enabled", matchIfMissing = true)
+    @ConditionalOnProperty(value = "sophon.metrics.auto-configuration.enabled", matchIfMissing = true)
     public static MetricsConfigurerModule metricsConfigurerModule(GlobalMetricRegistry globalMetricRegistry) {
         return new MetricsConfigurerModule(globalMetricRegistry);
     }

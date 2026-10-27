@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.Transaction;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
@@ -516,54 +516,54 @@ class DeadLetteringEventHandlerInvokerTest {
     }
 
     @Test
-    void buildWithNullDeadLetterQueueThrowsAxonConfigurationException() {
+    void buildWithNullDeadLetterQueueThrowsSophonConfigurationException() {
         DeadLetteringEventHandlerInvoker.Builder builderTestSubject = DeadLetteringEventHandlerInvoker.builder();
 
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.queue(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.queue(null));
     }
 
     @Test
-    void buildWithoutDeadLetterQueueThrowsAxonConfigurationException() {
+    void buildWithoutDeadLetterQueueThrowsSophonConfigurationException() {
         DeadLetteringEventHandlerInvoker.Builder builderTestSubject =
                 DeadLetteringEventHandlerInvoker.builder()
                                                 .transactionManager(NoTransactionManager.instance());
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithNullEnqueuePolicyThrowsAxonConfigurationException() {
+    void buildWithNullEnqueuePolicyThrowsSophonConfigurationException() {
         DeadLetteringEventHandlerInvoker.Builder builderTestSubject = DeadLetteringEventHandlerInvoker.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.enqueuePolicy(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.enqueuePolicy(null));
     }
 
     @Test
-    void buildWithNullTransactionManagerThrowsAxonConfigurationException() {
+    void buildWithNullTransactionManagerThrowsSophonConfigurationException() {
         DeadLetteringEventHandlerInvoker.Builder builderTestSubject =
                 DeadLetteringEventHandlerInvoker.builder();
 
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.transactionManager(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.transactionManager(null));
     }
 
     @Test
-    void buildWithoutTransactionManagerThrowsAxonConfigurationException() {
+    void buildWithoutTransactionManagerThrowsSophonConfigurationException() {
         DeadLetteringEventHandlerInvoker.Builder builderTestSubject =
                 DeadLetteringEventHandlerInvoker.builder()
                                                 .queue(queue);
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithNullListenerInvocationErrorHandlerThrowsAxonConfigurationException() {
+    void buildWithNullListenerInvocationErrorHandlerThrowsSophonConfigurationException() {
         DeadLetteringEventHandlerInvoker.Builder builderTestSubject =
                 DeadLetteringEventHandlerInvoker.builder();
 
         //noinspection ConstantConditions
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.listenerInvocationErrorHandler(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.listenerInvocationErrorHandler(null));
     }
 
     // This stub TransactionManager is used for spying.

@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.IdentifierFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jdbc.ConnectionProvider;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.Transaction;
@@ -83,7 +83,7 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
 
     private DataSource dataSource() {
         JDBCDataSource dataSource = new JDBCDataSource();
-        dataSource.setUrl("jdbc:hsqldb:mem:axontest");
+        dataSource.setUrl("jdbc:hsqldb:mem:sophontest");
         dataSource.setUser("sa");
         dataSource.setPassword("");
         return dataSource;
@@ -208,110 +208,110 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
 
     @SuppressWarnings("DataFlowIssue")
     @Test
-    void buildWithNullProcessingGroupThrowsAxonConfigurationException() {
+    void buildWithNullProcessingGroupThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.processingGroup(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingGroup(null));
     }
 
     @Test
-    void buildWithEmptyProcessingGroupThrowsAxonConfigurationException() {
+    void buildWithEmptyProcessingGroupThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.processingGroup(""));
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    @Test
-    void buildWithNullConnectionProviderThrowsAxonConfigurationException() {
-        JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.connectionProvider(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingGroup(""));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
-    void buildWithNullTransactionManagerThrowsAxonConfigurationException() {
+    void buildWithNullConnectionProviderThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.transactionManager(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.connectionProvider(null));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
-    void buildWithNullSchemaThrowsAxonConfigurationException() {
+    void buildWithNullTransactionManagerThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.schema(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.transactionManager(null));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
-    void buildWithNullStatementFactoryThrowsAxonConfigurationException() {
+    void buildWithNullSchemaThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.statementFactory(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.schema(null));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
-    void buildWithNullConverterThrowsAxonConfigurationException() {
+    void buildWithNullStatementFactoryThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.converter(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.statementFactory(null));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
-    void buildWithNullGenericSerializerThrowsAxonConfigurationException() {
+    void buildWithNullConverterThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.genericSerializer(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.converter(null));
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
-    void buildWithNullEventSerializerThrowsAxonConfigurationException() {
+    void buildWithNullGenericSerializerThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.eventSerializer(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.genericSerializer(null));
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    @Test
+    void buildWithNullEventSerializerThrowsSophonConfigurationException() {
+        JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventSerializer(null));
     }
 
     @Test
-    void buildWithZeroMaxSequencesThrowsAxonConfigurationException() {
+    void buildWithZeroMaxSequencesThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.maxSequences(0));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.maxSequences(0));
     }
 
     @Test
-    void buildWithNegativeMaxSequencesThrowsAxonConfigurationException() {
+    void buildWithNegativeMaxSequencesThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.maxSequences(-1));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.maxSequences(-1));
     }
 
     @Test
-    void buildWithZeroMaxSequenceSizeThrowsAxonConfigurationException() {
+    void buildWithZeroMaxSequenceSizeThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.maxSequenceSize(0));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.maxSequenceSize(0));
     }
 
     @Test
-    void buildWithNegativeMaxSequenceSizeThrowsAxonConfigurationException() {
+    void buildWithNegativeMaxSequenceSizeThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.maxSequenceSize(-1));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.maxSequenceSize(-1));
     }
 
     @Test
-    void buildWithNullClaimDurationThrowsAxonConfigurationException() {
+    void buildWithNullClaimDurationThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.claimDuration(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.claimDuration(null));
     }
 
     @Test
-    void buildWithZeroPageSizeThrowsAxonConfigurationException() {
+    void buildWithZeroPageSizeThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.pageSize(0));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.pageSize(0));
     }
 
     @Test
-    void buildWithNegativePageSizeThrowsAxonConfigurationException() {
+    void buildWithNegativePageSizeThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.pageSize(-1));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.pageSize(-1));
     }
 
     @Test
-    void buildWithoutProcessingGroupThrowsAxonConfigurationException() {
+    void buildWithoutProcessingGroupThrowsSophonConfigurationException() {
         @SuppressWarnings("unchecked")
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder =
                 JdbcSequencedDeadLetterQueue.builder()
@@ -320,11 +320,11 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .converter(mock(DeadLetterJdbcConverter.class));
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 
     @Test
-    void buildWithoutConnectionProviderThrowsAxonConfigurationException() {
+    void buildWithoutConnectionProviderThrowsSophonConfigurationException() {
         @SuppressWarnings("unchecked")
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder =
                 JdbcSequencedDeadLetterQueue.builder()
@@ -333,11 +333,11 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .converter(mock(DeadLetterJdbcConverter.class));
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 
     @Test
-    void buildWithoutTransactionManagerThrowsAxonConfigurationException() {
+    void buildWithoutTransactionManagerThrowsSophonConfigurationException() {
         @SuppressWarnings("unchecked")
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder =
                 JdbcSequencedDeadLetterQueue.builder()
@@ -346,11 +346,11 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .converter(mock(DeadLetterJdbcConverter.class));
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 
     @Test
-    void buildWithoutStatementFactoryAndGenericSerializersThrowsAxonConfigurationException() {
+    void buildWithoutStatementFactoryAndGenericSerializersThrowsSophonConfigurationException() {
         @SuppressWarnings("unchecked")
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder =
                 JdbcSequencedDeadLetterQueue.builder()
@@ -359,11 +359,11 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .converter(mock(DeadLetterJdbcConverter.class))
                                             .eventSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 
     @Test
-    void buildWithoutStatementFactoryAndEventSerializersThrowsAxonConfigurationException() {
+    void buildWithoutStatementFactoryAndEventSerializersThrowsSophonConfigurationException() {
         @SuppressWarnings("unchecked")
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder =
                 JdbcSequencedDeadLetterQueue.builder()
@@ -372,11 +372,11 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .converter(mock(DeadLetterJdbcConverter.class))
                                             .genericSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 
     @Test
-    void buildWithoutConverterAndGenericSerializersThrowsAxonConfigurationException() {
+    void buildWithoutConverterAndGenericSerializersThrowsSophonConfigurationException() {
         @SuppressWarnings("unchecked")
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder =
                 JdbcSequencedDeadLetterQueue.builder()
@@ -385,11 +385,11 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .eventSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 
     @Test
-    void buildWithoutConverterAndEventSerializersThrowsAxonConfigurationException() {
+    void buildWithoutConverterAndEventSerializersThrowsSophonConfigurationException() {
         @SuppressWarnings("unchecked")
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder =
                 JdbcSequencedDeadLetterQueue.builder()
@@ -398,6 +398,6 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .genericSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 }

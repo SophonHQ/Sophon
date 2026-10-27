@@ -38,11 +38,11 @@ public class TagsUtil {
     }
 
     /**
-     * The micrometer {@link Tag} key that represents the Axon message payload type
+     * The micrometer {@link Tag} key that represents the Sophon message payload type
      */
     public static final String PAYLOAD_TYPE_TAG = "payloadType";
     /**
-     * The micrometer {@link Tag} key that represents the Axon event processor name
+     * The micrometer {@link Tag} key that represents the Sophon event processor name
      */
     public static final String PROCESSOR_NAME_TAG = "processorName";
     /**

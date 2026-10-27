@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.command;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception indicating that concurrent access to a repository was detected. Most likely, two threads were using the
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Lucas Campos
  * @since axon-4.3
  */
-public class AggregateStreamCreationException extends AxonException {
+public class AggregateStreamCreationException extends SophonException {
 
     private static final long serialVersionUID = -4514732518167514479L;
 

@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.eventhandling.gateway;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -47,7 +47,7 @@ public abstract class AbstractEventGateway {
     /**
      * Instantiate an {@link AbstractEventGateway} based on the fields contained in the {@link Builder}.
      * <p>
-     * Will assert that the {@link EventBus} is not {@code null} and throws an {@link AxonConfigurationException} if it
+     * Will assert that the {@link EventBus} is not {@code null} and throws an {@link SophonConfigurationException} if it
      * is.
      *
      * @param builder the {@link Builder} used to instantiate a {@link AbstractEventGateway} instance
@@ -173,7 +173,7 @@ public abstract class AbstractEventGateway {
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

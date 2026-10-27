@@ -128,7 +128,7 @@ class DefaultConfigurerTest {
         assertNotNull(config.repository(StubAggregate.class));
         assertEquals(EventSourcingRepository.class, config.repository(StubAggregate.class).getClass());
         // As discovered modules increase, the configuration module set grows accordingly.
-        // In addition to the event sourcing configuration modules, the AxonTaskJanitorShutdownConfigurerModule
+        // In addition to the event sourcing configuration modules, the SophonTaskJanitorShutdownConfigurerModule
         // registers a late shutdown hook, which is represented as a module configuration.
         assertEquals(2, config.getModules().size());
         assertExpectedModules(config, AggregateConfiguration.class);
@@ -428,7 +428,7 @@ class DefaultConfigurerTest {
                                                 .configureEmbeddedEventStore(c -> new InMemoryEventStorageEngine())
                                                 .start();
 
-        // Includes the extra module configuration registered by AxonTaskJanitorShutdownConfigurerModule.
+        // Includes the extra module configuration registered by SophonTaskJanitorShutdownConfigurerModule.
         assertEquals(3, config.getModules().size());
         assertExpectedModules(config,
                               AggregateConfiguration.class,

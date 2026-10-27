@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.test.aggregate;
 
 import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
 import io.github.sophonhq.sophon.modelling.command.TargetAggregateIdentifier;

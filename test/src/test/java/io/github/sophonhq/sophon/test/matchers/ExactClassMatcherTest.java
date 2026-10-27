@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.test.matchers;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
 import org.junit.jupiter.api.Test;
@@ -56,7 +56,7 @@ public class ExactClassMatcherTest {
     @Test
     void matchesIsNullSafe() {
         assertFalse(new ExactClassMatcher<>(String.class).matches(null));
-        assertThrows(AxonConfigurationException.class, () -> new ExactClassMatcher<>(null).matches("foo"));
+        assertThrows(SophonConfigurationException.class, () -> new ExactClassMatcher<>(null).matches("foo"));
     }
 
     private static class SomeBaseEvent {

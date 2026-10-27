@@ -69,13 +69,13 @@ public class EventSourcingRepository<T> extends LockingRepository<T, EventSource
      * instantiate this AggregateModel, either an {@link AggregateModel} can be provided directly or an
      * {@code aggregateType} of type {@link Class} can be used. The latter will internally resolve to an AggregateModel.
      * Thus, either the AggregateModel <b>or</b> the {@code aggregateType} should be provided. An
-     * {@link io.github.sophonhq.sophon.common.AxonConfigurationException} is thrown if these criteria are not met. The same
+     * {@link io.github.sophonhq.sophon.common.SophonConfigurationException} is thrown if these criteria are not met. The same
      * criteria holds for the {@link AggregateFactory}. Either the AggregateFactory can be set directly or it will be
      * instantiated internally based on the {@code aggregateType}. Hence, one of both is a hard requirement, and will
-     * also result in an AxonConfigurationException if both are missing.
+     * also result in an SophonConfigurationException if both are missing.
      * <p>
      * Additionally, the builder will assert that the {@link LockFactory}, {@link EventStore} and
-     * {@link SnapshotTriggerDefinition} are not {@code null}, resulting in an AxonConfigurationException if for any of
+     * {@link SnapshotTriggerDefinition} are not {@code null}, resulting in an SophonConfigurationException if for any of
      * these this is the case. The {@link RepositorySpanFactory} is defaulted to a
      * {@link io.github.sophonhq.sophon.modelling.command.DefaultRepositorySpanFactory} backed by a
      * {@link io.github.sophonhq.sophon.tracing.NoOpSpanFactory}.

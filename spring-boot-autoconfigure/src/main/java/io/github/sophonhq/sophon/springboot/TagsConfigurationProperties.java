@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Milan Savic
  * @since axon-4.2
  */
-@ConfigurationProperties(prefix = "axon")
+@ConfigurationProperties(prefix = "sophon")
 public class TagsConfigurationProperties {
 
     /**

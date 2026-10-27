@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * Represents a part of the application logic that will be traced. One or multiple spans together form a trace and are
  * often used to debug and monitor (distributed) applications.
  * <p>
- * The {@link Span} is an abstraction for Axon Framework to have tracing capabilities without knowing the specific
+ * The {@link Span} is an abstraction for Sophon to have tracing capabilities without knowing the specific
  * tracing provider. Calling {@link #start()} will start the {@code span} and make it active to the current thread. For
  * every start invocation, a respective {@link #end()} should be called as well to prevent scope leaks.
  * <p>

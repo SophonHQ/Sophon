@@ -23,8 +23,8 @@ import io.github.sophonhq.sophon.eventhandling.EventHandler;
 import io.github.sophonhq.sophon.eventsourcing.eventstore.EventStoreException;
 import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
 import io.github.sophonhq.sophon.modelling.command.TargetAggregateIdentifier;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
 import io.github.sophonhq.sophon.test.FixtureExecutionException;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import org.junit.jupiter.api.*;
 
 import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
@@ -141,7 +141,7 @@ class FixtureTest_ExceptionHandling {
     @Test
     void expectExceptionMessageThrowsFixtureExecutionExceptionWhenNoExceptionIsThrown() {
         assertThrows(
-                AxonAssertionError.class,
+                SophonAssertionError.class,
                 () -> fixture.given(new MyAggregateCreatedEvent(AGGREGATE_ID))
                              .when(new ValidMyAggregateCommand(AGGREGATE_ID))
                              .expectExceptionMessage("some-exception-message")

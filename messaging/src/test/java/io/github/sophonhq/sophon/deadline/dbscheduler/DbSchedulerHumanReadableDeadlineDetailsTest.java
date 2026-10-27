@@ -63,7 +63,7 @@ class DbSchedulerHumanReadableDeadlineDetailsTest {
         assertEquals(expected, result);
     }
 
-    @MethodSource("axonSerializers")
+    @MethodSource("sophonSerializers")
     @ParameterizedTest
     void whenDataInPojoIsSerializedAndDeserializedItShouldBeTheSame(TestSerializer testSerializer) {
         io.github.sophonhq.sophon.serialization.Serializer serializer = testSerializer.getSerializer();
@@ -90,7 +90,7 @@ class DbSchedulerHumanReadableDeadlineDetailsTest {
         return serializers;
     }
 
-    public static Collection<TestSerializer> axonSerializers() {
+    public static Collection<TestSerializer> sophonSerializers() {
         List<TestSerializer> testSerializerList = new ArrayList<>();
         testSerializerList.add(TestSerializer.JACKSON);
         testSerializerList.add(TestSerializer.XSTREAM);

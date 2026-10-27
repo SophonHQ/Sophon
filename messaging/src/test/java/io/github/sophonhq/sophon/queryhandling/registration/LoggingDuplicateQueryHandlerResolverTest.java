@@ -45,7 +45,7 @@ class LoggingDuplicateQueryHandlerResolverTest {
         existingHandlers.add(existingHandler);
 
         List<QuerySubscription<?>> resolvedList =
-                resolver.resolve("org.axon.MyQuery", MyQuery.class, existingHandlers, addedHandler);
+                resolver.resolve("com.example.MyQuery", MyQuery.class, existingHandlers, addedHandler);
 
         assertEquals(2, resolvedList.size());
         assertTrue(resolvedList.contains(existingHandler));

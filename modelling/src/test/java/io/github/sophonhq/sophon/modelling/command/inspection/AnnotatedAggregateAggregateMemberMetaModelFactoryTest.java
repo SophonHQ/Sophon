@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.modelling.command.inspection;
 
 import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.modelling.command.AggregateMember;
 import org.junit.jupiter.api.*;
 
@@ -36,25 +36,25 @@ import static org.junit.jupiter.api.Assertions.*;
 class AnnotatedAggregateAggregateMemberMetaModelFactoryTest {
 
     @Test
-    void interfaceAggregateMemberThrowsAxonConfigurationException() {
+    void interfaceAggregateMemberThrowsSophonConfigurationException() {
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TestAggregate.class)
         );
     }
 
     @Test
-    void interfaceAggregateMemberCollectionThrowsAxonConfigurationException() {
+    void interfaceAggregateMemberCollectionThrowsSophonConfigurationException() {
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TestCollectionAggregate.class)
         );
     }
 
     @Test
-    void interfaceAggregateMemberMapThrowsAxonConfigurationException() {
+    void interfaceAggregateMemberMapThrowsSophonConfigurationException() {
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TestMapAggregate.class)
         );
     }

@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.test.saga;
 
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.GenericEventMessage;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import io.github.sophonhq.sophon.test.aggregate.MyOtherEvent;
 import io.github.sophonhq.sophon.test.matchers.AllFieldsFilter;
 import io.github.sophonhq.sophon.test.matchers.Matchers;
@@ -44,7 +44,7 @@ class EventValidatorTest {
     void assertPublishedEventsWithNoEventsMatcherThrowsAssertionErrorIfEventWasPublished() {
         testSubject.handle(GenericEventMessage.asEventMessage(new MyOtherEvent()));
 
-        assertThrows(AxonAssertionError.class, () -> testSubject.assertPublishedEventsMatching(Matchers.noEvents()));
+        assertThrows(SophonAssertionError.class, () -> testSubject.assertPublishedEventsMatching(Matchers.noEvents()));
     }
 
     @Test
@@ -56,7 +56,7 @@ class EventValidatorTest {
     void assertPublishedEventsThrowsAssertionErrorIfEventWasPublished() {
         testSubject.handle(GenericEventMessage.asEventMessage(new MyOtherEvent()));
 
-        assertThrows(AxonAssertionError.class, testSubject::assertPublishedEvents);
+        assertThrows(SophonAssertionError.class, testSubject::assertPublishedEvents);
     }
 
     @Test

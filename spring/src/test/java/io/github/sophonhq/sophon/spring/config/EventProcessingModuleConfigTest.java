@@ -76,7 +76,7 @@ public class EventProcessingModuleConfigTest {
                      eventProcessingConfiguration.eventProcessorByProcessingGroup("processor4").get().getName());
     }
 
-    @Import(SpringAxonAutoConfigurer.ImportSelector.class)
+    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
     @Configuration
     public static class Context {
 

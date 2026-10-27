@@ -27,8 +27,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 
 /**
- * Automatically configured the {@link OpenTelemetrySpanFactory} as the method of providing tracing in Axon Framework.
- * For this to take effect, the {@code axon-tracing-opentelemetry} dependency must be on the classpath.
+ * Automatically configured the {@link OpenTelemetrySpanFactory} as the method of providing tracing in Sophon.
+ * For this to take effect, the {@code sophon-tracing-opentelemetry} dependency must be on the classpath.
  * <p>
  * When a Spring-managed {@link OpenTelemetry} bean is present (e.g. Spring Boot 3's
  * {@code OpenTelemetryAutoConfiguration} together with {@code micrometer-tracing-bridge-otel}), its
@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Bean;
  * {@link io.opentelemetry.context.propagation.TextMapPropagator TextMapPropagator} are passed into the
  * {@link OpenTelemetrySpanFactory.Builder} explicitly. Without this, the builder falls back to
  * {@link io.opentelemetry.api.GlobalOpenTelemetry}, which Spring Boot 3 does not register — leaving the
- * factory with a no-op propagator that silently drops W3C trace context across asynchronous Axon
+ * factory with a no-op propagator that silently drops W3C trace context across asynchronous Sophon
  * boundaries (event processors, deadlines, distributed command/query buses).
  * <p>
  * If no {@link OpenTelemetry} bean is available the builder defaults are kept, preserving compatibility
@@ -47,7 +47,7 @@ import org.springframework.context.annotation.Bean;
  * @since axon-4.6.0
  */
 @AutoConfiguration
-@AutoConfigureBefore({AxonTracingAutoConfiguration.class, AxonAutoConfiguration.class})
+@AutoConfigureBefore({SophonTracingAutoConfiguration.class, SophonAutoConfiguration.class})
 @ConditionalOnClass(name = "io.github.sophonhq.sophon.tracing.opentelemetry.OpenTelemetrySpanFactory")
 public class OpenTelemetryAutoConfiguration {
 
@@ -59,7 +59,7 @@ public class OpenTelemetryAutoConfiguration {
             return OpenTelemetrySpanFactory.builder().build();
         }
         return OpenTelemetrySpanFactory.builder()
-                                       .tracer(openTelemetry.getTracer("AxonFramework-OpenTelemetry"))
+                                       .tracer(openTelemetry.getTracer("Sophon-OpenTelemetry"))
                                        .contextPropagators(openTelemetry.getPropagators().getTextMapPropagator())
                                        .build();
     }

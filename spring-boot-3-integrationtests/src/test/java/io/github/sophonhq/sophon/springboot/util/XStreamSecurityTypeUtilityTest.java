@@ -34,7 +34,7 @@ class XStreamSecurityTypeUtilityTest {
 
     @Test
     void autoConfigBasePackagesTest() {
-        // Axon packages are added through the default ApplicationContextRunner that adds Axon's DefaultEntityRegistrar.
+        // Sophon packages are added through the default ApplicationContextRunner that adds Sophon's DefaultEntityRegistrar.
         String[] expected = new String[]{
                 "io.github.sophonhq.sophon.springboot.util.**",
                 "io.github.sophonhq.sophon.eventhandling.tokenstore.**",

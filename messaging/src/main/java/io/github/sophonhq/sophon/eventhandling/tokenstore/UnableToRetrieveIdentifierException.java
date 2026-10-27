@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.tokenstore;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception indicating that a TokenStore implementation was unable determine its identifier based on the underlying
@@ -26,7 +26,7 @@ import io.github.sophonhq.sophon.common.AxonTransientException;
  * @see TokenStore#retrieveStorageIdentifier()
  * @since axon-4.3
  */
-public class UnableToRetrieveIdentifierException extends AxonTransientException {
+public class UnableToRetrieveIdentifierException extends SophonTransientException {
 
     /**
      * Initialize the exception using given {@code message} and {@code cause}.

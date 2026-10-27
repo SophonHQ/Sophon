@@ -26,12 +26,12 @@ import org.springframework.context.annotation.Bean;
 
 @AutoConfiguration
 @AutoConfigureAfter(TransactionAutoConfiguration.class)
-@AutoConfigureBefore(AxonAutoConfiguration.class)
+@AutoConfigureBefore(SophonAutoConfiguration.class)
 public class NoOpTransactionAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(TransactionManager.class)
-    public TransactionManager axonTransactionManager() {
+    public TransactionManager sophonTransactionManager() {
         return NoTransactionManager.INSTANCE;
     }
 }

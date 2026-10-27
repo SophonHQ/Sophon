@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.integrationtests.deadline.quartz;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.config.Configuration;
 import io.github.sophonhq.sophon.config.ConfigurationScopeAwareProvider;
 import io.github.sophonhq.sophon.deadline.DeadlineException;
@@ -55,7 +55,7 @@ class QuartzDeadlineManagerTest extends AbstractDeadlineManagerTestSuite {
             scheduler.start();
             return quartzDeadlineManager;
         } catch (SchedulerException e) {
-            throw new AxonConfigurationException("Unable to configure quartz scheduler", e);
+            throw new SophonConfigurationException("Unable to configure quartz scheduler", e);
         }
     }
 
@@ -90,24 +90,24 @@ class QuartzDeadlineManagerTest extends AbstractDeadlineManagerTestSuite {
     }
 
     @Test
-    void buildWithoutSchedulerThrowsAxonConfigurationException() {
+    void buildWithoutSchedulerThrowsSophonConfigurationException() {
         ScopeAwareProvider scopeAwareProvider = mock(ScopeAwareProvider.class);
         QuartzDeadlineManager.Builder builderTestSubject =
                 QuartzDeadlineManager.builder()
                                      .scopeAwareProvider(scopeAwareProvider)
                                      .serializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithoutScopeAwareProviderThrowsAxonConfigurationException() {
+    void buildWithoutScopeAwareProviderThrowsSophonConfigurationException() {
         Scheduler scheduler = mock(Scheduler.class);
         QuartzDeadlineManager.Builder builderTestSubject =
                 QuartzDeadlineManager.builder()
                                      .scheduler(scheduler)
                                      .serializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 }

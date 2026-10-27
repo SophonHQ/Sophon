@@ -38,8 +38,8 @@ import static org.mockito.Mockito.*;
  * Abstract test class used to create tests for the {@link io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.JpaEventStorageEngine}
  * and {@link io.github.sophonhq.sophon.eventsourcing.eventstore.jdbc.JdbcEventStorageEngine}.
  * <p>
- * Methods are public so they can be overridden by {@link EventStorageEngine} implementation test cases in different
- * repository, like the [Mongo Extension](https://github.com/AxonFramework/extension-mongo).
+ * Methods are public so they can be overridden by {@link EventStorageEngine} implementation test cases in other
+ * repositories.
  *
  * @author Rene de Waele
  */

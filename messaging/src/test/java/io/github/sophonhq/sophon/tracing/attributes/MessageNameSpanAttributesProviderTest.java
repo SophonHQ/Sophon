@@ -47,7 +47,7 @@ class MessageNameSpanAttributesProviderTest {
                                                                    ResponseTypes.instanceOf(String.class));
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
         assertEquals(1, map.size());
-        assertEquals("myQueryName", map.get("axon_message_name"));
+        assertEquals("myQueryName", map.get("sophon_message_name"));
     }
 
     @Test
@@ -56,7 +56,7 @@ class MessageNameSpanAttributesProviderTest {
                                                                    ResponseTypes.instanceOf(String.class));
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
         assertEquals(1, map.size());
-        assertEquals("java.lang.String", map.get("axon_message_name"));
+        assertEquals("java.lang.String", map.get("sophon_message_name"));
     }
 
     @Test
@@ -65,7 +65,7 @@ class MessageNameSpanAttributesProviderTest {
                                                                      "MyAwesomeCommand");
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
         assertEquals(1, map.size());
-        assertEquals("MyAwesomeCommand", map.get("axon_message_name"));
+        assertEquals("MyAwesomeCommand", map.get("sophon_message_name"));
     }
 
     @Test
@@ -73,6 +73,6 @@ class MessageNameSpanAttributesProviderTest {
         Message<?> genericQueryMessage = new GenericCommandMessage<>("payload");
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
         assertEquals(1, map.size());
-        assertEquals("java.lang.String", map.get("axon_message_name"));
+        assertEquals("java.lang.String", map.get("sophon_message_name"));
     }
 }

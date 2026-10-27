@@ -36,7 +36,7 @@ class AggregateIdentifierSpanAttributesProviderTest {
 
         Map<String, String> map = provider.provideForMessage(message);
         assertEquals(1, map.size());
-        assertEquals("1729872981", map.get("axon_aggregate_identifier"));
+        assertEquals("1729872981", map.get("sophon_aggregate_identifier"));
     }
     @Test
     void genericEventMessage() {

@@ -51,7 +51,7 @@ public class AnnotationDrivenConfigurationTest_CustomValues {
     @Test
     void commandHandlerPostProcessorBeanDefinitionContainCustomValues() {
         BeanDefinition beanDefinition =  beanFactory.getBeanDefinition(
-                "__axon-annotation-command-handler-bean-post-processor");
+                "__sophon-annotation-command-handler-bean-post-processor");
         assertEquals(AnnotationCommandHandlerBeanPostProcessor.class.getName(), beanDefinition.getBeanClassName());
     }
 

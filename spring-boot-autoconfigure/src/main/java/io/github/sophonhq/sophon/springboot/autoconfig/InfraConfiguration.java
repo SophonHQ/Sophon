@@ -28,9 +28,9 @@ import io.github.sophonhq.sophon.modelling.saga.ResourceInjector;
 import io.github.sophonhq.sophon.serialization.upcasting.event.EventUpcaster;
 import io.github.sophonhq.sophon.spring.config.MessageHandlerLookup;
 import io.github.sophonhq.sophon.spring.config.SpringAggregateLookup;
-import io.github.sophonhq.sophon.spring.config.SpringAxonConfiguration;
 import io.github.sophonhq.sophon.spring.config.SpringConfigurer;
 import io.github.sophonhq.sophon.spring.config.SpringSagaLookup;
+import io.github.sophonhq.sophon.spring.config.SpringSophonConfiguration;
 import io.github.sophonhq.sophon.spring.config.annotation.HandlerDefinitionFactoryBean;
 import io.github.sophonhq.sophon.spring.config.annotation.SpringParameterResolverFactoryBean;
 import io.github.sophonhq.sophon.spring.saga.SpringResourceInjector;
@@ -51,8 +51,8 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Infrastructure autoconfiguration class for Axon Framework application. Constructs the look-up components, like the
- * {@link MessageHandlerLookup} to find Axon components and register them with the {@link SpringConfigurer}.
+ * Infrastructure autoconfiguration class for Sophon application. Constructs the look-up components, like the
+ * {@link MessageHandlerLookup} to find Sophon components and register them with the {@link SpringConfigurer}.
  *
  * @author Allard Buijze
  * @since axon-3.0.4
@@ -60,7 +60,7 @@ import java.util.List;
 @AutoConfiguration
 @ConditionalOnClass(SpringConfigurer.class)
 @AutoConfigureAfter({
-        AxonAutoConfiguration.class,
+        SophonAutoConfiguration.class,
         JpaAutoConfiguration.class,
         JpaEventStoreAutoConfiguration.class,
         NoOpTransactionAutoConfiguration.class,
@@ -88,13 +88,13 @@ public class InfraConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public SpringAxonConfiguration springAxonConfiguration(Configurer configurer) {
-        return new SpringAxonConfiguration(configurer);
+    public SpringSophonConfiguration springSophonConfiguration(Configurer configurer) {
+        return new SpringSophonConfiguration(configurer);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public SpringConfigurer springAxonConfigurer(ConfigurableListableBeanFactory beanFactory,
+    public SpringConfigurer springSophonConfigurer(ConfigurableListableBeanFactory beanFactory,
                                                  List<ConfigurerModule> configurerModules,
                                                  List<ModuleConfiguration> moduleConfigurations) {
         SpringConfigurer configurer = new SpringConfigurer(beanFactory);

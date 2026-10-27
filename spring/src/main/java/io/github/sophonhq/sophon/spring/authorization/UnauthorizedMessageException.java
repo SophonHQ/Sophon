@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.spring.authorization;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception indicating that a message has been rejected due to a lack of authorization.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Roald Bankras
  * @since axon-4.11.0
  */
-public class UnauthorizedMessageException extends AxonNonTransientException {
+public class UnauthorizedMessageException extends SophonNonTransientException {
 
     /**
      * Construct the exception with the given {$code message}.

@@ -244,7 +244,7 @@ public class AnnotatedHandlerInspector<T> {
 
     /**
      * Inspect another handler type and register the result to the inspector registry of this inspector. This is used
-     * by Axon to inspect child entities of an aggregate.
+     * by Sophon to inspect child entities of an aggregate.
      *
      * @param entityType the type of the handler to inspect
      * @param <C>        the handler's type

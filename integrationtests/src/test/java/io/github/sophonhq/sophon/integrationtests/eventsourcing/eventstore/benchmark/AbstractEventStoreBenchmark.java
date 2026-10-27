@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.integrationtests.eventsourcing.eventstore.benchmark;
 
-import io.github.sophonhq.sophon.common.AxonThreadFactory;
+import io.github.sophonhq.sophon.common.SophonThreadFactory;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventhandling.EventMessageHandler;
@@ -103,7 +103,7 @@ public abstract class AbstractEventStoreBenchmark {
                                                     .tokenStore(new InMemoryTokenStore())
                                                     .transactionManager(NoTransactionManager.INSTANCE)
                                                     .build();
-        this.executorService = Executors.newFixedThreadPool(threadCount, new AxonThreadFactory("storageJobs"));
+        this.executorService = Executors.newFixedThreadPool(threadCount, new SophonThreadFactory("storageJobs"));
     }
 
     public void start() {

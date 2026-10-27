@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.async.SequencingPolicy;
 import io.github.sophonhq.sophon.eventhandling.async.SequentialPerAggregatePolicy;
 import io.github.sophonhq.sophon.messaging.annotation.HandlerDefinition;
@@ -52,7 +52,7 @@ public class SimpleEventHandlerInvoker implements EventHandlerInvoker {
      * Instantiate a {@link SimpleEventHandlerInvoker} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that at least one {@link EventMessageHandler} is provided, and will throw an {@link
-     * AxonConfigurationException} if this is not the case.
+     * SophonConfigurationException} if this is not the case.
      *
      * @param builder the {@link Builder} used to instantiate a {@link SimpleEventHandlerInvoker} instance
      */
@@ -329,10 +329,10 @@ public class SimpleEventHandlerInvoker implements EventHandlerInvoker {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertThat(eventHandlers,
                        list -> list != null && !list.isEmpty(),
                        "At least one EventMessageHandler should be provided");

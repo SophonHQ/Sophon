@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.lifecycle;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception indicating a process tried to register an activity whilst the application is shutting down.
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @see ShutdownLatch
  * @since axon-4.3
  */
-public class ShutdownInProgressException extends AxonNonTransientException {
+public class ShutdownInProgressException extends SophonNonTransientException {
 
     private static final String DEFAULT_MESSAGE = "Cannot start the activity, shutdown in progress";
 

@@ -15,6 +15,6 @@
  */
 
 /**
- * Classes in support of testing Axon based applications.
+ * Classes in support of testing Sophon based applications.
  */
 package io.github.sophonhq.sophon.test;

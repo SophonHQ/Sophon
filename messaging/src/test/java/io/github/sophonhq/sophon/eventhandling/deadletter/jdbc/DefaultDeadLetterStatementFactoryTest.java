@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.serialization.TestSerializer;
 import org.junit.jupiter.api.Test;
 
@@ -41,42 +41,42 @@ import static org.mockito.Mockito.when;
 class DefaultDeadLetterStatementFactoryTest {
 
     @Test
-    void buildWithNullSchemaThrowsAxonConfigurationException() {
+    void buildWithNullSchemaThrowsSophonConfigurationException() {
         DefaultDeadLetterStatementFactory.Builder<?> testBuilder = DefaultDeadLetterStatementFactory.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.schema(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.schema(null));
     }
 
     @Test
-    void buildWithNullGenericSerializerThrowsAxonConfigurationException() {
+    void buildWithNullGenericSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterStatementFactory.Builder<?> testBuilder = DefaultDeadLetterStatementFactory.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.genericSerializer(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.genericSerializer(null));
     }
 
     @Test
-    void buildWithNullEventSerializerThrowsAxonConfigurationException() {
+    void buildWithNullEventSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterStatementFactory.Builder<?> testBuilder = DefaultDeadLetterStatementFactory.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> testBuilder.eventSerializer(null));
+        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventSerializer(null));
     }
 
     @Test
-    void buildWithoutTheGenericSerializerThrowsAxonConfigurationException() {
+    void buildWithoutTheGenericSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterStatementFactory.Builder<?> testBuilder =
                 DefaultDeadLetterStatementFactory.builder()
                                                  .eventSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 
     @Test
-    void buildWithoutTheEventSerializerThrowsAxonConfigurationException() {
+    void buildWithoutTheEventSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterStatementFactory.Builder<?> testBuilder =
                 DefaultDeadLetterStatementFactory.builder()
                                                  .genericSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, testBuilder::build);
+        assertThrows(SophonConfigurationException.class, testBuilder::build);
     }
 
     @Test

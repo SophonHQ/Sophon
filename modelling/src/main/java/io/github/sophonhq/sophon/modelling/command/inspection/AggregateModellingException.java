@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.command.inspection;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 
 /**
  * Thrown if an aggregate model is invalid.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonConfigurationException;
  * @author Milan Savic
  * @since axon-4.3
  */
-public class AggregateModellingException extends AxonConfigurationException {
+public class AggregateModellingException extends SophonConfigurationException {
 
     private static final long serialVersionUID = 4058550238776573504L;
 

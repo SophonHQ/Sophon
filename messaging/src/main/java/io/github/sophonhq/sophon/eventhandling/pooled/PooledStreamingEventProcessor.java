@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.eventhandling.pooled;
 
 import io.github.sophonhq.sophon.common.Assert;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.AbstractEventProcessor;
 import io.github.sophonhq.sophon.eventhandling.ErrorHandler;
@@ -120,7 +120,7 @@ public class PooledStreamingEventProcessor extends AbstractEventProcessor
      *     <li>A {@link ScheduledExecutorService} for coordination.</li>
      *     <li>A {@link ScheduledExecutorService} to process work packages.</li>
      * </ul>
-     * If any of these is not present or does no comply to the requirements an {@link AxonConfigurationException} is thrown.
+     * If any of these is not present or does no comply to the requirements an {@link SophonConfigurationException} is thrown.
      *
      * @param builder the {@link Builder} used to instantiate a {@link PooledStreamingEventProcessor} instance
      */
@@ -775,7 +775,7 @@ public class PooledStreamingEventProcessor extends AbstractEventProcessor
         }
 
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
             assertNonNull(messageSource, "The StreamableMessageSource is a hard requirement and should be provided");
             assertNonNull(tokenStore, "The TokenStore is a hard requirement and should be provided");

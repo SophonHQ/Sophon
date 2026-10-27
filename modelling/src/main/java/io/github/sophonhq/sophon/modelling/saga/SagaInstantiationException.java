@@ -16,12 +16,12 @@
 
 package io.github.sophonhq.sophon.modelling.saga;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Exception triggered during initialization of a Saga.
  */
-public class SagaInstantiationException extends AxonNonTransientException {
+public class SagaInstantiationException extends SophonNonTransientException {
     /**
      * Initializes the exception using the given {@code message} and {@code cause}.
      *

@@ -25,7 +25,7 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test class validating the {@link NegateCommandMessageFilter} can be serialized through Axon's {@link
+ * Test class validating the {@link NegateCommandMessageFilter} can be serialized through Sophon's {@link
  * io.github.sophonhq.sophon.serialization.Serializer} implementations.
  *
  * @author Steven van Beelen

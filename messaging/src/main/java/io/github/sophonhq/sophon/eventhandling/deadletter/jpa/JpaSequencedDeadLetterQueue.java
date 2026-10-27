@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.deadletter.jpa;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import io.github.sophonhq.sophon.common.jpa.PagingJpaQueryIterable;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
@@ -801,7 +801,7 @@ public class JpaSequencedDeadLetterQueue<M extends EventMessage<?>> implements S
         /**
          * Validate whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException When one field asserts to be incorrect according to the Builder's
+         * @throws SophonConfigurationException When one field asserts to be incorrect according to the Builder's
          *                                    specifications.
          */
         protected void validate() {

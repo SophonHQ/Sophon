@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Exception thrown when an {@link EventProcessor} failed to handle a batch of events.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Allard Buijze
  * @since axon-0.3
  */
-public class EventProcessingException extends AxonException {
+public class EventProcessingException extends SophonException {
 
     /**
      * Initialize the exception with given {@code message} and {@code cause}.

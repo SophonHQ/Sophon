@@ -112,10 +112,10 @@ public class GenericJpaRepository<T> extends LockingRepository<T, AnnotatedAggre
      * instantiate this AggregateModel, either an {@link AggregateModel} can be provided directly or an
      * {@code aggregateType} of type {@link Class} can be used. The latter will internally resolve to an AggregateModel.
      * Thus, either the AggregateModel <b>or</b> the {@code aggregateType} should be provided. An
-     * {@link io.github.sophonhq.sophon.common.AxonConfigurationException} is thrown if this criteria is not met.
+     * {@link io.github.sophonhq.sophon.common.SophonConfigurationException} is thrown if this criteria is not met.
      * <p>
      * Additionally will assert that the {@link LockFactory}, {@link EntityManagerProvider}, {@link EventBus} and
-     * {@code identifierConverter} are not {@code null}, resulting in an AxonConfigurationException if for any of these
+     * {@code identifierConverter} are not {@code null}, resulting in an SophonConfigurationException if for any of these
      * this is the case.
      *
      * @param builder the {@link Builder} used to instantiate a {@link GenericJpaRepository} instance

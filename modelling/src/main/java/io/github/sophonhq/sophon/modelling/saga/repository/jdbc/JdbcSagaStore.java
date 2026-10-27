@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.saga.repository.jdbc;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jdbc.ConnectionProvider;
 import io.github.sophonhq.sophon.common.jdbc.DataSourceConnectionProvider;
 import io.github.sophonhq.sophon.common.jdbc.UnitOfWorkAwareConnectionProviderWrapper;
@@ -68,7 +68,7 @@ public class JdbcSagaStore implements SagaStore<Object> {
      * Instantiate a {@link JdbcSagaStore} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link ConnectionProvider}, {@link SagaSqlSchema} and {@link Serializer} are not
-     * {@code null}, and will throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@code null}, and will throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link JdbcSagaStore} instance
      */
@@ -387,10 +387,10 @@ public class JdbcSagaStore implements SagaStore<Object> {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(connectionProvider, "The ConnectionProvider is a hard requirement and should be provided");
             if (serializer == null) {
                 serializer = XStreamSerializer::defaultSerializer;

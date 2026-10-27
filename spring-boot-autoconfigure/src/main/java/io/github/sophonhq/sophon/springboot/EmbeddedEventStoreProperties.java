@@ -26,7 +26,7 @@ import java.time.Duration;
  * @author Allard Buijze
  * @since axon-4.13.1
  */
-@ConfigurationProperties("axon.eventstore")
+@ConfigurationProperties("sophon.eventstore")
 public class EmbeddedEventStoreProperties {
 
     /**

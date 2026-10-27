@@ -35,7 +35,7 @@ import static java.lang.String.format;
 public class DbSchedulerScheduleToken implements ScheduleToken, TaskInstanceId {
 
     private static final long serialVersionUID = 7798276124742534225L;
-    static final String TASK_NAME = "AxonScheduledEvent";
+    static final String TASK_NAME = "SophonScheduledEvent";
 
     private final String id;
 

@@ -16,21 +16,21 @@
 
 package io.github.sophonhq.sophon.commandhandling;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 import static java.lang.String.format;
 
 /**
  * Exception indicating that no suitable command handler could be found for the given command.
  * <p>
- * As of 4.2, this exception has been moved to {@link AxonTransientException}, since (especially in a MicroServices
+ * As of 4.2, this exception has been moved to {@link SophonTransientException}, since (especially in a MicroServices
  * Architecture context) the handler may return. {@link io.github.sophonhq.sophon.commandhandling.gateway.RetryScheduler}s will
  * now see this exception as retryable.
  *
  * @author Allard Buijze
  * @since axon-0.5
  */
-public class NoHandlerForCommandException extends AxonTransientException {
+public class NoHandlerForCommandException extends SophonTransientException {
 
     private static final long serialVersionUID = -7202076465339197011L;
 

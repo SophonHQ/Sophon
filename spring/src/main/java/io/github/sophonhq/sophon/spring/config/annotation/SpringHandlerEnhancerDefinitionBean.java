@@ -35,7 +35,7 @@ import java.util.Map;
 
 /**
  * Spring factory bean that creates a HandlerEnhancerDefinition instance that is capable of resolving parameter values
- * as Spring Beans, in addition to the default behavior defined by Axon.
+ * as Spring Beans, in addition to the default behavior defined by Sophon.
  *
  * @author Milan Savic
  * @see ClasspathHandlerEnhancerDefinition

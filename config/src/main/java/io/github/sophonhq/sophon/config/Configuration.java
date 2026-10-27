@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.config;
 
 import io.github.sophonhq.sophon.commandhandling.CommandBus;
 import io.github.sophonhq.sophon.commandhandling.gateway.CommandGateway;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.deadline.DeadlineManager;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.eventhandling.gateway.EventGateway;
@@ -50,7 +50,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Interface describing the Global Configuration for Axon components. It provides access to the components configured,
+ * Interface describing the Global Configuration for Sophon components. It provides access to the components configured,
  * such as the Command Bus and Event Bus.
  * <p>
  * Note that certain components in the Configuration may need to be started. Therefore, before using any of the
@@ -91,14 +91,14 @@ public interface Configuration extends LifecycleOperations {
     }
     /**
      * Returns the Event Store in this Configuration, if it is defined. If no Event Store is defined (but an Event Bus
-     * instead), this method throws an {@link AxonConfigurationException}.
+     * instead), this method throws an {@link SophonConfigurationException}.
      *
      * @return the Event Store defined in this Configuration
      */
     default EventStore eventStore() {
         EventBus eventBus = eventBus();
         if (!(eventBus instanceof EventStore)) {
-            throw new AxonConfigurationException("A component is requesting an Event Store, however, there is none configured");
+            throw new SophonConfigurationException("A component is requesting an Event Store, however, there is none configured");
         }
         return (EventStore) eventBus;
     }
@@ -164,14 +164,14 @@ public interface Configuration extends LifecycleOperations {
     /**
      * Returns the {@link EventProcessingConfiguration} defined in this Configuration. If there aren't any defined,
      * {@code null} will be returned. If there is exactly one, it will be returned. For case when there are multiple,
-     * an {@link AxonConfigurationException} is thrown and the {@link #getModules()} API should be used instead.
+     * an {@link SophonConfigurationException} is thrown and the {@link #getModules()} API should be used instead.
      *
      * @return the {@link EventProcessingConfiguration} defined in this Configuration
      *
-     * @throws AxonConfigurationException thrown if there are more than one Event Processing Configurations defined with
+     * @throws SophonConfigurationException thrown if there are more than one Event Processing Configurations defined with
      *                                    this configuration
      */
-    default EventProcessingConfiguration eventProcessingConfiguration() throws AxonConfigurationException {
+    default EventProcessingConfiguration eventProcessingConfiguration() throws SophonConfigurationException {
         List<EventProcessingConfiguration> eventProcessingModules =
                 getModules().stream()
                             .filter(module -> module.isType(EventProcessingConfiguration.class))
@@ -183,7 +183,7 @@ public interface Configuration extends LifecycleOperations {
             case 1:
                 return eventProcessingModules.get(0);
             default:
-                throw new AxonConfigurationException(
+                throw new SophonConfigurationException(
                         "There are several EventProcessingConfigurations defined. Use findModules(Class<T>) method instead.");
         }
     }

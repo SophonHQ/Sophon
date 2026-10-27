@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.lifecycle.LifecycleHandlerInvocationException;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
@@ -439,31 +439,31 @@ class DefaultConfigurerLifecycleOperationsTest {
     }
 
     @Test
-    void configureLifecyclePhaseTimeoutWithZeroTimeoutThrowsAxonConfigurationException() {
+    void configureLifecyclePhaseTimeoutWithZeroTimeoutThrowsSophonConfigurationException() {
         Configurer configurerTestSubject = DefaultConfigurer.defaultConfiguration();
 
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> configurerTestSubject.configureLifecyclePhaseTimeout(0, TimeUnit.SECONDS)
         );
     }
 
     @Test
-    void configureLifecyclePhaseTimeoutWithNegativeTimeoutThrowsAxonConfigurationException() {
+    void configureLifecyclePhaseTimeoutWithNegativeTimeoutThrowsSophonConfigurationException() {
         Configurer configurerTestSubject = DefaultConfigurer.defaultConfiguration();
 
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> configurerTestSubject.configureLifecyclePhaseTimeout(-1, TimeUnit.SECONDS)
         );
     }
 
     @Test
-    void configureLifecyclePhaseTimeoutWithNullTimeUnitThrowsAxonConfigurationException() {
+    void configureLifecyclePhaseTimeoutWithNullTimeUnitThrowsSophonConfigurationException() {
         Configurer configurerTestSubject = DefaultConfigurer.defaultConfiguration();
 
         assertThrows(
-                AxonConfigurationException.class,
+                SophonConfigurationException.class,
                 () -> configurerTestSubject.configureLifecyclePhaseTimeout(1, null)
         );
     }

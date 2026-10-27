@@ -21,7 +21,7 @@ import io.github.sophonhq.sophon.commandhandling.CommandHandler;
 import io.github.sophonhq.sophon.commandhandling.SimpleCommandBus;
 import io.github.sophonhq.sophon.commandhandling.gateway.CommandGateway;
 import io.github.sophonhq.sophon.commandhandling.gateway.DefaultCommandGateway;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.eventsourcing.EventSourcingHandler;
 import io.github.sophonhq.sophon.eventsourcing.EventSourcingRepository;
@@ -161,7 +161,7 @@ class CommandHandlerInterceptorTest {
                 EventSourcingRepository.builder(MyAggregateWithInterceptorReturningNonVoid.class)
                         .eventStore(eventStore);
 
-        assertThrows(AxonConfigurationException.class, builder::build);
+        assertThrows(SophonConfigurationException.class, builder::build);
     }
 
     @Test

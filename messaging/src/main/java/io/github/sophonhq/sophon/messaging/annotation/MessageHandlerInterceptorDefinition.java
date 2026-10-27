@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging.annotation;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.messaging.InterceptorChain;
 import io.github.sophonhq.sophon.messaging.Message;
 import io.github.sophonhq.sophon.messaging.interceptors.MessageHandlerInterceptor;
@@ -65,12 +65,12 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
         public ResultHandlingInterceptorMember(MessageHandlingMember<T> original, Class<?> expectedResultType) {
             super(original);
             this.expectedResultType = expectedResultType;
-            Method method = original.unwrap(Method.class).orElseThrow(() -> new AxonConfigurationException(
+            Method method = original.unwrap(Method.class).orElseThrow(() -> new SophonConfigurationException(
                     "Only methods can be marked as MessageHandlerInterceptor. Violating handler: " + original.signature()));
             boolean declaredInterceptorChain = Arrays.stream(method.getParameters())
                                                      .anyMatch(p -> p.getType().equals(InterceptorChain.class));
             if (declaredInterceptorChain) {
-                throw new AxonConfigurationException("A MessageHandlerInterceptor acting on the invocation result must not declare a parameter of type InterceptorChain. Violating handler: " + original.signature());
+                throw new SophonConfigurationException("A MessageHandlerInterceptor acting on the invocation result must not declare a parameter of type InterceptorChain. Violating handler: " + original.signature());
             }
         }
 
@@ -109,12 +109,12 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
 
         public InterceptedMessageHandlingMember(MessageHandlingMember<T> original) {
             super(original);
-            Method method = original.unwrap(Method.class).orElseThrow(() -> new AxonConfigurationException(
+            Method method = original.unwrap(Method.class).orElseThrow(() -> new SophonConfigurationException(
                     "Only methods can be marked as MessageHandlerInterceptor. Violating handler: " + original.signature()));
             shouldInvokeInterceptorChain = Arrays.stream(method.getParameters())
                                                  .noneMatch(p -> p.getType().equals(InterceptorChain.class));
             if (shouldInvokeInterceptorChain && !Void.TYPE.equals(method.getReturnType())) {
-                throw new AxonConfigurationException("A MessageHandlerInterceptor must either return null or declare a parameter of type InterceptorChain. Violating handler: " + original.signature());
+                throw new SophonConfigurationException("A MessageHandlerInterceptor must either return null or declare a parameter of type InterceptorChain. Violating handler: " + original.signature());
             }
         }
 

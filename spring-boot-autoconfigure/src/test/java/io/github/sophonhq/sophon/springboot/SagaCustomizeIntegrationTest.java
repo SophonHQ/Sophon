@@ -27,7 +27,7 @@ import io.github.sophonhq.sophon.modelling.saga.SagaEventHandler;
 import io.github.sophonhq.sophon.modelling.saga.StartSaga;
 import io.github.sophonhq.sophon.serialization.Serializer;
 import io.github.sophonhq.sophon.spring.stereotype.Saga;
-import io.github.sophonhq.sophon.springboot.autoconfig.AxonAutoConfiguration;
+import io.github.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration;
 import io.github.sophonhq.sophon.springboot.utils.TestSerializer;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +108,7 @@ class SagaCustomizeIntegrationTest {
                 });
     }
 
-    @AutoConfigureBefore(AxonAutoConfiguration.class)
+    @AutoConfigureBefore(SophonAutoConfiguration.class)
     @Configuration
     public static class Context {
 

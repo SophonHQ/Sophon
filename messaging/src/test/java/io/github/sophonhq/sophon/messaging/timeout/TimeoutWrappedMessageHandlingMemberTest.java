@@ -48,7 +48,7 @@ class TimeoutWrappedMessageHandlingMemberTest {
                 original, 300, 200, 50
         );
 
-        assertThrows(AxonTimeoutException.class,
+        assertThrows(SophonTimeoutException.class,
                      () -> wrappedHandler.handle(GenericEventMessage.asEventMessage("my-message"),
                                                  new TestMessageHandler()));
     }

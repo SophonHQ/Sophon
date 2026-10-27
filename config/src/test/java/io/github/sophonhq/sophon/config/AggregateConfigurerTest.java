@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.XStream;
 import io.github.sophonhq.sophon.commandhandling.CommandHandler;
 import io.github.sophonhq.sophon.commandhandling.distributed.DistributedCommandBus;
 import io.github.sophonhq.sophon.commandhandling.gateway.CommandGateway;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import io.github.sophonhq.sophon.common.jpa.SimpleEntityManagerProvider;
 import io.github.sophonhq.sophon.common.lock.PessimisticLockFactory;
@@ -208,7 +208,7 @@ public class AggregateConfigurerTest {
     }
 
     @Test
-    void aggregateConfigurationThrowsAxonConfigExceptionWhenCreatingRevisionSnapshotFilterForUndefinedDeclaredType() {
+    void aggregateConfigurationThrowsSophonConfigExceptionWhenCreatingRevisionSnapshotFilterForUndefinedDeclaredType() {
         //noinspection unchecked
         AggregateModel<TestAggregateWithRevision> mockModel = mock(AggregateModel.class);
         when(mockModel.declaredType(TestAggregateWithRevision.class)).thenReturn(Optional.empty());
@@ -221,7 +221,7 @@ public class AggregateConfigurerTest {
 
         undefinedDeclaredAggregateTypeTestSubject.initialize(mockConfiguration);
 
-        assertThrows(AxonConfigurationException.class, undefinedDeclaredAggregateTypeTestSubject::snapshotFilter);
+        assertThrows(SophonConfigurationException.class, undefinedDeclaredAggregateTypeTestSubject::snapshotFilter);
     }
 
     @Test

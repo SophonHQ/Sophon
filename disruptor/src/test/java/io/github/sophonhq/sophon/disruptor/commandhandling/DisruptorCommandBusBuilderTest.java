@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.disruptor.commandhandling;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,11 +30,11 @@ class DisruptorCommandBusBuilderTest {
 
     @Test
     void setIllegalPublisherThreadCount() {
-        assertThrows(AxonConfigurationException.class, () -> DisruptorCommandBus.builder().publisherThreadCount(0));
+        assertThrows(SophonConfigurationException.class, () -> DisruptorCommandBus.builder().publisherThreadCount(0));
     }
 
     @Test
     void setIllegalInvokerThreadCount() {
-        assertThrows(AxonConfigurationException.class, () -> DisruptorCommandBus.builder().invokerThreadCount(0));
+        assertThrows(SophonConfigurationException.class, () -> DisruptorCommandBus.builder().invokerThreadCount(0));
     }
 }

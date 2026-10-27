@@ -36,7 +36,7 @@ class DefaultDeadlineManagerSpanFactoryTest
                 spanFactory -> spanFactory.createScheduleSpan("myDeadline", "myDeadlineId", message),
                 expectedSpan("DeadlineManager.scheduleDeadline(myDeadline)", TestSpanFactory.TestSpanType.DISPATCH)
                         .withMessage(message)
-                        .expectAttribute("axon.deadlineId", "myDeadlineId")
+                        .expectAttribute("sophon.deadlineId", "myDeadlineId")
         );
     }
 
@@ -57,7 +57,7 @@ class DefaultDeadlineManagerSpanFactoryTest
         test(
                 spanFactory -> spanFactory.createCancelScheduleSpan("myDeadline", "myDeadlineId"),
                 expectedSpan("DeadlineManager.cancelDeadline(myDeadline)", TestSpanFactory.TestSpanType.INTERNAL)
-                        .expectAttribute("axon.deadlineId", "myDeadlineId")
+                        .expectAttribute("sophon.deadlineId", "myDeadlineId")
         );
     }
 
@@ -87,7 +87,7 @@ class DefaultDeadlineManagerSpanFactoryTest
         test(
                 spanFactory -> spanFactory.createCancelAllWithinScopeSpan("myDeadline", scope),
                 expectedSpan("DeadlineManager.cancelAllWithinScope(myDeadline)", TestSpanFactory.TestSpanType.INTERNAL)
-                        .expectAttribute("axon.deadlineScope", "myScopeDescription")
+                        .expectAttribute("sophon.deadlineScope", "myScopeDescription")
         );
     }
     @Test
@@ -108,7 +108,7 @@ class DefaultDeadlineManagerSpanFactoryTest
         test(spanFactory -> spanFactory.createExecuteSpan("myDeadline", "myDeadlineId", message),
                 expectedSpan("DeadlineManager.executeDeadline(myDeadline)", TestSpanFactory.TestSpanType.HANDLER_LINK)
                         .withMessage(message)
-                        .expectAttribute("axon.deadlineId", "myDeadlineId")
+                        .expectAttribute("sophon.deadlineId", "myDeadlineId")
         );
     }
 

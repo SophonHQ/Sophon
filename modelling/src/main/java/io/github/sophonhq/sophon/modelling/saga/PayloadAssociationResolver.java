@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.saga;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.property.Property;
 import io.github.sophonhq.sophon.common.property.PropertyAccessStrategy;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
@@ -64,7 +64,7 @@ public class PayloadAssociationResolver implements AssociationResolver {
 
     private <T> Property createProperty(String associationPropertyName, MessageHandlingMember<T> handler) {
         if (associationPropertyName.isEmpty()) {
-            throw new AxonConfigurationException(format(
+            throw new SophonConfigurationException(format(
                     "SagaEventHandler %s does not define an association property",
                     getHandlerName(handler)
             ));
@@ -73,7 +73,7 @@ public class PayloadAssociationResolver implements AssociationResolver {
         Property<?> associationProperty = PropertyAccessStrategy.getProperty(handler.payloadType(),
                                                                              associationPropertyName);
         if (associationProperty == null) {
-            throw new AxonConfigurationException(format(
+            throw new SophonConfigurationException(format(
                     "SagaEventHandler %s defines a property %s that is not defined on the Event it declares to handle (%s)",
                     getHandlerName(handler),
                     associationPropertyName,

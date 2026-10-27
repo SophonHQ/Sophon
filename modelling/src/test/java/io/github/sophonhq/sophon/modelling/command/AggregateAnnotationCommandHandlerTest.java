@@ -23,9 +23,9 @@ import io.github.sophonhq.sophon.commandhandling.CommandResultMessage;
 import io.github.sophonhq.sophon.commandhandling.DuplicateCommandHandlerSubscriptionException;
 import io.github.sophonhq.sophon.commandhandling.SimpleCommandBus;
 import io.github.sophonhq.sophon.commandhandling.callbacks.LoggingCallback;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.IdentifierFactory;
 import io.github.sophonhq.sophon.common.Priority;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.messaging.MessageHandler;
 import io.github.sophonhq.sophon.messaging.MetaData;
@@ -572,7 +572,7 @@ class AggregateAnnotationCommandHandlerTest {
                                                  .aggregateType(CollectionFieldWithoutGenerics.class)
                                                  .repository(mockRepo);
 
-        assertThrows(AxonConfigurationException.class, repoBuilder::build);
+        assertThrows(SophonConfigurationException.class, repoBuilder::build);
     }
 
     @Test

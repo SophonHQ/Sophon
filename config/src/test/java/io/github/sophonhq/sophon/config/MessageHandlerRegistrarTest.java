@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -38,12 +38,12 @@ class MessageHandlerRegistrarTest {
     private static final Registration TEST_REGISTRATION_IMPLEMENTATION = () -> false;
 
     @Test
-    void startThrowsAxonConfigurationExceptionForCreatingNullMessageHandler(@Mock Configuration config) {
+    void startThrowsSophonConfigurationExceptionForCreatingNullMessageHandler(@Mock Configuration config) {
         MessageHandlerRegistrar testSubject = new MessageHandlerRegistrar(
                 () -> config, c -> null, (c, msgHandler) -> TEST_REGISTRATION_IMPLEMENTATION
         );
 
-        assertThrows(AxonConfigurationException.class, testSubject::start);
+        assertThrows(SophonConfigurationException.class, testSubject::start);
     }
 
     @Test

@@ -50,7 +50,7 @@ class UpcasterOrderingTest {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    private Configuration axonConfig;
+    private Configuration sophonConfig;
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     @Test
@@ -58,7 +58,7 @@ class UpcasterOrderingTest {
         //noinspection unchecked
         Stream<IntermediateEventRepresentation> mockStream = mock(Stream.class);
 
-        EventUpcasterChain testSubject = axonConfig.upcasterChain();
+        EventUpcasterChain testSubject = sophonConfig.upcasterChain();
 
         testSubject.upcast(mockStream);
 
@@ -71,7 +71,7 @@ class UpcasterOrderingTest {
     }
 
     @Scope
-    @Import(SpringAxonAutoConfigurer.ImportSelector.class)
+    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
     @org.springframework.context.annotation.Configuration
     public static class TestContext {
 

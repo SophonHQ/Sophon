@@ -17,8 +17,8 @@
 package io.github.sophonhq.sophon.modelling.command.inspection;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.ReflectionUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.modelling.command.AggregateMember;
 import io.github.sophonhq.sophon.modelling.command.ForwardingMode;
@@ -52,7 +52,7 @@ public class AggregateMemberAnnotatedChildEntityDefinition extends AbstractChild
                                                               Member member) {
         Class<?> entityClass = ReflectionUtils.getMemberValueType(member);
         if (entityClass.isInterface()) {
-            throw new AxonConfigurationException(
+            throw new SophonConfigurationException(
                     "Aggregate Member type should be a concrete implementation instead of [" + entityClass + "]."
             );
         }

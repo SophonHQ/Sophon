@@ -16,8 +16,8 @@
 
 package io.github.sophonhq.sophon.modelling.saga.repository;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.CollectionUtils;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.lock.LockFactory;
 import io.github.sophonhq.sophon.messaging.annotation.HandlerDefinition;
 import io.github.sophonhq.sophon.messaging.annotation.MessageHandlerInterceptorMemberChain;
@@ -67,7 +67,7 @@ public class AnnotatedSagaRepository<T> extends LockingSagaRepository<T> {
      * Instantiate a {@link AnnotatedSagaRepository} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@code sagaType}, {@link SagaStore} and {@link ResourceInjector} are not {@code null}, and
-     * will throw an {@link AxonConfigurationException} if any of them is {@code null}. Additionally, the provided
+     * will throw an {@link SophonConfigurationException} if any of them is {@code null}. Additionally, the provided
      * builder's goal is to either build a {@link SagaModel} specifying generic {@code T} as the Saga type to be stored
      * or derive it based on the given {@code sagaType}. The same argument applies to the {@link MessageHandlerInterceptorMemberChain}. All
      * Sagas in this repository must be {@code instanceOf} this saga type.
@@ -430,11 +430,11 @@ public class AnnotatedSagaRepository<T> extends LockingSagaRepository<T> {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         @Override
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             super.validate();
             assertNonNull(sagaType, "The sagaType is a hard requirement and should be provided");
             assertNonNull(sagaStore, "The SagaStore is a hard requirement and should be provided");

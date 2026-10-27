@@ -29,7 +29,7 @@ import static java.lang.String.format;
 @SuppressWarnings("Duplicates")
 public class DbSchedulerDeadlineToken implements TaskInstanceId {
 
-    static final String TASK_NAME = "AxonDeadline";
+    static final String TASK_NAME = "SophonDeadline";
 
     private final String id;
 

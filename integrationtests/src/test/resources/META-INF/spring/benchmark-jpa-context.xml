@@ -28,7 +28,7 @@
 
     <bean id="eventStorageEngine" class="io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.JpaEventStorageEngine">
         <constructor-arg name="entityManagerProvider" ref="entityManagerProvider"/>
-        <constructor-arg name="transactionManager" ref="axonTransactionManager"/>
+        <constructor-arg name="transactionManager" ref="sophonTransactionManager"/>
     </bean>
 
     <!-- Infrastructure configuration -->
@@ -60,7 +60,7 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <bean id="axonTransactionManager" class="io.github.sophonhq.sophon.spring.messaging.unitofwork.SpringTransactionManager">
+    <bean id="sophonTransactionManager" class="io.github.sophonhq.sophon.spring.messaging.unitofwork.SpringTransactionManager">
         <constructor-arg name="transactionManager" ref="transactionManager"/>
     </bean>
 

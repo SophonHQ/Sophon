@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  * @author Allard Buijze
  * @since axon-3.0
  */
-@ConfigurationProperties("axon.eventhandling")
+@ConfigurationProperties("sophon.eventhandling")
 public class EventProcessorProperties {
 
     /**

@@ -19,7 +19,7 @@ package io.github.sophonhq.sophon.test.aggregate;
 import io.github.sophonhq.sophon.deadline.DeadlineMessage;
 import io.github.sophonhq.sophon.deadline.GenericDeadlineMessage;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import io.github.sophonhq.sophon.test.deadline.ScheduledDeadlineInfo;
 import io.github.sophonhq.sophon.test.deadline.StubDeadlineManager;
 import io.github.sophonhq.sophon.test.matchers.AllFieldsFilter;
@@ -70,14 +70,14 @@ class ResultValidatorImplTest {
     void shouldCompareValuesForEquality() {
         EventMessage<?> expected = actualEvents().iterator().next().andMetaData(singletonMap("key1", "otherValue"));
 
-        assertThrows(AxonAssertionError.class, () -> validator.expectEvents(expected));
+        assertThrows(SophonAssertionError.class, () -> validator.expectEvents(expected));
     }
 
     @Test
     void shouldCompareKeysForEquality() {
         EventMessage<?> expected = actualEvents().iterator().next().andMetaData(singletonMap("KEY1", "value1"));
 
-        assertThrows(AxonAssertionError.class, () -> validator.expectEvents(expected));
+        assertThrows(SophonAssertionError.class, () -> validator.expectEvents(expected));
     }
 
     @Test
@@ -110,7 +110,7 @@ class ResultValidatorImplTest {
                                               () -> null,
                                               null);
 
-        assertThrows(AxonAssertionError.class, () -> validator.expectEvents("some-other-string"));
+        assertThrows(SophonAssertionError.class, () -> validator.expectEvents("some-other-string"));
     }
 
     @Test
@@ -120,7 +120,7 @@ class ResultValidatorImplTest {
                                               () -> null,
                                               null);
 
-        assertThrows(AxonAssertionError.class, () -> validator.expectEvents(new MyEvent("some-other-string", 1)));
+        assertThrows(SophonAssertionError.class, () -> validator.expectEvents(new MyEvent("some-other-string", 1)));
     }
 
     @Test
@@ -128,7 +128,7 @@ class ResultValidatorImplTest {
         Instant expiryTime = deadlineWindowFrom.plus(1, ChronoUnit.DAYS);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(expiryTime)));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadlineMatching(deadlineWindowFrom,
                                                                        deadlineWindowTo,
                                                                        Matchers.anything()));
@@ -149,7 +149,7 @@ class ResultValidatorImplTest {
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(
                 deadlineWindowFrom)));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadlineMatching(deadlineWindowFrom,
                                                                        deadlineWindowTo,
                                                                        Matchers.anything()));
@@ -160,7 +160,7 @@ class ResultValidatorImplTest {
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(
                 deadlineWindowTo)));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadlineMatching(deadlineWindowFrom,
                                                                        deadlineWindowTo,
                                                                        Matchers.anything()));
@@ -184,7 +184,7 @@ class ResultValidatorImplTest {
         Object deadline = deadlineInfo.deadlineMessage().getPayload();
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadlineInfo));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadline(deadlineWindowFrom, deadlineWindowTo, deadline));
     }
 
@@ -204,7 +204,7 @@ class ResultValidatorImplTest {
         Object deadline = deadlineInfo.deadlineMessage().getPayload();
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadlineInfo));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadline(deadlineWindowFrom, deadlineWindowTo, deadline));
     }
 
@@ -214,7 +214,7 @@ class ResultValidatorImplTest {
         Object deadline = deadlineInfo.deadlineMessage().getPayload();
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadlineInfo));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadline(deadlineWindowFrom, deadlineWindowTo, deadline));
     }
 
@@ -238,7 +238,7 @@ class ResultValidatorImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(expiryTime);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadlineOfType(deadlineWindowFrom,
                                                                      deadlineWindowTo,
                                                                      String.class));
@@ -259,7 +259,7 @@ class ResultValidatorImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(deadlineWindowFrom);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadlineOfType(deadlineWindowFrom,
                                                                      deadlineWindowTo,
                                                                      String.class));
@@ -270,7 +270,7 @@ class ResultValidatorImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(deadlineWindowTo);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadlineOfType(deadlineWindowFrom,
                                                                      deadlineWindowTo,
                                                                      String.class));
@@ -292,7 +292,7 @@ class ResultValidatorImplTest {
         Instant expiryTime = deadlineWindowFrom.plus(1, ChronoUnit.DAYS);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(expiryTime)));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadlineWithName(deadlineWindowFrom,
                                                                        deadlineWindowTo,
                                                                        "deadlineName"));
@@ -313,7 +313,7 @@ class ResultValidatorImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(deadlineWindowFrom);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadlineWithName(deadlineWindowFrom,
                                                                        deadlineWindowTo,
                                                                        "deadlineName"));
@@ -324,7 +324,7 @@ class ResultValidatorImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(deadlineWindowTo);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(AxonAssertionError.class,
+        assertThrows(SophonAssertionError.class,
                      () -> validator.expectNoScheduledDeadlineWithName(deadlineWindowFrom,
                                                                        deadlineWindowTo,
                                                                        "deadlineName"));
@@ -370,8 +370,8 @@ class ResultValidatorImplTest {
         };
         try {
             validator.expectEventsMatching(matcher);
-            fail("expected expectEventsMatching to throw AxonAssertionError");
-        } catch (AxonAssertionError e) {
+            fail("expected expectEventsMatching to throw SophonAssertionError");
+        } catch (SophonAssertionError e) {
             assertThat(e.getMessage(), containsString("<EXPECTED DESCRIPTION TEXT>"));
             assertThat(e.getMessage(), containsString("<MISMATCH TEXT>"));
         }

@@ -76,7 +76,7 @@ public class OpenTelemetrySpan implements Span {
     public SpanScope makeCurrent() {
         if (span == null) {
             logger.warn(
-                    "Span was attempted to be made current while not started yet! Please report this to the Axon Framework team.",
+                    "Span was attempted to be made current while not started yet! Please report this to the Sophon maintainers.",
                     new IllegalStateException("Span attempted to be made current while not started"));
             // Return empty scope as to not influence user's code
             return () -> {
@@ -95,19 +95,19 @@ public class OpenTelemetrySpan implements Span {
     public void end() {
         if (span == null) {
             logger.warn(
-                    "Span was attempted to be ended while not started yet! Please report this to the Axon Framework team.",
+                    "Span was attempted to be ended while not started yet! Please report this to the Sophon maintainers.",
                     new IllegalStateException("Span attempted to be ended while not started"));
             return;
         }
         if (ended) {
             logger.warn(
-                    "Span ended a second time! Will ignore this ended invocation. Please report this to the Axon Framework team.",
+                    "Span ended a second time! Will ignore this ended invocation. Please report this to the Sophon maintainers.",
                     new IllegalStateException("Span ended a second time"));
             return;
         }
         if (!scopes.isEmpty()) {
             logger.warn(
-                    "Span ended without all scopes! Please report this to the Axon Framework team. This might influence reliability of your OpenTelemetry traces.",
+                    "Span ended without all scopes! Please report this to the Sophon maintainers. This might influence reliability of your OpenTelemetry traces.",
                     new IllegalStateException("Span ended with still " + scopes.size() + " open!"));
         }
         span.end();

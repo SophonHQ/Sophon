@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.test.eventscheduler;
 
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
@@ -77,7 +77,7 @@ public class EventSchedulerValidator {
         Description actual = new StringDescription();
         matcher.describeTo(expected);
         describe(eventScheduler.getScheduledItems(), actual);
-        throw new AxonAssertionError(String.format(
+        throw new SophonAssertionError(String.format(
                 "Did not find an event at the given schedule. \nExpected:\n<%s> at <%s>\nGot:%s\n",
                 expected, scheduledTime, actual
         ));
@@ -122,7 +122,7 @@ public class EventSchedulerValidator {
                     matcher.matches(scheduledItem.getEvent())) {
                 Description unexpected = new StringDescription();
                 matcher.describeTo(unexpected);
-                throw new AxonAssertionError(format(
+                throw new SophonAssertionError(format(
                         "Unexpected matching event found at the given schedule. \nGot:%s\n",
                         unexpected
                 ));
@@ -136,7 +136,7 @@ public class EventSchedulerValidator {
     public void assertNoScheduledEvents() {
         List<ScheduledItem> scheduledItems = eventScheduler.getScheduledItems();
         if (scheduledItems != null && !scheduledItems.isEmpty()) {
-            throw new AxonAssertionError("Expected no scheduled events, got " + scheduledItems.size());
+            throw new SophonAssertionError("Expected no scheduled events, got " + scheduledItems.size());
         }
     }
 }

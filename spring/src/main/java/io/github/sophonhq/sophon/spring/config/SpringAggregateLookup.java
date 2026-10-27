@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.spring.config;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.annotation.AnnotationUtils;
 import io.github.sophonhq.sophon.config.Configuration;
 import io.github.sophonhq.sophon.modelling.command.Repository;
@@ -105,7 +105,7 @@ public class SpringAggregateLookup implements BeanDefinitionRegistryPostProcesso
     private static <A> String beanName(ListableBeanFactory beanFactory, Class<A> type) {
         String[] beanNamesForType = beanFactory.getBeanNamesForType(type);
         if (beanNamesForType.length == 0) {
-            throw new AxonConfigurationException(format("There are no spring beans for '%s' defined.", type.getName()));
+            throw new SophonConfigurationException(format("There are no spring beans for '%s' defined.", type.getName()));
         } else if (beanNamesForType.length != 1) {
             logger.debug(
                     "There are {} beans defined for type [{}], making this a polymorphic aggregate. "

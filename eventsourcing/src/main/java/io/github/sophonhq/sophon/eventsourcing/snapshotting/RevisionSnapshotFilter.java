@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventsourcing.snapshotting;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.DomainEventData;
 import io.github.sophonhq.sophon.modelling.command.inspection.AggregateTypeUtils;
 
@@ -56,7 +56,7 @@ public class RevisionSnapshotFilter implements SnapshotFilter {
      * Instantiate a {@link RevisionSnapshotFilter} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@code type} is not {@code null} or an empty String and the {@code revision} is not an empty
-     * String and will throw an {@link AxonConfigurationException} if this is the case.
+     * String and will throw an {@link SophonConfigurationException} if this is the case.
      *
      * @param builder the {@link Builder} used to instantiate a {@link RevisionSnapshotFilter} instance
      */
@@ -157,7 +157,7 @@ public class RevisionSnapshotFilter implements SnapshotFilter {
         /**
          * Validate whether the fields contained in this Builder as set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
         protected void validate() {

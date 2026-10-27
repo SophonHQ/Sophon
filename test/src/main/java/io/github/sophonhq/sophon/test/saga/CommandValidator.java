@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.test.saga;
 
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
-import io.github.sophonhq.sophon.test.AxonAssertionError;
+import io.github.sophonhq.sophon.test.SophonAssertionError;
 import io.github.sophonhq.sophon.test.matchers.FieldFilter;
 import io.github.sophonhq.sophon.test.matchers.Matchers;
 import io.github.sophonhq.sophon.test.utils.RecordingCommandBus;
@@ -68,7 +68,7 @@ public class CommandValidator {
     public void assertDispatchedEqualTo(Object... expected) {
         List<CommandMessage<?>> actual = commandBus.getDispatchedCommands();
         if (actual.size() != expected.length) {
-            throw new AxonAssertionError(
+            throw new SophonAssertionError(
                     "Got wrong number of commands dispatched.\n"
                             + "Expected <" + expected.length + ">,\n but got <" + actual.size() + ">."
             );
@@ -83,7 +83,7 @@ public class CommandValidator {
             if (expectedItem instanceof CommandMessage) {
                 CommandMessage<?> expectedMessage = (CommandMessage<?>) expectedItem;
                 if (!expectedMessage.getPayloadType().equals(actualItem.getPayloadType())) {
-                    throw new AxonAssertionError(
+                    throw new SophonAssertionError(
                             "Unexpected payload type of command at position " + counter + " (0-based).\n"
                                     + "Expected <" + expectedMessage.getPayloadType() + ">,\n"
                                     + " but got <" + actualItem.getPayloadType() + ">."
@@ -91,7 +91,7 @@ public class CommandValidator {
                 }
                 assertCommandEquality(counter, expectedMessage.getPayload(), actualItem.getPayload());
                 if (!expectedMessage.getMetaData().equals(actualItem.getMetaData())) {
-                    throw new AxonAssertionError(
+                    throw new SophonAssertionError(
                             "Unexpected Meta Data of command at position " + counter + " (0-based).\n"
                                     + "Expected <" + expectedMessage.getMetaData() + ">,\n"
                                     + " but got <" + actualItem.getMetaData() + ">."
@@ -115,7 +115,7 @@ public class CommandValidator {
             Description actualDescription = new StringDescription();
             matcher.describeTo(expectedDescription);
             describe(commandBus.getDispatchedCommands(), actualDescription);
-            throw new AxonAssertionError(
+            throw new SophonAssertionError(
                     "Incorrect dispatched command.\n"
                             + "Expected <" + expectedDescription + ">,\n but got <" + actualDescription + ">."
             );
@@ -125,7 +125,7 @@ public class CommandValidator {
     private void assertCommandEquality(int commandIndex, Object expected, Object actual) {
         if (!expected.equals(actual)) {
             if (!expected.getClass().equals(actual.getClass())) {
-                throw new AxonAssertionError(
+                throw new SophonAssertionError(
                         "Wrong command type at index " + commandIndex + " (0-based).\n"
                                 + "Expected <" + expected.getClass().getSimpleName() + ">,\n"
                                 + " but got <" + actual.getClass().getSimpleName() + ">."
@@ -133,7 +133,7 @@ public class CommandValidator {
             }
             Matcher<Object> matcher = Matchers.deepEquals(expected, fieldFilter);
             if (!matcher.matches(actual)) {
-                throw new AxonAssertionError(
+                throw new SophonAssertionError(
                         "Unexpected command at index " + commandIndex + " (0-based).\n"
                                 + "Expected <" + expected + ">,\n but got <" + actual + ">."
                 );

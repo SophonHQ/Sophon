@@ -31,7 +31,7 @@ public interface SubscribableMessageSourceDefinition<M extends Message<?>> {
     /**
      * Creates a {@link SubscribableMessageSource} based on this definition and the provided configuration.
      *
-     * @param configuration The Axon {@link Configuration} to base the {@link SubscribableMessageSource} on.
+     * @param configuration The Sophon {@link Configuration} to base the {@link SubscribableMessageSource} on.
      * @return A {@link SubscribableMessageSource} based on this definition and the provided configuration.
      */
     SubscribableMessageSource<M> create(Configuration configuration);

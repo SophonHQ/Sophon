@@ -27,14 +27,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 
 @AutoConfiguration
-@AutoConfigureBefore(AxonAutoConfiguration.class)
+@AutoConfigureBefore(SophonAutoConfiguration.class)
 @ConditionalOnClass(name = {"com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper"})
 @EnableConfigurationProperties(value = SerializerProperties.class)
 public class CBORMapperAutoConfiguration {
-    @Bean("defaultAxonCborMapper")
+    @Bean("defaultSophonCborMapper")
     @ConditionalOnMissingBean(CBORMapper.class)
-    @ConditionalOnExpression("'${axon.serializer.general}' == 'cbor' || '${axon.serializer.events}' == 'cbor' || '${axon.serializer.messages}' == 'cbor'")
-    public CBORMapper defaultAxonCborMapper() {
+    @ConditionalOnExpression("'${sophon.serializer.general}' == 'cbor' || '${sophon.serializer.events}' == 'cbor' || '${sophon.serializer.messages}' == 'cbor'")
+    public CBORMapper defaultSophonCborMapper() {
         return (CBORMapper) new CBORMapper().findAndRegisterModules();
     }
 }

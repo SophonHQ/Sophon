@@ -22,8 +22,8 @@ import com.github.kagkarlsson.scheduler.task.Task;
 import com.github.kagkarlsson.scheduler.task.TaskDescriptor;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import com.github.kagkarlsson.scheduler.task.helper.Tasks;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.IdentifierFactory;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.NoTransactionManager;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
@@ -82,7 +82,7 @@ public class DbSchedulerEventScheduler implements EventScheduler, Lifecycle {
      * {@link DbSchedulerEventScheduler.Builder}.
      * <p>
      * Will assert that the {@link Scheduler}, {@link Serializer} and {@link EventBus} are not {@code null}, and will
-     * throw an {@link AxonConfigurationException} if any of them is {@code null}.
+     * throw an {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link DbSchedulerEventScheduler} instance
      */
@@ -436,10 +436,10 @@ public class DbSchedulerEventScheduler implements EventScheduler, Lifecycle {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(scheduler, "The Scheduler is a hard requirement and should be provided.");
             assertNonNull(serializer, "The Serializer is a hard requirement and should be provided.");
             assertNonNull(eventBus, "The EventBus is a hard requirement and should be provided.");

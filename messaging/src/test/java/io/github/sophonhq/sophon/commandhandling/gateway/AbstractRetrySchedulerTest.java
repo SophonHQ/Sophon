@@ -18,7 +18,7 @@ package io.github.sophonhq.sophon.commandhandling.gateway;
 
 import io.github.sophonhq.sophon.commandhandling.CommandExecutionException;
 import io.github.sophonhq.sophon.commandhandling.CommandMessage;
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -59,8 +59,8 @@ public class AbstractRetrySchedulerTest {
     void isExplicitlyNonTransient_defaults() {
         RetrySchedulerStub retrySchedulerStub = RetrySchedulerStub.builder().retryExecutor(mock(ScheduledExecutorService.class)).build();
         assertTrue(
-                retrySchedulerStub.isExplicitlyNonTransient(new AxonNonTransientException("message") {}),
-                "AxonNonTransientException should be treated as non-transient by default"
+                retrySchedulerStub.isExplicitlyNonTransient(new SophonNonTransientException("message") {}),
+                "SophonNonTransientException should be treated as non-transient by default"
         );
     }
 
@@ -73,8 +73,8 @@ public class AbstractRetrySchedulerTest {
                 .build();
 
         assertTrue(
-                retrySchedulerStub.isExplicitlyNonTransient(new AxonNonTransientException("message") {}),
-                "AxonNonTransientException should be treated as non-transient by default"
+                retrySchedulerStub.isExplicitlyNonTransient(new SophonNonTransientException("message") {}),
+                "SophonNonTransientException should be treated as non-transient by default"
         );
 
         assertTrue(
@@ -179,7 +179,7 @@ public class AbstractRetrySchedulerTest {
                 .retryExecutor(mock(ScheduledExecutorService.class))
                 .nonTransientFailurePredicate(
                         // Not really needed (as this is a default), but added for clarity and explicitness.
-                        new AxonNonTransientExceptionClassesPredicate()
+                        new SophonNonTransientExceptionClassesPredicate()
                 )
                 .addNonTransientFailurePredicate(
                         new NonTransientExceptionClassesPredicate(CommandExecutionException.class, IllegalArgumentException.class)
@@ -187,8 +187,8 @@ public class AbstractRetrySchedulerTest {
                 .build();
 
         assertTrue(
-                retrySchedulerStub.isExplicitlyNonTransient(new AxonNonTransientException("message") {}),
-                "Per configuration, AxonNonTransientException should be treated as non-transient"
+                retrySchedulerStub.isExplicitlyNonTransient(new SophonNonTransientException("message") {}),
+                "Per configuration, SophonNonTransientException should be treated as non-transient"
         );
 
         assertTrue(
@@ -212,7 +212,7 @@ public class AbstractRetrySchedulerTest {
                 .retryExecutor(mock(ScheduledExecutorService.class))
                 .nonTransientFailurePredicate(
                         new NonTransientExceptionClassesPredicate(
-                                AxonNonTransientException.class, NullPointerException.class, IllegalArgumentException.class, IllegalStateException.class
+                                SophonNonTransientException.class, NullPointerException.class, IllegalArgumentException.class, IllegalStateException.class
                         )
                 )
                 .addNonTransientFailurePredicate(CommandExecutionException.class, nonTransientCommandExecutionExceptionPredicate)

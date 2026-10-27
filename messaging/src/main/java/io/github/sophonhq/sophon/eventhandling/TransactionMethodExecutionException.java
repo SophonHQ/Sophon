@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * Wrapper for exceptions that occurred while calling an @BeforeTransaction or @AfterTransaction annotated method. This
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Allard Buijze
  * @since axon-0.3
  */
-public class TransactionMethodExecutionException extends AxonException {
+public class TransactionMethodExecutionException extends SophonException {
 
     private static final long serialVersionUID = 1952095576024390566L;
 

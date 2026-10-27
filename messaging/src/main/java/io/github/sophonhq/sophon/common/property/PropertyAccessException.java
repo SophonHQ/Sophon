@@ -17,7 +17,7 @@
 package io.github.sophonhq.sophon.common.property;
 
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 
 /**
  * Exception indicating that a predefined property is not accessible. Generally, this means that the property does not
@@ -27,7 +27,7 @@ import io.github.sophonhq.sophon.common.AxonConfigurationException;
  * @author Allard Buijze
  * @since axon-2.0
  */
-public class PropertyAccessException extends AxonConfigurationException {
+public class PropertyAccessException extends SophonConfigurationException {
 
     private static final long serialVersionUID = -1360531453606316133L;
 

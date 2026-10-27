@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngine;
 import io.github.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
 import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
 import io.github.sophonhq.sophon.modelling.command.TargetAggregateIdentifier;
-import io.github.sophonhq.sophon.spring.config.SpringAxonAutoConfigurer;
+import io.github.sophonhq.sophon.spring.config.SpringSophonAutoConfigurer;
 import io.github.sophonhq.sophon.spring.stereotype.Aggregate;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -205,7 +205,7 @@ public class AggregatePolymorphismTest {
         }
     }
 
-    @Import(SpringAxonAutoConfigurer.ImportSelector.class)
+    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
     @Configuration
     public static class Context {
 

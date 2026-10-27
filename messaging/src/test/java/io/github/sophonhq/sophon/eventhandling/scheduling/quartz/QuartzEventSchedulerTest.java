@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.eventhandling.scheduling.quartz;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.transaction.Transaction;
 import io.github.sophonhq.sophon.common.transaction.TransactionManager;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
@@ -186,39 +186,39 @@ class QuartzEventSchedulerTest {
     }
 
     @Test
-    void buildWithNullEventJobDataBinderThrowsAxonConfigurationException() {
+    void buildWithNullEventJobDataBinderThrowsSophonConfigurationException() {
         QuartzEventScheduler.Builder builderTestSubject = QuartzEventScheduler.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.jobDataBinder(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.jobDataBinder(null));
     }
 
     @Test
-    void buildWithNullSerializerThrowsAxonConfigurationException() {
+    void buildWithNullSerializerThrowsSophonConfigurationException() {
         QuartzEventScheduler.Builder builderTestSubject = QuartzEventScheduler.builder();
 
-        assertThrows(AxonConfigurationException.class, () -> builderTestSubject.serializer(null));
+        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.serializer(null));
     }
 
     @Test
-    void buildWithoutSchedulerThrowsAxonConfigurationException() {
+    void buildWithoutSchedulerThrowsSophonConfigurationException() {
         EventBus eventBus = SimpleEventBus.builder().build();
         QuartzEventScheduler.Builder builderTestSubject =
                 QuartzEventScheduler.builder()
                                     .eventBus(eventBus)
                                     .serializer(TestSerializer.XSTREAM.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     @Test
-    void buildWithoutEventBusThrowsAxonConfigurationException() {
+    void buildWithoutEventBusThrowsSophonConfigurationException() {
         Scheduler scheduler = mock(Scheduler.class);
         QuartzEventScheduler.Builder builderTestSubject =
                 QuartzEventScheduler.builder()
                                     .scheduler(scheduler)
                                     .serializer(TestSerializer.XSTREAM.getSerializer());
 
-        assertThrows(AxonConfigurationException.class, builderTestSubject::build);
+        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
     }
 
     private EventMessage<Object> buildTestEvent() {

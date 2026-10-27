@@ -16,12 +16,12 @@
 
 package io.github.sophonhq.sophon.commandhandling.distributed;
 
-import io.github.sophonhq.sophon.common.AxonTransientException;
+import io.github.sophonhq.sophon.common.SophonTransientException;
 
 /**
  * Exception thrown when the CommandBusConnector has a communication failure
  */
-public class CommandBusConnectorCommunicationException extends AxonTransientException {
+public class CommandBusConnectorCommunicationException extends SophonTransientException {
     /**
      * Initializes the CommandBusConnectorCommunicationException
      * @param message The message of the exception

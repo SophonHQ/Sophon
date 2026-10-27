@@ -54,7 +54,7 @@ class AutoWiredStateStoredAggregateTest {
         assertEquals(GenericJpaRepository.class, myAggregateRepository.getClass());
     }
 
-    @Import(SpringAxonAutoConfigurer.ImportSelector.class)
+    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
     @Scope
     @Configuration
     public static class Context {

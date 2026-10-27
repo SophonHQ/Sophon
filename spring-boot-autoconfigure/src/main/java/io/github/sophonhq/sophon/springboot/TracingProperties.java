@@ -27,7 +27,7 @@ import java.time.Duration;
  * @author Mitchell Herrijgers
  * @since axon-4.6.0
  */
-@ConfigurationProperties("axon.tracing")
+@ConfigurationProperties("sophon.tracing")
 public class TracingProperties {
     /**
      * Properties describing the tracing settings for the {@link io.github.sophonhq.sophon.eventsourcing.Snapshotter}.
@@ -72,7 +72,7 @@ public class TracingProperties {
 
     /**
      * Defines which {@link io.github.sophonhq.sophon.tracing.SpanAttributesProvider SpanAttributesProviders}, provided by
-     * default by Axon Framework, are active.
+     * default by Sophon, are active.
      */
     private AttributeProviders attributeProviders;
 
@@ -563,17 +563,17 @@ public class TracingProperties {
     public static class DeadlineManagerProperties {
 
         /**
-         * The name of the attribute used to store the deadline id in the span. Defaults to {@code axon.deadlineId}.
+         * The name of the attribute used to store the deadline id in the span. Defaults to {@code sophon.deadlineId}.
          */
-        private String deadlineIdAttributeName = "axon.deadlineId";
+        private String deadlineIdAttributeName = "sophon.deadlineId";
         /**
          * The name of the attribute used to store the deadline scope in the span. Defaults to
-         * {@code axon.deadlineScope}.
+         * {@code sophon.deadlineScope}.
          */
-        private String deadlineScopeAttributeName = "axon.deadlineScope";
+        private String deadlineScopeAttributeName = "sophon.deadlineScope";
 
         /**
-         * The name of the attribute used to store the deadline id in the span. Defaults to {@code axon.deadlineId}.
+         * The name of the attribute used to store the deadline id in the span. Defaults to {@code sophon.deadlineId}.
          *
          * @return The name of the attribute used to store the deadline id in the span.
          */
@@ -582,7 +582,7 @@ public class TracingProperties {
         }
 
         /**
-         * The name of the attribute used to store the deadline id in the span. Defaults to {@code axon.deadlineId}.
+         * The name of the attribute used to store the deadline id in the span. Defaults to {@code sophon.deadlineId}.
          *
          * @param deadlineIdAttributeName The name of the attribute used to store the deadline id in the span.
          */
@@ -591,7 +591,7 @@ public class TracingProperties {
         }
 
         /**
-         * The name of the attribute used to store the deadline scope in the span. Defaults to {@code axon.deadlineScope}.
+         * The name of the attribute used to store the deadline scope in the span. Defaults to {@code sophon.deadlineScope}.
          *
          * @return The name of the attribute used to store the deadline scope in the span.
          */
@@ -600,7 +600,7 @@ public class TracingProperties {
         }
 
         /**
-         * The name of the attribute used to store the deadline scope in the span. Defaults to {@code axon.deadlineScope}.
+         * The name of the attribute used to store the deadline scope in the span. Defaults to {@code sophon.deadlineScope}.
          *
          * @param deadlineScopeAttributeName The name of the attribute used to store the deadline scope in the span.
          */
@@ -618,12 +618,12 @@ public class TracingProperties {
     public static class RepositoryProperties {
 
         /**
-         * The name of the attribute used to store the aggregate id in the span. Defaults to {@code axon.aggregateId}.
+         * The name of the attribute used to store the aggregate id in the span. Defaults to {@code sophon.aggregateId}.
          */
-        private String aggregateIdAttributeName = "axon.aggregateId";
+        private String aggregateIdAttributeName = "sophon.aggregateId";
 
         /**
-         * The name of the attribute used to store the aggregate id in the span. Defaults to {@code axon.aggregateId}.
+         * The name of the attribute used to store the aggregate id in the span. Defaults to {@code sophon.aggregateId}.
          *
          * @return The name of the attribute used to store the aggregate id in the span.
          */
@@ -632,7 +632,7 @@ public class TracingProperties {
         }
 
         /**
-         * The name of the attribute used to store the aggregate id in the span. Defaults to {@code axon.aggregateId}.
+         * The name of the attribute used to store the aggregate id in the span. Defaults to {@code sophon.aggregateId}.
          *
          * @param aggregateIdAttributeName The name of the attribute used to store the aggregate id in the span.
          */
@@ -650,12 +650,12 @@ public class TracingProperties {
     public static class SagaManagerProperties {
 
         /**
-         * The name of the attribute used to store the saga id in the span. Defaults to {@code axon.sagaIdentifier}.
+         * The name of the attribute used to store the saga id in the span. Defaults to {@code sophon.sagaIdentifier}.
          */
-        private String sagaIdentifierAttributeName = "axon.sagaIdentifier";
+        private String sagaIdentifierAttributeName = "sophon.sagaIdentifier";
 
         /**
-         * The name of the attribute used to store the saga id in the span. Defaults to {@code axon.sagaIdentifier}.
+         * The name of the attribute used to store the saga id in the span. Defaults to {@code sophon.sagaIdentifier}.
          *
          * @return The name of the attribute used to store the saga id in the span.
          */
@@ -664,7 +664,7 @@ public class TracingProperties {
         }
 
         /**
-         * The name of the attribute used to store the saga id in the span. Defaults to {@code axon.sagaIdentifier}.
+         * The name of the attribute used to store the saga id in the span. Defaults to {@code sophon.sagaIdentifier}.
          *
          * @param sagaIdentifierAttributeName The name of the attribute used to store the saga id in the span.
          */

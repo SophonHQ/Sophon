@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.micrometer;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.monitoring.MessageMonitor;
 import io.micrometer.core.instrument.Gauge;
@@ -128,46 +128,46 @@ class EventProcessorLatencyMonitorTest {
     }
 
     @Test
-    void buildWithNullMeterNamePrefixThrowsAxonConfigurationException() {
+    void buildWithNullMeterNamePrefixThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.meterNamePrefix(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.meterNamePrefix(null));
     }
 
     @Test
-    void buildWithEmptyMeterNamePrefixThrowsAxonConfigurationException() {
+    void buildWithEmptyMeterNamePrefixThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.meterNamePrefix(""));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.meterNamePrefix(""));
     }
 
     @Test
-    void buildWithoutMeterNamePrefixThrowsAxonConfigurationException() {
+    void buildWithoutMeterNamePrefixThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject =
                 EventProcessorLatencyMonitor.builder().meterRegistry(meterRegistry);
-        assertThrows(AxonConfigurationException.class, testSubject::build);
+        assertThrows(SophonConfigurationException.class, testSubject::build);
     }
 
     @Test
-    void buildWithNullMeterRegistryThrowsAxonConfigurationException() {
+    void buildWithNullMeterRegistryThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.meterRegistry(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.meterRegistry(null));
     }
 
     @Test
-    void buildWithoutMeterRegistryThrowsAxonConfigurationException() {
+    void buildWithoutMeterRegistryThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject =
                 EventProcessorLatencyMonitor.builder().meterNamePrefix(METER_NAME_PREFIX);
-        assertThrows(AxonConfigurationException.class, testSubject::build);
+        assertThrows(SophonConfigurationException.class, testSubject::build);
     }
 
     @Test
-    void buildWithNullClockThrowsAxonConfigurationException() {
+    void buildWithNullClockThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.clock(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.clock(null));
     }
 
     @Test
-    void buildWithNullTagsBuilderThrowsAxonConfigurationException() {
+    void buildWithNullTagsBuilderThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(AxonConfigurationException.class, () -> testSubject.tagsBuilder(null));
+        assertThrows(SophonConfigurationException.class, () -> testSubject.tagsBuilder(null));
     }
 }

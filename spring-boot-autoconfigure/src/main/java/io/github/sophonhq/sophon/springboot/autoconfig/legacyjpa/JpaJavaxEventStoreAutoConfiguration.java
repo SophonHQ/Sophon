@@ -24,9 +24,9 @@ import io.github.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngine;
 import io.github.sophonhq.sophon.eventsourcing.eventstore.EventStore;
 import io.github.sophonhq.sophon.eventsourcing.eventstore.legacyjpa.JpaEventStorageEngine;
 import io.github.sophonhq.sophon.serialization.Serializer;
-import io.github.sophonhq.sophon.springboot.autoconfig.AxonAutoConfiguration;
 import io.github.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration;
 import io.github.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration;
+import io.github.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration;
 import io.github.sophonhq.sophon.springboot.util.RegisterDefaultEntities;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -39,7 +39,7 @@ import org.springframework.context.annotation.Bean;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * Autoconfiguration class for Axon's JPA specific event store components.
+ * Autoconfiguration class for Sophon's JPA specific event store components.
  *
  * @author Sara Pelligrini
  * @since axon-4.0
@@ -50,7 +50,7 @@ import javax.persistence.EntityManagerFactory;
 @ConditionalOnBean(EntityManagerFactory.class)
 @ConditionalOnMissingBean({EventStorageEngine.class, EventBus.class, EventStore.class})
 @AutoConfigureAfter(JpaJavaxAutoConfiguration.class)
-@AutoConfigureBefore({JpaEventStoreAutoConfiguration.class, JdbcAutoConfiguration.class, AxonAutoConfiguration.class})
+@AutoConfigureBefore({JpaEventStoreAutoConfiguration.class, JdbcAutoConfiguration.class, SophonAutoConfiguration.class})
 @RegisterDefaultEntities(packages = {
         "io.github.sophonhq.sophon.eventsourcing.eventstore.jpa"
 })

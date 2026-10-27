@@ -17,8 +17,8 @@
 package io.github.sophonhq.sophon.config;
 
 import io.github.sophonhq.sophon.commandhandling.CommandBus;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
 import io.github.sophonhq.sophon.common.Registration;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.annotation.AnnotationUtils;
 import io.github.sophonhq.sophon.common.caching.Cache;
 import io.github.sophonhq.sophon.common.caching.WeakReferenceCache;
@@ -64,7 +64,7 @@ import static java.lang.String.format;
 import static io.github.sophonhq.sophon.common.Assert.state;
 
 /**
- * Axon Configuration API extension that allows the definition of an Aggregate. This component will automatically set up
+ * Sophon Configuration API extension that allows the definition of an Aggregate. This component will automatically set up
  * all components required for the Aggregate to operate.
  *
  * @param <A> the type of Aggregate configured
@@ -126,7 +126,7 @@ public class AggregateConfigurer<A> implements AggregateConfiguration<A> {
                     EntityManagerProvider entityManagerProvider = c.getComponent(
                             EntityManagerProvider.class,
                             () -> {
-                                throw new AxonConfigurationException(format(
+                                throw new SophonConfigurationException(format(
                                         "JPA has not been correctly configured for aggregate [%s]. Either provide "
                                                 + "an EntityManagerProvider, or use "
                                                 + "DefaultConfigurer.jpaConfiguration(...) to define one for the "
@@ -151,7 +151,7 @@ public class AggregateConfigurer<A> implements AggregateConfiguration<A> {
      * expected to be a proper JPA Entity.
      *
      * @param aggregateType         The type of Aggregate to configure
-     * @param entityManagerProvider The provider for Axon to retrieve the EntityManager from
+     * @param entityManagerProvider The provider for Sophon to retrieve the EntityManager from
      * @param <A>                   The type of Aggregate to configure
      * @return An AggregateConfigurer instance for further configuration of the Aggregate
      */
@@ -203,7 +203,7 @@ public class AggregateConfigurer<A> implements AggregateConfiguration<A> {
             final String declaredAggregateType =
                     metaModel.get()
                              .declaredType(aggregate)
-                             .orElseThrow(() -> new AxonConfigurationException(
+                             .orElseThrow(() -> new SophonConfigurationException(
                                      "No declared type found for Aggregate [" + aggregate + "]"
                              ));
             return RevisionSnapshotFilter.builder()

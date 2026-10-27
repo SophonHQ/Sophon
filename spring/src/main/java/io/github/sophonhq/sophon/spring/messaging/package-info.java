@@ -15,6 +15,6 @@
  */
 
 /**
- * Utility classes used to connect Axon Event publishing mechanisms to a Spring Messaging Channel.
+ * Utility classes used to connect Sophon Event publishing mechanisms to a Spring Messaging Channel.
  */
 package io.github.sophonhq.sophon.spring.messaging;

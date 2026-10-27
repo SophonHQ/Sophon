@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.messaging.annotation;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 
 /**
  * MessageHandlerInvocationException is a runtime exception that wraps an exception thrown by an invoked message
@@ -25,7 +25,7 @@ import io.github.sophonhq.sophon.common.AxonException;
  * @author Allard Buijze
  * @since axon-2.1
  */
-public class MessageHandlerInvocationException extends AxonException {
+public class MessageHandlerInvocationException extends SophonException {
 
     private static final long serialVersionUID = 664867158607341533L;
 

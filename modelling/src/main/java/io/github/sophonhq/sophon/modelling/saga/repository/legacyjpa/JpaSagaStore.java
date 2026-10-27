@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.saga.repository.legacyjpa;
 
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.common.legacyjpa.EntityManagerProvider;
 import io.github.sophonhq.sophon.modelling.saga.AssociationValue;
 import io.github.sophonhq.sophon.modelling.saga.AssociationValues;
@@ -109,7 +109,7 @@ public class JpaSagaStore implements SagaStore<Object> {
      * Instantiate a {@link JpaSagaStore} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the {@link EntityManagerProvider} and {@link Serializer} are not {@code null}, and will throw an
-     * {@link AxonConfigurationException} if any of them is {@code null}.
+     * {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link JpaSagaStore} instance
      */
@@ -410,10 +410,10 @@ public class JpaSagaStore implements SagaStore<Object> {
         /**
          * Validates whether the fields contained in this Builder are set accordingly.
          *
-         * @throws AxonConfigurationException if one field is asserted to be incorrect according to the Builder's
+         * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
          *                                    specifications
          */
-        protected void validate() throws AxonConfigurationException {
+        protected void validate() throws SophonConfigurationException {
             assertNonNull(entityManagerProvider,
                           "The EntityManagerProvider is a hard requirement and should be provided");
             if (serializer == null) {

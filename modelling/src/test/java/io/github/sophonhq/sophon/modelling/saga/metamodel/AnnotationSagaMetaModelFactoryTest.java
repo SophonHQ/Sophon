@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.modelling.saga.metamodel;
 
-import io.github.sophonhq.sophon.common.AxonException;
+import io.github.sophonhq.sophon.common.SophonException;
 import io.github.sophonhq.sophon.eventhandling.EventMessage;
 import io.github.sophonhq.sophon.messaging.annotation.MessageHandlerInterceptorMemberChain;
 import io.github.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
@@ -151,7 +151,7 @@ class AnnotationSagaMetaModelFactoryTest {
         }
     }
 
-    private static class FooException extends AxonException {
+    private static class FooException extends SophonException {
 
         private static final long serialVersionUID = 6212176261668474654L;
 

@@ -33,38 +33,38 @@ public abstract class BuilderUtils {
 
     /**
      * Assert that the given {@code value} will result to {@code true} through the {@code assertion} {@link Predicate}.
-     * If not, an {@link AxonConfigurationException} is thrown containing the provided {@code exceptionMessage}.
+     * If not, an {@link SophonConfigurationException} is thrown containing the provided {@code exceptionMessage}.
      *
      * @param value            a {@code T} specifying the value to assert
      * @param assertion        a {@link Predicate} to test {@code value} against
      * @param exceptionMessage The message for the exception.
      * @param <T>              a generic specifying the type of the {@code value}, which is the input for the {@code
      *                         assertion}
-     * @throws AxonConfigurationException if the {@code value} asserts to {@code false} by the {@code assertion}
+     * @throws SophonConfigurationException if the {@code value} asserts to {@code false} by the {@code assertion}
      */
     public static <T> void assertThat(T value,
                                       Predicate<T> assertion,
-                                      String exceptionMessage) throws AxonConfigurationException {
-        Assert.assertThat(value, assertion, () -> new AxonConfigurationException(exceptionMessage));
+                                      String exceptionMessage) throws SophonConfigurationException {
+        Assert.assertThat(value, assertion, () -> new SophonConfigurationException(exceptionMessage));
     }
 
     /**
-     * Assert that the given {@code value} is non null. If not, an {@link AxonConfigurationException} is thrown
+     * Assert that the given {@code value} is non null. If not, an {@link SophonConfigurationException} is thrown
      * containing the provided {@code exceptionMessage}.
      *
      * @param value            a {@code T} specifying the value to assert
      * @param exceptionMessage The message for the exception.
      * @param <T>              a generic specifying the type of the {@code value}, which is the input for the {@code
      *                         assertion}
-     * @throws AxonConfigurationException if the {@code value} equals {@code null}
+     * @throws SophonConfigurationException if the {@code value} equals {@code null}
      */
-    public static <T> void assertNonNull(T value, String exceptionMessage) throws AxonConfigurationException {
+    public static <T> void assertNonNull(T value, String exceptionMessage) throws SophonConfigurationException {
         assertThat(value, Objects::nonNull, exceptionMessage);
     }
 
     /**
      * Assert that the given {@code value} is positive, meaning greater than, or equal to, zero. If not, an {@link
-     * AxonConfigurationException} is thrown containing the provided {code exceptionMessage}.
+     * SophonConfigurationException} is thrown containing the provided {code exceptionMessage}.
      *
      * @param i                the value to assert
      * @param exceptionMessage the message for the exception
@@ -75,7 +75,7 @@ public abstract class BuilderUtils {
 
     /**
      * Assert that the given {@code value} is positive, meaning greater than, or equal to, zero. If not, an {@link
-     * AxonConfigurationException} is thrown containing the provided {code exceptionMessage}.
+     * SophonConfigurationException} is thrown containing the provided {code exceptionMessage}.
      *
      * @param l                the value to assert
      * @param exceptionMessage the message for the exception
@@ -86,7 +86,7 @@ public abstract class BuilderUtils {
 
     /**
      * Assert that the given {@code value} is strictly positive, meaning greater than zero. If not, an {@link
-     * AxonConfigurationException} is thrown containing the provided {code exceptionMessage}.
+     * SophonConfigurationException} is thrown containing the provided {code exceptionMessage}.
      *
      * @param i                the value to assert
      * @param exceptionMessage the message for the exception.
@@ -97,7 +97,7 @@ public abstract class BuilderUtils {
 
     /**
      * Assert that the given {@code value} is strictly positive, meaning greater than zero. If not, an {@link
-     * AxonConfigurationException} is thrown containing the provided {code exceptionMessage}.
+     * SophonConfigurationException} is thrown containing the provided {code exceptionMessage}.
      *
      * @param l                the value to assert
      * @param exceptionMessage the message for the exception.
@@ -108,7 +108,7 @@ public abstract class BuilderUtils {
 
     /**
      * Assert that the given {@code string} is not null and does not equal an empty String. If not, an {@link
-     * AxonConfigurationException} is thrown containing the provided {@code exceptionMessage}.
+     * SophonConfigurationException} is thrown containing the provided {@code exceptionMessage}.
      *
      * @param string           the value to assert
      * @param exceptionMessage the message for the exception.
@@ -118,7 +118,7 @@ public abstract class BuilderUtils {
     }
     /**
      * Assert that the given {@code string} does not equals an empty String. If not, an {@link
-     * AxonConfigurationException} is thrown containing the provided {@code exceptionMessage}.
+     * SophonConfigurationException} is thrown containing the provided {@code exceptionMessage}.
      *
      * @param string           the value to assert
      * @param exceptionMessage the message for the exception.

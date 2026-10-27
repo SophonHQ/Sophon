@@ -15,7 +15,7 @@
  */
 
 /**
- * Contains the main classes for annotation support in Axon Framework. These classes are typically independent of the
+ * Contains the main classes for annotation support in Sophon. These classes are typically independent of the
  * type of annotated handler (e.g. event handler, command handler).
  */
 package io.github.sophonhq.sophon.common.annotation;

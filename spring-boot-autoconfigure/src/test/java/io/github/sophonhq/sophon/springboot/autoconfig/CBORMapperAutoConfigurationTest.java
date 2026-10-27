@@ -54,10 +54,10 @@ class CBORMapperAutoConfigurationTest {
     private ApplicationContext applicationContext;
 
     @Test
-    void eventSerializerIsOfTypeJacksonSerializerAndUsesDefaultAxonObjectMapperBean() {
+    void eventSerializerIsOfTypeJacksonSerializerAndUsesDefaultSophonObjectMapperBean() {
         final Serializer serializer = applicationContext.getBean(Serializer.class);
         final Serializer eventSerializer = applicationContext.getBean("serializer", Serializer.class);
-        final CBORMapper objectMapper = applicationContext.getBean("defaultAxonCborMapper", CBORMapper.class);
+        final CBORMapper objectMapper = applicationContext.getBean("defaultSophonCborMapper", CBORMapper.class);
 
         assertTrue(serializer instanceof JacksonSerializer);
         assertEquals(objectMapper, ((JacksonSerializer) serializer).getObjectMapper());

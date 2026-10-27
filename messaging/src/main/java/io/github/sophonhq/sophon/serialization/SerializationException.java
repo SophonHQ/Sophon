@@ -16,7 +16,7 @@
 
 package io.github.sophonhq.sophon.serialization;
 
-import io.github.sophonhq.sophon.common.AxonNonTransientException;
+import io.github.sophonhq.sophon.common.SophonNonTransientException;
 
 /**
  * Indicates that an exception occurred while serializing or deserializing an object.
@@ -24,7 +24,7 @@ import io.github.sophonhq.sophon.common.AxonNonTransientException;
  * @author Allard Buijze
  * @since axon-0.6
  */
-public class SerializationException extends AxonNonTransientException {
+public class SerializationException extends SophonNonTransientException {
 
     private static final long serialVersionUID = 4649672453752098762L;
 

@@ -20,7 +20,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
 import com.thoughtworks.xstream.io.xml.Dom4JReader;
 import com.thoughtworks.xstream.io.xml.XomReader;
-import io.github.sophonhq.sophon.common.AxonConfigurationException;
+import io.github.sophonhq.sophon.common.SophonConfigurationException;
 import io.github.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import io.github.sophonhq.sophon.serialization.AbstractXStreamSerializer;
 import io.github.sophonhq.sophon.serialization.AnnotationRevisionResolver;
@@ -41,7 +41,7 @@ import java.nio.charset.Charset;
 
 /**
  * Serializer that uses XStream to serialize and deserialize arbitrary objects. The XStream instance is configured to
- * deal with the Classes used in Axon Framework in the most compact fashion.
+ * deal with the Classes used in Sophon in the most compact fashion.
  * <p/>
  * When running on a Sun JVM, XStream does not pose any restrictions on classes to serialize. On other JVM's, however,
  * you need to either implement Serializable, or provide a default constructor (accessible under the JVM's security
@@ -61,9 +61,9 @@ public class XStreamSerializer extends AbstractXStreamSerializer {
      * The {@link XStream} is defaulted to a {@link XStream#XStream(HierarchicalStreamDriver)} call, providing a {@link
      * CompactDriver}, the {@link Charset} is defaulted to a {@link Charset#forName(String)} using the {@code UTF-8}
      * character set, the {@link RevisionResolver} defaults to an {@link AnnotationRevisionResolver} and the {@link
-     * Converter} defaults to a {@link ChainingConverter}. Lastly, the builder adds Axon types for XStream's security
+     * Converter} defaults to a {@link ChainingConverter}. Lastly, the builder adds Sophon types for XStream's security
      * settings by including {@code "io.github.sophonhq.sophon.**} as a wildcard type. This can be disabled with the {@link
-     * Builder#disableAxonTypeSecurity()} operation when required.
+     * Builder#disableSophonTypeSecurity()} operation when required.
      * <p>
      * Upon instantiation, several defaults aliases are added to the XStream instance, for example for the {@link
      * GenericDomainEventMessage}, the {@link io.github.sophonhq.sophon.commandhandling.GenericCommandMessage} and the {@link
@@ -85,7 +85,7 @@ public class XStreamSerializer extends AbstractXStreamSerializer {
      * The {@link XStream} is defaulted to a {@link XStream#XStream(HierarchicalStreamDriver)} call, providing a {@link
      * CompactDriver}, the {@link Charset} is defaulted to a {@link Charset#forName(String)} using the {@code UTF-8}
      * character set, the {@link RevisionResolver} defaults to an {@link AnnotationRevisionResolver} and the {@link
-     * Converter} defaults to a {@link ChainingConverter}. Lastly, the builder adds Axon types for XStream's security
+     * Converter} defaults to a {@link ChainingConverter}. Lastly, the builder adds Sophon types for XStream's security
      * settings by including {@code "io.github.sophonhq.sophon.**} as a wildcard type.
      * <p>
      * Upon instantiation, several defaults aliases are added to the XStream instance, for example for the {@link
@@ -104,7 +104,7 @@ public class XStreamSerializer extends AbstractXStreamSerializer {
      */
     @Deprecated
     public static XStreamSerializer defaultSerializer() {
-        logger.warn("An unsecured XStream instance allowing all types is used. It is strongly recommended to set the security context yourself instead!", new AxonConfigurationException(
+        logger.warn("An unsecured XStream instance allowing all types is used. It is strongly recommended to set the security context yourself instead!", new SophonConfigurationException(
                 "An unsecured XStream instance allowing all types is used. "
                         + "It is strongly recommended to set the security context yourself instead!"
         ));
@@ -116,7 +116,7 @@ public class XStreamSerializer extends AbstractXStreamSerializer {
 
     /**
      * Instantiate a {@link XStreamSerializer} based on the fields contained in the {@link Builder}. The {@link XStream}
-     * instance is configured with several converters for the most common types in Axon.
+     * instance is configured with several converters for the most common types in Sophon.
      *
      * @param builder the {@link Builder} used to instantiate a {@link XStreamSerializer} instance
      */
@@ -159,9 +159,9 @@ public class XStreamSerializer extends AbstractXStreamSerializer {
      * The {@link XStream} is defaulted to a {@link XStream#XStream(HierarchicalStreamDriver)} call, providing a {@link
      * CompactDriver}, the {@link Charset} is defaulted to a {@link Charset#forName(String)} using the {@code UTF-8}
      * character set, the {@link RevisionResolver} defaults to an {@link AnnotationRevisionResolver} and the {@link
-     * Converter} defaults to a {@link ChainingConverter}. Lastly, the builder adds Axon types for XStream's security
+     * Converter} defaults to a {@link ChainingConverter}. Lastly, the builder adds Sophon types for XStream's security
      * settings by including {@code "io.github.sophonhq.sophon.**} as a wildcard type. This can be disabled with the {@link
-     * Builder#disableAxonTypeSecurity()} operation when required.
+     * Builder#disableSophonTypeSecurity()} operation when required.
      * <p>
      * Upon instantiation, several defaults aliases are added to the XStream instance, for example for the {@link
      * GenericDomainEventMessage}, the {@link io.github.sophonhq.sophon.commandhandling.GenericCommandMessage} and the {@link
@@ -214,8 +214,8 @@ public class XStreamSerializer extends AbstractXStreamSerializer {
         }
 
         @Override
-        public Builder disableAxonTypeSecurity() {
-            super.disableAxonTypeSecurity();
+        public Builder disableSophonTypeSecurity() {
+            super.disableSophonTypeSecurity();
             return this;
         }
 
@@ -232,7 +232,7 @@ public class XStreamSerializer extends AbstractXStreamSerializer {
          */
         public XStreamSerializer build() {
             if (xStream == null) {
-                logger.warn("An unsecured XStream instance allowing all types is used. It is strongly recommended to set the security context yourself instead!", new AxonConfigurationException(
+                logger.warn("An unsecured XStream instance allowing all types is used. It is strongly recommended to set the security context yourself instead!", new SophonConfigurationException(
                         "An unsecured XStream instance allowing all types is used. "
                                 + "It is strongly recommended to set the security context yourself instead!"
                 ));

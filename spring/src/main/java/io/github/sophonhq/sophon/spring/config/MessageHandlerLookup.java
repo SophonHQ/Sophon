@@ -43,8 +43,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * A {@link BeanDefinitionRegistryPostProcessor} implementation that detects beans with Axon Message handlers and
- * registers an {@link MessageHandlerConfigurer} to have these handlers registered in the Axon
+ * A {@link BeanDefinitionRegistryPostProcessor} implementation that detects beans with Sophon Message handlers and
+ * registers an {@link MessageHandlerConfigurer} to have these handlers registered in the Sophon
  * {@link io.github.sophonhq.sophon.config.Configuration}.
  *
  * @author Allard Buijze
@@ -111,7 +111,7 @@ public class MessageHandlerLookup implements BeanDefinitionRegistryPostProcessor
         }
 
         for (MessageHandlerConfigurer.Type value : MessageHandlerConfigurer.Type.values()) {
-            String configurerBeanName = "MessageHandlerConfigurer$$Axon$$" + value.name();
+            String configurerBeanName = "MessageHandlerConfigurer$$Sophon$$" + value.name();
             if (beanFactory.containsBeanDefinition(configurerBeanName)) {
                 logger.info("Message handler configurer already available. Skipping configuration");
                 break;
