@@ -1,36 +1,30 @@
 # Migration
-Module containing [OpenRewrite](https://docs.openrewrite.org/) recipes for migrating Axon Framework applications.
 
-## Migrate to Axon Framework 4.x Javax
+Module containing [OpenRewrite](https://docs.openrewrite.org/) recipes that migrate an application from Axon
+Framework 4 to Sophon. See [MIGRATING.md](../MIGRATING.md) for everything that changes, including the steps the recipe
+does not cover.
+
+## Migrate from Axon Framework 4 to Sophon
+
 ### Maven
+
 ```bash
 mvn -U org.openrewrite.maven:rewrite-maven-plugin:run \
-  -Drewrite.recipeArtifactCoordinates=org.axonframework:axon-migration:LATEST \
-  -DactiveRecipes=org.axonframework.migration.UpgradeAxonFramework_4_Javax
+  -Drewrite.recipeArtifactCoordinates=io.github.sophonhq.sophon:sophon-migration:LATEST \
+  -Drewrite.activeRecipes=io.github.sophonhq.sophon.migration.MigrateFromAxonFramework4
 ```
 
-#### Gradle
-Requires a custom [Gradle init script](https://docs.openrewrite.org/running-recipes/running-rewrite-on-a-gradle-project-without-modifying-the-build).
+### Gradle
 
-## Migrate to Axon Framework 4.x Jakarta
-### Maven
-```bash
-mvn -U org.openrewrite.maven:rewrite-maven-plugin:run \
-  -Drewrite.recipeArtifactCoordinates=org.axonframework:axon-migration:LATEST \
-  -DactiveRecipes=org.axonframework.migration.UpgradeAxonFramework_4_Jakarta
-```
+Requires a custom
+[Gradle init script](https://docs.openrewrite.org/running-recipes/running-rewrite-on-a-gradle-project-without-modifying-the-build).
 
-#### Gradle
-Requires a custom [Gradle init script](https://docs.openrewrite.org/running-recipes/running-rewrite-on-a-gradle-project-without-modifying-the-build).
+## Recipes
 
-
-## Migrate to Axon Framework 4.x Jakarta and Spring Boot 3.2
-### Maven
-```bash
-mvn -U org.openrewrite.maven:rewrite-maven-plugin:run \
-  -Drewrite.recipeArtifactCoordinates=org.openrewrite.recipe:rewrite-spring:LATEST,org.axonframework:axon-migration:LATEST \
-  -DactiveRecipes=org.openrewrite.java.spring.boot3.UpgradeSpringBoot_3_2,org.axonframework.migration.UpgradeAxonFramework_4_Jakarta
-```
-
-#### Gradle
-Requires a custom [Gradle init script](https://docs.openrewrite.org/running-recipes/running-rewrite-on-a-gradle-project-without-modifying-the-build).
+| Recipe                                                               | Migrates                                                                         |
+|----------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| `io.github.sophonhq.sophon.migration.MigrateFromAxonFramework4`      | Everything below                                                                 |
+| `io.github.sophonhq.sophon.migration.ChangeAxonJavaCode`             | Packages, renamed types and members, string literals and imports in Java sources |
+| `io.github.sophonhq.sophon.migration.ChangeAxonMavenCoordinates`     | `org.axonframework:axon-*` dependencies                                          |
+| `io.github.sophonhq.sophon.migration.ChangeAxonConfigurationProperties` | `axon.*` properties in `.properties` and YAML files                           |
+| `io.github.sophonhq.sophon.migration.ChangeAxonResources`            | ServiceLoader files, Spring Boot registrations, JPA descriptors and logging configuration |

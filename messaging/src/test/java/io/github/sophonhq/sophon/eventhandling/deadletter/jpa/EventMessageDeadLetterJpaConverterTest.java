@@ -127,6 +127,16 @@ class EventMessageDeadLetterJpaConverterTest {
                                                         Instant::now));
     }
 
+    @Test
+    void canConvertDeadLettersStoredWithAxonFrameworkMessageTypes() {
+        DeadLetterEventEntry legacyEntry = new DeadLetterEventEntry(
+                "org.axonframework.eventhandling.GenericTrackedDomainEventMessage", "identifier", Instant.now().toString(),
+                null, null, null, null, null, null, null, null, null
+        );
+
+        assertTrue(converter.canConvert(legacyEntry));
+    }
+
     private void testConversion(EventMessage<?> message) {
         assertTrue(converter.canConvert(message));
         DeadLetterEventEntry deadLetterEventEntry = converter.convert(message, eventSerializer, genericSerializer);

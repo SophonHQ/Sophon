@@ -30,6 +30,7 @@ import io.github.sophonhq.sophon.messaging.MetaData;
 import io.github.sophonhq.sophon.serialization.AnnotationRevisionResolver;
 import io.github.sophonhq.sophon.serialization.ChainingConverter;
 import io.github.sophonhq.sophon.serialization.Converter;
+import io.github.sophonhq.sophon.serialization.LegacyClassNames;
 import io.github.sophonhq.sophon.serialization.RevisionResolver;
 import io.github.sophonhq.sophon.serialization.SerializationException;
 import io.github.sophonhq.sophon.serialization.SerializedObject;
@@ -61,6 +62,7 @@ public class JacksonSerializer implements Serializer {
     private final ObjectMapper objectMapper;
     private final Set<String> unknownClasses = new ConcurrentSkipListSet<>();
     private final boolean cacheUnknownClasses;
+    private final boolean translateLegacyClassNames;
 
     /**
      * Instantiate a Builder to be able to create a {@link JacksonSerializer}.
@@ -122,6 +124,7 @@ public class JacksonSerializer implements Serializer {
             registerConverters((ChainingConverter) converter);
         }
         this.cacheUnknownClasses = builder.cacheUnknownClasses;
+        this.translateLegacyClassNames = builder.translateLegacyClassNames;
     }
 
     /**
@@ -202,12 +205,15 @@ public class JacksonSerializer implements Serializer {
                 //noinspection unchecked
                 return (T) new UnknownSerializedType(this, serializedObject);
             }
+            ObjectReader reader = getReader(type);
+            if (translateLegacyClassNames) {
+                reader = reader.withHandler(LegacyTypeIdHandler.INSTANCE);
+            }
             if (JsonNode.class.equals(serializedObject.getContentType())) {
-                return getReader(type)
-                        .readValue((JsonNode) serializedObject.getData());
+                return reader.readValue((JsonNode) serializedObject.getData());
             }
             SerializedObject<byte[]> byteSerialized = converter.convert(serializedObject, byte[].class);
-            return getReader(type).readValue(byteSerialized.getData());
+            return reader.readValue(byteSerialized.getData());
         } catch (IOException e) {
             throw new SerializationException("Error while deserializing object", e);
         }
@@ -218,7 +224,9 @@ public class JacksonSerializer implements Serializer {
         if (SimpleSerializedType.emptyType().equals(type)) {
             return Void.class;
         }
-        String className = resolveClassName(type);
+        String className = translateLegacyClassNames
+                ? LegacyClassNames.translate(resolveClassName(type))
+                : resolveClassName(type);
         if (cacheUnknownClasses && unknownClasses.contains(className)) {
             return UnknownSerializedType.class;
         }
@@ -284,6 +292,7 @@ public class JacksonSerializer implements Serializer {
         private boolean defaultTyping = false;
         private ClassLoader classLoader;
         private boolean cacheUnknownClasses = true;
+        private boolean translateLegacyClassNames = false;
 
         /**
          * Sets the {@link RevisionResolver} used to resolve the revision from an object to be serialized. Defaults to
@@ -379,6 +388,19 @@ public class JacksonSerializer implements Serializer {
          */
         public Builder defaultTyping() {
             defaultTyping = true;
+            return this;
+        }
+
+        /**
+         * Translates class names written by Axon Framework 4 into their Sophon equivalents when deserializing, so data
+         * stored by an Axon Framework 4 application, like tracking tokens and sagas, can be read. This covers the
+         * serialized type as well as polymorphic type ids in the serialized data. Defaults to {@code false}.
+         *
+         * @return the current Builder instance, for fluent interfacing
+         * @see LegacyClassNames
+         */
+        public Builder translateLegacyClassNames() {
+            this.translateLegacyClassNames = true;
             return this;
         }
 

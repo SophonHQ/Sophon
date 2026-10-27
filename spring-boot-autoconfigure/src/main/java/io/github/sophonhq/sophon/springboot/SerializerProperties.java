@@ -56,6 +56,13 @@ public class SerializerProperties {
     private SerializerType messages = SerializerType.DEFAULT;
 
     /**
+     * Whether serializers translate class names written by Axon Framework 4 into their Sophon equivalents when
+     * deserializing, so data stored by an Axon Framework 4 application, like tracking tokens and sagas, can be read.
+     * Defaults to {@code false}.
+     */
+    private boolean translateLegacyClassNames = false;
+
+    /**
      * The type of serializer to use to serialize any type of object, for which no more specific serializer is
      * configured. Defaults to an XStream based serializer.
      *
@@ -113,6 +120,27 @@ public class SerializerProperties {
      */
     public void setMessages(SerializerType serializerType) {
         this.messages = serializerType;
+    }
+
+    /**
+     * Whether serializers translate class names written by Axon Framework 4 into their Sophon equivalents when
+     * deserializing. Defaults to {@code false}.
+     *
+     * @return {@code true} if Axon Framework 4 class names are translated, {@code false} otherwise.
+     */
+    public boolean isTranslateLegacyClassNames() {
+        return translateLegacyClassNames;
+    }
+
+    /**
+     * Sets whether serializers translate class names written by Axon Framework 4 into their Sophon equivalents when
+     * deserializing, so data stored by an Axon Framework 4 application, like tracking tokens and sagas, can be read.
+     * Defaults to {@code false}.
+     *
+     * @param translateLegacyClassNames Whether to translate Axon Framework 4 class names.
+     */
+    public void setTranslateLegacyClassNames(boolean translateLegacyClassNames) {
+        this.translateLegacyClassNames = translateLegacyClassNames;
     }
 
     /**

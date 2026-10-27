@@ -18,6 +18,7 @@ package io.github.sophonhq.sophon.eventhandling.deadletter.legacyjpa;
 
 import io.github.sophonhq.sophon.eventhandling.*;
 import io.github.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEventEntry;
+import io.github.sophonhq.sophon.serialization.LegacyClassNames;
 import io.github.sophonhq.sophon.serialization.SerializedMessage;
 import io.github.sophonhq.sophon.serialization.SerializedObject;
 import io.github.sophonhq.sophon.serialization.SerializedType;
@@ -115,10 +116,12 @@ public class EventMessageDeadLetterJpaConverter implements DeadLetterJpaConverte
 
     @Override
     public boolean canConvert(DeadLetterEventEntry message) {
-        return message.getMessageType().equals(GenericTrackedDomainEventMessage.class.getName()) ||
-                message.getMessageType().equals(GenericEventMessage.class.getName()) ||
-                message.getMessageType().equals(GenericDomainEventMessage.class.getName()) ||
-                message.getMessageType().equals(GenericTrackedEventMessage.class.getName());
+        // Dead letters stored by Axon Framework 4 refer to the message classes by their original names.
+        String messageType = LegacyClassNames.translate(message.getMessageType());
+        return messageType.equals(GenericTrackedDomainEventMessage.class.getName()) ||
+                messageType.equals(GenericEventMessage.class.getName()) ||
+                messageType.equals(GenericDomainEventMessage.class.getName()) ||
+                messageType.equals(GenericTrackedEventMessage.class.getName());
     }
 
     @Override

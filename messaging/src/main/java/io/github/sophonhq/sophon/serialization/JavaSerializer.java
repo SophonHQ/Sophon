@@ -24,6 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.io.ObjectOutputStream;
 
 import static io.github.sophonhq.sophon.common.BuilderUtils.assertNonNull;
@@ -45,6 +46,7 @@ import static io.github.sophonhq.sophon.common.BuilderUtils.assertNonNull;
 public class JavaSerializer implements Serializer {
 
     private final RevisionResolver revisionResolver;
+    private final boolean translateLegacyClassNames;
 
     private final Converter converter = new ChainingConverter();
 
@@ -56,6 +58,7 @@ public class JavaSerializer implements Serializer {
     protected JavaSerializer(Builder builder) {
         builder.validate();
         this.revisionResolver = builder.revisionResolver;
+        this.translateLegacyClassNames = builder.translateLegacyClassNames;
     }
 
     /**
@@ -116,7 +119,9 @@ public class JavaSerializer implements Serializer {
                 converter.convert(serializedObject, InputStream.class);
         ObjectInputStream ois = null;
         try {
-            ois = new ObjectInputStream(converted.getData());
+            ois = translateLegacyClassNames
+                    ? new LegacyClassNameObjectInputStream(converted.getData())
+                    : new ObjectInputStream(converted.getData());
             return (T) ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
             throw new SerializationException("An error occurred while deserializing: " + e.getMessage(), e);
@@ -131,7 +136,8 @@ public class JavaSerializer implements Serializer {
             return Void.class;
         }
         try {
-            return Class.forName(type.getName());
+            String className = translateLegacyClassNames ? LegacyClassNames.translate(type.getName()) : type.getName();
+            return Class.forName(className);
         } catch (ClassNotFoundException e) {
             return UnknownSerializedType.class;
         }
@@ -152,6 +158,26 @@ public class JavaSerializer implements Serializer {
     }
 
     /**
+     * {@link ObjectInputStream} resolving classes written under their Axon Framework 4 names to their Sophon
+     * equivalents.
+     */
+    private static final class LegacyClassNameObjectInputStream extends ObjectInputStream {
+
+        private LegacyClassNameObjectInputStream(InputStream in) throws IOException {
+            super(in);
+        }
+
+        @Override
+        protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
+            String className = LegacyClassNames.translateAll(desc.getName());
+            if (className.equals(desc.getName())) {
+                return super.resolveClass(desc);
+            }
+            return Class.forName(className, false, JavaSerializer.class.getClassLoader());
+        }
+    }
+
+    /**
      * Builder class to instantiate a {@link JavaSerializer}.
      * <p>
      * The {@link RevisionResolver} is defaulted to an {@link SerialVersionUIDRevisionResolver}.
@@ -159,6 +185,7 @@ public class JavaSerializer implements Serializer {
     public static class Builder {
 
         private RevisionResolver revisionResolver = new SerialVersionUIDRevisionResolver();
+        private boolean translateLegacyClassNames = false;
 
         /**
          * Sets the {@link RevisionResolver} used to resolve the revision from an object to be serialized. Defaults to
@@ -172,6 +199,20 @@ public class JavaSerializer implements Serializer {
         public Builder revisionResolver(RevisionResolver revisionResolver) {
             assertNonNull(revisionResolver, "RevisionResolver may not be null");
             this.revisionResolver = revisionResolver;
+            return this;
+        }
+
+        /**
+         * Translates class names written by Axon Framework 4 into their Sophon equivalents when deserializing, so data
+         * stored by an Axon Framework 4 application, like tracking tokens and sagas, can be read. Only classes declaring
+         * an explicit {@code serialVersionUID} can be read this way, as the computed default depends on the class name.
+         * Defaults to {@code false}.
+         *
+         * @return the current Builder instance, for fluent interfacing
+         * @see LegacyClassNames
+         */
+        public Builder translateLegacyClassNames() {
+            this.translateLegacyClassNames = true;
             return this;
         }
 

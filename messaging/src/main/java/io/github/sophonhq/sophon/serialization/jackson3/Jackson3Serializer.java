@@ -22,6 +22,7 @@ import io.github.sophonhq.sophon.messaging.MetaData;
 import io.github.sophonhq.sophon.serialization.AnnotationRevisionResolver;
 import io.github.sophonhq.sophon.serialization.ChainingConverter;
 import io.github.sophonhq.sophon.serialization.Converter;
+import io.github.sophonhq.sophon.serialization.LegacyClassNames;
 import io.github.sophonhq.sophon.serialization.RevisionResolver;
 import io.github.sophonhq.sophon.serialization.SerializationException;
 import io.github.sophonhq.sophon.serialization.SerializedObject;
@@ -73,6 +74,7 @@ public class Jackson3Serializer implements Serializer {
     private final ObjectMapper objectMapper;
     private final Set<String> unknownClasses = new ConcurrentSkipListSet<>();
     private final boolean cacheUnknownClasses;
+    private final boolean translateLegacyClassNames;
 
     /**
      * Instantiate a Builder to be able to create a {@link Jackson3Serializer}.
@@ -137,6 +139,10 @@ public class Jackson3Serializer implements Serializer {
 
         jmb.polymorphicTypeValidator(typeValidator);
 
+        if (builder.translateLegacyClassNames) {
+            jmb.addHandler(LegacyTypeIdHandler.INSTANCE);
+        }
+
         jmb.typeFactory(builder.classLoader == null
             ? TypeFactory.createDefaultInstance()
             : TypeFactory.createDefaultInstance().withClassLoader(builder.classLoader)
@@ -152,6 +158,7 @@ public class Jackson3Serializer implements Serializer {
             registerConverters((ChainingConverter) converter);
         }
         this.cacheUnknownClasses = builder.cacheUnknownClasses;
+        this.translateLegacyClassNames = builder.translateLegacyClassNames;
     }
 
     /**
@@ -251,7 +258,9 @@ public class Jackson3Serializer implements Serializer {
         if (SimpleSerializedType.emptyType().equals(type)) {
             return Void.class;
         }
-        String className = resolveClassName(type);
+        String className = translateLegacyClassNames
+                ? LegacyClassNames.translate(resolveClassName(type))
+                : resolveClassName(type);
         if (cacheUnknownClasses && unknownClasses.contains(className)) {
             return UnknownSerializedType.class;
         }
@@ -315,6 +324,7 @@ public class Jackson3Serializer implements Serializer {
         private boolean defaultTyping;
         private ClassLoader classLoader;
         private boolean cacheUnknownClasses = true;
+        private boolean translateLegacyClassNames = false;
 
         /**
          * Sets the {@link RevisionResolver} used to resolve the revision from an object to be serialized. Defaults to
@@ -416,6 +426,19 @@ public class Jackson3Serializer implements Serializer {
          */
         public Builder defaultTyping() {
             defaultTyping = true;
+            return this;
+        }
+
+        /**
+         * Translates class names written by Axon Framework 4 into their Sophon equivalents when deserializing, so data
+         * stored by an Axon Framework 4 application, like tracking tokens and sagas, can be read. This covers the
+         * serialized type as well as polymorphic type ids in the serialized data. Defaults to {@code false}.
+         *
+         * @return the current Builder instance, for fluent interfacing
+         * @see LegacyClassNames
+         */
+        public Builder translateLegacyClassNames() {
+            this.translateLegacyClassNames = true;
             return this;
         }
 

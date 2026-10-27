@@ -28,6 +28,7 @@ import io.github.sophonhq.sophon.config.EventProcessingConfiguration;
 import io.github.sophonhq.sophon.config.EventProcessingConfigurer;
 import io.github.sophonhq.sophon.eventhandling.EventBus;
 import io.github.sophonhq.sophon.eventhandling.EventHandler;
+import io.github.sophonhq.sophon.eventhandling.GlobalSequenceTrackingToken;
 import io.github.sophonhq.sophon.eventhandling.gateway.EventGateway;
 import io.github.sophonhq.sophon.eventhandling.tokenstore.TokenStore;
 import io.github.sophonhq.sophon.eventsourcing.AggregateFactory;
@@ -49,11 +50,15 @@ import io.github.sophonhq.sophon.messaging.correlation.SimpleCorrelationDataProv
 import io.github.sophonhq.sophon.modelling.command.Repository;
 import io.github.sophonhq.sophon.modelling.saga.SagaEventHandler;
 import io.github.sophonhq.sophon.queryhandling.QueryBus;
+import io.github.sophonhq.sophon.serialization.SerializedType;
 import io.github.sophonhq.sophon.serialization.Serializer;
+import io.github.sophonhq.sophon.serialization.SimpleSerializedType;
+import io.github.sophonhq.sophon.serialization.UnknownSerializedType;
 import io.github.sophonhq.sophon.serialization.json.JacksonSerializer;
 import io.github.sophonhq.sophon.serialization.xml.XStreamSerializer;
 import io.github.sophonhq.sophon.spring.stereotype.Aggregate;
 import io.github.sophonhq.sophon.spring.stereotype.Saga;
+import io.github.sophonhq.sophon.springboot.util.LegacyPropertiesDetector;
 import io.github.sophonhq.sophon.tracing.SpanFactory;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.UnsatisfiedDependencyException;
@@ -242,6 +247,36 @@ class SophonAutoConfigurationTest {
                     assertTrue(serializer instanceof JacksonSerializer);
                     assertSame(defaultCborMapper, ((JacksonSerializer) serializer).getObjectMapper());
                 });
+    }
+
+    @Test
+    void serializersTranslateLegacyClassNamesWhenEnabled() {
+        SerializedType legacyType = new SimpleSerializedType(
+                "org.axonframework.eventhandling.GlobalSequenceTrackingToken", null
+        );
+        new ApplicationContextRunner()
+                .withUserConfiguration(Context.class)
+                .withPropertyValues("sophon.serializer.translate-legacy-class-names=true")
+                .run(context -> assertEquals(GlobalSequenceTrackingToken.class,
+                                             context.getBean(Serializer.class).classForType(legacyType)));
+    }
+
+    @Test
+    void serializersDoNotTranslateLegacyClassNamesByDefault() {
+        SerializedType legacyType = new SimpleSerializedType(
+                "org.axonframework.eventhandling.GlobalSequenceTrackingToken", null
+        );
+        new ApplicationContextRunner()
+                .withUserConfiguration(Context.class)
+                .run(context -> assertEquals(UnknownSerializedType.class,
+                                             context.getBean(Serializer.class).classForType(legacyType)));
+    }
+
+    @Test
+    void legacyPropertiesDetectorIsRegistered() {
+        new ApplicationContextRunner()
+                .withUserConfiguration(Context.class)
+                .run(context -> assertNotNull(context.getBean(LegacyPropertiesDetector.class)));
     }
 
     @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})

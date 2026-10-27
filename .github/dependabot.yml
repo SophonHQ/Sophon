@@ -60,10 +60,6 @@ updates:
         versions: [ "[7.0.0,)" ]
       - dependency-name: "org.mockito:*"
         versions: [ "[5.0.0,)" ]
-      - dependency-name: "org.openrewrite.recipe:rewrite-migrate-java"
-        versions: [ "[2.0.0,)" ]
-      - dependency-name: "org.openrewrite:rewrite-test"
-        versions: [ "[8.0.0,)" ]
       - dependency-name: "org.quartz-scheduler:quartz"
         versions: [ "[2.5.0,)" ]
       - dependency-name: "org.springframework:*"

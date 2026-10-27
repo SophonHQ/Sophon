@@ -62,6 +62,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
     private final Converter converter;
     private final Set<String> unknownClasses = new ConcurrentSkipListSet<>();
     private final boolean cacheUnknownClasses;
+    private final boolean translateLegacyClassNames;
 
     /**
      * Instantiate a {@link AbstractXStreamSerializer} based on the fields contained in the {@link Builder}.
@@ -75,6 +76,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
         this.converter = builder.converter;
         this.revisionResolver = builder.revisionResolver;
         this.cacheUnknownClasses = builder.cacheUnknownClasses;
+        this.translateLegacyClassNames = builder.translateLegacyClassNames;
 
         if (converter instanceof ChainingConverter) {
             registerConverters((ChainingConverter) converter);
@@ -164,7 +166,20 @@ public abstract class AbstractXStreamSerializer implements Serializer {
         if (UnknownSerializedType.class.isAssignableFrom(classForType(serializedObject.getType()))) {
             return (T) new UnknownSerializedType(this, serializedObject);
         }
+        if (translateLegacyClassNames) {
+            return (T) doDeserialize(translateLegacyClassNames(serializedObject), xStream);
+        }
         return (T) doDeserialize(serializedObject, xStream);
+    }
+
+    private SerializedObject<?> translateLegacyClassNames(SerializedObject<?> serializedObject) {
+        String xml = new String(converter.convert(serializedObject, byte[].class).getData(), charset);
+        if (!LegacyClassNames.containsLegacyName(xml)) {
+            return serializedObject;
+        }
+        return new SimpleSerializedObject<>(LegacyClassNames.translateAll(xml).getBytes(charset),
+                                            byte[].class,
+                                            serializedObject.getType());
     }
 
     @Override
@@ -172,7 +187,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
         if (SerializedType.emptyType().equals(type)) {
             return Void.class;
         }
-        String className = type.getName();
+        String className = translateLegacyClassNames ? LegacyClassNames.translate(type.getName()) : type.getName();
         if (cacheUnknownClasses && unknownClasses.contains(className)) {
             return UnknownSerializedType.class;
         }
@@ -298,6 +313,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
         private boolean sophonTypeSecurity = true;
         private ClassLoader classLoader;
         private boolean cacheUnknownClasses = true;
+        private boolean translateLegacyClassNames = false;
 
         /**
          * Sets the {@link XStream} used to perform the serialization of objects to XML, and vice versa.
@@ -403,6 +419,19 @@ public abstract class AbstractXStreamSerializer implements Serializer {
          */
         public Builder disableCachingOfUnknownClasses() {
             this.cacheUnknownClasses = false;
+            return this;
+        }
+
+        /**
+         * Translates class names written by Axon Framework 4 into their Sophon equivalents when deserializing, so data
+         * stored by an Axon Framework 4 application, like tracking tokens and sagas, can be read. Defaults to
+         * {@code false}.
+         *
+         * @return the current Builder instance, for fluent interfacing
+         * @see LegacyClassNames
+         */
+        public Builder translateLegacyClassNames() {
+            this.translateLegacyClassNames = true;
             return this;
         }
 

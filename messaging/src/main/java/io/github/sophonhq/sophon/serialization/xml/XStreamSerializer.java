@@ -225,6 +225,12 @@ public class XStreamSerializer extends AbstractXStreamSerializer {
             return this;
         }
 
+        @Override
+        public Builder translateLegacyClassNames() {
+            super.translateLegacyClassNames();
+            return this;
+        }
+
         /**
          * Initializes a {@link XStreamSerializer} as specified through this Builder.
          *

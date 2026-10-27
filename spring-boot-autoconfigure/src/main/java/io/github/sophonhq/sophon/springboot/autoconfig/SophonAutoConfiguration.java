@@ -82,6 +82,7 @@ import io.github.sophonhq.sophon.springboot.EventProcessorProperties;
 import io.github.sophonhq.sophon.springboot.SerializerProperties;
 import io.github.sophonhq.sophon.springboot.TagsConfigurationProperties;
 import io.github.sophonhq.sophon.springboot.util.ConditionalOnMissingQualifiedBean;
+import io.github.sophonhq.sophon.springboot.util.LegacyPropertiesDetector;
 import org.apache.avro.message.SchemaStore;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.BeanClassLoaderAware;
@@ -96,6 +97,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -237,21 +239,27 @@ public class SophonAutoConfiguration implements BeanClassLoaderAware {
                         : objectMapperBeans.values().stream().findFirst()
                                            .orElseThrow(() -> new NoSuchBeanDefinitionException(ObjectMapper.class));
                 ChainingConverter converter = new ChainingConverter(beanClassLoader);
-                return JacksonSerializer.builder()
-                                        .revisionResolver(revisionResolver)
-                                        .converter(converter)
-                                        .objectMapper(objectMapper)
-                                        .build();
+                JacksonSerializer.Builder jacksonBuilder = JacksonSerializer.builder()
+                                                                            .revisionResolver(revisionResolver)
+                                                                            .converter(converter)
+                                                                            .objectMapper(objectMapper);
+                if (serializerProperties.isTranslateLegacyClassNames()) {
+                    jacksonBuilder.translateLegacyClassNames();
+                }
+                return jacksonBuilder.build();
             case JACKSON3:
                 Map<String, Jackson3SerializerCustomizer> customizerBeans = beansOfTypeIncludingAncestors(applicationContext, Jackson3SerializerCustomizer.class);
                 Jackson3SerializerCustomizer customizer = customizerBeans.values().stream().findFirst().orElse(null);
                 ChainingConverter converter3 = new ChainingConverter(beanClassLoader);
 
-                return Jackson3Serializer.builder()
-                                         .revisionResolver(revisionResolver)
-                                         .converter(converter3)
-                                         .jsonMapperBuilderCustomizer(customizer)
-                                         .build();
+                Jackson3Serializer.Builder jackson3Builder = Jackson3Serializer.builder()
+                                                                               .revisionResolver(revisionResolver)
+                                                                               .converter(converter3)
+                                                                               .jsonMapperBuilderCustomizer(customizer);
+                if (serializerProperties.isTranslateLegacyClassNames()) {
+                    jackson3Builder.translateLegacyClassNames();
+                }
+                return jackson3Builder.build();
             case CBOR:
                 Map<String, CBORMapper> cborMapperBeans = beansOfTypeIncludingAncestors(applicationContext,
                                                                                         CBORMapper.class);
@@ -260,13 +268,20 @@ public class SophonAutoConfiguration implements BeanClassLoaderAware {
                         : cborMapperBeans.values().stream().findFirst()
                                          .orElseThrow(() -> new NoSuchBeanDefinitionException(CBORMapper.class));
                 ChainingConverter cborConverter = new ChainingConverter(beanClassLoader);
-                return JacksonSerializer.builder()
-                                        .revisionResolver(revisionResolver)
-                                        .converter(cborConverter)
-                                        .objectMapper(cborMapper)
-                                        .build();
+                JacksonSerializer.Builder cborBuilder = JacksonSerializer.builder()
+                                                                         .revisionResolver(revisionResolver)
+                                                                         .converter(cborConverter)
+                                                                         .objectMapper(cborMapper);
+                if (serializerProperties.isTranslateLegacyClassNames()) {
+                    cborBuilder.translateLegacyClassNames();
+                }
+                return cborBuilder.build();
             case JAVA:
-                return JavaSerializer.builder().revisionResolver(revisionResolver).build();
+                JavaSerializer.Builder javaBuilder = JavaSerializer.builder().revisionResolver(revisionResolver);
+                if (serializerProperties.isTranslateLegacyClassNames()) {
+                    javaBuilder.translateLegacyClassNames();
+                }
+                return javaBuilder.build();
             case XSTREAM:
             case DEFAULT:
             default:
@@ -275,11 +290,14 @@ public class SophonAutoConfiguration implements BeanClassLoaderAware {
                         ? xStreamBeans.get("defaultSophonXStream")
                         : xStreamBeans.values().stream().findFirst()
                                       .orElseThrow(() -> new NoSuchBeanDefinitionException(XStream.class));
-                return XStreamSerializer.builder()
-                                        .xStream(xStream)
-                                        .revisionResolver(revisionResolver)
-                                        .classLoader(beanClassLoader)
-                                        .build();
+                XStreamSerializer.Builder xStreamBuilder = XStreamSerializer.builder()
+                                                                            .xStream(xStream)
+                                                                            .revisionResolver(revisionResolver)
+                                                                            .classLoader(beanClassLoader);
+                if (serializerProperties.isTranslateLegacyClassNames()) {
+                    xStreamBuilder.translateLegacyClassNames();
+                }
+                return xStreamBuilder.build();
         }
     }
 
@@ -461,6 +479,11 @@ public class SophonAutoConfiguration implements BeanClassLoaderAware {
     @ConditionalOnMissingBean
     public RoutingStrategy routingStrategy() {
         return AnnotationRoutingStrategy.defaultStrategy();
+    }
+
+    @Bean
+    public LegacyPropertiesDetector legacyPropertiesDetector(Environment environment) {
+        return new LegacyPropertiesDetector(environment);
     }
 
     @ConditionalOnMissingBean(
