@@ -14,5 +14,4 @@
 # limitations under the License.
 #
 
-org.axonframework.config.UpdateCheckerConfigurerModule
 org.axonframework.config.AxonTaskJanitorShutdownConfigurerModule

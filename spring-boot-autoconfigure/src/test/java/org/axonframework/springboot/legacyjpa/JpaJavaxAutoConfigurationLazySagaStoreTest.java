@@ -19,9 +19,6 @@ package org.axonframework.springboot.legacyjpa;
 import org.axonframework.common.legacyjpa.EntityManagerProvider;
 import org.axonframework.modelling.saga.repository.SagaStore;
 import org.axonframework.modelling.saga.repository.legacyjpa.JpaSagaStore;
-import org.axonframework.springboot.autoconfig.AxonServerActuatorAutoConfiguration;
-import org.axonframework.springboot.autoconfig.AxonServerAutoConfiguration;
-import org.axonframework.springboot.autoconfig.AxonServerBusAutoConfiguration;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.junit.jupiter.*;
@@ -46,11 +43,7 @@ import static org.mockito.Mockito.*;
  *
  * @author Steven van Beelen
  */
-@EnableAutoConfiguration(exclude = {
-        AxonServerAutoConfiguration.class,
-        AxonServerBusAutoConfiguration.class,
-        AxonServerActuatorAutoConfiguration.class
-})
+@EnableAutoConfiguration
 @ExtendWith({SpringExtension.class, MockitoExtension.class})
 @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 @ContextConfiguration(classes = JpaJavaxAutoConfigurationLazySagaStoreTest.TestContext.class)

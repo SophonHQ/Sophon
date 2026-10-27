@@ -68,7 +68,7 @@ import java.util.List;
  * @since axon-4.6.0
  */
 @AutoConfiguration
-@AutoConfigureBefore({AxonServerAutoConfiguration.class, AxonAutoConfiguration.class})
+@AutoConfigureBefore(AxonAutoConfiguration.class)
 @EnableConfigurationProperties(TracingProperties.class)
 public class AxonTracingAutoConfiguration {
 

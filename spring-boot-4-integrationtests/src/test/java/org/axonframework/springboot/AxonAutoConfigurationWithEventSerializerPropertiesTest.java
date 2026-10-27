@@ -52,7 +52,7 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(properties = "axon.axonserver.enabled=false")
+@SpringBootTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = AxonAutoConfigurationWithEventSerializerPropertiesTest.TestContext.class)
 @EnableAutoConfiguration(exclude = {

@@ -43,7 +43,6 @@ class JpaEventStoreAutoConfigurationWithoutAxonServerTest {
     @Test
     void eventStore() {
         new ApplicationContextRunner()
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .withUserConfiguration(TestContext.class)
                 .run(context -> {
                     assertThat(context).hasSingleBean(JpaEventStorageEngine.class);
@@ -55,7 +54,6 @@ class JpaEventStoreAutoConfigurationWithoutAxonServerTest {
     @Test
     void eventBusOverridesEventStoreDefinition() {
         new ApplicationContextRunner()
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .withUserConfiguration(EventBusContext.class, TestContext.class)
                 .run(context -> {
                     assertThat(context).hasBean("simpleEventBus");

@@ -31,8 +31,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * Dedicated {@link CollectionConverter} implementation to de-/serializer the {@link GapAwareTrackingToken} and
- * {@code org.axonframework.eventsourcing.eventstore.GapAwareTrackingToken}.
+ * Dedicated {@link CollectionConverter} implementation to de-/serializer the {@link GapAwareTrackingToken}.
  * <p>
  * Necessary due to the {@link java.util.concurrent.ConcurrentSkipListSet} used within the
  * {@code GapAwareTrackingToken}, as {@link XStream} is incapable to marshall / unmarshall these
@@ -43,11 +42,6 @@ import java.util.TreeSet;
  * @since axon-4.7.0
  */
 public final class GapAwareTrackingTokenConverter extends CollectionConverter {
-
-    private static final String GAP_AWARE_TRACKING_TOKEN =
-            "org.axonframework.eventhandling.GapAwareTrackingToken";
-    private static final String LEGACY_GAP_AWARE_TRACKING_TOKEN =
-            "org.axonframework.eventsourcing.eventstore.GapAwareTrackingToken";
 
     private static final String INDEX_NODE = "index";
     private static final String GAPS_NODE = "gaps";
@@ -124,8 +118,7 @@ public final class GapAwareTrackingTokenConverter extends CollectionConverter {
 
     @Override
     public boolean canConvert(Class type) {
-        return GAP_AWARE_TRACKING_TOKEN.equals(type.getName())
-                || LEGACY_GAP_AWARE_TRACKING_TOKEN.equals(type.getName());
+        return GapAwareTrackingToken.class.equals(type);
     }
 
     private static final class ReflectivelyConstructedGapSetConverter extends CollectionConverter {

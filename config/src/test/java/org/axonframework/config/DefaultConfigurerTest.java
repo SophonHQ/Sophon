@@ -130,9 +130,8 @@ class DefaultConfigurerTest {
         // As discovered modules increase, the configuration module set grows accordingly.
         // In addition to the event sourcing configuration modules, the AxonTaskJanitorShutdownConfigurerModule
         // registers a late shutdown hook, which is represented as a module configuration.
-        assertEquals(3, config.getModules().size());
-        assertExpectedModules(config,
-                              AggregateConfiguration.class, AxonIQConsoleModule.class);
+        assertEquals(2, config.getModules().size());
+        assertExpectedModules(config, AggregateConfiguration.class);
     }
 
     @Test
@@ -311,8 +310,8 @@ class DefaultConfigurerTest {
         config.commandBus().dispatch(GenericCommandMessage.asCommandMessage("test"), callback);
         assertEquals("test", callback.get().getPayload());
         assertNotNull(config.repository(StubAggregate.class));
-        assertEquals(2, config.getModules().size());
-        assertExpectedModules(config, AggregateConfiguration.class, AxonIQConsoleModule.class);
+        assertEquals(1, config.getModules().size());
+        assertExpectedModules(config, AggregateConfiguration.class);
 
         verify(transactionManager, times(2)).startTransaction();
     }
@@ -393,8 +392,8 @@ class DefaultConfigurerTest {
         config.commandBus().dispatch(GenericCommandMessage.asCommandMessage("test"), callback);
         assertEquals("test", callback.get().getPayload());
         assertNotNull(config.repository(StubAggregate.class));
-        assertEquals(2, config.getModules().size());
-        assertExpectedModules(config, AggregateConfiguration.class, AxonIQConsoleModule.class);
+        assertEquals(1, config.getModules().size());
+        assertExpectedModules(config, AggregateConfiguration.class);
 
         verify(transactionManager, times(2)).startTransaction();
     }
@@ -430,11 +429,10 @@ class DefaultConfigurerTest {
                                                 .start();
 
         // Includes the extra module configuration registered by AxonTaskJanitorShutdownConfigurerModule.
-        assertEquals(4, config.getModules().size());
+        assertEquals(3, config.getModules().size());
         assertExpectedModules(config,
                               AggregateConfiguration.class,
-                              AggregateConfiguration.class,
-                              AxonIQConsoleModule.class);
+                              AggregateConfiguration.class);
     }
 
     @Test

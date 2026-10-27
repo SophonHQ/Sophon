@@ -49,7 +49,7 @@ import org.springframework.context.annotation.Bean;
  */
 @AutoConfiguration
 @ConditionalOnBean(Scheduler.class)
-@AutoConfigureAfter(value = {AxonServerAutoConfiguration.class, AxonTracingAutoConfiguration.class},
+@AutoConfigureAfter(value = AxonTracingAutoConfiguration.class,
         name = {"com.github.kagkarlsson.scheduler.boot.autoconfigure.DbSchedulerAutoConfiguration"})
 public class AxonDbSchedulerAutoConfiguration {
 

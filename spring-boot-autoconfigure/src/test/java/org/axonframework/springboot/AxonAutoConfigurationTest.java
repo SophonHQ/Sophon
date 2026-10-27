@@ -82,7 +82,6 @@ class AxonAutoConfigurationTest {
     void contextInitialization() {
         new ApplicationContextRunner()
                 .withUserConfiguration(AxonAutoConfigurationTest.Context.class)
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .run(applicationContext -> {
                     assertNotNull(applicationContext);
                     assertNotNull(applicationContext.getBean(Configurer.class));
@@ -128,8 +127,7 @@ class AxonAutoConfigurationTest {
         ApplicationContextRunner applicationContextRunner = new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withBean("gatewayOne", CommandGateway.class, () -> DefaultCommandGateway.builder().commandBus(SimpleCommandBus.builder().build()).build())
-                .withBean("gatewayTwo", CommandGateway.class, () -> DefaultCommandGateway.builder().commandBus(SimpleCommandBus.builder().build()).build())
-                .withPropertyValues("axon.axonserver.enabled=false");
+                .withBean("gatewayTwo", CommandGateway.class, () -> DefaultCommandGateway.builder().commandBus(SimpleCommandBus.builder().build()).build());
 
         AxonConfigurationException actual = assertThrows(AxonConfigurationException.class, () -> {
             applicationContextRunner
@@ -145,8 +143,7 @@ class AxonAutoConfigurationTest {
     void beansImplementingLifecycleHaveTheirHandlersRegistered() {
         ApplicationContextRunner applicationContextRunner = new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
-                .withBean("lifecycletest", CustomLifecycleBean.class, CustomLifecycleBean::new)
-                .withPropertyValues("axon.axonserver.enabled=false");
+                .withBean("lifecycletest", CustomLifecycleBean.class, CustomLifecycleBean::new);
 
         applicationContextRunner.run(context -> {
             assertTrue(context.getBean("lifecycletest", CustomLifecycleBean.class).isInvoked());
@@ -156,8 +153,7 @@ class AxonAutoConfigurationTest {
     @Test
     void shutDownCalledOnEmbeddedEventStoreEngine() {
         ApplicationContextRunner applicationContextRunner = new ApplicationContextRunner()
-                .withUserConfiguration(Context.class)
-                .withPropertyValues("axon.axonserver.enabled=false");
+                .withUserConfiguration(Context.class);
 
         AtomicReference<EmbeddedEventStore> eventStore = new AtomicReference<>();
 
@@ -179,8 +175,7 @@ class AxonAutoConfigurationTest {
                 .withBean("gatewayTwo",
                           CommandGateway.class,
                           () -> DefaultCommandGateway.builder().commandBus(SimpleCommandBus.builder().build()).build(),
-                          beanDefinition -> beanDefinition.setPrimary(true))
-                .withPropertyValues("axon.axonserver.enabled=false");
+                          beanDefinition -> beanDefinition.setPrimary(true));
 
         AxonConfigurationException actual = assertThrows(AxonConfigurationException.class, () -> {
             applicationContextRunner
@@ -197,7 +192,6 @@ class AxonAutoConfigurationTest {
                 .withUserConfiguration(Context.class)
                 .withBean("gatewayOne", CommandBus.class, () -> SimpleCommandBus.builder().build())
                 .withBean("gatewayTwo", CommandBus.class, () -> SimpleCommandBus.builder().build())
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .run(ctx -> {
                     Throwable startupFailure = ctx.getStartupFailure();
                     assertTrue(startupFailure instanceof UnsatisfiedDependencyException);
@@ -211,7 +205,6 @@ class AxonAutoConfigurationTest {
     void embeddedEventStoreDefaultsToOptimizeEventConsumptionEnabled() throws Exception {
         new ApplicationContextRunner()
                 .withUserConfiguration(MinimalContext.class)
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .run(context -> {
                     EmbeddedEventStore eventStore = context.getBean(EmbeddedEventStore.class);
                     java.lang.reflect.Field field = EmbeddedEventStore.class.getDeclaredField("optimizeEventConsumption");
@@ -224,8 +217,7 @@ class AxonAutoConfigurationTest {
     void embeddedEventStoreOptimizeEventConsumptionCanBeDisabledViaProperties() throws Exception {
         new ApplicationContextRunner()
                 .withUserConfiguration(MinimalContext.class)
-                .withPropertyValues("axon.axonserver.enabled=false",
-                                    "axon.eventstore.optimize-event-consumption=false")
+                .withPropertyValues("axon.eventstore.optimize-event-consumption=false")
                 .run(context -> {
                     EmbeddedEventStore eventStore = context.getBean(EmbeddedEventStore.class);
                     java.lang.reflect.Field field = EmbeddedEventStore.class.getDeclaredField("optimizeEventConsumption");

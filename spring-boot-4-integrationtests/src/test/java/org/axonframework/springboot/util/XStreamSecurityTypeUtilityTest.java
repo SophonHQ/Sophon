@@ -42,7 +42,7 @@ class XStreamSecurityTypeUtilityTest {
                 "org.axonframework.modelling.saga.repository.jpa.**",
                 "org.axonframework.eventsourcing.eventstore.jpa.**",
         };
-        new ApplicationContextRunner().withPropertyValues("axon.axonserver.enabled:false")
+        new ApplicationContextRunner()
                                       .withConfiguration(AutoConfigurations.of(TestContext.class))
                                       .run(context -> {
                                           String[] result = autoConfigBasePackages(context.getSourceApplicationContext());

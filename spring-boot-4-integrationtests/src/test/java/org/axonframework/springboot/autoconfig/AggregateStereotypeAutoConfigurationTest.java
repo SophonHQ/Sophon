@@ -79,8 +79,7 @@ class AggregateStereotypeAutoConfigurationTest {
         cacheInvoked = new AtomicBoolean(false);
         lockFactoryInvoked = new AtomicBoolean(false);
 
-        testApplicationContext = new ApplicationContextRunner().withUserConfiguration(TestContext.class)
-                                                               .withPropertyValues("axon.axonserver.enabled:false");
+        testApplicationContext = new ApplicationContextRunner().withUserConfiguration(TestContext.class);
     }
 
     @Test

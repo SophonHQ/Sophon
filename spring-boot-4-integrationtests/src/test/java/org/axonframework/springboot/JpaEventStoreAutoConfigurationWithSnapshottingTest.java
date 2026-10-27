@@ -61,7 +61,6 @@ class JpaEventStoreAutoConfigurationWithSnapshottingTest {
     void setUp() {
         TestContext.SNAPSHOT_FILTER_INVOKED.set(false);
         testContext = new ApplicationContextRunner()
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .withUserConfiguration(TestContext.class);
     }
 

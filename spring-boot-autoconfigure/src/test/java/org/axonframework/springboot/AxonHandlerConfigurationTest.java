@@ -20,9 +20,6 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.QueryHandler;
-import org.axonframework.springboot.autoconfig.AxonServerActuatorAutoConfiguration;
-import org.axonframework.springboot.autoconfig.AxonServerAutoConfiguration;
-import org.axonframework.springboot.autoconfig.AxonServerBusAutoConfiguration;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
         JmxAutoConfiguration.class,
         WebClientAutoConfiguration.class,
         HibernateJpaAutoConfiguration.class,
-        DataSourceAutoConfiguration.class,
-        AxonServerBusAutoConfiguration.class,
-        AxonServerAutoConfiguration.class,
-        AxonServerActuatorAutoConfiguration.class
+        DataSourceAutoConfiguration.class
 })
 @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 public class AxonHandlerConfigurationTest {

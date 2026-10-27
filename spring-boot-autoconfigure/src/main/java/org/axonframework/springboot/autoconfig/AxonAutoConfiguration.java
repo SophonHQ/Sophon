@@ -25,6 +25,8 @@ import org.axonframework.commandhandling.CommandBusSpanFactory;
 import org.axonframework.commandhandling.DuplicateCommandHandlerResolver;
 import org.axonframework.commandhandling.LoggingDuplicateCommandHandlerResolver;
 import org.axonframework.commandhandling.SimpleCommandBus;
+import org.axonframework.commandhandling.distributed.AnnotationRoutingStrategy;
+import org.axonframework.commandhandling.distributed.RoutingStrategy;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.common.AxonConfigurationException;
@@ -455,11 +457,15 @@ public class AxonAutoConfiguration implements BeanClassLoaderAware {
         return LoggingDuplicateCommandHandlerResolver.instance();
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    public RoutingStrategy routingStrategy() {
+        return AnnotationRoutingStrategy.defaultStrategy();
+    }
+
     @ConditionalOnMissingBean(
             ignoredType = {
-                    "org.axonframework.commandhandling.distributed.DistributedCommandBus",
-                    "org.axonframework.axonserver.connector.command.AxonServerCommandBus",
-                    "org.axonframework.extensions.multitenancy.components.commandhandeling.MultiTenantCommandBus"
+                    "org.axonframework.commandhandling.distributed.DistributedCommandBus"
             },
             value = CommandBus.class
     )

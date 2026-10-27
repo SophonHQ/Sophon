@@ -52,8 +52,7 @@ class JpaJavaxAutoConfigurationTest {
 
     @BeforeEach
     void setUp() {
-        testContext = new ApplicationContextRunner().withUserConfiguration(TestContext.class)
-                                                    .withPropertyValues("axon.axonserver.enabled=false");
+        testContext = new ApplicationContextRunner().withUserConfiguration(TestContext.class);
     }
 
     @SuppressWarnings("deprecation")

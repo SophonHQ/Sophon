@@ -34,7 +34,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
-
 /**
  * Autoconfiguration class for Axon's JPA specific event store components.
  *
@@ -45,7 +44,6 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnBean(EntityManagerFactory.class)
 @ConditionalOnMissingBean({EventStorageEngine.class, EventBus.class, EventStore.class})
 @AutoConfigureAfter(name = {
-    "org.axonframework.springboot.autoconfig.AxonServerBusAutoConfiguration",
     "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration",
     "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration"
 })

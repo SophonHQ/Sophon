@@ -39,7 +39,7 @@ class XStreamAutoConfigurationTest {
 
     @BeforeEach
     void setUp() {
-        testApplicationContext = new ApplicationContextRunner().withPropertyValues("axon.axonserver.enabled:false");
+        testApplicationContext = new ApplicationContextRunner();
     }
 
     @Test

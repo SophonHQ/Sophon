@@ -53,7 +53,6 @@ class AxonAutoConfigurationWithDisruptorTest {
     void contextInitialization() {
         new ApplicationContextRunner()
                 .withUserConfiguration(AxonAutoConfigurationWithDisruptorTest.Context.class)
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .run(applicationContext -> {
                     assertNotNull(applicationContext);
                     assertNotNull(applicationContext.getBean(Configurer.class));

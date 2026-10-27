@@ -63,8 +63,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Marc Gathier
  */
 @SpringBootTest(properties = {
-        "spring.main.banner-mode=off",
-        "axon.axonserver.enabled=false"
+        "spring.main.banner-mode=off"
 })
 @SpringBootConfiguration
 @EnableAutoConfiguration(exclude = {

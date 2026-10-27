@@ -38,9 +38,6 @@ import org.axonframework.messaging.StreamableMessageSource;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
 import org.axonframework.serialization.Serializer;
-import org.axonframework.springboot.autoconfig.AxonServerActuatorAutoConfiguration;
-import org.axonframework.springboot.autoconfig.AxonServerAutoConfiguration;
-import org.axonframework.springboot.autoconfig.AxonServerBusAutoConfiguration;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -87,10 +84,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootConfiguration
 @EnableAutoConfiguration(exclude = {
         JmxAutoConfiguration.class,
-        WebClientAutoConfiguration.class,
-        AxonServerBusAutoConfiguration.class,
-        AxonServerAutoConfiguration.class,
-        AxonServerActuatorAutoConfiguration.class
+        WebClientAutoConfiguration.class
 })
 @TestPropertySource(properties = "spring.main.banner-mode=off")
 @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)

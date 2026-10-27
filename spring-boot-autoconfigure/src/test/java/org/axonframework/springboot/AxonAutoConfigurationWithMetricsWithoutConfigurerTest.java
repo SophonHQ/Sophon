@@ -17,20 +17,15 @@
 package org.axonframework.springboot;
 
 import com.codahale.metrics.MetricRegistry;
-import org.axonframework.axonserver.connector.event.axon.AxonServerEventStore;
-import org.axonframework.axonserver.connector.event.axon.AxonServerEventStoreFactory;
 import org.axonframework.config.Configurer;
 import org.axonframework.config.MessageMonitorFactory;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.metrics.GlobalMetricRegistry;
 import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.springboot.autoconfig.MicrometerMetricsAutoConfiguration;
-import org.axonframework.springboot.utils.GrpcServerStub;
-import org.axonframework.springboot.utils.TcpUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
@@ -67,16 +62,6 @@ class AxonAutoConfigurationWithMetricsWithoutConfigurerTest {
     @Autowired
     private GlobalMetricRegistry globalMetricRegistry;
 
-    @BeforeAll
-    static void beforeAll() {
-        System.setProperty("axon.axonserver.servers", GrpcServerStub.DEFAULT_HOST + ":" + TcpUtils.findFreePort());
-    }
-
-    @AfterAll
-    static void afterAll() {
-        System.clearProperty("axon.axonserver.servers");
-    }
-
     @Test
     void contextInitialization() {
         assertNotNull(applicationContext);
@@ -92,18 +77,6 @@ class AxonAutoConfigurationWithMetricsWithoutConfigurerTest {
         assertFalse(applicationContext.containsBean("metricsConfigurerModule"));
     }
 
-    @Test
-    void axonServerEventStoreAndFactoryRequestMonitor() {
-        assertNotNull(applicationContext.getBean(AxonServerEventStore.class));
-        assertNotNull(applicationContext.getBean(AxonServerEventStoreFactory.class));
-
-        MessageMonitorFactory monitor =
-                applicationContext.getBean("mockMessageMonitorFactory", MessageMonitorFactory.class);
-
-        verify(monitor, times(2).description("expected MessageMonitorFactory to be retrieved for AxonServerEventStore"))
-                .create(any(), eq(AxonServerEventStore.class), anyString());
-    }
-
     @Configuration
     public static class Context {
 
@@ -117,11 +90,6 @@ class AxonAutoConfigurationWithMetricsWithoutConfigurerTest {
             MessageMonitorFactory mock = mock(MessageMonitorFactory.class);
             when(mock.create(any(), any(), any())).thenReturn(NoOpMessageMonitor.instance());
             return mock;
-        }
-
-        @Bean(initMethod = "start", destroyMethod = "shutdown")
-        public GrpcServerStub grpcServerStub(@Value("${axon.axonserver.servers}") String servers) {
-            return new GrpcServerStub(Integer.parseInt(servers.split(":")[1]));
         }
     }
 }

@@ -49,7 +49,6 @@ class AxonAutoConfigurationWithOpenTelemetryTest {
     void spanFactoryIsOpenTelemetrySpanFactory() {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .run(context -> {
                     assertNotNull(context);
 
@@ -72,7 +71,6 @@ class AxonAutoConfigurationWithOpenTelemetryTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(ContextWithOpenTelemetry.class)
                 .withBean(OpenTelemetry.class, () -> openTelemetry)
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .run(context -> {
                     SpanFactory spanFactory = context.getBean(SpanFactory.class);
                     assertEquals(OpenTelemetrySpanFactory.class, spanFactory.getClass());
@@ -114,7 +112,6 @@ class AxonAutoConfigurationWithOpenTelemetryTest {
     void spanFactoryFallsBackToGlobalOpenTelemetryWhenNoBeanAvailable() {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .run(context -> {
                     SpanFactory spanFactory = context.getBean(SpanFactory.class);
                     assertEquals(OpenTelemetrySpanFactory.class, spanFactory.getClass());

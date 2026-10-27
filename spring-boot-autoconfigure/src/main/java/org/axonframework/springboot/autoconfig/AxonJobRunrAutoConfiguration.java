@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Bean;
  */
 @AutoConfiguration
 @ConditionalOnBean(JobScheduler.class)
-@AutoConfigureAfter(value = {AxonServerAutoConfiguration.class, AxonTracingAutoConfiguration.class},
+@AutoConfigureAfter(value = AxonTracingAutoConfiguration.class,
         name = {"org.jobrunr.spring.autoconfigure.JobRunrAutoConfiguration"})
 public class AxonJobRunrAutoConfiguration {
 

@@ -59,7 +59,6 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.axonserver.enabled=false",
                         "axon.eventhandling.processors.first.mode=tracking",
                         "axon.eventhandling.processors.first.sequencingPolicy=customPolicy"
                 )
@@ -101,7 +100,6 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.axonserver.enabled=false",
                         "axon.eventhandling.processors.non_default_token_claim_interval.mode=tracking",
                         "axon.eventhandling.processors.non_default_token_claim_interval.tokenClaimInterval=1000",
                         "axon.eventhandling.processors.non_default_token_claim_interval.tokenClaimIntervalTimeUnit=MINUTES"
@@ -131,7 +129,6 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.axonserver.enabled=false",
                         "axon.eventhandling.processors.second.mode=pooled",
                         "axon.eventhandling.processors.second.initialSegmentCount=12",
                         "axon.eventhandling.processors.second.tokenClaimInterval=1000",
@@ -170,7 +167,6 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.axonserver.enabled=false",
                         "axon.eventhandling.processors.first.dlq.enabled=true"
                 )
                 .run(context -> {
@@ -187,7 +183,6 @@ class EventProcessorConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues(
-                        "axon.axonserver.enabled=false",
                         "axon.eventhandling.processors.first.dlq.enabled=true",
                         "axon.eventhandling.processors.first.dlq.cache.enabled=true",
                         "axon.eventhandling.processors.first.dlq.cache.size=10"

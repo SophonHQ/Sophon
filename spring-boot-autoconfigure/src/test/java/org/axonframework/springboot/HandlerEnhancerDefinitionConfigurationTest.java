@@ -53,7 +53,6 @@ class HandlerEnhancerDefinitionConfigurationTest {
     void handlerEnhancerDefinitionWrapsEventHandler() {
         new ApplicationContextRunner()
                 .withUserConfiguration(ContextWithHandlers.class)
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .run(context -> {
                     assertThat(context).hasSingleBean(CustomHandlerEnhancerDefinition.class);
                     assertThat(context).hasSingleBean(MyEventHandlingComponent.class);
@@ -66,7 +65,6 @@ class HandlerEnhancerDefinitionConfigurationTest {
     void handlerEnhancerDefinitionDoesNotWrapInAbsenceOfMessageHandlers() {
         new ApplicationContextRunner()
                 .withUserConfiguration(ContextWithoutHandlers.class)
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .run(context -> {
                     assertThat(context).hasSingleBean(CustomHandlerEnhancerDefinition.class);
 

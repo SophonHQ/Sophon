@@ -51,7 +51,6 @@ class DbSchedulerAutoConfigurationTest {
     @Test
     void eventSchedulerAndDeadlineManagerCreated() {
         new ApplicationContextRunner()
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .withUserConfiguration(DefaultContext.class)
                 .run(context -> {
                     EventScheduler eventScheduler = context.getBean(EventScheduler.class);
@@ -67,7 +66,6 @@ class DbSchedulerAutoConfigurationTest {
     @Test
     void onlyTwoTaskBeansWhenOverwritten() {
         new ApplicationContextRunner()
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .withUserConfiguration(HumanReadableContext.class)
                 .run(context -> {
                     EventScheduler eventScheduler = context.getBean(EventScheduler.class);

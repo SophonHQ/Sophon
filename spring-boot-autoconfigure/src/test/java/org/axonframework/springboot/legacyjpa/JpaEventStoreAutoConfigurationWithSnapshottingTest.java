@@ -63,7 +63,6 @@ class JpaEventStoreAutoConfigurationWithSnapshottingTest {
     @Test
     void snapshotterAndSnapshotTriggerDefinitionAreInvoked() {
         new ApplicationContextRunner()
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .withUserConfiguration(TestContext.class)
                 .run(context -> {
                     SnapshotTriggerDefinition snapshotTriggerDefinition =
@@ -85,7 +84,6 @@ class JpaEventStoreAutoConfigurationWithSnapshottingTest {
     @Test
     void snapshotFilterIsInvoked() {
         new ApplicationContextRunner()
-                .withPropertyValues("axon.axonserver.enabled=false")
                 .withUserConfiguration(TestContext.class)
                 .run(context -> {
                     SnapshotFilter snapshotFilter = context.getBean(SnapshotFilter.class);

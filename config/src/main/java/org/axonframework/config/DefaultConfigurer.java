@@ -237,7 +237,6 @@ public class DefaultConfigurer implements Configurer {
                        new Component<>(config, "repositorySpanFactory", this::defaultRepositorySpanFactory));
         components.put(EventProcessorSpanFactory.class,
                        new Component<>(config, "eventProcessorSpanFactory", this::defaultEventProcessorSpanFactory));
-        registerModule(new AxonIQConsoleModule());
     }
 
     /**
