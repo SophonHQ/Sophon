@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2010-2022. Axon Framework
+ * Modifications Copyright (c) 2026. SophonHQ
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.sophonhq.sophon.spring.messaging;
+
+import org.junit.jupiter.api.*;
+import org.mockito.*;
+import org.sophonhq.sophon.eventhandling.EventBus;
+import org.sophonhq.sophon.eventhandling.EventMessage;
+import org.sophonhq.sophon.spring.utils.StubDomainEvent;
+import org.springframework.messaging.support.GenericMessage;
+
+import static org.mockito.Mockito.*;
+
+/**
+ * @author Allard Buijze
+ */
+class InboundEventMessageChannelAdapterTest {
+
+    private EventBus mockEventBus;
+    private InboundEventMessageChannelAdapter testSubject;
+
+    @BeforeEach
+    void setUp() {
+        mockEventBus = mock(EventBus.class);
+        testSubject = new InboundEventMessageChannelAdapter(mockEventBus);
+    }
+
+    @Test
+    void messagePayloadIsPublished() {
+        testSubject = new InboundEventMessageChannelAdapter();
+        StubDomainEvent event = new StubDomainEvent();
+        testSubject.handleMessage(new GenericMessage<Object>(event));
+
+        verify(mockEventBus, never()).publish(isA(EventMessage.class));
+
+        testSubject.subscribe(mockEventBus::publish);
+
+        testSubject.handleMessage(new GenericMessage<Object>(event));
+
+        verify(mockEventBus).publish(ArgumentMatchers.anyList());
+    }
+
+}

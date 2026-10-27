@@ -146,7 +146,7 @@ In a Spring environment, the Saga implementation should be annotated with `@Saga
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.spring.stereotype.Saga;
+import org.sophonhq.sophon.spring.stereotype.Saga;
 
 @Saga
 class MySaga {
@@ -189,7 +189,7 @@ To provide a custom `SagaStore`, providing a bean to the application context and
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.spring.stereotype.Saga;
+import org.sophonhq.sophon.spring.stereotype.Saga;
 
 @Saga(sagaStore = "mySagaStore")
 public class MySaga {

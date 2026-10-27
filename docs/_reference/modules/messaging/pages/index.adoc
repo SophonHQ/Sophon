@@ -43,7 +43,7 @@ Implementing this concept, though, is far from simple and straightforward. A rob
 [cols="2h,10"]
 |===
 |Maven artifact
-|`io.github.sophonhq.sophon:sophon-messaging`
+|`org.sophonhq.sophon:sophon-messaging`
 
 |Source code
 |https://github.com/SophonHQ/Sophon/tree/main/messaging

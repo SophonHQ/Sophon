@@ -30,8 +30,8 @@ The following example shows the usage of the "given-when-then" test fixture with
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.test.aggregate.AggregateTestFixture;
-import io.github.sophonhq.sophon.test.aggregate.FixtureConfiguration;
+import org.sophonhq.sophon.test.aggregate.AggregateTestFixture;
+import org.sophonhq.sophon.test.aggregate.FixtureConfiguration;
 
 public class GiftCardTest {
 
@@ -401,13 +401,13 @@ Below is a small code sample displaying the usage of these matchers. In this exa
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.test.aggregate.FixtureConfiguration;
+import org.sophonhq.sophon.test.aggregate.FixtureConfiguration;
 
-import static io.github.sophonhq.sophon.test.matchers.Matchers.andNoMore;
-import static io.github.sophonhq.sophon.test.matchers.Matchers.equalTo;
-import static io.github.sophonhq.sophon.test.matchers.Matchers.exactSequenceOf;
-import static io.github.sophonhq.sophon.test.matchers.Matchers.messageWithPayload;
-import static io.github.sophonhq.sophon.test.matchers.Matchers.payloadsMatching;
+import static org.sophonhq.sophon.test.matchers.Matchers.andNoMore;
+import static org.sophonhq.sophon.test.matchers.Matchers.equalTo;
+import static org.sophonhq.sophon.test.matchers.Matchers.exactSequenceOf;
+import static org.sophonhq.sophon.test.matchers.Matchers.messageWithPayload;
+import static org.sophonhq.sophon.test.matchers.Matchers.payloadsMatching;
 
 class MyCommandModelTest {
 

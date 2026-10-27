@@ -9,10 +9,10 @@ The structure of a state-stored Aggregate is a little different from an Event So
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.eventhandling.EventHandler;
-import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
-import io.github.sophonhq.sophon.modelling.command.AggregateMember;
+import org.sophonhq.sophon.commandhandling.CommandHandler;
+import org.sophonhq.sophon.eventhandling.EventHandler;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import org.sophonhq.sophon.modelling.command.AggregateMember;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

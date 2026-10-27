@@ -37,7 +37,7 @@ To use the `JpaEventStorageEngine`, you must have the JPA (`jakarta.persistence`
 The old, javax JPA (`javax.persistence`) annotations are also still supported.
 This will use an instance of the `JpaEventStorageEngine` using the `legacyjpa` namespace.
 
-By default, the event store needs you to configure your persistence context (for example, as defined in the `META-INF/persistence.xml` file) to contain the classes `DomainEventEntry` and `SnapshotEventEntry` (both of these classes are located in the `io.github.sophonhq.sophon.eventsourcing.eventstore.jpa` package).
+By default, the event store needs you to configure your persistence context (for example, as defined in the `META-INF/persistence.xml` file) to contain the classes `DomainEventEntry` and `SnapshotEventEntry` (both of these classes are located in the `org.sophonhq.sophon.eventsourcing.eventstore.jpa` package).
 
 Below is an example configuration of a persistence context configuration:
 
@@ -45,8 +45,8 @@ Below is an example configuration of a persistence context configuration:
 ----
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
     <persistence-unit name="eventStore" transaction-type="RESOURCE_LOCAL"> <1>
-        <class>io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.DomainEventEntry</class> <2>
-        <class>io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
+        <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.DomainEventEntry</class> <2>
+        <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
     </persistence-unit>
 </persistence>
 ----
@@ -318,7 +318,7 @@ Databases have slight deviations from what's the optimal SQL statement to perfor
 Since optimizing for all possibilities out there is beyond the framework's scope, you can adjust the default statements used by the storage engine.
 
 Check the `JdbcEventStorageEngineStatements` utility class for the default statements used by the `JdbcEventStorageEngine`.
-Furthermore, the `io.github.sophonhq.sophon.eventsourcing.eventstore.jdbc.statements` package contains the set of adjustable statements.
+Furthermore, the `org.sophonhq.sophon.eventsourcing.eventstore.jdbc.statements` package contains the set of adjustable statements.
 Each of these statement-builders can be customized through the `JdbcEventStorageEngine.Builder`.
 ====
 

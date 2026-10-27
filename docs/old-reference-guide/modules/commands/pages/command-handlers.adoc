@@ -28,10 +28,10 @@ Taking the `GiftCard` Aggregate as an example, we can identify two Command Handl
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import org.sophonhq.sophon.commandhandling.CommandHandler;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
 
-import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
+import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 public class GiftCard {
 
@@ -63,7 +63,7 @@ The Command objects, `IssueCardCommand` and `RedeemCardCommand`, which `GiftCard
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.modelling.command.TargetAggregateIdentifier;
+import org.sophonhq.sophon.modelling.command.TargetAggregateIdentifier;
 
 public class IssueCardCommand {
 
@@ -166,9 +166,9 @@ This can be achieved by adding the `@CreationPolicy` annotation to a command han
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.modelling.command.CreationPolicy;
-import io.github.sophonhq.sophon.modelling.command.AggregateCreationPolicy;
+import org.sophonhq.sophon.commandhandling.CommandHandler;
+import org.sophonhq.sophon.modelling.command.CreationPolicy;
+import org.sophonhq.sophon.modelling.command.AggregateCreationPolicy;
 
 public class GiftCard {
 
@@ -219,8 +219,8 @@ Unlike with Aggregates, there is only a _single_ instance of a Command Handling 
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.modelling.command.Repository;
+import org.sophonhq.sophon.commandhandling.CommandHandler;
+import org.sophonhq.sophon.modelling.command.Repository;
 
 public class GiftCardCommandHandler {
     private final Repository<GiftCard> giftCardRepository; // <1>

@@ -44,14 +44,14 @@ xref:event-handlers.adoc#registering-event-handlers[This] section describes the 
 
 Now let us consider that the following event handlers have been registered:
 
-* `io.github.sophonhq.sophon.example.eventhandling.MyHandler`
-* `io.github.sophonhq.sophon.example.eventhandling.MyOtherHandler`
-* `io.github.sophonhq.sophon.example.eventhandling.module.ModuleHandler`
+* `org.sophonhq.sophon.example.eventhandling.MyHandler`
+* `org.sophonhq.sophon.example.eventhandling.MyOtherHandler`
+* `org.sophonhq.sophon.example.eventhandling.module.ModuleHandler`
 
 Without any intervention, this will trigger the creation of two processors, namely:
 
-. `io.github.sophonhq.sophon.example.eventhandling` with two handlers called `MyHandler` and `MyOtherHandler`
-. `io.github.sophonhq.sophon.example.eventhandling.module` with the single handler `ModuleHandler`
+. `org.sophonhq.sophon.example.eventhandling` with two handlers called `MyHandler` and `MyOtherHandler`
+. `org.sophonhq.sophon.example.eventhandling.module` with the single handler `ModuleHandler`
 
 Using the package name serves as a suitable default, but using dedicated names for an Event Processor and/or the Processing Group is recommended.
 The most straightforward approach to reaching a transparent naming scheme of your event handlers is by using the `ProcessingGroup` annotation.

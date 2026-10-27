@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2010-2020. Axon Framework
+ * Modifications Copyright (c) 2026. SophonHQ
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.sophonhq.sophon.serialization.upcasting.event;
+
+import org.sophonhq.sophon.serialization.upcasting.SingleEntryMultiUpcaster;
+
+/**
+ * Abstract implementation of a {@link SingleEntryMultiUpcaster} and an {@link EventUpcaster} that eases the common
+ * process of upcasting one intermediate event representation to several other representations by applying a flat
+ * mapping function to the input stream of intermediate representations.
+ *
+ * @author Steven van Beelen
+ * @since axon-3.0.6
+ */
+public abstract class EventMultiUpcaster
+        extends SingleEntryMultiUpcaster<IntermediateEventRepresentation> implements EventUpcaster {
+
+}

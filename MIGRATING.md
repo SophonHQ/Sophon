@@ -26,18 +26,18 @@ the migration:
 
 ```shell
 mvn -U org.openrewrite.maven:rewrite-maven-plugin:run \
-  -Drewrite.recipeArtifactCoordinates=io.github.sophonhq.sophon:sophon-migration:1.0.0 \
-  -Drewrite.activeRecipes=io.github.sophonhq.sophon.migration.MigrateFromAxonFramework4
+  -Drewrite.recipeArtifactCoordinates=org.sophonhq.sophon:sophon-migration:1.0.0 \
+  -Drewrite.activeRecipes=org.sophonhq.sophon.migration.MigrateFromAxonFramework4
 ```
 
 The recipe:
 
-* moves all references from the `org.axonframework` package to `io.github.sophonhq.sophon`, renames the types and
+* moves all references from the `org.axonframework` package to `org.sophonhq.sophon`, renames the types and
   members listed under [Renamed types and members](#renamed-types-and-members), and orders the imports of changed
   files;
 * replaces Axon Framework package and type names, and `${axon.*}` placeholders, in Java string literals, for example
   in `@EntityScan` or `@Value`;
-* replaces `org.axonframework:axon-*` dependencies with `io.github.sophonhq.sophon:sophon-*` (see
+* replaces `org.axonframework:axon-*` dependencies with `org.sophonhq.sophon:sophon-*` (see
   [Maven coordinates](#maven-coordinates));
 * renames `axon.*` configuration properties to `sophon.*` in `.properties` and YAML files;
 * renames `META-INF/services` files of Sophon extension points and replaces Axon Framework class and package names in
@@ -92,7 +92,7 @@ The following is **not** covered and needs to be handled before switching:
 
 ### Maven coordinates
 
-The group id changes from `org.axonframework` to `io.github.sophonhq.sophon`; artifact ids change from `axon-*` to
+The group id changes from `org.axonframework` to `org.sophonhq.sophon`; artifact ids change from `axon-*` to
 `sophon-*`:
 
 | Axon Framework 4                 | Sophon                             |
@@ -114,8 +114,8 @@ The group id changes from `org.axonframework` to `io.github.sophonhq.sophon`; ar
 
 ### Packages
 
-All classes moved from `org.axonframework` to `io.github.sophonhq.sophon`, keeping their sub-packages. For example,
-`org.axonframework.eventhandling.EventHandler` is now `io.github.sophonhq.sophon.eventhandling.EventHandler`.
+All classes moved from `org.axonframework` to `org.sophonhq.sophon`, keeping their sub-packages. For example,
+`org.axonframework.eventhandling.EventHandler` is now `org.sophonhq.sophon.eventhandling.EventHandler`.
 
 ### Renamed types and members
 
@@ -169,7 +169,7 @@ recorded both as `axon.scope` and ignored `axon.tracing.repository.aggregate-id-
 | `springAxonConfigurer`                              | `springSophonConfigurer`                                      |
 | `axonTransactionManager`                            | `sophonTransactionManager`                                    |
 | `axonTimeoutConfigurerModule`                       | `sophonTimeoutConfigurerModule`                               |
-| `org.axonframework.spring.config.AxonConfiguration` | `io.github.sophonhq.sophon.spring.config.SophonConfiguration` |
+| `org.axonframework.spring.config.AxonConfiguration` | `org.sophonhq.sophon.spring.config.SophonConfiguration` |
 
 ### Runtime identifiers
 

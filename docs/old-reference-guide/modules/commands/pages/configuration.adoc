@@ -21,14 +21,14 @@ Configurer configurer = DefaultConfigurer.defaultConfiguration()
 Spring Boot::
 +
 --
-The `@Aggregate` annotation (in the `io.github.sophonhq.sophon.spring.stereotype` package) triggers auto configuration to set up the necessary components to use the annotated type as an aggregate. Note that only the aggregate root needs to be annotated.
+The `@Aggregate` annotation (in the `org.sophonhq.sophon.spring.stereotype` package) triggers auto configuration to set up the necessary components to use the annotated type as an aggregate. Note that only the aggregate root needs to be annotated.
 
 Sophon will automatically register all the `@CommandHandler` annotated methods with the command bus and set up a repository if none is present.
 
 [source,java]
 ----
 // ...
-import io.github.sophonhq.sophon.spring.stereotype.Aggregate;
+import org.sophonhq.sophon.spring.stereotype.Aggregate;
 // ...
 @Aggregate
 public class GiftCard {

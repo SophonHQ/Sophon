@@ -100,7 +100,7 @@ To override these settings, create a file called `/META-INF/orm.xml` on the clas
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-mappings version="1.0" xmlns="http://java.sun.com/xml/ns/persistence/orm">
-    <mapped-superclass access="FIELD" metadata-complete="false" class="io.github.sophonhq.sophon.eventhandling.AbstractSequencedDomainEventEntry">
+    <mapped-superclass access="FIELD" metadata-complete="false" class="org.sophonhq.sophon.eventhandling.AbstractSequencedDomainEventEntry">
         <attributes>
             <id name="globalIndex">
                 <generated-value strategy="SEQUENCE" generator="myGenerator"/>
@@ -219,12 +219,12 @@ Below is an example of overriding the `serializedSaga` and `token` columns from 
 [source,xml]
 ----
 <entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" version="2.0">
-    <entity class="io.github.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry">
+    <entity class="org.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry">
         <attribute-override name="serializedSaga">
             <column name="serializedSaga" column-definition="BYTEA"></column>
         </attribute-override>
     </entity>
-    <entity class="io.github.sophonhq.sophon.eventhandling.tokenstore.jpa.TokenEntry">
+    <entity class="org.sophonhq.sophon.eventhandling.tokenstore.jpa.TokenEntry">
         <attribute-override name="token">
             <column name="token" column-definition="BYTEA"></column>
         </attribute-override>

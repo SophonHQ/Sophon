@@ -24,7 +24,7 @@ The `AggregateLifecycle` provides a simple means to achieve the above:
 
 [source,java]
 ----
-import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
+import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 public class GiftCard {
 

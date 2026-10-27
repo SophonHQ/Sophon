@@ -18,12 +18,12 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
     <persistence-unit name="SophonSpringTest" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.DomainEventEntry</class>
-        <class>io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
-        <class>io.github.sophonhq.sophon.modelling.saga.repository.jpa.AssociationValueEntry</class>
-        <class>io.github.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry</class>
-        <class>io.github.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEntry</class>
-        <class>io.github.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEventEntry</class>
+        <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.DomainEventEntry</class>
+        <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
+        <class>org.sophonhq.sophon.modelling.saga.repository.jpa.AssociationValueEntry</class>
+        <class>org.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry</class>
+        <class>org.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEntry</class>
+        <class>org.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEventEntry</class>
         <properties>
             <property name="hibernate.archive.autodetection" value="class"/>
         </properties>

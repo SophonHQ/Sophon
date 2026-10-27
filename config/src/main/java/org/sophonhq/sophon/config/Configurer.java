@@ -1,0 +1,623 @@
+/*
+ * Copyright (c) 2010-2023. Axon Framework
+ * Modifications Copyright (c) 2026. SophonHQ
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.sophonhq.sophon.config;
+
+import org.jspecify.annotations.NonNull;
+import org.sophonhq.sophon.commandhandling.CommandBus;
+import org.sophonhq.sophon.common.SophonConfigurationException;
+import org.sophonhq.sophon.common.transaction.TransactionManager;
+import org.sophonhq.sophon.deadline.DeadlineManager;
+import org.sophonhq.sophon.eventhandling.EventBus;
+import org.sophonhq.sophon.eventsourcing.Snapshotter;
+import org.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngine;
+import org.sophonhq.sophon.eventsourcing.eventstore.EventStore;
+import org.sophonhq.sophon.messaging.Message;
+import org.sophonhq.sophon.messaging.annotation.HandlerDefinition;
+import org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
+import org.sophonhq.sophon.messaging.correlation.CorrelationDataProvider;
+import org.sophonhq.sophon.modelling.saga.ResourceInjector;
+import org.sophonhq.sophon.monitoring.MessageMonitor;
+import org.sophonhq.sophon.queryhandling.QueryBus;
+import org.sophonhq.sophon.queryhandling.QueryUpdateEmitter;
+import org.sophonhq.sophon.serialization.Serializer;
+import org.sophonhq.sophon.serialization.upcasting.event.EventUpcaster;
+import org.sophonhq.sophon.tracing.SpanFactory;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+/**
+ * Entry point of the Sophon Configuration API.
+ * <p>
+ * Using {@link DefaultConfigurer#defaultConfiguration()}, you will get a Configurer instance with default components
+ * configured. You will need to register your Aggregates (using {@link #configureAggregate(AggregateConfiguration)} and
+ * provide a repository implementation for each of them, or if you wish to use event sourcing, register your aggregates
+ * through {@link #configureAggregate(Class)} and configure an Event Store ({@link #configureEventStore(Function)} or
+ * {@link #configureEmbeddedEventStore(Function)}).
+ *
+ * @author Allard Buijze
+ * @see DefaultConfigurer
+ * @since axon-3.0
+ */
+public interface Configurer extends LifecycleOperations {
+
+    /**
+     * Registers an upcaster to be used to upcast Events to a newer version
+     *
+     * @param upcasterBuilder The function that returns an EventUpcaster based on the configuration
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    Configurer registerEventUpcaster(@NonNull Function<Configuration, EventUpcaster> upcasterBuilder);
+
+    /**
+     * Configures the Message Monitor to use for the Message processing components in this configuration, unless more
+     * specific configuration based on the component's type, or type and name is available. The builder function
+     * receives the type of component as well as its name as input, and is expected to return a MessageMonitor instance
+     * to be used by that type of component.
+     *
+     * @param messageMonitorFactoryBuilder The MessageMonitor builder function
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    Configurer configureMessageMonitor(
+            @NonNull Function<Configuration, BiFunction<Class<?>, String, MessageMonitor<Message<?>>>> messageMonitorFactoryBuilder);
+
+    /**
+     * Configures the builder function to create the Message Monitor for the Message processing components in this
+     * configuration that match the given componentType, unless more specific configuration based on both type and name
+     * is available.
+     * <p>
+     * <p>A component matches componentType if componentType is assignable from the component's class. If a component
+     * matches multiple types, and the types derive from each other, the configuration from the most derived type is
+     * used. If the matching types do not derive from each other, the result is unspecified.</p>
+     * <p>
+     * <p>For example: in case a monitor is configured for {@link CommandBus} and another monitor is configured for
+     * {@link org.sophonhq.sophon.commandhandling.SimpleCommandBus SimpleCommandBus}), components of type
+     * {@link org.sophonhq.sophon.commandhandling.AsynchronousCommandBus AsynchronousCommandBus} will use the monitor
+     * configured for the SimpleCommandBus.</p>
+     * <p>
+     * <p>A component's name matches componentName if they are identical; i.e. they are compared case sensitively.</p>
+     *
+     * @param componentType         The declared type of the component
+     * @param messageMonitorBuilder The builder function to use
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureMessageMonitor(@NonNull Class<?> componentType,
+                                               @NonNull Function<Configuration, MessageMonitor<Message<?>>> messageMonitorBuilder) {
+        return configureMessageMonitor(componentType,
+                                       (configuration, type, name) -> messageMonitorBuilder.apply(configuration));
+    }
+
+    /**
+     * Configures the factory to create the Message Monitor for the Message processing components in this configuration
+     * that match the given componentType, unless more specific configuration based on both type and name is available.
+     * <p>
+     * <p>A component matches componentType if componentType is assignable from the component's class. If a component
+     * matches multiple types, and the types derive from each other, the configuration from the most derived type is
+     * used. If the matching types do not derive from each other, the result is unspecified.</p>
+     * <p>
+     * <p>For example: in case a monitor is configured for {@link CommandBus} and another monitor is configured for
+     * {@link org.sophonhq.sophon.commandhandling.SimpleCommandBus SimpleCommandBus}), components of type
+     * {@link org.sophonhq.sophon.commandhandling.AsynchronousCommandBus AsynchronousCommandBus} will use the monitor
+     * configured for the SimpleCommandBus.</p>
+     * <p>
+     * <p>A component's name matches componentName if they are identical; i.e. they are compared case sensitively.</p>
+     *
+     * @param componentType         The declared type of the component
+     * @param messageMonitorFactory The factory to use
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    Configurer configureMessageMonitor(@NonNull Class<?> componentType,
+                                       @NonNull MessageMonitorFactory messageMonitorFactory);
+
+    /**
+     * Configures the builder function to create the Message Monitor for the Message processing components in this
+     * configuration that match the given class and name.
+     * <p>
+     * <p>A component matches componentType if componentType is assignable from the component's class. If a component
+     * matches multiple types, and the types derive from each other, the configuration from the most derived type is
+     * used. If the matching types do not derive from each other, the result is unspecified.</p>
+     * <p>
+     * <p>For example: in case a monitor is configured for {@link CommandBus} and another monitor is configured for
+     * {@link org.sophonhq.sophon.commandhandling.SimpleCommandBus SimpleCommandBus}), components of type
+     * {@link org.sophonhq.sophon.commandhandling.AsynchronousCommandBus AsynchronousCommandBus} will use the monitor
+     * configured for the SimpleCommandBus.</p>
+     * <p>
+     * <p>A component's name matches componentName if they are identical; i.e. they are compared case sensitively.</p>
+     *
+     * @param componentType         The declared type of the component
+     * @param componentName         The name of the component
+     * @param messageMonitorBuilder The builder function to use
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureMessageMonitor(@NonNull Class<?> componentType, @NonNull String componentName,
+                                               @NonNull Function<Configuration, MessageMonitor<Message<?>>> messageMonitorBuilder) {
+        return configureMessageMonitor(componentType,
+                                       componentName,
+                                       (configuration, type, name) -> messageMonitorBuilder.apply(configuration));
+    }
+
+    /**
+     * Configures the factory create the Message Monitor for those Message processing components in this configuration
+     * that match the given class and name.
+     * <p>
+     * <p>A component matches componentType if componentType is assignable from the component's class. If a component
+     * matches multiple types, and the types derive from each other, the configuration from the most derived type is
+     * used. If the matching types do not derive from each other, the result is unspecified.</p>
+     * <p>
+     * <p>For example: in case a monitor is configured for {@link CommandBus} and another monitor is configured for
+     * {@link org.sophonhq.sophon.commandhandling.SimpleCommandBus SimpleCommandBus}), components of type
+     * {@link org.sophonhq.sophon.commandhandling.AsynchronousCommandBus AsynchronousCommandBus} will use the monitor
+     * configured for the SimpleCommandBus.</p>
+     * <p>
+     * <p>A component's name matches componentName if they are identical; i.e. they are compared case sensitively.</p>
+     *
+     * @param componentType         The declared type of the component
+     * @param componentName         The name of the component
+     * @param messageMonitorFactory The factory to use
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    Configurer configureMessageMonitor(@NonNull Class<?> componentType, @NonNull String componentName,
+                                       @NonNull MessageMonitorFactory messageMonitorFactory);
+
+    /**
+     * Configures the CorrelationDataProviders that Message processing components should use to attach correlation data
+     * to outgoing messages. The builder function receives the Configuration as input and is expected to return a list
+     * or CorrelationDataProviders.
+     *
+     * @param correlationDataProviderBuilder the builder function returning the CorrelationDataProvider list
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    Configurer configureCorrelationDataProviders(
+            @NonNull Function<Configuration, List<CorrelationDataProvider>> correlationDataProviderBuilder);
+
+    /**
+     * Registers a Sophon module with this configuration. The module is initialized when the configuration is created and
+     * has access to the global configuration when initialized.
+     * <p>
+     * Typically, modules are registered for Event Handling components or Sagas.
+     *
+     * @param module The module to register
+     * @return the current instance of the Configurer, for chaining purposes
+     * @see SagaConfiguration
+     */
+    Configurer registerModule(@NonNull ModuleConfiguration module);
+
+    /**
+     * Registers a component which should be made available to other components or modules in this Configuration. The
+     * builder function gets this configuration as input, and is expected to provide the component as output.
+     * <p>
+     * Where possible, it is recommended to use the explicit {@code configure...} and {@code register...} methods.
+     *
+     * @param componentType    The declared type of the component, typically an interface
+     * @param componentBuilder The builder function of this component
+     * @param <C>              The type of component
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    <C> Configurer registerComponent(@NonNull Class<C> componentType,
+                                     @NonNull Function<Configuration, ? extends C> componentBuilder);
+
+    /**
+     * Registers a command handler bean with this {@link Configurer}. The bean may be of any type. The actual command
+     * handler methods will be detected based on the annotations present on the bean's methods. Message handling
+     * functions annotated with {@link org.sophonhq.sophon.commandhandling.CommandHandler} will be taken into account.
+     * <p>
+     * The builder function receives the {@link Configuration} as input, and is expected to return a fully initialized
+     * instance of the command handler bean.
+     *
+     * @param commandHandlerBuilder the builder function of the command handler bean
+     * @return the current instance of the {@link Configurer}, for chaining purposes
+     */
+    Configurer registerCommandHandler(@NonNull Function<Configuration, Object> commandHandlerBuilder);
+
+    /**
+     * Registers a command handler bean with this {@link Configurer}. The bean may be of any type. The actual command
+     * handler methods will be detected based on the annotations present on the bean's methods. Message handling
+     * functions annotated with {@link org.sophonhq.sophon.commandhandling.CommandHandler} will be taken into account.
+     * <p>
+     * The builder function receives the {@link Configuration} as input, and is expected to return a fully initialized
+     * instance of the command handler bean.
+     *
+     * @param commandHandlerBuilder the builder function of the command handler bean
+     * @param phase                 defines a phase in which the command handler builder will be invoked during {@link
+     *                              Configuration#start()} and {@link Configuration#shutdown()}. When starting the
+     *                              configuration handlers are ordered in ascending, when shutting down the
+     *                              configuration, descending order is used.
+     * @return the current instance of the {@link Configurer}, for chaining purposes
+     * @deprecated in favor of {@link #registerCommandHandler(Function)}, since the {@code phase} of an annotated
+     * handler should be defined through the {@link org.sophonhq.sophon.lifecycle.StartHandler}/{@link
+     * org.sophonhq.sophon.lifecycle.ShutdownHandler} annotation.
+     */
+    @Deprecated
+    default Configurer registerCommandHandler(int phase,
+                                              @NonNull Function<Configuration, Object> commandHandlerBuilder) {
+        return registerCommandHandler(commandHandlerBuilder);
+    }
+
+    /**
+     * Registers a query handler bean with this {@link Configurer}. The bean may be of any type. The actual query
+     * handler methods will be detected based on the annotations present on the bean's methods. Message handling
+     * functions annotated with {@link org.sophonhq.sophon.queryhandling.QueryHandler} will be taken into account.
+     * <p>
+     * The builder function receives the {@link Configuration} as input, and is expected to return a fully initialized
+     * instance of the query handler bean.
+     *
+     * @param queryHandlerBuilder the builder function of the query handler bean
+     * @return the current instance of the {@link Configurer}, for chaining purposes
+     */
+    Configurer registerQueryHandler(@NonNull Function<Configuration, Object> queryHandlerBuilder);
+
+    /**
+     * Registers a query handler bean with this {@link Configurer}. The bean may be of any type. The actual query
+     * handler methods will be detected based on the annotations present on the bean's methods. Message handling
+     * functions annotated with {@link org.sophonhq.sophon.queryhandling.QueryHandler} will be taken into account.
+     * <p>
+     * The builder function receives the {@link Configuration} as input, and is expected to return a fully initialized
+     * instance of the query handler bean.
+     *
+     * @param queryHandlerBuilder the builder function of the query handler bean
+     * @param phase               defines a phase in which the query handler builder will be invoked during {@link
+     *                            Configuration#start()} and {@link Configuration#shutdown()}. When starting the
+     *                            configuration handlers are ordered in ascending, when shutting down the configuration,
+     *                            descending order is used.
+     * @return the current instance of the {@link Configurer}, for chaining purposes
+     * @deprecated in favor of {@link #registerQueryHandler(Function)}, since the {@code phase} of an annotated handler
+     * should be defined through the {@link org.sophonhq.sophon.lifecycle.StartHandler}/{@link
+     * org.sophonhq.sophon.lifecycle.ShutdownHandler} annotation.
+     */
+    @Deprecated
+    default Configurer registerQueryHandler(int phase, @NonNull Function<Configuration, Object> queryHandlerBuilder) {
+        return registerQueryHandler(queryHandlerBuilder);
+    }
+
+    /**
+     * Registers a message handler bean with this configuration. The bean may be of any type. The actual message handler
+     * methods will be detected based on the annotations present on the bean's methods. Message handling functions
+     * annotated with {@link org.sophonhq.sophon.commandhandling.CommandHandler}, {@link
+     * org.sophonhq.sophon.eventhandling.EventHandler} and {@link org.sophonhq.sophon.queryhandling.QueryHandler} will be
+     * taken into account.
+     * <p>
+     * The builder function receives the {@link Configuration} as input, and is expected to return a fully initialized
+     * instance of the message handler bean.
+     *
+     * @param messageHandlerBuilder the builder function of the message handler bean
+     * @return the current instance of the {@link Configurer}, for chaining purposes
+     */
+    Configurer registerMessageHandler(@NonNull Function<Configuration, Object> messageHandlerBuilder);
+
+    /**
+     * Configures an Embedded Event Store which uses the given Event Storage Engine to store its events. The builder
+     * receives the Configuration as input and is expected to return a fully initialized {@link EventStorageEngine}
+     * instance.
+     *
+     * @param storageEngineBuilder The builder function for the {@link EventStorageEngine}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    Configurer configureEmbeddedEventStore(@NonNull Function<Configuration, EventStorageEngine> storageEngineBuilder);
+
+    /**
+     * Configures the given Event Store to use in this configuration. The builder receives the Configuration as input
+     * and is expected to return a fully initialized {@link EventStore} instance.
+     *
+     * @param eventStoreBuilder The builder function for the {@link EventStore}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureEventStore(@NonNull Function<Configuration, EventStore> eventStoreBuilder) {
+        return registerComponent(EventBus.class, eventStoreBuilder);
+    }
+
+    /**
+     * Configures the given Event Bus to use in this configuration. The builder receives the Configuration as input
+     * and is expected to return a fully initialized {@link EventBus}
+     * instance.
+     * <p>
+     * Note that this builder should not be used when an Event Store is configured. Since Axon 3, the Event Store will
+     * act as Event Bus implementation as well.
+     *
+     * @param eventBusBuilder The builder function for the {@link EventBus}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureEventBus(@NonNull Function<Configuration, EventBus> eventBusBuilder) {
+        return registerComponent(EventBus.class, eventBusBuilder);
+    }
+
+    /**
+     * Configures the given Command Bus to use in this configuration. The builder receives the Configuration as input
+     * and is expected to return a fully initialized {@link CommandBus}
+     * instance.
+     *
+     * @param commandBusBuilder The builder function for the {@link CommandBus}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureCommandBus(@NonNull Function<Configuration, CommandBus> commandBusBuilder) {
+        return registerComponent(CommandBus.class, commandBusBuilder);
+    }
+
+    /**
+     * Configures the given Query Bus to use in this configuration. The builder receives the Configuration as input
+     * and is expected to return a fully initialized {@link QueryBus}
+     * instance.
+     *
+     * @param queryBusBuilder The builder function for the {@link QueryBus}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureQueryBus(@NonNull Function<Configuration, QueryBus> queryBusBuilder) {
+        return registerComponent(QueryBus.class, queryBusBuilder);
+    }
+
+    /**
+     * Configures the given Query Update Emitter to use in this configuration. The builder receives the Configuration as
+     * input and is expected to return a fully initialized {@link QueryUpdateEmitter} instance.
+     *
+     * @param queryUpdateEmitterBuilder The builder function for the {@link QueryUpdateEmitter}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureQueryUpdateEmitter(
+            @NonNull Function<Configuration, QueryUpdateEmitter> queryUpdateEmitterBuilder) {
+        return registerComponent(QueryUpdateEmitter.class, queryUpdateEmitterBuilder);
+    }
+
+    /**
+     * Configures the given Serializer to use in this configuration. The builder receives the Configuration as input
+     * and is expected to return a fully initialized {@link Serializer}
+     * instance.
+     *
+     * @param serializerBuilder The builder function for the {@link Serializer}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureSerializer(@NonNull Function<Configuration, Serializer> serializerBuilder) {
+        return registerComponent(Serializer.class, serializerBuilder);
+    }
+
+    /**
+     * Configures the given event Serializer to use in this configuration. The builder receives the Configuration as
+     * input and is expected to return a fully initialized {@link org.sophonhq.sophon.serialization.Serializer} instance.
+     * <p/>
+     * This Serializer is specifically used to serialize EventMessage payload and metadata.
+     *
+     * @param eventSerializerBuilder The builder function for the {@link org.sophonhq.sophon.serialization.Serializer}.
+     * @return The current instance of the Configurer, for chaining purposes.
+     */
+    Configurer configureEventSerializer(@NonNull Function<Configuration, Serializer> eventSerializerBuilder);
+
+    /**
+     * Configures the given event Serializer to use in this configuration. The builder receives the Configuration as
+     * input and is expected to return a fully initialized {@link org.sophonhq.sophon.serialization.Serializer} instance.
+     * <p/>
+     * This Serializer is specifically used to serialize Message payload and Metadata.
+     *
+     * @param messageSerializerBuilder The builder function for the {@link org.sophonhq.sophon.serialization.Serializer}.
+     * @return The current instance of the Configurer, for chaining purposes.
+     */
+    Configurer configureMessageSerializer(@NonNull Function<Configuration, Serializer> messageSerializerBuilder);
+
+    /**
+     * Configures the given Transaction Manager to use in this configuration. The builder receives the Configuration as
+     * input and is expected to return a fully initialized {@link TransactionManager}
+     * instance.
+     *
+     * @param transactionManagerBuilder The builder function for the {@link TransactionManager}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureTransactionManager(
+            @NonNull Function<Configuration, TransactionManager> transactionManagerBuilder) {
+        return registerComponent(TransactionManager.class, transactionManagerBuilder);
+    }
+
+    /**
+     * Configures the given Resource Injector to use for Sagas in this configuration. The builder receives the
+     * Configuration as input and is expected to return a fully initialized {@link ResourceInjector} instance.
+     *
+     * @param resourceInjectorBuilder The builder function for the {@link ResourceInjector}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureResourceInjector(
+            @NonNull Function<Configuration, ResourceInjector> resourceInjectorBuilder) {
+        return registerComponent(ResourceInjector.class, resourceInjectorBuilder);
+    }
+
+    /**
+     * Configures the given Tags Configuration to use in this configuration. The builder receives the Configuration as
+     * input and is expected to return a fully initialized {@link TagsConfiguration} instance.
+     *
+     * @param tagsBuilder The builder function for the {@link TagsConfiguration}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureTags(@NonNull Function<Configuration, TagsConfiguration> tagsBuilder) {
+        return registerComponent(TagsConfiguration.class, tagsBuilder);
+    }
+
+    /**
+     * Configures an Aggregate in this configuration based on the given {@code aggregateConfiguration}. This method
+     * allows for more fine-grained configuration compared to the {@link #configureAggregate(Class)} method.
+     *
+     * @param aggregateConfiguration The instance describing the configuration of an Aggregate
+     * @param <A>                    The type of aggregate the configuration is for
+     * @return the current instance of the Configurer, for chaining purposes
+     * @see AggregateConfigurer
+     */
+    <A> Configurer configureAggregate(@NonNull AggregateConfiguration<A> aggregateConfiguration);
+
+    /**
+     * Configures an Aggregate using default settings. This means the aggregate is expected to be Event Sourced if an
+     * Event Store present in the configuration. Otherwise, an explicit repository must be configured and the
+     * {@link #configureAggregate(AggregateConfiguration)} must be used to register the aggregate.
+     *
+     * @param aggregate The aggregate type to register with the Configuration
+     * @param <A>       The type of aggregate
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default <A> Configurer configureAggregate(@NonNull Class<A> aggregate) {
+        return configureAggregate(AggregateConfigurer.defaultConfiguration(aggregate));
+    }
+
+    /**
+     * Registers the definition of a Handler class. Defaults to annotation based recognition of handler methods.
+     *
+     * @param handlerDefinitionClass A function providing the definition based on the current Configuration as well
+     *                               as the class being inspected.
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    Configurer registerHandlerDefinition(
+            @NonNull BiFunction<Configuration, Class, HandlerDefinition> handlerDefinitionClass);
+
+    /**
+     * Registers a builder function for a {@link HandlerEnhancerDefinition} used during constructing of the default
+     * {@link HandlerDefinition}.
+     * <p>
+     * Any number of handler enhancer builder functions can be registered through this method. Note that any
+     * {@code HandlerEnhancerDefinitions} registered through this method are <b>ignored</b> for handlers matching the
+     * type used in the {@link #registerHandlerDefinition(BiFunction)} method's lambda.
+     *
+     * @param handlerEnhancerBuilder A lambda constructing a {@link HandlerEnhancerDefinition} based on the
+     *                               {@link Configuration}.
+     * @return The current instance of the {@link Configurer}, for chaining purposes.
+     */
+    Configurer registerHandlerEnhancerDefinition(
+            Function<Configuration, HandlerEnhancerDefinition> handlerEnhancerBuilder
+    );
+
+    /**
+     * Registers a {@link Snapshotter} instance with this {@link Configurer}. Defaults to a {@link
+     * org.sophonhq.sophon.eventsourcing.AggregateSnapshotter} implementation.
+     *
+     * @param snapshotterBuilder the builder function for the {@link Snapshotter}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureSnapshotter(@NonNull Function<Configuration, Snapshotter> snapshotterBuilder) {
+        return registerComponent(Snapshotter.class, snapshotterBuilder);
+    }
+
+    /**
+     * Registers a {@link DeadlineManager} instance with this {@link Configurer}. Defaults to a {@link
+     * org.sophonhq.sophon.deadline.SimpleDeadlineManager} implementation.
+     *
+     * @param deadlineManagerBuilder a builder function for the {@link DeadlineManager}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureDeadlineManager(
+            @NonNull Function<Configuration, DeadlineManager> deadlineManagerBuilder) {
+        return registerComponent(DeadlineManager.class, deadlineManagerBuilder);
+    }
+
+    /**
+     * Registers a {@link SpanFactory} instance with this {@link Configurer}. Defaults to a
+     * {@link org.sophonhq.sophon.tracing.NoOpSpanFactory} implementation.
+     *
+     * @param spanFactory a builder function for the {@link SpanFactory}
+     * @return the current instance of the Configurer, for chaining purposes
+     */
+    default Configurer configureSpanFactory(
+            @NonNull Function<Configuration, SpanFactory> spanFactory) {
+        return registerComponent(SpanFactory.class, spanFactory);
+    }
+
+    /**
+     * Retrieve the {@link EventProcessingConfigurer} registered as a module with this Configurer. If there aren't
+     * any, it will create an {@link EventProcessingModule} and register it as a module. If there are multiple,
+     * an {@link SophonConfigurationException} is thrown.
+     *
+     * @return an instance of Event Processing Configurer
+     *
+     * @throws SophonConfigurationException thrown if there are multiple {@link EventProcessingConfigurer}s
+     */
+    EventProcessingConfigurer eventProcessing() throws SophonConfigurationException;
+
+    /**
+     * Locates the {@link EventProcessingConfigurer} registered as a module with this Configurer and provides it to the
+     * given consumer for configuration. If there aren't any pre-registered instances of
+     * {@link EventProcessingConfigurer}, it will create an {@link EventProcessingModule} and register it as a module.
+     * If there are multiple, an {@link SophonConfigurationException} is thrown.
+     *
+     * This method is identical to using {@link #eventProcessing()}, except that this variant allows for easier fluent
+     * interfacing.
+     *
+     * @param eventProcessingConfigurer a consumer to configure the
+     * @return an instance of Event Processing Configurer
+     *
+     * @throws SophonConfigurationException thrown if there are multiple {@link EventProcessingConfigurer}s
+     */
+    default Configurer eventProcessing(@NonNull Consumer<EventProcessingConfigurer> eventProcessingConfigurer)
+            throws SophonConfigurationException {
+        eventProcessingConfigurer.accept(eventProcessing());
+        return this;
+    }
+
+    /**
+     * Registers a {@link Function} that builds an Event Handler instance.
+     *
+     * @param eventHandlerBuilder a {@link Function} that builds an Event Handler instance.
+     * @return the current instance of the Configurer, for chaining purposes.
+     */
+    default Configurer registerEventHandler(@NonNull Function<Configuration, Object> eventHandlerBuilder) {
+        eventProcessing().registerEventHandler(eventHandlerBuilder);
+        return this;
+    }
+
+    /**
+     * Configures the timeout of each lifecycle phase. The Configurer invokes lifecycle phases during start-up and
+     * shutdown of an application.
+     * <p>
+     * Note that if a lifecycle phase exceeds the configured {@code timeout} and {@code timeUnit} combination, the
+     * Configurer will proceed with the following phase. A phase-skip is marked with a warn logging message, as the
+     * chances are high this causes undesired side effects.
+     * <p>
+     * The default lifecycle phase timeout is five seconds.
+     *
+     * @param timeout  the amount of time to wait for lifecycle phase completion
+     * @param timeUnit the unit in which the {@code timeout} is expressed
+     * @return the current instance of the Configurer, for chaining purposes
+     * @see org.sophonhq.sophon.lifecycle.Phase
+     * @see LifecycleHandler
+     */
+    default Configurer configureLifecyclePhaseTimeout(long timeout, TimeUnit timeUnit) {
+        return this;
+    }
+
+    /**
+     * Register an initialization handler which should be invoked prior to starting this {@link Configurer}.
+     *
+     * @param initHandler a {@link Consumer} of the configuration, to be ran upon initialization of the {@link
+     *                    Configuration}
+     */
+    default void onInitialize(@NonNull Consumer<Configuration> initHandler) {
+        registerModule(initHandler::accept);
+    }
+
+    /**
+     * Returns the completely initialized Configuration built using this configurer. It is not recommended to change
+     * any configuration on this Configurer once this method is called.
+     *
+     * @return the fully initialized Configuration
+     */
+    Configuration buildConfiguration();
+
+    /**
+     * Builds the configuration and starts it immediately. It is not recommended to change any configuration on this
+     * Configurer once this method is called.
+     *
+     * @return The started configuration
+     */
+    default Configuration start() {
+        Configuration configuration = buildConfiguration();
+        configuration.start();
+        return configuration;
+    }
+}

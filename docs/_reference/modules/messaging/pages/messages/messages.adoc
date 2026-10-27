@@ -47,5 +47,5 @@ That said, understanding the generic messaging design and object structure can s
 .Source code
 [%collapsible]
 ====
-* https://github.com/SophonHQ/Sophon/blob/main/messaging/src/main/java/io/github/sophonhq/sophon/messaging/Message.java[`Message`]
+* https://github.com/SophonHQ/Sophon/blob/main/messaging/src/main/java/org/sophonhq/sophon/messaging/Message.java[`Message`]
 ====

@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2010-2022. Axon Framework
+ * Modifications Copyright (c) 2026. SophonHQ
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.sophonhq.sophon.commandhandling.distributed;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
+import org.sophonhq.sophon.commandhandling.CommandExecutionException;
+import org.sophonhq.sophon.commandhandling.CommandResultMessage;
+import org.sophonhq.sophon.messaging.RemoteHandlingException;
+import org.sophonhq.sophon.messaging.RemoteNonTransientHandlingException;
+import org.sophonhq.sophon.serialization.SerializationException;
+import org.sophonhq.sophon.serialization.Serializer;
+import org.sophonhq.sophon.serialization.TestSerializer;
+
+import java.io.Serializable;
+import java.util.Collection;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.sophonhq.sophon.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
+
+/**
+ * Tests serialization/deserialization of {@link ReplyMessage}.
+ *
+ * @author Milan Savic
+ */
+class ReplyMessageSerializationTest {
+
+    public static Collection<TestSerializer> serializers() {
+       return TestSerializer.all();
+    }
+
+    @MethodSource("serializers")
+    @ParameterizedTest
+    void serializationDeserializationOfSuccessfulMessage(TestSerializer serializer) {
+        String commandId = "commandId";
+        CommandResultMessage<String> success = asCommandResultMessage("success");
+        DummyReplyMessage message = new DummyReplyMessage(commandId, success, serializer.getSerializer());
+
+        assertEquals(message, serializer.serializeDeserialize(message));
+    }
+
+    @MethodSource("serializers")
+    @ParameterizedTest
+    void serializationDeserializationOfUnsuccessfulMessage(TestSerializer serializer) {
+        String commandId = "commandId";
+        CommandResultMessage<String> failure = asCommandResultMessage(new RuntimeException("oops"));
+        DummyReplyMessage message = new DummyReplyMessage(commandId, failure, serializer.getSerializer());
+
+        assertEquals(message, serializer.serializeDeserialize(message));
+    }
+
+    @MethodSource("serializers")
+    @ParameterizedTest
+    void deserializingOfPersistentExceptions(TestSerializer serializer) {
+        String commandId = "commandId";
+        CommandResultMessage<String> failure = asCommandResultMessage(new SerializationException("oops"));
+        DummyReplyMessage message = new DummyReplyMessage(commandId, failure, serializer.getSerializer());
+
+        CommandResultMessage<?> commandResultMessage = message.getCommandResultMessage(serializer.getSerializer());
+        assertTrue(commandResultMessage.exceptionResult() instanceof CommandExecutionException);
+        assertTrue(commandResultMessage.exceptionResult().getCause() instanceof RemoteNonTransientHandlingException);
+    }
+
+    @MethodSource("serializers")
+    @ParameterizedTest
+    void deserializingOfTransientExceptions(TestSerializer serializer) {
+        String commandId = "commandId";
+        CommandResultMessage<String> failure = asCommandResultMessage(new RuntimeException("oops"));
+        DummyReplyMessage message = new DummyReplyMessage(commandId, failure, serializer.getSerializer());
+
+        CommandResultMessage<?> commandResultMessage = message.getCommandResultMessage(serializer.getSerializer());
+        assertTrue(commandResultMessage.exceptionResult() instanceof CommandExecutionException);
+        assertTrue(commandResultMessage.exceptionResult().getCause() instanceof RemoteHandlingException);
+    }
+
+    private static class DummyReplyMessage extends ReplyMessage implements Serializable {
+
+        private static final long serialVersionUID = -6583822511843818492L;
+
+        @JsonCreator
+        public DummyReplyMessage() {
+            super();
+        }
+
+        @JsonIgnore
+        public DummyReplyMessage(String commandIdentifier, CommandResultMessage<?> commandResultMessage,
+                                 Serializer serializer) {
+            super(commandIdentifier, commandResultMessage, serializer);
+        }
+    }
+}

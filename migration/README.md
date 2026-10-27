@@ -10,8 +10,8 @@ does not cover.
 
 ```bash
 mvn -U org.openrewrite.maven:rewrite-maven-plugin:run \
-  -Drewrite.recipeArtifactCoordinates=io.github.sophonhq.sophon:sophon-migration:LATEST \
-  -Drewrite.activeRecipes=io.github.sophonhq.sophon.migration.MigrateFromAxonFramework4
+  -Drewrite.recipeArtifactCoordinates=org.sophonhq.sophon:sophon-migration:LATEST \
+  -Drewrite.activeRecipes=org.sophonhq.sophon.migration.MigrateFromAxonFramework4
 ```
 
 ### Gradle
@@ -21,10 +21,10 @@ Requires a custom
 
 ## Recipes
 
-| Recipe                                                               | Migrates                                                                         |
-|----------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| `io.github.sophonhq.sophon.migration.MigrateFromAxonFramework4`      | Everything below                                                                 |
-| `io.github.sophonhq.sophon.migration.ChangeAxonJavaCode`             | Packages, renamed types and members, string literals and imports in Java sources |
-| `io.github.sophonhq.sophon.migration.ChangeAxonMavenCoordinates`     | `org.axonframework:axon-*` dependencies                                          |
-| `io.github.sophonhq.sophon.migration.ChangeAxonConfigurationProperties` | `axon.*` properties in `.properties` and YAML files                           |
-| `io.github.sophonhq.sophon.migration.ChangeAxonResources`            | ServiceLoader files, Spring Boot registrations, JPA descriptors and logging configuration |
+| Recipe                                                            | Migrates                                                                                  |
+|-------------------------------------------------------------------|-------------------------------------------------------------------------------------------|
+| `org.sophonhq.sophon.migration.MigrateFromAxonFramework4`         | Everything below                                                                          |
+| `org.sophonhq.sophon.migration.ChangeAxonJavaCode`                | Packages, renamed types and members, string literals and imports in Java sources          |
+| `org.sophonhq.sophon.migration.ChangeAxonMavenCoordinates`        | `org.axonframework:axon-*` dependencies                                                   |
+| `org.sophonhq.sophon.migration.ChangeAxonConfigurationProperties` | `axon.*` properties in `.properties` and YAML files                                       |
+| `org.sophonhq.sophon.migration.ChangeAxonResources`               | ServiceLoader files, Spring Boot registrations, JPA descriptors and logging configuration |

@@ -44,10 +44,10 @@ sure the right Entities are registered.
 
 To register Sophon's JPA Entities, include the relevant packages, as described below:
 
-* `io.github.sophonhq.sophon.eventhandling.tokenstore` contains the entities necessary for the TokenStore used by Event
+* `org.sophonhq.sophon.eventhandling.tokenstore` contains the entities necessary for the TokenStore used by Event
  Processors.
-* `io.github.sophonhq.sophon.modelling.saga.repository.jpa` contains the entities necessary to persist Sagas
-* `io.github.sophonhq.sophon.eventsourcing.eventstore.jpa` contains the entities necessary for the JPA Event Storage engine,
+* `org.sophonhq.sophon.modelling.saga.repository.jpa` contains the entities necessary to persist Sagas
+* `org.sophonhq.sophon.eventsourcing.eventstore.jpa` contains the entities necessary for the JPA Event Storage engine,
  when using a relational database as the Event Store.
 
 == Demystifying Sophon Spring Boot Starter
@@ -65,29 +65,29 @@ the `META-INF` directory of `sophon-spring-boot-autoconfigure` module:
 [source,text]
 ----
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.github.sophonhq.sophon.springboot.autoconfig.MetricsAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.MicrometerMetricsAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.EventProcessingAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.AvroSerializerAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration, \
-  io.github.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.TransactionAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.NoOpTransactionAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.InfraConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.InterceptorAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.ObjectMapperAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.CBORMapperAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.XStreamAutoConfiguration,\
-  io.github.sophonhq.sophon.springboot.autoconfig.SophonTracingAutoConfiguration, \
-  io.github.sophonhq.sophon.springboot.autoconfig.OpenTelemetryAutoConfiguration, \
-  io.github.sophonhq.sophon.springboot.autoconfig.SecurityAutoConfiguration
+  org.sophonhq.sophon.springboot.autoconfig.MetricsAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.MicrometerMetricsAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.EventProcessingAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.AvroSerializerAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration, \
+  org.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.TransactionAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.NoOpTransactionAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.InfraConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.InterceptorAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.ObjectMapperAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.CBORMapperAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.XStreamAutoConfiguration,\
+  org.sophonhq.sophon.springboot.autoconfig.SophonTracingAutoConfiguration, \
+  org.sophonhq.sophon.springboot.autoconfig.OpenTelemetryAutoConfiguration, \
+  org.sophonhq.sophon.springboot.autoconfig.SecurityAutoConfiguration
 ----
 
 This file maps different configuration classes which a Sophon Spring Boot application will try to apply. So, as per this snippet, Spring Boot will try to apply all the configuration classes, like `SophonAutoConfiguration`, `JpaAutoConfiguration`, …
@@ -101,29 +101,29 @@ the `META-INF/spring` directory of `sophon-spring-boot-autoconfigure` module:
 
 [source,text]
 ----
-io.github.sophonhq.sophon.springboot.autoconfig.AvroSerializerAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.SophonTracingAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.EventProcessingAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.InfraConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.InterceptorAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.MetricsAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.MicrometerMetricsAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.NoOpTransactionAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.ObjectMapperAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.CBORMapperAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.OpenTelemetryAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.SecurityAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.TransactionAutoConfiguration
-io.github.sophonhq.sophon.springboot.autoconfig.XStreamAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.AvroSerializerAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.SophonTracingAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.EventProcessingAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.InfraConfiguration
+org.sophonhq.sophon.springboot.autoconfig.InterceptorAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.MetricsAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.MicrometerMetricsAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.NoOpTransactionAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.ObjectMapperAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.CBORMapperAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.OpenTelemetryAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.SecurityAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.TransactionAutoConfiguration
+org.sophonhq.sophon.springboot.autoconfig.XStreamAutoConfiguration
 ----
 
 This file maps different configuration classes which a Sophon Spring Boot application will try to apply. So, as per this snippet, Spring Boot will try to apply all the configuration classes, like `SophonAutoConfiguration`, `JpaAutoConfiguration`, …

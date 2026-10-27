@@ -330,7 +330,7 @@ To get OpenTelemetry support enabled you will need to add the following dependen
 [source,xml  ]
 ----
 <dependency>  
-    <groupId>io.github.sophonhq.sophon</groupId>  
+    <groupId>org.sophonhq.sophon</groupId>  
     <artifactId>sophon-tracing-opentelemetry</artifactId>
 	<version>${sophon-framework.version}</version>
 </dependency>
@@ -340,7 +340,7 @@ To get OpenTelemetry support enabled you will need to add the following dependen
 
 [source,gradle]
 ----
-implementation group: 'io.github.sophonhq.sophon', name: 'sophon-tracing-opentelemetry', version: sophonFrameworkVersion
+implementation group: 'org.sophonhq.sophon', name: 'sophon-tracing-opentelemetry', version: sophonFrameworkVersion
 ----
 
 Depending on your application, more configuration might be needed.

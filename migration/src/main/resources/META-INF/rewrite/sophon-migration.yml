@@ -16,33 +16,33 @@
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sophonhq.sophon.migration.MigrateFromAxonFramework4
+name: org.sophonhq.sophon.migration.MigrateFromAxonFramework4
 displayName: Migrate from Axon Framework 4 to Sophon
 description: >-
   Migrates an application from Axon Framework 4 to Sophon ${project.version}: Java packages, renamed types and
   members, Maven coordinates, Spring Boot configuration properties, ServiceLoader files and other resources that
   reference Axon Framework classes.
 recipeList:
-  - io.github.sophonhq.sophon.migration.ChangeAxonJavaCode
-  - io.github.sophonhq.sophon.migration.ChangeAxonMavenCoordinates
-  - io.github.sophonhq.sophon.migration.ChangeAxonConfigurationProperties
-  - io.github.sophonhq.sophon.migration.ChangeAxonResources
+  - org.sophonhq.sophon.migration.ChangeAxonJavaCode
+  - org.sophonhq.sophon.migration.ChangeAxonMavenCoordinates
+  - org.sophonhq.sophon.migration.ChangeAxonConfigurationProperties
+  - org.sophonhq.sophon.migration.ChangeAxonResources
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sophonhq.sophon.migration.ChangeAxonJavaCode
+name: org.sophonhq.sophon.migration.ChangeAxonJavaCode
 displayName: Migrate Axon Framework 4 Java code to Sophon
 description: >-
   Renames Axon Framework types and members whose names changed in Sophon and moves all references from the
-  org.axonframework package to io.github.sophonhq.sophon.
+  org.axonframework package to org.sophonhq.sophon.
 recipeList:
   # Members first, while the types still carry their Axon Framework names.
   - org.openrewrite.java.ReplaceConstantWithAnotherConstant:
       existingFullyQualifiedConstantName: org.axonframework.spring.config.SpringAxonAutoConfigurer.AXON_CONFIGURATION_BEAN
-      fullyQualifiedConstantName: io.github.sophonhq.sophon.spring.config.SpringSophonAutoConfigurer.SOPHON_CONFIGURATION_BEAN
+      fullyQualifiedConstantName: org.sophonhq.sophon.spring.config.SpringSophonAutoConfigurer.SOPHON_CONFIGURATION_BEAN
   - org.openrewrite.java.ReplaceConstantWithAnotherConstant:
       existingFullyQualifiedConstantName: org.axonframework.spring.config.SpringAxonAutoConfigurer.AXON_CONFIGURER_BEAN
-      fullyQualifiedConstantName: io.github.sophonhq.sophon.spring.config.SpringSophonAutoConfigurer.SOPHON_CONFIGURER_BEAN
+      fullyQualifiedConstantName: org.sophonhq.sophon.spring.config.SpringSophonAutoConfigurer.SOPHON_CONFIGURER_BEAN
   - org.openrewrite.java.ChangeMethodName:
       methodPattern: org.axonframework.serialization.AbstractXStreamSerializer.Builder disableAxonTypeSecurity()
       newMethodName: disableSophonTypeSecurity
@@ -54,168 +54,168 @@ recipeList:
   # Types renamed in Sophon.
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.commandhandling.gateway.AxonNonTransientExceptionClassesPredicate
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.commandhandling.gateway.SophonNonTransientExceptionClassesPredicate
+      newFullyQualifiedTypeName: org.sophonhq.sophon.commandhandling.gateway.SophonNonTransientExceptionClassesPredicate
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.common.AxonConfigurationException
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.common.SophonConfigurationException
+      newFullyQualifiedTypeName: org.sophonhq.sophon.common.SophonConfigurationException
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.common.AxonException
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.common.SophonException
+      newFullyQualifiedTypeName: org.sophonhq.sophon.common.SophonException
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.common.AxonNonTransientException
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.common.SophonNonTransientException
+      newFullyQualifiedTypeName: org.sophonhq.sophon.common.SophonNonTransientException
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.common.AxonThreadFactory
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.common.SophonThreadFactory
+      newFullyQualifiedTypeName: org.sophonhq.sophon.common.SophonThreadFactory
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.common.AxonTransientException
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.common.SophonTransientException
+      newFullyQualifiedTypeName: org.sophonhq.sophon.common.SophonTransientException
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.config.AxonTaskJanitorShutdownConfigurerModule
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.config.SophonTaskJanitorShutdownConfigurerModule
+      newFullyQualifiedTypeName: org.sophonhq.sophon.config.SophonTaskJanitorShutdownConfigurerModule
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.messaging.timeout.AxonTaskJanitor
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.messaging.timeout.SophonTaskJanitor
+      newFullyQualifiedTypeName: org.sophonhq.sophon.messaging.timeout.SophonTaskJanitor
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.messaging.timeout.AxonTimeLimitedTask
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.messaging.timeout.SophonTimeLimitedTask
+      newFullyQualifiedTypeName: org.sophonhq.sophon.messaging.timeout.SophonTimeLimitedTask
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.messaging.timeout.AxonTimeoutException
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.messaging.timeout.SophonTimeoutException
+      newFullyQualifiedTypeName: org.sophonhq.sophon.messaging.timeout.SophonTimeoutException
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.spring.config.AxonConfiguration
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.spring.config.SophonConfiguration
+      newFullyQualifiedTypeName: org.sophonhq.sophon.spring.config.SophonConfiguration
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.spring.config.SpringAxonAutoConfigurer
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.spring.config.SpringSophonAutoConfigurer
+      newFullyQualifiedTypeName: org.sophonhq.sophon.spring.config.SpringSophonAutoConfigurer
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.spring.config.SpringAxonConfiguration
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.spring.config.SpringSophonConfiguration
+      newFullyQualifiedTypeName: org.sophonhq.sophon.spring.config.SpringSophonConfiguration
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.spring.event.AxonStartedEvent
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.spring.event.SophonStartedEvent
+      newFullyQualifiedTypeName: org.sophonhq.sophon.spring.event.SophonStartedEvent
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.springboot.autoconfig.AxonAutoConfiguration
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration
+      newFullyQualifiedTypeName: org.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.springboot.autoconfig.AxonDbSchedulerAutoConfiguration
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration
+      newFullyQualifiedTypeName: org.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.springboot.autoconfig.AxonJobRunrAutoConfiguration
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration
+      newFullyQualifiedTypeName: org.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.springboot.autoconfig.AxonTimeoutAutoConfiguration
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration
+      newFullyQualifiedTypeName: org.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.springboot.autoconfig.AxonTracingAutoConfiguration
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.springboot.autoconfig.SophonTracingAutoConfiguration
+      newFullyQualifiedTypeName: org.sophonhq.sophon.springboot.autoconfig.SophonTracingAutoConfiguration
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: org.axonframework.test.AxonAssertionError
-      newFullyQualifiedTypeName: io.github.sophonhq.sophon.test.SophonAssertionError
+      newFullyQualifiedTypeName: org.sophonhq.sophon.test.SophonAssertionError
   # Everything else keeps its name and only changes package.
   - org.openrewrite.java.ChangePackage:
       oldPackageName: org.axonframework
-      newPackageName: io.github.sophonhq.sophon
+      newPackageName: org.sophonhq.sophon
       recursive: true
-  - io.github.sophonhq.sophon.migration.ChangeAxonReferencesInStringLiterals
-  - io.github.sophonhq.sophon.migration.OrderImportsInSophonSources
+  - org.sophonhq.sophon.migration.ChangeAxonReferencesInStringLiterals
+  - org.sophonhq.sophon.migration.OrderImportsInSophonSources
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sophonhq.sophon.migration.OrderImportsInSophonSources
+name: org.sophonhq.sophon.migration.OrderImportsInSophonSources
 displayName: Order imports in Java sources that import Sophon types
 description: >-
   Orders imports in Java sources that import Sophon types, as moving from org.axonframework to
-  io.github.sophonhq.sophon changes where those imports sort.
+  org.sophonhq.sophon changes where those imports sort.
 preconditions:
   - org.openrewrite.java.search.FindImports:
-      typePattern: io.github.sophonhq.sophon..*
+      typePattern: org.sophonhq.sophon..*
 recipeList:
   - org.openrewrite.java.OrderImports:
       removeUnused: false
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sophonhq.sophon.migration.ChangeAxonMavenCoordinates
+name: org.sophonhq.sophon.migration.ChangeAxonMavenCoordinates
 displayName: Migrate Axon Framework 4 Maven dependencies to Sophon
-description: Replaces org.axonframework:axon-* dependencies with their io.github.sophonhq.sophon:sophon-* counterparts.
+description: Replaces org.axonframework:axon-* dependencies with their org.sophonhq.sophon:sophon-* counterparts.
 recipeList:
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-messaging
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-messaging
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-modelling
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-modelling
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-eventsourcing
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-eventsourcing
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-configuration
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-configuration
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-disruptor
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-disruptor
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-spring
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-spring
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-spring-boot-autoconfigure
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-spring-boot-autoconfigure
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-spring-boot-starter
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-spring-boot-starter
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-test
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-test
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-metrics
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-metrics
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-micrometer
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-micrometer
       newVersion: ${project.version}
   - org.openrewrite.maven.ChangeDependencyGroupIdAndArtifactId:
       oldGroupId: org.axonframework
       oldArtifactId: axon-tracing-opentelemetry
-      newGroupId: io.github.sophonhq.sophon
+      newGroupId: org.sophonhq.sophon
       newArtifactId: sophon-tracing-opentelemetry
       newVersion: ${project.version}
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sophonhq.sophon.migration.ChangeAxonConfigurationProperties
+name: org.sophonhq.sophon.migration.ChangeAxonConfigurationProperties
 displayName: Migrate Axon Framework 4 configuration properties to Sophon
 description: Renames Spring Boot configuration properties from the axon.* namespace to sophon.*.
 recipeList:
@@ -229,7 +229,7 @@ recipeList:
 
 ---
 type: specs.openrewrite.org/v1beta/recipe
-name: io.github.sophonhq.sophon.migration.ChangeAxonResources
+name: org.sophonhq.sophon.migration.ChangeAxonResources
 displayName: Migrate Axon Framework 4 references in resources to Sophon
 description: >-
   Renames META-INF/services files of Sophon extension points and replaces Axon Framework class and package names in
@@ -237,35 +237,35 @@ description: >-
 recipeList:
   - org.openrewrite.RenameFile:
       fileMatcher: '**/META-INF/services/org.axonframework.common.IdentifierFactory'
-      fileName: io.github.sophonhq.sophon.common.IdentifierFactory
+      fileName: org.sophonhq.sophon.common.IdentifierFactory
   - org.openrewrite.RenameFile:
       fileMatcher: '**/META-INF/services/org.axonframework.common.property.PropertyAccessStrategy'
-      fileName: io.github.sophonhq.sophon.common.property.PropertyAccessStrategy
+      fileName: org.sophonhq.sophon.common.property.PropertyAccessStrategy
   - org.openrewrite.RenameFile:
       fileMatcher: '**/META-INF/services/org.axonframework.config.ConfigurerModule'
-      fileName: io.github.sophonhq.sophon.config.ConfigurerModule
+      fileName: org.sophonhq.sophon.config.ConfigurerModule
   - org.openrewrite.RenameFile:
       fileMatcher: '**/META-INF/services/org.axonframework.messaging.annotation.HandlerDefinition'
-      fileName: io.github.sophonhq.sophon.messaging.annotation.HandlerDefinition
+      fileName: org.sophonhq.sophon.messaging.annotation.HandlerDefinition
   - org.openrewrite.RenameFile:
       fileMatcher: '**/META-INF/services/org.axonframework.messaging.annotation.HandlerEnhancerDefinition'
-      fileName: io.github.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition
+      fileName: org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition
   - org.openrewrite.RenameFile:
       fileMatcher: '**/META-INF/services/org.axonframework.messaging.annotation.ParameterResolverFactory'
-      fileName: io.github.sophonhq.sophon.messaging.annotation.ParameterResolverFactory
+      fileName: org.sophonhq.sophon.messaging.annotation.ParameterResolverFactory
   - org.openrewrite.RenameFile:
       fileMatcher: '**/META-INF/services/org.axonframework.modelling.command.inspection.ChildEntityDefinition'
-      fileName: io.github.sophonhq.sophon.modelling.command.inspection.ChildEntityDefinition
+      fileName: org.sophonhq.sophon.modelling.command.inspection.ChildEntityDefinition
   - org.openrewrite.RenameFile:
       fileMatcher: '**/META-INF/services/org.axonframework.serialization.ContentTypeConverter'
-      fileName: io.github.sophonhq.sophon.serialization.ContentTypeConverter
+      fileName: org.sophonhq.sophon.serialization.ContentTypeConverter
   # Renamed types first, then the package of everything else.
   - org.openrewrite.text.FindAndReplace:
       find: 'org\.axonframework\.((?:[a-z0-9_]+\.)*)(\w*)Axon(\w*)'
-      replace: 'io.github.sophonhq.sophon.$1$2Sophon$3'
+      replace: 'org.sophonhq.sophon.$1$2Sophon$3'
       regex: true
       filePattern: '**/META-INF/services/*;**/META-INF/spring.factories;**/META-INF/spring/*.imports;**/persistence.xml;**/orm.xml;**/logback*.xml;**/log4j2*.xml;**/*.properties;**/*.yml;**/*.yaml'
   - org.openrewrite.text.FindAndReplace:
       find: 'org.axonframework'
-      replace: 'io.github.sophonhq.sophon'
+      replace: 'org.sophonhq.sophon'
       filePattern: '**/META-INF/services/*;**/META-INF/spring.factories;**/META-INF/spring/*.imports;**/persistence.xml;**/orm.xml;**/logback*.xml;**/log4j2*.xml;**/*.properties;**/*.yml;**/*.yaml'

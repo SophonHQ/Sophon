@@ -43,11 +43,11 @@ Henceforth, our basic `GiftCard` Aggregate structure will focus on the Event Sou
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.eventsourcing.EventSourcingHandler;
-import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import org.sophonhq.sophon.commandhandling.CommandHandler;
+import org.sophonhq.sophon.eventsourcing.EventSourcingHandler;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
 
-import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
+import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 public class GiftCard {
 

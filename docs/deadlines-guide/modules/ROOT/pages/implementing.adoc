@@ -9,7 +9,7 @@ For this how-to, it's configured as a Spring Bean.
 ----
 @Bean
 public DeadlineManager deadlineManager(
-        io.github.sophonhq.sophon.config.Configuration configuration
+        org.sophonhq.sophon.config.Configuration configuration
 ) {
     var provider = new ConfigurationScopeAwareProvider(configuration);
     return SimpleDeadlineManager

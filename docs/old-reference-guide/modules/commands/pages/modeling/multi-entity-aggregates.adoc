@@ -12,9 +12,9 @@ Within the 'Gift Card' domain, the `GiftCard` aggregate root was defined in xref
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
-import io.github.sophonhq.sophon.modelling.command.AggregateMember;
-import io.github.sophonhq.sophon.modelling.command.EntityId;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import org.sophonhq.sophon.modelling.command.AggregateMember;
+import org.sophonhq.sophon.modelling.command.EntityId;
 
 public class GiftCard {
 
@@ -81,12 +81,12 @@ The field declaration for both the `Collection` or `Map` should contain proper g
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
-import io.github.sophonhq.sophon.modelling.command.AggregateMember;
-import io.github.sophonhq.sophon.modelling.command.EntityId;
+import org.sophonhq.sophon.commandhandling.CommandHandler;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import org.sophonhq.sophon.modelling.command.AggregateMember;
+import org.sophonhq.sophon.modelling.command.EntityId;
 
-import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
+import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 public class GiftCard {
 
@@ -145,12 +145,12 @@ When an entity (including the aggregate root) applies an event, it is handled by
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.commandhandling.CommandHandler;
-import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
-import io.github.sophonhq.sophon.modelling.command.AggregateMember;
-import io.github.sophonhq.sophon.modelling.command.EntityId;
+import org.sophonhq.sophon.commandhandling.CommandHandler;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import org.sophonhq.sophon.modelling.command.AggregateMember;
+import org.sophonhq.sophon.modelling.command.EntityId;
 
-import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
+import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 public class GiftCard {
 
@@ -218,9 +218,9 @@ Two specifics are worth mentioning from the above snippet, pointed out with numb
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.modelling.command.AggregateIdentifier;
-import io.github.sophonhq.sophon.modelling.command.AggregateMember;
-import io.github.sophonhq.sophon.modelling.command.ForwardMatchingInstances;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import org.sophonhq.sophon.modelling.command.AggregateMember;
+import org.sophonhq.sophon.modelling.command.ForwardMatchingInstances;
 
 public class GiftCard {
 

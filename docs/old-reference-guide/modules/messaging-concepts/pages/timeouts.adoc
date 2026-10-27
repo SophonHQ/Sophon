@@ -31,7 +31,7 @@ java.base/java.lang.Thread.sleep(Thread.java:509)
 com.example.publisher.MyEventProcessor.handle(MyEventProcessor.kt:16)
 java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 /** Removed some part of the stack trace for brevity **/
-io.github.sophonhq.sophon.messaging.timeout.TimeoutWrappedMessageHandlingMember.handle(TimeoutWrappedMessageHandlingMember.java:61)
+org.sophonhq.sophon.messaging.timeout.TimeoutWrappedMessageHandlingMember.handle(TimeoutWrappedMessageHandlingMember.java:61)
 ----
 
 This is beneficial for debugging and monitoring purposes, as it allows you to see which handlers are taking a long time to process.

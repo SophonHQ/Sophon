@@ -6,7 +6,7 @@ Configure a repository for your build system (http://maven.apache.org/[Maven], h
 
 == Main modules
 
-The maven `groupId` of all modules is `io.github.sophonhq.sophon`.
+The maven `groupId` of all modules is `org.sophonhq.sophon`.
 
 ____
 
@@ -21,18 +21,18 @@ ____
 |===
 |Module |Artifact Id |Group Id
 
-|<<Sophon messaging>>             |`sophon-messaging`                |`io.github.sophonhq.sophon`
-|<<Sophon modelling>>             |`sophon-modelling`                |`io.github.sophonhq.sophon`
-|<<Sophon Event Sourcing>>        |`sophon-eventsourcing`            |`io.github.sophonhq.sophon`
-|<<Sophon Configuration>>         |`sophon-configuration`            |`io.github.sophonhq.sophon`
-|<<Sophon test>>                  |`sophon-test`                     |`io.github.sophonhq.sophon`
-|<<Sophon Spring>>                |`sophon-spring`                   |`io.github.sophonhq.sophon`
-|<<Sophon Spring Boot Starter>>   |`sophon-spring-boot-starter`      |`io.github.sophonhq.sophon`
-|<<Sophon Disruptor>>             |`sophon-disruptor`                |`io.github.sophonhq.sophon`
-|<<Sophon Metrics>>               |`sophon-metrics`                  |`io.github.sophonhq.sophon`
-|<<Sophon Micrometer>>            |`sophon-micrometer`               |`io.github.sophonhq.sophon`
-|<<Sophon Tracing OpenTelemetry>> |`sophon-tracing-opentelemetry`    |`io.github.sophonhq.sophon`
-|<<Sophon Migration>>             |`sophon-migration`                |`io.github.sophonhq.sophon`
+|<<Sophon messaging>>             |`sophon-messaging`                |`org.sophonhq.sophon`
+|<<Sophon modelling>>             |`sophon-modelling`                |`org.sophonhq.sophon`
+|<<Sophon Event Sourcing>>        |`sophon-eventsourcing`            |`org.sophonhq.sophon`
+|<<Sophon Configuration>>         |`sophon-configuration`            |`org.sophonhq.sophon`
+|<<Sophon test>>                  |`sophon-test`                     |`org.sophonhq.sophon`
+|<<Sophon Spring>>                |`sophon-spring`                   |`org.sophonhq.sophon`
+|<<Sophon Spring Boot Starter>>   |`sophon-spring-boot-starter`      |`org.sophonhq.sophon`
+|<<Sophon Disruptor>>             |`sophon-disruptor`                |`org.sophonhq.sophon`
+|<<Sophon Metrics>>               |`sophon-metrics`                  |`org.sophonhq.sophon`
+|<<Sophon Micrometer>>            |`sophon-micrometer`               |`org.sophonhq.sophon`
+|<<Sophon Tracing OpenTelemetry>> |`sophon-tracing-opentelemetry`    |`org.sophonhq.sophon`
+|<<Sophon Migration>>             |`sophon-migration`                |`org.sophonhq.sophon`
 |===
 
 === Sophon messaging

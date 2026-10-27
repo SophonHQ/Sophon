@@ -14,9 +14,9 @@ Let us assume we have a `ParentAggregate`, that upon handling a certain command 
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.commandhandling.CommandHandler;
+import org.sophonhq.sophon.commandhandling.CommandHandler;
 
-import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.createNew;
+import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.createNew;
 
 public class ParentAggregate {
 
@@ -38,7 +38,7 @@ The `ChildAggregate` implementation would in this scenario resemble the followin
 
 [source,java]
 ----
-import static io.github.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
+import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 public class ChildAggregate {
 

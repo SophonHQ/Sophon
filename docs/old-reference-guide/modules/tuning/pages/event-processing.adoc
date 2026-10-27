@@ -17,7 +17,7 @@ First, the instance of the Tracking Event Processor must be obtained. This can b
 [source,java]
 ----
 // The `Configuration` was returned through the `Configurer` or is available as a bean in the Spring Application Context
-public TrackingEventProcessor retrieveTrackingProcessor(io.github.sophonhq.sophon.config.Configuration sophonConfig,
+public TrackingEventProcessor retrieveTrackingProcessor(org.sophonhq.sophon.config.Configuration sophonConfig,
                                                         String processorName) {
     return sophonConfig.eventProcessingConfiguration()
                      .eventProcessor(processorName) // This call returns an Optional

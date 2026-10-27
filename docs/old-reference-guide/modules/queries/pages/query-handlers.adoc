@@ -28,7 +28,7 @@ As shown, we have a regular POJO that will fetch a `CardSummary` based on the `c
 
 [source,java]
 ----
-import io.github.sophonhq.sophon.queryhandling.QueryHandler;
+import org.sophonhq.sophon.queryhandling.QueryHandler;
 
 public class CardSummaryProjection {
 

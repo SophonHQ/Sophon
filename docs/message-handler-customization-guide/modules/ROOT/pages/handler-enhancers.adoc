@@ -7,7 +7,7 @@ To create a handler enhancer, you implement the `HandlerEnhancerDefinition` inte
 
 You can then filter these handlers based on the type of `Message` they handle by using the `MessageHandlingMember.canHandleMessageType(Class<? extends Message>)` method. Doing so, you can specifically enhance message handlers dealing with, for example, the `CommandMessage`.
 
-For your handler enhancer to run, you'll need to create a `META-INF/services/io.github.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition` file containing the fully qualified class name of the handler enhancer you have created or register the enhancer explicitly in the `Configurer`. Here's an example of a `HandlerEnhancerDefinition` that filters messages based on an expected `MetaData` key and value.
+For your handler enhancer to run, you'll need to create a `META-INF/services/org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition` file containing the fully qualified class name of the handler enhancer you have created or register the enhancer explicitly in the `Configurer`. Here's an example of a `HandlerEnhancerDefinition` that filters messages based on an expected `MetaData` key and value.
 
 [source,java]
 ----

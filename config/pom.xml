@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>sophon</artifactId>
-        <groupId>io.github.sophonhq.sophon</groupId>
+        <groupId>org.sophonhq.sophon</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -91,12 +91,12 @@
         <!-- explicitly define transitive dependencies to increase version priority -->
         <!-- see https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#Transitive_Dependencies -->
         <dependency>
-            <groupId>io.github.sophonhq.sophon</groupId>
+            <groupId>org.sophonhq.sophon</groupId>
             <artifactId>sophon-modelling</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.sophonhq.sophon</groupId>
+            <groupId>org.sophonhq.sophon</groupId>
             <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -121,7 +121,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>io.github.sophonhq.sophon.config</Automatic-Module-Name>
+                            <Automatic-Module-Name>org.sophonhq.sophon.config</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -145,7 +145,7 @@
                         <Bundle-Description>${project.description}</Bundle-Description>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>
-                            io.github.sophonhq.sophon.config.*
+                            org.sophonhq.sophon.config.*
                         </Export-Package>
                         <Import-Package>
                             *;resolution:=optional
