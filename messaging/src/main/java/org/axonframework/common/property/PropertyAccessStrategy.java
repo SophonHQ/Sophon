@@ -16,12 +16,12 @@
 
 package org.axonframework.common.property;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentSkipListSet;
-import javax.annotation.Nonnull;
-
 
 /**
  * Abstract Strategy that provides access to all PropertyAccessStrategy implementations.
@@ -95,7 +95,7 @@ public abstract class PropertyAccessStrategy implements Comparable<PropertyAcces
     }
 
     @Override
-    public final int compareTo(@Nonnull PropertyAccessStrategy o) {
+    public final int compareTo(@NonNull PropertyAccessStrategy o) {
         if (o == this) {
             return 0;
         }

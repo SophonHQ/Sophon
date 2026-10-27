@@ -23,13 +23,13 @@ import org.axonframework.common.Registration;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.axonframework.messaging.MessageHandler;
 import org.axonframework.messaging.MessageHandlerInterceptor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
 
@@ -48,14 +48,14 @@ public class RecordingCommandBus implements CommandBus {
     private CallbackBehavior callbackBehavior = new DefaultCallbackBehavior();
 
     @Override
-    public <C> void dispatch(@Nonnull CommandMessage<C> command) {
+    public <C> void dispatch(@NonNull CommandMessage<C> command) {
         dispatchedCommands.add(command);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <C, R> void dispatch(@Nonnull CommandMessage<C> command,
-                                @Nonnull CommandCallback<? super C, ? super R> callback) {
+    public <C, R> void dispatch(@NonNull CommandMessage<C> command,
+                                @NonNull CommandCallback<? super C, ? super R> callback) {
         dispatchedCommands.add(command);
         try {
             callback.onResult(command, asCommandResultMessage(
@@ -67,8 +67,8 @@ public class RecordingCommandBus implements CommandBus {
     }
 
     @Override
-    public Registration subscribe(@Nonnull String commandName,
-                                  @Nonnull MessageHandler<? super CommandMessage<?>> handler) {
+    public Registration subscribe(@NonNull String commandName,
+                                  @NonNull MessageHandler<? super CommandMessage<?>> handler) {
         subscriptions.putIfAbsent(commandName, handler);
         return () -> subscriptions.remove(commandName, handler);
     }
@@ -140,13 +140,13 @@ public class RecordingCommandBus implements CommandBus {
 
     @Override
     public Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super CommandMessage<?>> dispatchInterceptor) {
+            @NonNull MessageDispatchInterceptor<? super CommandMessage<?>> dispatchInterceptor) {
         return null;
     }
 
     @Override
     public Registration registerHandlerInterceptor(
-            @Nonnull MessageHandlerInterceptor<? super CommandMessage<?>> handlerInterceptor) {
+            @NonNull MessageHandlerInterceptor<? super CommandMessage<?>> handlerInterceptor) {
         return () -> true;
     }
 }

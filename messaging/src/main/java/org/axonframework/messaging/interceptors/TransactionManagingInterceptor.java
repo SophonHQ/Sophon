@@ -22,8 +22,7 @@ import org.axonframework.messaging.InterceptorChain;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageHandlerInterceptor;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interceptor that uses a {@link TransactionManager} to start a new transaction before a Message is handled. When the
@@ -45,7 +44,7 @@ public class TransactionManagingInterceptor<T extends Message<?>> implements Mes
     }
 
     @Override
-    public Object handle(@Nonnull UnitOfWork<? extends T> unitOfWork, @Nonnull InterceptorChain interceptorChain)
+    public Object handle(@NonNull UnitOfWork<? extends T> unitOfWork, @NonNull InterceptorChain interceptorChain)
             throws Exception {
         Transaction transaction = transactionManager.startTransaction();
         unitOfWork.onCommit(u -> transaction.commit());

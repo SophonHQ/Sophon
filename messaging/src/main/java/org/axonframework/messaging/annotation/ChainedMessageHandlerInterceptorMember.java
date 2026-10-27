@@ -17,9 +17,9 @@
 package org.axonframework.messaging.annotation;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Iterator;
-import javax.annotation.Nonnull;
 
 /**
  * A {@link MessageHandlerInterceptorMemberChain} implementation that constructs a chain of instances of itself based on
@@ -53,9 +53,9 @@ public class ChainedMessageHandlerInterceptorMember<T> implements MessageHandler
     }
 
     @Override
-    public Object handle(@Nonnull Message<?> message,
-                         @Nonnull T target,
-                         @Nonnull MessageHandlingMember<? super T> handler) throws Exception {
+    public Object handle(@NonNull Message<?> message,
+                         @NonNull T target,
+                         @NonNull MessageHandlingMember<? super T> handler) throws Exception {
         return InterceptorChainParameterResolverFactory.callWithInterceptorChain(
                 () -> next.handle(message, target, handler),
                 () -> doHandle(message, target, handler)

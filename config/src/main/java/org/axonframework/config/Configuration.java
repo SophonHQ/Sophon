@@ -43,8 +43,8 @@ import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.upcasting.event.EventUpcasterChain;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -79,12 +79,12 @@ public interface Configuration extends LifecycleOperations {
     default Lifecycle.LifecycleRegistry lifecycleRegistry() {
         return new Lifecycle.LifecycleRegistry() {
             @Override
-            public void onStart(int phase, @Nonnull Lifecycle.LifecycleHandler action) {
+            public void onStart(int phase, Lifecycle.@NonNull LifecycleHandler action) {
                 Configuration.this.onStart(phase, action::run);
             }
 
             @Override
-            public void onShutdown(int phase, @Nonnull Lifecycle.LifecycleHandler action) {
+            public void onShutdown(int phase, Lifecycle.@NonNull LifecycleHandler action) {
                 Configuration.this.onShutdown(phase, action::run);
             }
         };
@@ -111,7 +111,7 @@ public interface Configuration extends LifecycleOperations {
      * @return configuration modules of {@code moduleType} defined in this configuration
      */
     @SuppressWarnings("unchecked")
-    default <T extends ModuleConfiguration> List<T> findModules(@Nonnull Class<T> moduleType) {
+    default <T extends ModuleConfiguration> List<T> findModules(@NonNull Class<T> moduleType) {
         return getModules().stream()
                            .filter(m -> m.isType(moduleType))
                            .map(m -> (T) m.unwrap())
@@ -232,7 +232,7 @@ public interface Configuration extends LifecycleOperations {
      * @param <A>           the aggregate type
      * @return the {@link AggregateConfiguration} for the given {@code aggregateType}
      */
-    default <A> AggregateConfiguration<A> aggregateConfiguration(@Nonnull Class<A> aggregateType) {
+    default <A> AggregateConfiguration<A> aggregateConfiguration(@NonNull Class<A> aggregateType) {
         //noinspection unchecked
         return findModules(AggregateConfiguration.class)
                 .stream()
@@ -251,7 +251,7 @@ public interface Configuration extends LifecycleOperations {
      * @param <A>           the aggregate type
      * @return the {@link Repository} from which aggregates of the given {@code aggregateType} can be loaded
      */
-    default <A> Repository<A> repository(@Nonnull Class<A> aggregateType) {
+    default <A> Repository<A> repository(@NonNull Class<A> aggregateType) {
         return aggregateConfiguration(aggregateType).repository();
     }
 
@@ -262,7 +262,7 @@ public interface Configuration extends LifecycleOperations {
      * @param <A>           the aggregate type
      * @return the {@link AggregateFactory} which constructs aggregate of the given {@code aggregateType}
      */
-    default <A> AggregateFactory<A> aggregateFactory(@Nonnull Class<A> aggregateType) {
+    default <A> AggregateFactory<A> aggregateFactory(@NonNull Class<A> aggregateType) {
         return aggregateConfiguration(aggregateType).aggregateFactory();
     }
 
@@ -274,7 +274,7 @@ public interface Configuration extends LifecycleOperations {
      * @param <T>           The type of component
      * @return the component registered for the given type, or {@code null} if no such component exists
      */
-    default <T> T getComponent(@Nonnull Class<T> componentType) {
+    default <T> T getComponent(@NonNull Class<T> componentType) {
         return getComponent(componentType, () -> null);
     }
 
@@ -290,7 +290,7 @@ public interface Configuration extends LifecycleOperations {
      * @return the component registered for the given type, or the value returned by the {@code defaultImpl} supplier,
      * if no component was registered
      */
-    <T> T getComponent(@Nonnull Class<T> componentType, @Nonnull Supplier<T> defaultImpl);
+    <T> T getComponent(@NonNull Class<T> componentType, @NonNull Supplier<T> defaultImpl);
 
     /**
      * Returns the message monitor configured for a component of given {@code componentType} and {@code componentName}.
@@ -300,8 +300,8 @@ public interface Configuration extends LifecycleOperations {
      * @param <M>           The type of message the monitor can deal with
      * @return The monitor to be used for the described component
      */
-    <M extends Message<?>> MessageMonitor<? super M> messageMonitor(@Nonnull Class<?> componentType,
-                                                                    @Nonnull String componentName);
+    <M extends Message<?>> MessageMonitor<? super M> messageMonitor(@NonNull Class<?> componentType,
+                                                                    @NonNull String componentName);
 
     /**
      * Returns the serializer defined in this Configuration

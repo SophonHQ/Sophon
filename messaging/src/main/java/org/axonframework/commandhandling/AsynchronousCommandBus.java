@@ -26,12 +26,12 @@ import org.axonframework.messaging.unitofwork.RollbackConfigurationType;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -130,44 +130,44 @@ public class AsynchronousCommandBus extends SimpleCommandBus {
         );
 
         @Override
-        public Builder transactionManager(@Nonnull TransactionManager transactionManager) {
+        public Builder transactionManager(@NonNull TransactionManager transactionManager) {
             super.transactionManager(transactionManager);
             return this;
         }
 
         @Override
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super CommandMessage<?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super CommandMessage<?>> messageMonitor) {
             super.messageMonitor(messageMonitor);
             return this;
         }
 
         @Override
-        public Builder rollbackConfiguration(@Nonnull RollbackConfiguration rollbackConfiguration) {
+        public Builder rollbackConfiguration(@NonNull RollbackConfiguration rollbackConfiguration) {
             super.rollbackConfiguration(rollbackConfiguration);
             return this;
         }
 
         @Override
-        public Builder defaultCommandCallback(@Nonnull CommandCallback<Object, Object> defaultCommandCallback) {
+        public Builder defaultCommandCallback(@NonNull CommandCallback<Object, Object> defaultCommandCallback) {
             super.defaultCommandCallback(defaultCommandCallback);
             return this;
         }
 
         @Override
         public Builder duplicateCommandHandlerResolver(
-                @Nonnull DuplicateCommandHandlerResolver duplicateCommandHandlerResolver) {
+                @NonNull DuplicateCommandHandlerResolver duplicateCommandHandlerResolver) {
             super.duplicateCommandHandlerResolver(duplicateCommandHandlerResolver);
             return this;
         }
 
         @Override
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }
 
         @Override
-        public Builder spanFactory(@Nonnull CommandBusSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull CommandBusSpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }

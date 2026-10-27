@@ -17,9 +17,9 @@
 package org.axonframework.modelling.command;
 
 import org.axonframework.common.Assert;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * Structure that holds an Aggregate Identifier and an expected version of an aggregate.
@@ -53,7 +53,7 @@ public class VersionedAggregateIdentifier {
      * @param identifier The non-null identifier of the targeted aggregate.
      * @param version    The expected version of the targeted aggregate, or {@code null} if the version is irrelevant.
      */
-    public VersionedAggregateIdentifier(@Nonnull Object identifier, Long version) {
+    public VersionedAggregateIdentifier(@NonNull Object identifier, Long version) {
         Assert.notNull(identifier, () -> "Identifier must not be null");
         this.identifier = identifier;
         this.version = version;
@@ -64,7 +64,7 @@ public class VersionedAggregateIdentifier {
      *
      * @return the string representation of identifier of the targeted Aggregate
      */
-    @Nonnull
+    @NonNull
     public String getIdentifier() {
         return identifier.toString();
     }
@@ -74,7 +74,7 @@ public class VersionedAggregateIdentifier {
      *
      * @return the object representation of the identifier of the targeted Aggregate
      */
-    @Nonnull
+    @NonNull
     public Object getIdentifierValue() {
         return identifier;
     }

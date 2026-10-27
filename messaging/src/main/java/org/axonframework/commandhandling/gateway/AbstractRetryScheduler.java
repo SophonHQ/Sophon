@@ -18,6 +18,7 @@ package org.axonframework.commandhandling.gateway;
 
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.common.AxonConfigurationException;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 import static org.axonframework.common.BuilderUtils.assertStrictPositive;
@@ -120,10 +120,10 @@ public abstract class AbstractRetryScheduler implements RetryScheduler {
      * @return {@code true} if rescheduling succeeded, {@code false} if otherwise.
      */
     @Override
-    public boolean scheduleRetry(@Nonnull CommandMessage commandMessage,
-                                 @Nonnull RuntimeException lastFailure,
-                                 @Nonnull List<Class<? extends Throwable>[]> failures,
-                                 @Nonnull Runnable dispatchTask) {
+    public boolean scheduleRetry(@NonNull CommandMessage commandMessage,
+                                 @NonNull RuntimeException lastFailure,
+                                 @NonNull List<Class<? extends Throwable>[]> failures,
+                                 @NonNull Runnable dispatchTask) {
         int failureCount = failures.size();
         if (!isExplicitlyNonTransient(lastFailure) && failureCount <= maxRetryCount) {
             if (logger.isInfoEnabled()) {
@@ -170,7 +170,7 @@ public abstract class AbstractRetryScheduler implements RetryScheduler {
          * @param retryExecutor a {@link ScheduledExecutorService} used to schedule a command retry
          * @return the current Builder instance, for fluent interfacing
          */
-        public B retryExecutor(@Nonnull ScheduledExecutorService retryExecutor) {
+        public B retryExecutor(@NonNull ScheduledExecutorService retryExecutor) {
             assertNonNull(retryExecutor, "ScheduledExecutorService may not be null");
             this.retryExecutor = retryExecutor;
 
@@ -189,7 +189,7 @@ public abstract class AbstractRetryScheduler implements RetryScheduler {
          *                                     testing transiency of provided failure
          * @return the current Builder instance, for fluent interfacing
          */
-        public B nonTransientFailurePredicate(@Nonnull Predicate<Throwable> nonTransientFailurePredicate) {
+        public B nonTransientFailurePredicate(@NonNull Predicate<Throwable> nonTransientFailurePredicate) {
             assertNonNull(nonTransientFailurePredicate, "Non-transient failure predicate may not be null");
             this.nonTransientFailurePredicate = nonTransientFailurePredicate;
 
@@ -212,8 +212,8 @@ public abstract class AbstractRetryScheduler implements RetryScheduler {
          * @param <E> type of the failure to handle
          * @return the current Builder instance, for fluent interfacing
          */
-        public <E extends Throwable> B nonTransientFailurePredicate(@Nonnull Class<E> failureType,
-                                                                    @Nonnull Predicate<? super E> nonTransientFailurePredicate) {
+        public <E extends Throwable> B nonTransientFailurePredicate(@NonNull Class<E> failureType,
+                                                                    @NonNull Predicate<? super E> nonTransientFailurePredicate) {
             assertNonNull(failureType, "Class of failure type may not be null");
             assertNonNull(nonTransientFailurePredicate, "Non-transient failure predicate may not be null");
 
@@ -239,7 +239,7 @@ public abstract class AbstractRetryScheduler implements RetryScheduler {
          *                                     testing transiency of provided failure
          * @return the current Builder instance, for fluent interfacing
          */
-        public B addNonTransientFailurePredicate(@Nonnull Predicate<Throwable> nonTransientFailurePredicate) {
+        public B addNonTransientFailurePredicate(@NonNull Predicate<Throwable> nonTransientFailurePredicate) {
             assertNonNull(nonTransientFailurePredicate, "Non-transient failure predicate may not be null");
             this.nonTransientFailurePredicate = nonTransientFailurePredicate.or(this.nonTransientFailurePredicate);
 
@@ -263,8 +263,8 @@ public abstract class AbstractRetryScheduler implements RetryScheduler {
          * @param <E> type of the failure to handle
          * @return the current Builder instance, for fluent interfacing
          */
-        public <E extends Throwable> B addNonTransientFailurePredicate(@Nonnull Class<E> failureType,
-                                                                       @Nonnull Predicate<? super E> nonTransientFailurePredicate) {
+        public <E extends Throwable> B addNonTransientFailurePredicate(@NonNull Class<E> failureType,
+                                                                       @NonNull Predicate<? super E> nonTransientFailurePredicate) {
             assertNonNull(failureType, "Class of failure type may not be null");
             assertNonNull(nonTransientFailurePredicate, "Non-transient failure predicate may not be null");
 

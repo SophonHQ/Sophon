@@ -18,10 +18,10 @@ package org.axonframework.eventhandling.gateway;
 
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.MessageDispatchInterceptorSupport;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Interface towards the Event Handling components of an application. This interface provides a friendlier API toward
@@ -55,5 +55,5 @@ public interface EventGateway extends MessageDispatchInterceptorSupport<EventMes
      *
      * @param events The collection of events to publish
      */
-    void publish(@Nonnull List<?> events);
+    void publish(@NonNull List<?> events);
 }

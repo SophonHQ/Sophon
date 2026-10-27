@@ -185,11 +185,10 @@
             </exclusions>
         </dependency>
 
-        <!-- JSR-305 - NonNull annotations for kotlin interop -->
+        <!-- JSpecify - nullness annotations (also used for Kotlin interop) -->
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <scope>provided</scope>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
         </dependency>
 
         <!-- Serialization - JSON -->

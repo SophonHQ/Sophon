@@ -31,12 +31,12 @@ import org.axonframework.modelling.command.CommandTargetResolver;
 import org.axonframework.modelling.command.GenericJpaRepository;
 import org.axonframework.modelling.command.Repository;
 import org.axonframework.modelling.command.RepositorySpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.Set;
-import javax.annotation.Nonnull;
 
 /**
  * A {@link ConfigurerModule} implementation that will configure an Aggregate with the Axon {@link
@@ -153,7 +153,7 @@ public class SpringAggregateConfigurer<T> implements ConfigurerModule, Applicati
     }
 
     @Override
-    public void configureModule(@Nonnull Configurer configurer) {
+    public void configureModule(@NonNull Configurer configurer) {
         AggregateConfigurer<T> aggregateConfigurer = AggregateConfigurer.defaultConfiguration(aggregateType)
                                                                         .withSubtypes(subTypes);
         if (snapshotFilter != null) {
@@ -212,7 +212,7 @@ public class SpringAggregateConfigurer<T> implements ConfigurerModule, Applicati
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 }

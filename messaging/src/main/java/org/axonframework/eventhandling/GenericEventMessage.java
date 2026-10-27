@@ -21,12 +21,12 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageDecorator;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.serialization.CachingSupplier;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Map;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 /**
  * Generic implementation of the EventMessage interface.
@@ -54,7 +54,7 @@ public class GenericEventMessage<T> extends MessageDecorator<T> implements Event
      * EventMessage.
      */
     @SuppressWarnings("unchecked")
-    public static <T> EventMessage<T> asEventMessage(@Nonnull Object event) {
+    public static <T> EventMessage<T> asEventMessage(@NonNull Object event) {
         if (EventMessage.class.isInstance(event)) {
             return (EventMessage<T>) event;
         } else if (event instanceof Message) {
@@ -81,7 +81,7 @@ public class GenericEventMessage<T> extends MessageDecorator<T> implements Event
      * @param metaData The MetaData for the EventMessage
      * @see #asEventMessage(Object)
      */
-    public GenericEventMessage(T payload, @Nonnull Map<String, ?> metaData) {
+    public GenericEventMessage(T payload, @NonNull Map<String, ?> metaData) {
         this(new GenericMessage<>(payload, metaData), clock.instant());
     }
 
@@ -93,8 +93,8 @@ public class GenericEventMessage<T> extends MessageDecorator<T> implements Event
      * @param payload    The payload of the message
      * @param metaData   The metadata of the message
      */
-    public GenericEventMessage(@Nonnull String identifier, T payload, @Nonnull Map<String, ?> metaData,
-                               @Nonnull Instant timestamp) {
+    public GenericEventMessage(@NonNull String identifier, T payload, @NonNull Map<String, ?> metaData,
+                               @NonNull Instant timestamp) {
         this(new GenericMessage<>(identifier, payload, metaData), timestamp);
     }
 
@@ -105,7 +105,7 @@ public class GenericEventMessage<T> extends MessageDecorator<T> implements Event
      * @param delegate          The message containing payload, identifier and metadata
      * @param timestampSupplier Supplier for the timestamp of the Message creation
      */
-    public GenericEventMessage(@Nonnull Message<T> delegate, @Nonnull Supplier<Instant> timestampSupplier) {
+    public GenericEventMessage(@NonNull Message<T> delegate, @NonNull Supplier<Instant> timestampSupplier) {
         super(delegate);
         this.timestampSupplier = CachingSupplier.of(timestampSupplier);
     }
@@ -117,18 +117,18 @@ public class GenericEventMessage<T> extends MessageDecorator<T> implements Event
      * @param delegate  the message that will be used as delegate
      * @param timestamp the timestamp of the resulting event message
      */
-    protected GenericEventMessage(@Nonnull Message<T> delegate, @Nonnull Instant timestamp) {
+    protected GenericEventMessage(@NonNull Message<T> delegate, @NonNull Instant timestamp) {
         this(delegate, CachingSupplier.of(timestamp));
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Instant getTimestamp() {
         return timestampSupplier.get();
     }
 
     @Override
-    public GenericEventMessage<T> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericEventMessage<T> withMetaData(@NonNull Map<String, ?> metaData) {
         if (getMetaData().equals(metaData)) {
             return this;
         }
@@ -136,7 +136,7 @@ public class GenericEventMessage<T> extends MessageDecorator<T> implements Event
     }
 
     @Override
-    public GenericEventMessage<T> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericEventMessage<T> andMetaData(@NonNull Map<String, ?> metaData) {
         //noinspection ConstantConditions
         if (metaData == null || metaData.isEmpty() || getMetaData().equals(metaData)) {
             return this;

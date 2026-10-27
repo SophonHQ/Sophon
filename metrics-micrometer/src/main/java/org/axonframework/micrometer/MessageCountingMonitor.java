@@ -22,9 +22,9 @@ import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
 import org.axonframework.messaging.Message;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 /**
  * Counts the number of ingested, successful, failed and processed messages
@@ -88,7 +88,7 @@ public class MessageCountingMonitor implements MessageMonitor<Message<?>> {
     }
 
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull Message<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull Message<?> message) {
 
         Iterable<Tag> tags = tagsBuilder.apply(message);
         Counter ingestedCounter = meterRegistry.counter(meterNamePrefix + INGESTED_COUNTER, tags);

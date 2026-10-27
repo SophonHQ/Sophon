@@ -18,13 +18,13 @@ package org.axonframework.serialization;
 
 import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.common.io.IOUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -71,7 +71,7 @@ public class JavaSerializer implements Serializer {
 
     @SuppressWarnings({"NonSerializableObjectPassedToObjectStream", "ThrowFromFinallyBlock"})
     @Override
-    public <T> SerializedObject<T> serialize(Object instance, @Nonnull Class<T> expectedType) {
+    public <T> SerializedObject<T> serialize(Object instance, @NonNull Class<T> expectedType) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -98,13 +98,13 @@ public class JavaSerializer implements Serializer {
     }
 
     @Override
-    public <T> boolean canSerializeTo(@Nonnull Class<T> expectedRepresentation) {
+    public <T> boolean canSerializeTo(@NonNull Class<T> expectedRepresentation) {
         return converter.canConvert(byte[].class, expectedRepresentation);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <S, T> T deserialize(@Nonnull SerializedObject<S> serializedObject) {
+    public <S, T> T deserialize(@NonNull SerializedObject<S> serializedObject) {
         if (SerializedType.emptyType().equals(serializedObject.getType())) {
             return null;
         }
@@ -126,7 +126,7 @@ public class JavaSerializer implements Serializer {
     }
 
     @Override
-    public Class classForType(@Nonnull SerializedType type) {
+    public Class classForType(@NonNull SerializedType type) {
         if (SerializedType.emptyType().equals(type)) {
             return Void.class;
         }

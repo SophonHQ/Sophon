@@ -19,9 +19,9 @@ package org.axonframework.serialization;
 import org.axonframework.messaging.AbstractMessage;
 import org.axonframework.messaging.GenericMessage;
 import org.axonframework.messaging.MetaData;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * A message containing serialized payload data and metadata. A SerializedMessage will deserialize the payload or
@@ -105,12 +105,12 @@ public class SerializedMessage<T> extends AbstractMessage<T> {
     }
 
     @Override
-    public SerializedMessage<T> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public SerializedMessage<T> withMetaData(@NonNull Map<String, ?> metaData) {
         return (SerializedMessage<T>) super.withMetaData(metaData);
     }
 
     @Override
-    public SerializedMessage<T> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public SerializedMessage<T> andMetaData(@NonNull Map<String, ?> metaData) {
         return (SerializedMessage<T>) super.andMetaData(metaData);
     }
 

@@ -16,7 +16,7 @@
 
 package org.axonframework.config;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface describing a configurer for a module in the Axon Configuration API. Allows the registration of modules on
@@ -32,7 +32,7 @@ public interface ConfigurerModule {
      *
      * @param configurer a {@link org.axonframework.config.Configurer} instance to configure this module with
      */
-    void configureModule(@Nonnull Configurer configurer);
+    void configureModule(@NonNull Configurer configurer);
 
     /**
      * Returns the relative order this configurer should be invoked, compared to other intstances.

@@ -17,10 +17,10 @@
 package org.axonframework.messaging.annotation;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Executable;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.annotation.AnnotationUtils.findAnnotationAttributes;
 
@@ -44,9 +44,9 @@ public class AnnotatedMessageHandlingMemberDefinition implements HandlerDefiniti
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> Optional<MessageHandlingMember<T>> createHandler(@Nonnull Class<T> declaringType,
-                                                                @Nonnull Executable executable,
-                                                                @Nonnull ParameterResolverFactory parameterResolverFactory) {
+    public <T> Optional<MessageHandlingMember<T>> createHandler(@NonNull Class<T> declaringType,
+                                                                @NonNull Executable executable,
+                                                                @NonNull ParameterResolverFactory parameterResolverFactory) {
         return findAnnotationAttributes(executable, MessageHandler.class)
                 .map(attr -> new AnnotatedMessageHandlingMember<>(
                         executable,

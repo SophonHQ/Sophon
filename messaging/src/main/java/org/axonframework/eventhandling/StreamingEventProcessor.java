@@ -18,14 +18,13 @@ package org.axonframework.eventhandling;
 
 import org.axonframework.eventhandling.tokenstore.TokenStore;
 import org.axonframework.messaging.StreamableMessageSource;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 
 /**
  * An {@link EventProcessor} which processes an event stream in segments. Segmenting the stream of events allows for
@@ -182,7 +181,7 @@ public interface StreamingEventProcessor extends EventProcessor {
      * @param initialTrackingTokenSupplier a function returning the token representing the position to reset to
      */
     void resetTokens(
-            @Nonnull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenSupplier
+            @NonNull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenSupplier
     );
 
     /**
@@ -201,7 +200,7 @@ public interface StreamingEventProcessor extends EventProcessor {
      * @param <R>                          the type of the provided {@code resetContext}
      */
     <R> void resetTokens(
-            @Nonnull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenSupplier,
+            @NonNull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenSupplier,
             @Nullable R resetContext
     );
 
@@ -217,7 +216,7 @@ public interface StreamingEventProcessor extends EventProcessor {
      *
      * @param startPosition the token representing the position to reset the processor to
      */
-    default void resetTokens(@Nonnull TrackingToken startPosition) {
+    default void resetTokens(@NonNull TrackingToken startPosition) {
         resetTokens(startPosition, null);
     }
 
@@ -236,7 +235,7 @@ public interface StreamingEventProcessor extends EventProcessor {
      * @param resetContext  a {@code R} used to support the reset operation
      * @param <R>           the type of the provided {@code resetContext}
      */
-    <R> void resetTokens(@Nonnull TrackingToken startPosition, @Nullable R resetContext);
+    <R> void resetTokens(@NonNull TrackingToken startPosition, @Nullable R resetContext);
 
     /**
      * Specifies the maximum amount of segments this {@link EventProcessor} can process at the same time.

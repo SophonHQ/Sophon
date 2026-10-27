@@ -38,6 +38,7 @@ import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
 import org.axonframework.tracing.SpanScope;
+import org.jspecify.annotations.NonNull;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,6 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
@@ -135,9 +135,9 @@ public class SimpleQueryBus implements QueryBus {
     }
 
     @Override
-    public <R> Registration subscribe(@Nonnull String queryName,
-                                      @Nonnull Type responseType,
-                                      @Nonnull MessageHandler<? super QueryMessage<?, R>> handler) {
+    public <R> Registration subscribe(@NonNull String queryName,
+                                      @NonNull Type responseType,
+                                      @NonNull MessageHandler<? super QueryMessage<?, R>> handler) {
         QuerySubscription<R> querySubscription = new QuerySubscription<>(responseType, handler);
         List<QuerySubscription<?>> handlers =
                 subscriptions.computeIfAbsent(queryName, k -> new CopyOnWriteArrayList<>());
@@ -170,7 +170,7 @@ public class SimpleQueryBus implements QueryBus {
     }
 
     @Override
-    public <Q, R> CompletableFuture<QueryResponseMessage<R>> query(@Nonnull QueryMessage<Q, R> query) {
+    public <Q, R> CompletableFuture<QueryResponseMessage<R>> query(@NonNull QueryMessage<Q, R> query) {
         Span span = spanFactory.createQuerySpan(query, false);
         return span.runSupplier(() -> doQuery(query).whenComplete((r, t) -> {
             if (t != null) {
@@ -179,9 +179,9 @@ public class SimpleQueryBus implements QueryBus {
         }));
     }
 
-    @Nonnull
+    @NonNull
     private <Q, R> CompletableFuture<QueryResponseMessage<R>> doQuery(
-            @Nonnull QueryMessage<Q, R> query) {
+            @NonNull QueryMessage<Q, R> query) {
         Assert.isFalse(Publisher.class.isAssignableFrom(query.getResponseType().getExpectedResponseType()),
                        () -> "Direct query does not support Flux as a return type.");
         MessageMonitor.MonitorCallback monitorCallback = messageMonitor.onMessageIngested(query);
@@ -394,8 +394,8 @@ public class SimpleQueryBus implements QueryBus {
     }
 
     @Override
-    public <Q, R> Stream<QueryResponseMessage<R>> scatterGather(@Nonnull QueryMessage<Q, R> query, long timeout,
-                                                                @Nonnull TimeUnit unit) {
+    public <Q, R> Stream<QueryResponseMessage<R>> scatterGather(@NonNull QueryMessage<Q, R> query, long timeout,
+                                                                @NonNull TimeUnit unit) {
         Assert.isFalse(Publisher.class.isAssignableFrom(query.getResponseType().getExpectedResponseType()),
                        () -> "Scatter-Gather query does not support Flux as a return type.");
         MessageMonitor.MonitorCallback monitorCallback = messageMonitor.onMessageIngested(query);
@@ -461,7 +461,7 @@ public class SimpleQueryBus implements QueryBus {
     @Deprecated
     @Override
     public <Q, I, U> SubscriptionQueryResult<QueryResponseMessage<I>, SubscriptionQueryUpdateMessage<U>> subscriptionQuery(
-            @Nonnull SubscriptionQueryMessage<Q, I, U> query,
+            @NonNull SubscriptionQueryMessage<Q, I, U> query,
             SubscriptionQueryBackpressure backpressure,
             int updateBufferSize
     ) {
@@ -484,7 +484,7 @@ public class SimpleQueryBus implements QueryBus {
 
     @Override
     public <Q, I, U> SubscriptionQueryResult<QueryResponseMessage<I>, SubscriptionQueryUpdateMessage<U>> subscriptionQuery(
-            @Nonnull SubscriptionQueryMessage<Q, I, U> query,
+            @NonNull SubscriptionQueryMessage<Q, I, U> query,
             int updateBufferSize
     ) {
         assertSubQueryResponseTypes(query);
@@ -601,7 +601,7 @@ public class SimpleQueryBus implements QueryBus {
      */
     @Override
     public Registration registerHandlerInterceptor(
-            @Nonnull MessageHandlerInterceptor<? super QueryMessage<?, ?>> interceptor) {
+            @NonNull MessageHandlerInterceptor<? super QueryMessage<?, ?>> interceptor) {
         handlerInterceptors.add(interceptor);
         return () -> handlerInterceptors.remove(interceptor);
     }
@@ -614,9 +614,9 @@ public class SimpleQueryBus implements QueryBus {
      * @return handle to deregister the interceptor
      */
     @Override
-    public @Nonnull
+    public @NonNull
     Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super QueryMessage<?, ?>> interceptor) {
+            @NonNull MessageDispatchInterceptor<? super QueryMessage<?, ?>> interceptor) {
         dispatchInterceptors.add(interceptor);
         return () -> dispatchInterceptors.remove(interceptor);
     }
@@ -680,7 +680,7 @@ public class SimpleQueryBus implements QueryBus {
          * @param messageMonitor a {@link MessageMonitor} used to monitor query messages
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super QueryMessage<?, ?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super QueryMessage<?, ?>> messageMonitor) {
             assertNonNull(messageMonitor, "MessageMonitor may not be null");
             this.messageMonitor = messageMonitor;
             return this;
@@ -710,7 +710,7 @@ public class SimpleQueryBus implements QueryBus {
          * @param transactionManager a {@link TransactionManager} used to manage the query handling transactions
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder transactionManager(@Nonnull TransactionManager transactionManager) {
+        public Builder transactionManager(@NonNull TransactionManager transactionManager) {
             assertNonNull(transactionManager, "TransactionManager may not be null");
             this.transactionManager = transactionManager;
             return this;
@@ -724,7 +724,7 @@ public class SimpleQueryBus implements QueryBus {
          *                     invocation
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder errorHandler(@Nonnull QueryInvocationErrorHandler errorHandler) {
+        public Builder errorHandler(@NonNull QueryInvocationErrorHandler errorHandler) {
             assertNonNull(errorHandler, "QueryInvocationErrorHandler may not be null");
             this.errorHandler = errorHandler;
             return this;
@@ -739,7 +739,7 @@ public class SimpleQueryBus implements QueryBus {
          *                           {@link QueryBus#subscriptionQuery(SubscriptionQueryMessage)}
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder queryUpdateEmitter(@Nonnull QueryUpdateEmitter queryUpdateEmitter) {
+        public Builder queryUpdateEmitter(@NonNull QueryUpdateEmitter queryUpdateEmitter) {
             assertNonNull(queryUpdateEmitter, "QueryUpdateEmitter may not be null");
             this.queryUpdateEmitter = queryUpdateEmitter;
             return this;
@@ -754,7 +754,7 @@ public class SimpleQueryBus implements QueryBus {
          * @deprecated Use {@link #spanFactory(QueryBusSpanFactory)} instead as it provides more configurability.
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = DefaultQueryBusSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
@@ -768,7 +768,7 @@ public class SimpleQueryBus implements QueryBus {
          * @param spanFactory The {@link QueryBusSpanFactory} implementation.
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull QueryBusSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull QueryBusSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = spanFactory;
             return this;

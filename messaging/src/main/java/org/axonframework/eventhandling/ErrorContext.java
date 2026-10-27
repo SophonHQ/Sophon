@@ -16,8 +16,9 @@
 
 package org.axonframework.eventhandling;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Describes the context of an error.
@@ -39,8 +40,8 @@ public class ErrorContext {
      * @param error          the error that was raised during processing
      * @param failedEvents   the list of events that triggered the error
      */
-    public ErrorContext(@Nonnull String eventProcessor, @Nonnull Throwable error,
-                        @Nonnull List<? extends EventMessage<?>> failedEvents) {
+    public ErrorContext(@NonNull String eventProcessor, @NonNull Throwable error,
+                        @NonNull List<? extends EventMessage<?>> failedEvents) {
         this.eventProcessor = eventProcessor;
         this.error = error;
         this.failedEvents = failedEvents;

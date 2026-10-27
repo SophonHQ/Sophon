@@ -22,13 +22,13 @@ import org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageE
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.queryhandling.QueryHandler;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -113,7 +113,7 @@ class DefaultConfigurerHandlerRegistrationTest {
                                              .registerHandlerEnhancerDefinition(c -> new HandlerEnhancerDefinition() {
                                                  @Override
                                                  public <T> MessageHandlingMember<T> wrapHandler(
-                                                         @Nonnull MessageHandlingMember<T> original
+                                                         @NonNull MessageHandlingMember<T> original
                                                  ) {
                                                      firstEnhancerInvoked.set(true);
                                                      return original;
@@ -122,7 +122,7 @@ class DefaultConfigurerHandlerRegistrationTest {
                                              .registerHandlerEnhancerDefinition(c -> new HandlerEnhancerDefinition() {
                                                  @Override
                                                  public <T> MessageHandlingMember<T> wrapHandler(
-                                                         @Nonnull MessageHandlingMember<T> original
+                                                         @NonNull MessageHandlingMember<T> original
                                                  ) {
                                                      secondEnhancerInvoked.set(true);
                                                      return original;

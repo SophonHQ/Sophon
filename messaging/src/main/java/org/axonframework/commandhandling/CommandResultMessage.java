@@ -17,9 +17,9 @@
 package org.axonframework.commandhandling;
 
 import org.axonframework.messaging.ResultMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Message that represents a result from handling a {@link CommandMessage}.
@@ -31,8 +31,8 @@ import javax.annotation.Nonnull;
 public interface CommandResultMessage<R> extends ResultMessage<R> {
 
     @Override
-    CommandResultMessage<R> withMetaData(@Nonnull Map<String, ?> metaData);
+    CommandResultMessage<R> withMetaData(@NonNull Map<String, ?> metaData);
 
     @Override
-    CommandResultMessage<R> andMetaData(@Nonnull Map<String, ?> metaData);
+    CommandResultMessage<R> andMetaData(@NonNull Map<String, ?> metaData);
 }

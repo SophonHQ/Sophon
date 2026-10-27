@@ -16,6 +16,7 @@
 
 package org.axonframework.springboot.util;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackages;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -24,14 +25,13 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.type.AnnotationMetadata;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class DefaultEntityRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
-                                        @Nonnull BeanDefinitionRegistry registry) {
+                                        @NonNull BeanDefinitionRegistry registry) {
         Map<String, Object> attributes = importingClassMetadata.getAnnotationAttributes(
                 "org.axonframework.springboot.util.RegisterDefaultEntities");
         String[] packages = (String[]) attributes.get("packages");

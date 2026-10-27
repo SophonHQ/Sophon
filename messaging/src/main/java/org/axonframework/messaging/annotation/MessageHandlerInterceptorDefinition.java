@@ -21,9 +21,9 @@ import org.axonframework.messaging.InterceptorChain;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.interceptors.MessageHandlerInterceptor;
 import org.axonframework.messaging.interceptors.ResultHandler;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
@@ -43,8 +43,8 @@ import java.util.Optional;
 public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefinition {
 
     @Override
-    public @Nonnull
-    <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public @NonNull
+    <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
 
         if (original.annotationAttributes(MessageHandlerInterceptor.class).isPresent()) {
             Optional<Map<String, Object>> attributes = original.annotationAttributes(ResultHandler.class);
@@ -80,12 +80,12 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
         }
 
         @Override
-        public boolean canHandle(@Nonnull Message<?> message) {
+        public boolean canHandle(@NonNull Message<?> message) {
             return ResultParameterResolverFactory.ignoringResultParameters(() -> super.canHandle(message));
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, @Nullable T target) throws Exception {
+        public Object handle(@NonNull Message<?> message, @Nullable T target) throws Exception {
             InterceptorChain chain = InterceptorChainParameterResolverFactory.currentInterceptorChain();
             try {
                 return chain.proceed();
@@ -119,7 +119,7 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, @Nullable T target) throws Exception {
+        public Object handle(@NonNull Message<?> message, @Nullable T target) throws Exception {
             Object result = super.handle(message, target);
             if (shouldInvokeInterceptorChain) {
                 return InterceptorChainParameterResolverFactory.currentInterceptorChain().proceed();

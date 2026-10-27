@@ -17,9 +17,9 @@
 package org.axonframework.deadline;
 
 import org.axonframework.eventhandling.EventMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Represents a Message for a Deadline, specified by its deadline name and optionally containing a deadline payload.
@@ -47,7 +47,7 @@ public interface DeadlineMessage<T> extends EventMessage<T> {
      * @return a copy of this message with the given MetaData
      */
     @Override
-    DeadlineMessage<T> withMetaData(@Nonnull Map<String, ?> metaData);
+    DeadlineMessage<T> withMetaData(@NonNull Map<String, ?> metaData);
 
     /**
      * Returns a copy of this DeadlineMessage with its MetaData merged with given {@code additionalMetaData}. The
@@ -57,5 +57,5 @@ public interface DeadlineMessage<T> extends EventMessage<T> {
      * @return a copy of this message with added additional MetaData
      */
     @Override
-    DeadlineMessage<T> andMetaData(@Nonnull Map<String, ?> additionalMetaData);
+    DeadlineMessage<T> andMetaData(@NonNull Map<String, ?> additionalMetaData);
 }

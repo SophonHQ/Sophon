@@ -25,11 +25,11 @@ import com.codahale.metrics.Timer;
 import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.messaging.Message;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -101,7 +101,7 @@ public class MessageTimerMonitor implements MessageMonitor<Message<?>>, MetricSe
     }
 
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull Message<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull Message<?> message) {
         final Timer.Context allTimerContext = this.allTimer.time();
         final Timer.Context successTimerContext = this.successTimer.time();
         final Timer.Context failureTimerContext = this.failureTimer.time();

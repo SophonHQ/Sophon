@@ -20,6 +20,7 @@ import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -29,7 +30,6 @@ import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -102,8 +102,8 @@ class HandlerEnhancerDefinitionConfigurationTest {
     private static class CustomHandlerEnhancerDefinition implements HandlerEnhancerDefinition {
 
         @Override
-        public @Nonnull
-        <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+        public @NonNull
+        <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
             VERIFY_ENHANCER.set(true);
             return original;
         }

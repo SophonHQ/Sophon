@@ -24,12 +24,12 @@ import org.axonframework.messaging.unitofwork.ExecutionResult;
 import org.axonframework.messaging.unitofwork.MessageProcessingContext;
 import org.axonframework.messaging.unitofwork.RollbackConfiguration;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.messaging.GenericResultMessage.asResultMessage;
 
@@ -120,7 +120,7 @@ public abstract class DisruptorUnitOfWork<T extends Message<?>> extends Abstract
      */
     @Override
     public <R> ResultMessage<R> executeWithResult(Callable<R> task,
-                                                  @Nonnull RollbackConfiguration rollbackConfiguration) {
+                                                  @NonNull RollbackConfiguration rollbackConfiguration) {
         throw new UnsupportedOperationException();
     }
 

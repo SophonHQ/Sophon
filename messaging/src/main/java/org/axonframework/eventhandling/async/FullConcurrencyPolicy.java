@@ -17,8 +17,7 @@
 package org.axonframework.eventhandling.async;
 
 import org.axonframework.eventhandling.EventMessage;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * SequencingPolicy that does not enforce any sequencing requirements on event processing.
@@ -30,7 +29,7 @@ import javax.annotation.Nonnull;
 public class FullConcurrencyPolicy implements SequencingPolicy<EventMessage<?>> {
 
     @Override
-    public Object getSequenceIdentifierFor(@Nonnull EventMessage<?> event) {
+    public Object getSequenceIdentifierFor(@NonNull EventMessage<?> event) {
         return event.getIdentifier();
     }
 }

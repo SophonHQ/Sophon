@@ -18,10 +18,10 @@ package org.axonframework.messaging;
 
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.Serializer;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 /**
  * Generic implementation of {@link ResultMessage}.
@@ -152,12 +152,12 @@ public class GenericResultMessage<R> extends MessageDecorator<R> implements Resu
     }
 
     @Override
-    public GenericResultMessage<R> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericResultMessage<R> withMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericResultMessage<>(getDelegate().withMetaData(metaData), exception);
     }
 
     @Override
-    public GenericResultMessage<R> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericResultMessage<R> andMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericResultMessage<>(getDelegate().andMetaData(metaData), exception);
     }
 

@@ -31,6 +31,7 @@ import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
 import org.axonframework.tracing.SpanScope;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -80,7 +80,7 @@ public abstract class AbstractSagaManager<T> implements EventHandlerInvoker, Sco
     }
 
     @Override
-    public void handle(@Nonnull EventMessage<?> event, @Nonnull Segment segment) throws Exception {
+    public void handle(@NonNull EventMessage<?> event, @NonNull Segment segment) throws Exception {
         Set<AssociationValue> associationValues = extractAssociationValues(event);
         List<String> sagaIds =
                 associationValues.stream()

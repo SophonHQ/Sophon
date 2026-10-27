@@ -18,12 +18,11 @@ package org.axonframework.config;
 
 import org.axonframework.lifecycle.Phase;
 import org.axonframework.messaging.timeout.AxonTaskJanitor;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
 
 /**
  * {@link ConfigurerModule} that registers a shutdown hook to shut down the {@link AxonTaskJanitor} executor service
@@ -44,7 +43,7 @@ public class AxonTaskJanitorShutdownConfigurerModule implements ConfigurerModule
     private static final int SHUTDOWN_PHASE = Phase.EXTERNAL_CONNECTIONS - 100;
 
     @Override
-    public void configureModule(@Nonnull Configurer configurer) {
+    public void configureModule(@NonNull Configurer configurer) {
         configurer.onShutdown(SHUTDOWN_PHASE, this::shutdownJanitor);
     }
 

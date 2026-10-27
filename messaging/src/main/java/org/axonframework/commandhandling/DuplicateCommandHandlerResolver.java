@@ -17,8 +17,7 @@
 package org.axonframework.commandhandling;
 
 import org.axonframework.messaging.MessageHandler;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Functional interface towards resolving the occurrence of a duplicate command handler being subscribed. As such it
@@ -41,7 +40,7 @@ public interface DuplicateCommandHandlerResolver {
      * another handler entirely
      * @throws RuntimeException when registration should fail
      */
-    MessageHandler<? super CommandMessage<?>> resolve(@Nonnull String commandName,
-                                                      @Nonnull MessageHandler<? super CommandMessage<?>> registeredHandler,
-                                                      @Nonnull MessageHandler<? super CommandMessage<?>> candidateHandler);
+    MessageHandler<? super CommandMessage<?>> resolve(@NonNull String commandName,
+                                                      @NonNull MessageHandler<? super CommandMessage<?>> registeredHandler,
+                                                      @NonNull MessageHandler<? super CommandMessage<?>> candidateHandler);
 }

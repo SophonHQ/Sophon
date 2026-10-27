@@ -17,9 +17,9 @@
 package org.axonframework.commandhandling.gateway;
 
 import org.axonframework.commandhandling.CommandMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Interface towards a mechanism that decides whether to schedule a command for execution when a previous attempts
@@ -48,6 +48,6 @@ public interface RetryScheduler {
      * @param commandDispatch The task to be executed to retry a command
      * @return {@code true} if the command has been rescheduled, otherwise {@code false}
      */
-    boolean scheduleRetry(@Nonnull CommandMessage commandMessage, @Nonnull RuntimeException lastFailure,
-                          @Nonnull List<Class<? extends Throwable>[]> failures, @Nonnull Runnable commandDispatch);
+    boolean scheduleRetry(@NonNull CommandMessage commandMessage, @NonNull RuntimeException lastFailure,
+                          @NonNull List<Class<? extends Throwable>[]> failures, @NonNull Runnable commandDispatch);
 }

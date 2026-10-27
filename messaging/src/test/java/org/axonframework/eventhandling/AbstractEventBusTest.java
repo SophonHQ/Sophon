@@ -22,6 +22,7 @@ import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
@@ -32,7 +33,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
@@ -262,7 +262,7 @@ class AbstractEventBusTest {
         }
 
         @Override
-        public Registration subscribe(@Nonnull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
+        public Registration subscribe(@NonNull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
             throw new UnsupportedOperationException();
         }
 
@@ -278,7 +278,7 @@ class AbstractEventBusTest {
             }
 
             @Override
-            public Builder messageMonitor(@Nonnull MessageMonitor<? super EventMessage<?>> messageMonitor) {
+            public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
                 super.messageMonitor(messageMonitor);
                 return this;
             }

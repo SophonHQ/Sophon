@@ -17,8 +17,7 @@
 package org.axonframework.commandhandling;
 
 import org.axonframework.messaging.MessageHandler;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Implementation of {@link DuplicateCommandHandlerResolver} that throws a {@link DuplicateCommandHandlerSubscriptionException}
@@ -44,9 +43,9 @@ public class FailingDuplicateCommandHandlerResolver implements DuplicateCommandH
     }
 
     @Override
-    public MessageHandler<? super CommandMessage<?>> resolve(@Nonnull String commandName,
-                                                             @Nonnull MessageHandler<? super CommandMessage<?>> registeredHandler,
-                                                             @Nonnull MessageHandler<? super CommandMessage<?>> candidateHandler) {
+    public MessageHandler<? super CommandMessage<?>> resolve(@NonNull String commandName,
+                                                             @NonNull MessageHandler<? super CommandMessage<?>> registeredHandler,
+                                                             @NonNull MessageHandler<? super CommandMessage<?>> candidateHandler) {
         throw new DuplicateCommandHandlerSubscriptionException(commandName, registeredHandler, candidateHandler);
     }
 }

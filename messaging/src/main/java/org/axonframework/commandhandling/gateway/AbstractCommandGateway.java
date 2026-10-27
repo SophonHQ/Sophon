@@ -23,10 +23,10 @@ import org.axonframework.commandhandling.callbacks.LoggingCallback;
 import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.common.Registration;
 import org.axonframework.messaging.MessageDispatchInterceptor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.annotation.Nonnull;
 
 import static java.util.Arrays.asList;
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
@@ -67,7 +67,7 @@ public abstract class AbstractCommandGateway {
      * @param callback The callback to notify with the processing result
      * @param <R>      The type of response expected from the command
      */
-    protected <C, R> void send(@Nonnull C command, @Nonnull CommandCallback<? super C, ? super R> callback) {
+    protected <C, R> void send(@NonNull C command, @NonNull CommandCallback<? super C, ? super R> callback) {
         CommandMessage<? extends C> commandMessage = processInterceptors(asCommandMessage(command));
         CommandCallback<? super C, ? super R> commandCallback = callback;
         if (retryScheduler != null) {
@@ -98,7 +98,7 @@ public abstract class AbstractCommandGateway {
      * @return a registration which can be used to cancel the registration of given interceptor
      */
     protected Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super CommandMessage<?>> interceptor) {
+            @NonNull MessageDispatchInterceptor<? super CommandMessage<?>> interceptor) {
         dispatchInterceptors.add(interceptor);
         return () -> dispatchInterceptors.remove(interceptor);
     }
@@ -146,7 +146,7 @@ public abstract class AbstractCommandGateway {
          * @param commandBus a {@link CommandBus} used to dispatch commands
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder commandBus(@Nonnull CommandBus commandBus) {
+        public Builder commandBus(@NonNull CommandBus commandBus) {
             assertNonNull(commandBus, "CommandBus may not be null");
             this.commandBus = commandBus;
             return this;
@@ -159,7 +159,7 @@ public abstract class AbstractCommandGateway {
          * @param retryScheduler a {@link RetryScheduler} capable of performing retries of failed commands
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder retryScheduler(@Nonnull RetryScheduler retryScheduler) {
+        public Builder retryScheduler(@NonNull RetryScheduler retryScheduler) {
             this.retryScheduler = retryScheduler;
             return this;
         }

@@ -16,10 +16,11 @@
 
 package org.axonframework.messaging;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
-import javax.annotation.Nonnull;
 
 /**
  * Interceptor that allows messages to be intercepted and modified before they are dispatched. This interceptor
@@ -38,8 +39,8 @@ public interface MessageDispatchInterceptor<T extends Message<?>> {
      * @param message The message intended to be dispatched
      * @return the message to dispatch
      */
-    @Nonnull
-    default T handle(@Nonnull T message) {
+    @NonNull
+    default T handle(@NonNull T message) {
         return handle(Collections.singletonList(message)).apply(0, message);
     }
 
@@ -50,7 +51,7 @@ public interface MessageDispatchInterceptor<T extends Message<?>> {
      * @param messages The Messages to pre-process
      * @return a function that processes messages based on their position in the list
      */
-    @Nonnull
-    BiFunction<Integer, T, T> handle(@Nonnull List<? extends T> messages);
+    @NonNull
+    BiFunction<Integer, T, T> handle(@NonNull List<? extends T> messages);
 
 }

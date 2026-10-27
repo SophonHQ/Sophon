@@ -20,10 +20,10 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.WrappedMessageHandlingMember;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -39,7 +39,7 @@ import java.util.Set;
 public class SecuredMessageHandlerDefinition implements HandlerEnhancerDefinition {
 
     @Override
-    public <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
         return original.annotationAttributes(Secured.class)
                        .filter(attributes -> attributes.containsKey("secured"))
                        .map(attributes -> (String[]) attributes.get("secured"))
@@ -59,7 +59,7 @@ public class SecuredMessageHandlerDefinition implements HandlerEnhancerDefinitio
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, T target) throws Exception {
+        public Object handle(@NonNull Message<?> message, T target) throws Exception {
             if (!hasRequiredRoles(message)) {
                 throw new UnauthorizedMessageException(
                         "Unauthorized message with identifier [" + message.getIdentifier() + "]"
@@ -68,7 +68,7 @@ public class SecuredMessageHandlerDefinition implements HandlerEnhancerDefinitio
             return super.handle(message, target);
         }
 
-        private boolean hasRequiredRoles(@Nonnull Message<?> message) {
+        private boolean hasRequiredRoles(@NonNull Message<?> message) {
             Set<String> authorities = new HashSet<>();
             if (message.getMetaData().containsKey("authorities")) {
                 //noinspection unchecked

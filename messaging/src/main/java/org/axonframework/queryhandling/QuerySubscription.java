@@ -18,10 +18,10 @@ package org.axonframework.queryhandling;
 
 import org.axonframework.messaging.MessageHandler;
 import org.axonframework.messaging.responsetypes.ResponseType;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Type;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 /**
  * Encapsulates the identifying fields of a Query Handler when one is subscribed to the {@link
@@ -44,7 +44,7 @@ public class QuerySubscription<R> {
      * @param responseType a {@link java.lang.reflect.Type} as the response type of this subscription
      * @param queryHandler the subscribed {@link org.axonframework.messaging.MessageHandler}
      */
-    public QuerySubscription(@Nonnull Type responseType, @Nonnull MessageHandler<? super QueryMessage<?, R>> queryHandler) {
+    public QuerySubscription(@NonNull Type responseType, @NonNull MessageHandler<? super QueryMessage<?, R>> queryHandler) {
         this.responseType = responseType;
         this.queryHandler = queryHandler;
     }
@@ -66,7 +66,7 @@ public class QuerySubscription<R> {
      * @return true of the given {@code queryResponseType} its {@link ResponseType#matches(Type)} returns true, false if
      * otherwise
      */
-    public boolean canHandle(@Nonnull ResponseType<?> queryResponseType) {
+    public boolean canHandle(@NonNull ResponseType<?> queryResponseType) {
         return queryResponseType.matches(responseType);
     }
 

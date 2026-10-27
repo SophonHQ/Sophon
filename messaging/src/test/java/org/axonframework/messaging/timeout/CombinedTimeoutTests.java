@@ -20,6 +20,8 @@ import org.axonframework.eventhandling.GenericEventMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.unitofwork.BatchingUnitOfWork;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.*;
 
 import java.lang.annotation.Annotation;
@@ -29,8 +31,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
@@ -230,17 +230,17 @@ class CombinedTimeoutTests {
         }
 
         @Override
-        public boolean canHandle(@Nonnull Message<?> message) {
+        public boolean canHandle(@NonNull Message<?> message) {
             return true;
         }
 
         @Override
-        public boolean canHandleMessageType(@Nonnull Class<? extends Message> messageType) {
+        public boolean canHandleMessageType(@NonNull Class<? extends Message> messageType) {
             return true;
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, @Nullable Object target) throws Exception {
+        public Object handle(@NonNull Message<?> message, @Nullable Object target) throws Exception {
             callable.call();
             return null;
         }

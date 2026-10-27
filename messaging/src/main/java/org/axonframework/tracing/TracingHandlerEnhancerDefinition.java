@@ -21,12 +21,12 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.WrappedMessageHandlingMember;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Executable;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * Enhances message handlers with the provided {@link SpanFactory}, wrapping handling of the message in a {@link Span}
@@ -67,7 +67,7 @@ public class TracingHandlerEnhancerDefinition implements HandlerEnhancerDefiniti
     }
 
     @Override
-    public <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
         if (!showEventSourcingHandlers && isEventSourcingHandler(original)) {
             return original;
         }
@@ -79,7 +79,7 @@ public class TracingHandlerEnhancerDefinition implements HandlerEnhancerDefiniti
         String signature = toMethodSignature(unwrap.get());
         return new WrappedMessageHandlingMember<T>(original) {
             @Override
-            public Object handle(@Nonnull Message<?> message, T target) throws Exception {
+            public Object handle(@NonNull Message<?> message, T target) throws Exception {
                 return spanFactory.createInternalSpan(() -> getSpanName(target, signature))
                                   .runCallable(() -> super.handle(message, target));
             }

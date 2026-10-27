@@ -20,8 +20,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.axonframework.common.Assert;
 import org.axonframework.common.CollectionUtils;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.util.Collection;
@@ -224,7 +224,7 @@ public class GapAwareTrackingToken implements TrackingToken, Serializable {
                 && otherToken.gaps.containsAll(this.gaps.headSet(otherToken.index));
     }
 
-    @Nonnull
+    @NonNull
     private static GapAwareTrackingToken assertGapAwareTrackingToken(TrackingToken other) {
         Assert.isTrue(
                 other instanceof GapAwareTrackingToken,

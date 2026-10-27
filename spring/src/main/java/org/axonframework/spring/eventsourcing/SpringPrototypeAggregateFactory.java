@@ -23,6 +23,7 @@ import org.axonframework.eventsourcing.AggregateFactory;
 import org.axonframework.eventsourcing.IncompatibleAggregateException;
 import org.axonframework.modelling.command.inspection.AggregateModel;
 import org.axonframework.modelling.command.inspection.AnnotatedAggregateMetaModelFactory;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -30,7 +31,6 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 
@@ -154,12 +154,12 @@ public class SpringPrototypeAggregateFactory<T>
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
     @Override
-    public void setBeanName(@Nonnull String beanName) {
+    public void setBeanName(@NonNull String beanName) {
         this.beanName = beanName;
     }
 

@@ -26,6 +26,7 @@ import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.axonframework.messaging.annotation.MetaDataValue;
 import org.axonframework.messaging.responsetypes.ResponseType;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -45,7 +46,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -431,13 +431,13 @@ public class CommandGatewayFactory {
             private Map<Method, InvocationHandler<?>> dispatchers;
 
             @Override
-            public Builder commandBus(@Nonnull CommandBus commandBus) {
+            public Builder commandBus(@NonNull CommandBus commandBus) {
                 super.commandBus(commandBus);
                 return this;
             }
 
             @Override
-            public Builder retryScheduler(@Nonnull RetryScheduler retryScheduler) {
+            public Builder retryScheduler(@NonNull RetryScheduler retryScheduler) {
                 super.retryScheduler(retryScheduler);
                 return this;
             }
@@ -553,13 +553,13 @@ public class CommandGatewayFactory {
             private boolean forceCallbacks;
 
             @Override
-            public Builder commandBus(@Nonnull CommandBus commandBus) {
+            public Builder commandBus(@NonNull CommandBus commandBus) {
                 super.commandBus(commandBus);
                 return this;
             }
 
             @Override
-            public Builder retryScheduler(@Nonnull RetryScheduler retryScheduler) {
+            public Builder retryScheduler(@NonNull RetryScheduler retryScheduler) {
                 super.retryScheduler(retryScheduler);
                 return this;
             }
@@ -637,8 +637,8 @@ public class CommandGatewayFactory {
         }
 
         @Override
-        public void onResult(@Nonnull CommandMessage<? extends C> commandMessage,
-                             @Nonnull CommandResultMessage<? extends R> commandResultMessage) {
+        public void onResult(@NonNull CommandMessage<? extends C> commandMessage,
+                             @NonNull CommandResultMessage<? extends R> commandResultMessage) {
             callbacks.forEach(callback -> callback.onResult(commandMessage, commandResultMessage));
         }
     }
@@ -792,8 +792,8 @@ public class CommandGatewayFactory {
         }
 
         @Override
-        public void onResult(@Nonnull CommandMessage<? extends C> commandMessage,
-                             @Nonnull CommandResultMessage<? extends R> commandResultMessage) {
+        public void onResult(@NonNull CommandMessage<? extends C> commandMessage,
+                             @NonNull CommandResultMessage<? extends R> commandResultMessage) {
             if (commandResultMessage.isExceptional() || parameterType.matches(commandResultMessage.getPayloadType())) {
                 delegate.onResult(commandMessage, commandResultMessage);
             }

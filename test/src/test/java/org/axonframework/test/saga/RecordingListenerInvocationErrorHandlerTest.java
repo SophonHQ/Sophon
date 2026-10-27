@@ -20,7 +20,7 @@ import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.EventMessageHandler;
 import org.axonframework.eventhandling.GenericEventMessage;
 import org.axonframework.eventhandling.ListenerInvocationErrorHandler;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
 import java.util.Optional;
@@ -112,8 +112,8 @@ class RecordingListenerInvocationErrorHandlerTest {
     private static class NoOpListenerInvocationErrorHandler implements ListenerInvocationErrorHandler {
 
         @Override
-        public void onError(@NotNull Exception exception, @NotNull EventMessage<?> event,
-                            @NotNull EventMessageHandler eventHandler) throws Exception {
+        public void onError(@NonNull Exception exception, @NonNull EventMessage<?> event,
+                            @NonNull EventMessageHandler eventHandler) throws Exception {
             // No-op
         }
     }

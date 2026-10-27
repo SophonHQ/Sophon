@@ -23,11 +23,11 @@ import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryHandlerAdapter;
 import org.axonframework.queryhandling.annotation.AnnotationQueryHandlerAdapter;
 import org.axonframework.spring.config.AbstractAnnotationHandlerBeanPostProcessor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nonnull;
 
 /**
  * Spring Bean post processor that automatically generates an adapter for each bean containing {@link QueryHandler}
@@ -72,7 +72,7 @@ public class AnnotationQueryHandlerBeanPostProcessor extends AbstractAnnotationH
         }
 
         @Override
-        public void doWith(@Nonnull Method method) throws IllegalArgumentException {
+        public void doWith(@NonNull Method method) throws IllegalArgumentException {
             if (AnnotationUtils.findAnnotationAttributes(method, QueryHandler.class).isPresent()) {
                 result.set(true);
             }

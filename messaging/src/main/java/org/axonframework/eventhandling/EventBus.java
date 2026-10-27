@@ -18,10 +18,10 @@ package org.axonframework.eventhandling;
 
 import org.axonframework.messaging.MessageDispatchInterceptorSupport;
 import org.axonframework.messaging.SubscribableMessageSource;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Specification of the mechanism on which the Event Listeners can subscribe for events and event publishers can publish
@@ -59,6 +59,6 @@ public interface EventBus extends SubscribableMessageSource<EventMessage<?>>,
      *
      * @param events The collection of events to publish
      */
-    void publish(@Nonnull List<? extends EventMessage<?>> events);
+    void publish(@NonNull List<? extends EventMessage<?>> events);
 
 }

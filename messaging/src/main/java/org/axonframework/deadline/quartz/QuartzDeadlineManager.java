@@ -35,6 +35,7 @@ import org.axonframework.serialization.xml.XStreamSerializer;
 import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -52,7 +53,6 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 import static java.util.Date.from;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -134,10 +134,10 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
 
     @Override
     @SuppressWarnings("rawtypes")
-    public String schedule(@Nonnull Instant triggerDateTime,
-                           @Nonnull String deadlineName,
+    public String schedule(@NonNull Instant triggerDateTime,
+                           @NonNull String deadlineName,
                            Object messageOrPayload,
-                           @Nonnull ScopeDescriptor deadlineScope) {
+                           @NonNull ScopeDescriptor deadlineScope) {
         DeadlineMessage<Object> deadlineMessage = asDeadlineMessage(deadlineName, messageOrPayload, triggerDateTime);
         String deadlineId = JOB_NAME_PREFIX + deadlineMessage.getIdentifier();
 
@@ -158,21 +158,21 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
     }
 
     @Override
-    public String schedule(@Nonnull Duration triggerDuration,
-                           @Nonnull String deadlineName,
+    public String schedule(@NonNull Duration triggerDuration,
+                           @NonNull String deadlineName,
                            Object messageOrPayload,
-                           @Nonnull ScopeDescriptor deadlineScope) {
+                           @NonNull ScopeDescriptor deadlineScope) {
         return schedule(Instant.now().plus(triggerDuration), deadlineName, messageOrPayload, deadlineScope);
     }
 
     @Override
-    public void cancelSchedule(@Nonnull String deadlineName, @Nonnull String scheduleId) {
+    public void cancelSchedule(@NonNull String deadlineName, @NonNull String scheduleId) {
         Span span = spanFactory.createCancelScheduleSpan(deadlineName, scheduleId);
         runOnPrepareCommitOrNow(span.wrapRunnable(() -> cancelSchedule(jobKey(scheduleId, deadlineName))));
     }
 
     @Override
-    public void cancelAll(@Nonnull String deadlineName) {
+    public void cancelAll(@NonNull String deadlineName) {
         Span span = spanFactory.createCancelAllSpan(deadlineName);
         runOnPrepareCommitOrNow(span.wrapRunnable(() -> {
             try {
@@ -185,7 +185,7 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
     }
 
     @Override
-    public void cancelAllWithinScope(@Nonnull String deadlineName, @Nonnull ScopeDescriptor scope) {
+    public void cancelAllWithinScope(@NonNull String deadlineName, @NonNull ScopeDescriptor scope) {
         // By serializing and deserializing the ScopeDescriptor we make certain that the givenScope is in the right
         // format to compare with the outcome from the
         // DeadlineJob.DeadlineJobDataBinder#deadlineScope(Serializer, JobDataMap) operation.
@@ -238,7 +238,7 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry lifecycle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry lifecycle) {
         lifecycle.onShutdown(Phase.INBOUND_EVENT_CONNECTORS, this::shutdown);
     }
 
@@ -336,7 +336,7 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
          * @deprecated Use {@link #spanFactory(DeadlineManagerSpanFactory)} which provides more configuration options.
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = DefaultDeadlineManagerSpanFactory.builder()
                                                                 .spanFactory(spanFactory).build();
@@ -351,7 +351,7 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
          * @param spanFactory The {@link SpanFactory} implementation
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull DeadlineManagerSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull DeadlineManagerSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = spanFactory;
             return this;

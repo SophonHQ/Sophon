@@ -17,8 +17,7 @@
 package org.axonframework.messaging;
 
 import org.axonframework.common.Registration;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface marking components capable of registering Dispatch Interceptors. Generally, these are Messaging components
@@ -40,5 +39,5 @@ public interface MessageDispatchInterceptorSupport<T extends Message<?>> {
      * @param dispatchInterceptor The interceptor to register
      * @return A Registration, which may be used to deregister the interceptor.
      */
-    Registration registerDispatchInterceptor(@Nonnull MessageDispatchInterceptor<? super T> dispatchInterceptor);
+    Registration registerDispatchInterceptor(@NonNull MessageDispatchInterceptor<? super T> dispatchInterceptor);
 }

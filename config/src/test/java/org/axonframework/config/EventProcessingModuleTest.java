@@ -64,6 +64,7 @@ import org.axonframework.messaging.interceptors.CorrelationDataInterceptor;
 import org.axonframework.messaging.unitofwork.RollbackConfigurationType;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
 import org.axonframework.tracing.TestSpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -82,7 +83,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.ReflectionUtils.getFieldValue;
 import static org.axonframework.utils.AssertUtils.assertWithin;
@@ -1616,7 +1616,7 @@ class EventProcessingModuleTest {
                   .registerEventHandler(c -> new TrackingEventHandler())
                   .registerTokenStore("tracking", c -> new InMemoryTokenStore() {
                       @Override
-                      public int[] fetchSegments(@Nonnull String processorName) {
+                      public int[] fetchSegments(@NonNull String processorName) {
                           tokenStoreInvocation.countDown();
                           return super.fetchSegments(processorName);
                       }
@@ -1663,7 +1663,7 @@ class EventProcessingModuleTest {
 
         @Override
         public Registration registerHandlerInterceptor(
-                @Nonnull MessageHandlerInterceptor<? super EventMessage<?>> interceptor) {
+                @NonNull MessageHandlerInterceptor<? super EventMessage<?>> interceptor) {
             interceptors.add(interceptor);
             return () -> interceptors.remove(interceptor);
         }
@@ -1708,8 +1708,8 @@ class EventProcessingModuleTest {
     private static class StubInterceptor implements MessageHandlerInterceptor<EventMessage<?>> {
 
         @Override
-        public Object handle(@Nonnull UnitOfWork<? extends EventMessage<?>> unitOfWork,
-                             @Nonnull InterceptorChain interceptorChain)
+        public Object handle(@NonNull UnitOfWork<? extends EventMessage<?>> unitOfWork,
+                             @NonNull InterceptorChain interceptorChain)
                 throws Exception {
             return interceptorChain.proceed();
         }
@@ -1775,14 +1775,14 @@ class EventProcessingModuleTest {
         }
 
         @Override
-        public void handleError(@Nonnull ErrorContext errorContext) {
+        public void handleError(@NonNull ErrorContext errorContext) {
             errorCounter.incrementAndGet();
             latch.countDown();
         }
 
         @Override
-        public void onError(@Nonnull Exception exception, @Nonnull EventMessage<?> event,
-                            @Nonnull EventMessageHandler eventHandler) {
+        public void onError(@NonNull Exception exception, @NonNull EventMessage<?> event,
+                            @NonNull EventMessageHandler eventHandler) {
             errorCounter.incrementAndGet();
             latch.countDown();
         }

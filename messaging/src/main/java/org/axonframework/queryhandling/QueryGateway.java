@@ -18,14 +18,14 @@ package org.axonframework.queryhandling;
 import org.axonframework.messaging.MessageDispatchInterceptorSupport;
 import org.axonframework.messaging.responsetypes.ResponseType;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import reactor.util.concurrent.Queues;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static org.axonframework.queryhandling.QueryMessage.queryName;
 
@@ -53,7 +53,7 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @return A {@link java.util.concurrent.CompletableFuture} containing the query result as dictated by the given
      * {@code responseType}
      */
-    default <R, Q> CompletableFuture<R> query(@Nonnull Q query, @Nonnull Class<R> responseType) {
+    default <R, Q> CompletableFuture<R> query(@NonNull Q query, @NonNull Class<R> responseType) {
         return query(queryName(query), query, responseType);
     }
 
@@ -70,8 +70,8 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @return A {@link java.util.concurrent.CompletableFuture} containing the query result as dictated by the given
      * {@code responseType}
      */
-    default <R, Q> CompletableFuture<R> query(@Nonnull String queryName, @Nonnull Q query,
-                                              @Nonnull Class<R> responseType) {
+    default <R, Q> CompletableFuture<R> query(@NonNull String queryName, @NonNull Q query,
+                                              @NonNull Class<R> responseType) {
         return query(queryName, query, ResponseTypes.instanceOf(responseType));
     }
 
@@ -87,7 +87,7 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @return A {@link java.util.concurrent.CompletableFuture} containing the query result as dictated by the given
      * {@code responseType}
      */
-    default <R, Q> CompletableFuture<R> query(@Nonnull Q query, @Nonnull ResponseType<R> responseType) {
+    default <R, Q> CompletableFuture<R> query(@NonNull Q query, @NonNull ResponseType<R> responseType) {
         return query(queryName(query), query, responseType);
     }
 
@@ -104,8 +104,8 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @return A {@link java.util.concurrent.CompletableFuture} containing the query result as dictated by the given
      * {@code responseType}
      */
-    <R, Q> CompletableFuture<R> query(@Nonnull String queryName, @Nonnull Q query,
-                                      @Nonnull ResponseType<R> responseType);
+    <R, Q> CompletableFuture<R> query(@NonNull String queryName, @NonNull Q query,
+                                      @NonNull ResponseType<R> responseType);
 
     /**
      * Sends given {@code query} over the {@link org.axonframework.queryhandling.QueryBus}, expecting a response
@@ -176,8 +176,8 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @param <Q>          The query class
      * @return A stream of results.
      */
-    default <R, Q> Stream<R> scatterGather(@Nonnull Q query, @Nonnull ResponseType<R> responseType, long timeout,
-                                           @Nonnull TimeUnit timeUnit) {
+    default <R, Q> Stream<R> scatterGather(@NonNull Q query, @NonNull ResponseType<R> responseType, long timeout,
+                                           @NonNull TimeUnit timeUnit) {
         return scatterGather(queryName(query), query, responseType, timeout, timeUnit);
     }
 
@@ -195,9 +195,9 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @param <Q>          The query class
      * @return A stream of results.
      */
-    <R, Q> Stream<R> scatterGather(@Nonnull String queryName, @Nonnull Q query, @Nonnull ResponseType<R> responseType,
+    <R, Q> Stream<R> scatterGather(@NonNull String queryName, @NonNull Q query, @NonNull ResponseType<R> responseType,
                                    long timeout,
-                                   @Nonnull TimeUnit timeUnit);
+                                   @NonNull TimeUnit timeUnit);
 
     /**
      * Sends given {@code query} over the {@link QueryBus} and returns result containing initial response and
@@ -218,9 +218,9 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage)
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage, int)
      */
-    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@Nonnull Q query,
-                                                                      @Nonnull Class<I> initialResponseType,
-                                                                      @Nonnull Class<U> updateResponseType) {
+    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull Q query,
+                                                                      @NonNull Class<I> initialResponseType,
+                                                                      @NonNull Class<U> updateResponseType) {
         return subscriptionQuery(queryName(query), query, initialResponseType, updateResponseType);
     }
 
@@ -244,10 +244,10 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage)
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage, int)
      */
-    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@Nonnull String queryName,
-                                                                      @Nonnull Q query,
-                                                                      @Nonnull Class<I> initialResponseType,
-                                                                      @Nonnull Class<U> updateResponseType) {
+    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull String queryName,
+                                                                      @NonNull Q query,
+                                                                      @NonNull Class<I> initialResponseType,
+                                                                      @NonNull Class<U> updateResponseType) {
         return subscriptionQuery(queryName,
                                  query,
                                  ResponseTypes.instanceOf(initialResponseType),
@@ -273,9 +273,9 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage)
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage, int)
      */
-    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@Nonnull Q query,
-                                                                      @Nonnull ResponseType<I> initialResponseType,
-                                                                      @Nonnull ResponseType<U> updateResponseType) {
+    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull Q query,
+                                                                      @NonNull ResponseType<I> initialResponseType,
+                                                                      @NonNull ResponseType<U> updateResponseType) {
         return subscriptionQuery(queryName(query),
                                  query,
                                  initialResponseType,
@@ -307,10 +307,10 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * Example: {@code result.updates().onBackpressureBuffer(100)}
      */
     @Deprecated
-    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@Nonnull String queryName,
-                                                                      @Nonnull Q query,
-                                                                      @Nonnull ResponseType<I> initialResponseType,
-                                                                      @Nonnull ResponseType<U> updateResponseType,
+    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull String queryName,
+                                                                      @NonNull Q query,
+                                                                      @NonNull ResponseType<I> initialResponseType,
+                                                                      @NonNull ResponseType<U> updateResponseType,
                                                                       @Nullable SubscriptionQueryBackpressure backpressure) {
         return subscriptionQuery(queryName,
                                  query,
@@ -340,10 +340,10 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage)
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage, int)
      */
-    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@Nonnull String queryName,
-                                                                      @Nonnull Q query,
-                                                                      @Nonnull ResponseType<I> initialResponseType,
-                                                                      @Nonnull ResponseType<U> updateResponseType) {
+    default <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull String queryName,
+                                                                      @NonNull Q query,
+                                                                      @NonNull ResponseType<I> initialResponseType,
+                                                                      @NonNull ResponseType<U> updateResponseType) {
         return subscriptionQuery(queryName, query, initialResponseType, updateResponseType, Queues.SMALL_BUFFER_SIZE);
     }
 
@@ -374,10 +374,10 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * Example: {@code result.updates().onBackpressureBuffer(100)}
      */
     @Deprecated
-    <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@Nonnull String queryName,
-                                                              @Nonnull Q query,
-                                                              @Nonnull ResponseType<I> initialResponseType,
-                                                              @Nonnull ResponseType<U> updateResponseType,
+    <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull String queryName,
+                                                              @NonNull Q query,
+                                                              @NonNull ResponseType<I> initialResponseType,
+                                                              @NonNull ResponseType<U> updateResponseType,
                                                               @Nullable SubscriptionQueryBackpressure backpressure,
                                                               int updateBufferSize);
 
@@ -403,9 +403,9 @@ public interface QueryGateway extends MessageDispatchInterceptorSupport<QueryMes
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage)
      * @see QueryBus#subscriptionQuery(SubscriptionQueryMessage, int)
      */
-    <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@Nonnull String queryName,
-                                                              @Nonnull Q query,
-                                                              @Nonnull ResponseType<I> initialResponseType,
-                                                              @Nonnull ResponseType<U> updateResponseType,
+    <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull String queryName,
+                                                              @NonNull Q query,
+                                                              @NonNull ResponseType<I> initialResponseType,
+                                                              @NonNull ResponseType<U> updateResponseType,
                                                               int updateBufferSize);
 }

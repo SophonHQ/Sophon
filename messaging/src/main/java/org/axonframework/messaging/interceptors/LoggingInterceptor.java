@@ -21,12 +21,12 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.axonframework.messaging.MessageHandlerInterceptor;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.BiFunction;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 
@@ -68,8 +68,8 @@ public class LoggingInterceptor<T extends Message<?>>
     }
 
     @Override
-    @Nonnull
-    public BiFunction<Integer, T, T> handle(@Nonnull List<? extends T> messages) {
+    @NonNull
+    public BiFunction<Integer, T, T> handle(@NonNull List<? extends T> messages) {
         return (i, message) -> {
             logger.info("Dispatched messages: [{}]", message.getPayloadType().getSimpleName());
             return message;
@@ -77,7 +77,7 @@ public class LoggingInterceptor<T extends Message<?>>
     }
 
     @Override
-    public Object handle(@Nonnull UnitOfWork<? extends T> unitOfWork, @Nonnull InterceptorChain interceptorChain)
+    public Object handle(@NonNull UnitOfWork<? extends T> unitOfWork, @NonNull InterceptorChain interceptorChain)
             throws Exception {
         T message = unitOfWork.getMessage();
         logger.info("Incoming message: [{}]", message.getPayloadType().getSimpleName());

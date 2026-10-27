@@ -21,8 +21,8 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.axonframework.messaging.MessageHandlerInterceptor;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -66,15 +66,15 @@ public class BeanValidationInterceptor<T extends Message<?>>
     }
 
     @Override
-    public Object handle(@Nonnull UnitOfWork<? extends T> unitOfWork, @Nonnull InterceptorChain interceptorChain)
+    public Object handle(@NonNull UnitOfWork<? extends T> unitOfWork, @NonNull InterceptorChain interceptorChain)
             throws Exception {
         handle(unitOfWork.getMessage());
         return interceptorChain.proceed();
     }
 
     @Override
-    @Nonnull
-    public BiFunction<Integer, T, T> handle(@Nonnull List<? extends T> messages) {
+    @NonNull
+    public BiFunction<Integer, T, T> handle(@NonNull List<? extends T> messages) {
         return (index, message) -> {
             Validator validator = validatorFactory.getValidator();
             Set<ConstraintViolation<Object>> violations = validateMessage(message.getPayload(), validator);

@@ -23,12 +23,12 @@ import io.micrometer.core.instrument.Tags;
 import org.axonframework.messaging.Message;
 import org.axonframework.micrometer.reservoir.SlidingTimeWindowReservoir;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 /**
  * Calculates capacity by tracking, within the configured time window, the average message processing time
@@ -182,7 +182,7 @@ public class CapacityMonitor implements MessageMonitor<Message<?>> {
     }
 
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull Message<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull Message<?> message) {
         final Iterable<Tag> tags = tagsBuilder.apply(message);
         final SlidingTimeWindowReservoir timeWindowedDurationMeasurements = createIfAbsent(meterNamePrefix,
                                                                                            Tags.of(tags),

@@ -38,11 +38,11 @@ import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.SimpleSerializedObject;
 import org.axonframework.serialization.SimpleSerializedType;
 import org.axonframework.serialization.UnknownSerializedType;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -138,7 +138,7 @@ public class JacksonSerializer implements Serializer {
     }
 
     @Override
-    public <T> SerializedObject<T> serialize(Object object, @Nonnull Class<T> expectedRepresentation) {
+    public <T> SerializedObject<T> serialize(Object object, @NonNull Class<T> expectedRepresentation) {
         try {
             if (String.class.equals(expectedRepresentation)) {
                 //noinspection unchecked
@@ -186,13 +186,13 @@ public class JacksonSerializer implements Serializer {
     }
 
     @Override
-    public <T> boolean canSerializeTo(@Nonnull Class<T> expectedRepresentation) {
+    public <T> boolean canSerializeTo(@NonNull Class<T> expectedRepresentation) {
         return JsonNode.class.equals(expectedRepresentation) || String.class.equals(expectedRepresentation) ||
                 converter.canConvert(byte[].class, expectedRepresentation);
     }
 
     @Override
-    public <S, T> T deserialize(@Nonnull SerializedObject<S> serializedObject) {
+    public <S, T> T deserialize(@NonNull SerializedObject<S> serializedObject) {
         try {
             if (SerializedType.emptyType().equals(serializedObject.getType())) {
                 return null;
@@ -214,7 +214,7 @@ public class JacksonSerializer implements Serializer {
     }
 
     @Override
-    public Class classForType(@Nonnull SerializedType type) {
+    public Class classForType(@NonNull SerializedType type) {
         if (SimpleSerializedType.emptyType().equals(type)) {
             return Void.class;
         }

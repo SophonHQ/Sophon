@@ -19,10 +19,10 @@ package org.axonframework.tracing.attributes;
 import org.axonframework.messaging.Message;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanAttributesProvider;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collections;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Adds the {@link Message#getPayloadType payload type} as an attribute to the {@link Span}.
@@ -33,7 +33,7 @@ import javax.annotation.Nonnull;
 public class PayloadTypeSpanAttributesProvider implements SpanAttributesProvider {
 
     @Override
-    public @Nonnull Map<String, String> provideForMessage(@Nonnull Message<?> message) {
+    public @NonNull Map<String, String> provideForMessage(@NonNull Message<?> message) {
         return Collections.singletonMap("axon_payload_type", message.getPayloadType().getName());
     }
 }

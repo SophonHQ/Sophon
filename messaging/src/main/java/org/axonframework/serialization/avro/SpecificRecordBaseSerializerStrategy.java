@@ -29,10 +29,10 @@ import org.axonframework.serialization.SerializationException;
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.SimpleSerializedObject;
 import org.axonframework.serialization.SimpleSerializedType;
+import org.jspecify.annotations.NonNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -71,8 +71,8 @@ public class SpecificRecordBaseSerializerStrategy implements AvroSerializerStrat
     }
 
     @Override
-    @Nonnull
-    public SerializedObject<byte[]> serializeToSingleObjectEncoded(@Nonnull Object object) {
+    @NonNull
+    public SerializedObject<byte[]> serializeToSingleObjectEncoded(@NonNull Object object) {
         if (!(object instanceof SpecificRecordBase)) {
             throw new SerializationException(
                     "Expected object to be instance of SpecificRecordBase but it was " + object.getClass()
@@ -97,9 +97,9 @@ public class SpecificRecordBaseSerializerStrategy implements AvroSerializerStrat
     }
 
     @Override
-    @Nonnull
-    public <T> T deserializeFromSingleObjectEncoded(@Nonnull SerializedObject<byte[]> serializedObject,
-                                                    @Nonnull Class<T> readerType) {
+    @NonNull
+    public <T> T deserializeFromSingleObjectEncoded(@NonNull SerializedObject<byte[]> serializedObject,
+                                                    @NonNull Class<T> readerType) {
         if (!SpecificRecordBase.class.isAssignableFrom(readerType)) {
             throw new SerializationException("Expected reader type to be assignable from SpecificRecordBase but it was "
                                                      + readerType.getCanonicalName());
@@ -145,9 +145,9 @@ public class SpecificRecordBaseSerializerStrategy implements AvroSerializerStrat
     }
 
     @Override
-    @Nonnull
-    public <T> T deserializeFromGenericRecord(@Nonnull SerializedObject<GenericRecord> serializedObject,
-                                              @Nonnull Class<T> readerType) {
+    @NonNull
+    public <T> T deserializeFromGenericRecord(@NonNull SerializedObject<GenericRecord> serializedObject,
+                                              @NonNull Class<T> readerType) {
         if (!SpecificRecordBase.class.isAssignableFrom(readerType)) {
             throw new SerializationException("Expected reader type to be assignable from SpecificRecordBase but it was "
                                                      + readerType.getCanonicalName());
@@ -173,12 +173,12 @@ public class SpecificRecordBaseSerializerStrategy implements AvroSerializerStrat
     }
 
     @Override
-    public boolean test(@Nonnull Class<?> payloadType) {
+    public boolean test(@NonNull Class<?> payloadType) {
         return SpecificRecordBase.class.isAssignableFrom(payloadType);
     }
 
     @Override
-    public void applyConfig(@Nonnull AvroSerializerStrategyConfig avroSerializerStrategyConfig) {
+    public void applyConfig(@NonNull AvroSerializerStrategyConfig avroSerializerStrategyConfig) {
         assertNonNull(avroSerializerStrategyConfig, "AvroSerializerStrategyConfig may not be null");
         this.avroSerializerStrategyConfig = avroSerializerStrategyConfig;
     }

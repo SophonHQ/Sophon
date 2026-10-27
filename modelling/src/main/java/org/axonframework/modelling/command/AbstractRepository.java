@@ -31,6 +31,7 @@ import org.axonframework.modelling.command.inspection.AggregateModel;
 import org.axonframework.modelling.command.inspection.AnnotatedAggregateMetaModelFactory;
 import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +43,6 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -85,13 +85,13 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
     }
 
     @Override
-    public A newInstance(@Nonnull Callable<T> factoryMethod) throws Exception {
+    public A newInstance(@NonNull Callable<T> factoryMethod) throws Exception {
         return newInstance(factoryMethod, a -> {});
     }
 
     @Override
-    public A newInstance(@Nonnull Callable<T> factoryMethod,
-                         @Nonnull Consumer<Aggregate<T>> initMethod) throws Exception {
+    public A newInstance(@NonNull Callable<T> factoryMethod,
+                         @NonNull Consumer<Aggregate<T>> initMethod) throws Exception {
         UnitOfWork<?> uow = currentUnitOfWork();
         AtomicReference<A> aggregateReference = new AtomicReference<>();
         // a constructor may apply events, and the persistence of an aggregate must take precedence over publishing its events.
@@ -140,7 +140,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
      * @throws RuntimeException           any exception thrown by implementing classes
      */
     @Override
-    public A load(@Nonnull String aggregateIdentifier, Long expectedVersion) {
+    public A load(@NonNull String aggregateIdentifier, Long expectedVersion) {
         return spanFactory.createLoadSpan(aggregateIdentifier)
                           .runSupplier(() -> {
                               UnitOfWork<?> uow = currentUnitOfWork();
@@ -166,7 +166,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
 
 
     @Override
-    public Aggregate<T> loadOrCreate(@Nonnull String aggregateIdentifier, @Nonnull Callable<T> factoryMethod) {
+    public Aggregate<T> loadOrCreate(@NonNull String aggregateIdentifier, @NonNull Callable<T> factoryMethod) {
         UnitOfWork<?> uow = currentUnitOfWork();
         Map<String, A> aggregates = managedAggregates(uow);
         A aggregate = aggregates.computeIfAbsent(
@@ -227,7 +227,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
     }
 
     @Override
-    public A load(@Nonnull String aggregateIdentifier) {
+    public A load(@NonNull String aggregateIdentifier) {
         return load(aggregateIdentifier, null);
     }
 
@@ -390,7 +390,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
     }
 
     @Override
-    public void send(@Nonnull Message<?> message, @Nonnull ScopeDescriptor scopeDescription) throws Exception {
+    public void send(@NonNull Message<?> message, @NonNull ScopeDescriptor scopeDescription) throws Exception {
         if (canResolve(scopeDescription)) {
             String aggregateIdentifier = ((AggregateScopeDescriptor) scopeDescription).getIdentifier().toString();
             try {
@@ -403,7 +403,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
     }
 
     @Override
-    public boolean canResolve(@Nonnull ScopeDescriptor scopeDescription) {
+    public boolean canResolve(@NonNull ScopeDescriptor scopeDescription) {
         return (scopeDescription instanceof AggregateScopeDescriptor) &&
                 (matchesSimpleType((AggregateScopeDescriptor) scopeDescription)
                         || matchesDeclaredType((AggregateScopeDescriptor) scopeDescription));
@@ -465,7 +465,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
          *                                 handlers contained in the Aggregate
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder<T> parameterResolverFactory(@Nonnull ParameterResolverFactory parameterResolverFactory) {
+        public Builder<T> parameterResolverFactory(@NonNull ParameterResolverFactory parameterResolverFactory) {
             assertNonNull(parameterResolverFactory, "ParameterResolverFactory may not be null");
             this.parameterResolverFactory = parameterResolverFactory;
             return this;
@@ -479,7 +479,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
          *                          aggregateType}.
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder<T> handlerDefinition(@Nonnull HandlerDefinition handlerDefinition) {
+        public Builder<T> handlerDefinition(@NonNull HandlerDefinition handlerDefinition) {
             assertNonNull(handlerDefinition, "HandlerDefinition may not be null");
             this.handlerDefinition = handlerDefinition;
             return this;
@@ -493,7 +493,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
          *                       Repository} will store
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder<T> aggregateModel(@Nonnull AggregateModel<T> aggregateModel) {
+        public Builder<T> aggregateModel(@NonNull AggregateModel<T> aggregateModel) {
             assertNonNull(aggregateModel, "AggregateModel may not be null");
             this.aggregateModel = aggregateModel;
             return this;
@@ -510,7 +510,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
          *                 {@link Repository}.
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder<T> subtypes(@Nonnull Set<Class<? extends T>> subtypes) {
+        public Builder<T> subtypes(@NonNull Set<Class<? extends T>> subtypes) {
             assertNonNull(subtypes, "Subtypes of the aggregate may not be null");
             this.subtypes = new HashSet<>(subtypes);
             return this;
@@ -526,7 +526,7 @@ public abstract class AbstractRepository<T, A extends Aggregate<T>> implements R
          *                {@link Repository}.
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder<T> subtype(@Nonnull Class<? extends T> subtype) {
+        public Builder<T> subtype(@NonNull Class<? extends T> subtype) {
             assertNonNull(subtype, "A subtype of the aggregate may not be null");
             this.subtypes.add(subtype);
             return this;

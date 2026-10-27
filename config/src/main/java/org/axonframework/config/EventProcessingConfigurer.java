@@ -42,12 +42,12 @@ import org.axonframework.messaging.deadletter.SequencedDeadLetterQueue;
 import org.axonframework.messaging.unitofwork.RollbackConfiguration;
 import org.axonframework.modelling.saga.repository.SagaStore;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 
 /**
  * Defines a contract for configuring event processing.
@@ -687,8 +687,8 @@ public interface EventProcessingConfigurer {
      * @return The current {@link EventProcessingConfigurer} instance, for fluent interfacing.
      */
     default EventProcessingConfigurer registerDeadLetterQueue(
-            @Nonnull String processingGroup,
-            @Nonnull Function<Configuration, SequencedDeadLetterQueue<EventMessage<?>>> queueBuilder
+            @NonNull String processingGroup,
+            @NonNull Function<Configuration, SequencedDeadLetterQueue<EventMessage<?>>> queueBuilder
     ) {
         return this;
     }
@@ -706,7 +706,7 @@ public interface EventProcessingConfigurer {
      * @return The current {@link EventProcessingConfigurer} instance, for fluent interfacing.
      */
     default EventProcessingConfigurer registerDefaultDeadLetterPolicy(
-            @Nonnull Function<Configuration, EnqueuePolicy<EventMessage<?>>> policyBuilder
+            @NonNull Function<Configuration, EnqueuePolicy<EventMessage<?>>> policyBuilder
     ) {
         return this;
     }
@@ -726,8 +726,8 @@ public interface EventProcessingConfigurer {
      * @return The current {@link EventProcessingConfigurer} instance, for fluent interfacing.
      */
     default EventProcessingConfigurer registerDeadLetterPolicy(
-            @Nonnull String processingGroup,
-            @Nonnull Function<Configuration, EnqueuePolicy<EventMessage<?>>> policyBuilder
+            @NonNull String processingGroup,
+            @NonNull Function<Configuration, EnqueuePolicy<EventMessage<?>>> policyBuilder
     ) {
         return this;
     }
@@ -746,8 +746,8 @@ public interface EventProcessingConfigurer {
      * @return The current {@link EventProcessingConfigurer} instance, for fluent interfacing.
      */
     default EventProcessingConfigurer registerDeadLetteringEventHandlerInvokerConfiguration(
-            @Nonnull String processingGroup,
-            @Nonnull DeadLetteringInvokerConfiguration configuration
+            @NonNull String processingGroup,
+            @NonNull DeadLetteringInvokerConfiguration configuration
     ) {
         return this;
     }

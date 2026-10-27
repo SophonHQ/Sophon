@@ -98,6 +98,7 @@ import org.axonframework.serialization.upcasting.event.EventUpcasterChain;
 import org.axonframework.serialization.xml.XStreamSerializer;
 import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,7 +123,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static java.util.stream.Collectors.toList;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -789,42 +789,42 @@ public class DefaultConfigurer implements Configurer {
     }
 
     @Override
-    public Configurer registerEventUpcaster(@Nonnull Function<Configuration, EventUpcaster> upcasterBuilder) {
+    public Configurer registerEventUpcaster(@NonNull Function<Configuration, EventUpcaster> upcasterBuilder) {
         upcasters.add(new Component<>(config, "upcaster", upcasterBuilder));
         return this;
     }
 
     @Override
     public Configurer configureMessageMonitor(
-            @Nonnull Function<Configuration, BiFunction<Class<?>, String, MessageMonitor<Message<?>>>> builder) {
+            @NonNull Function<Configuration, BiFunction<Class<?>, String, MessageMonitor<Message<?>>>> builder) {
         messageMonitorFactoryBuilder.add((conf, type, name) -> builder.apply(conf).apply(type, name));
         return this;
     }
 
     @Override
-    public Configurer configureMessageMonitor(@Nonnull Class<?> componentType,
-                                              @Nonnull MessageMonitorFactory messageMonitorFactory) {
+    public Configurer configureMessageMonitor(@NonNull Class<?> componentType,
+                                              @NonNull MessageMonitorFactory messageMonitorFactory) {
         messageMonitorFactoryBuilder.add(componentType, messageMonitorFactory);
         return this;
     }
 
     @Override
-    public Configurer configureMessageMonitor(@Nonnull Class<?> componentType,
-                                              @Nonnull String componentName,
-                                              @Nonnull MessageMonitorFactory messageMonitorFactory) {
+    public Configurer configureMessageMonitor(@NonNull Class<?> componentType,
+                                              @NonNull String componentName,
+                                              @NonNull MessageMonitorFactory messageMonitorFactory) {
         messageMonitorFactoryBuilder.add(componentType, componentName, messageMonitorFactory);
         return this;
     }
 
     @Override
     public Configurer configureCorrelationDataProviders(
-            @Nonnull Function<Configuration, List<CorrelationDataProvider>> correlationDataProviderBuilder) {
+            @NonNull Function<Configuration, List<CorrelationDataProvider>> correlationDataProviderBuilder) {
         correlationProviders.update(correlationDataProviderBuilder);
         return this;
     }
 
     @Override
-    public Configurer registerModule(@Nonnull ModuleConfiguration module) {
+    public Configurer registerModule(@NonNull ModuleConfiguration module) {
         logger.debug("Registering module [{}]", module.getClass().getSimpleName());
         if (initialized) {
             module.initialize(config);
@@ -834,15 +834,15 @@ public class DefaultConfigurer implements Configurer {
     }
 
     @Override
-    public <C> Configurer registerComponent(@Nonnull Class<C> componentType,
-                                            @Nonnull Function<Configuration, ? extends C> componentBuilder) {
+    public <C> Configurer registerComponent(@NonNull Class<C> componentType,
+                                            @NonNull Function<Configuration, ? extends C> componentBuilder) {
         logger.debug("Registering component [{}]", componentType.getSimpleName());
         components.put(componentType, new Component<>(config, componentType.getSimpleName(), componentBuilder));
         return this;
     }
 
     @Override
-    public Configurer registerCommandHandler(@Nonnull Function<Configuration, Object> commandHandlerBuilder) {
+    public Configurer registerCommandHandler(@NonNull Function<Configuration, Object> commandHandlerBuilder) {
         messageHandlerRegistrars.add(new Component<>(
                 () -> config,
                 "CommandHandlerRegistrar",
@@ -860,7 +860,7 @@ public class DefaultConfigurer implements Configurer {
     }
 
     @Override
-    public Configurer registerQueryHandler(@Nonnull Function<Configuration, Object> queryHandlerBuilder) {
+    public Configurer registerQueryHandler(@NonNull Function<Configuration, Object> queryHandlerBuilder) {
         messageHandlerRegistrars.add(new Component<>(
                 () -> config,
                 "QueryHandlerRegistrar",
@@ -878,7 +878,7 @@ public class DefaultConfigurer implements Configurer {
     }
 
     @Override
-    public Configurer registerMessageHandler(@Nonnull Function<Configuration, Object> messageHandlerBuilder) {
+    public Configurer registerMessageHandler(@NonNull Function<Configuration, Object> messageHandlerBuilder) {
         Component<Object> messageHandler = new Component<>(() -> config, "", messageHandlerBuilder);
         Class<?> handlerClass = messageHandler.get().getClass();
         if (isCommandHandler(handlerClass)) {
@@ -895,7 +895,7 @@ public class DefaultConfigurer implements Configurer {
 
     @Override
     public Configurer configureEmbeddedEventStore(
-            @Nonnull Function<Configuration, EventStorageEngine> storageEngineBuilder) {
+            @NonNull Function<Configuration, EventStorageEngine> storageEngineBuilder) {
         return configureEventStore(c -> {
             MessageMonitor<Message<?>> monitor =
                     messageMonitorFactoryComponent.get().apply(EmbeddedEventStore.class, "eventStore");
@@ -909,26 +909,26 @@ public class DefaultConfigurer implements Configurer {
     }
 
     @Override
-    public Configurer configureEventSerializer(@Nonnull Function<Configuration, Serializer> eventSerializerBuilder) {
+    public Configurer configureEventSerializer(@NonNull Function<Configuration, Serializer> eventSerializerBuilder) {
         eventSerializer.update(eventSerializerBuilder);
         return this;
     }
 
     @Override
     public Configurer configureMessageSerializer(
-            @Nonnull Function<Configuration, Serializer> messageSerializerBuilder) {
+            @NonNull Function<Configuration, Serializer> messageSerializerBuilder) {
         messageSerializer.update(messageSerializerBuilder);
         return this;
     }
 
     @Override
-    public <A> Configurer configureAggregate(@Nonnull AggregateConfiguration<A> aggregateConfiguration) {
+    public <A> Configurer configureAggregate(@NonNull AggregateConfiguration<A> aggregateConfiguration) {
         return registerModule(aggregateConfiguration);
     }
 
     @Override
     public Configurer registerHandlerDefinition(
-            @Nonnull BiFunction<Configuration, Class, HandlerDefinition> handlerDefinitionClass) {
+            @NonNull BiFunction<Configuration, Class, HandlerDefinition> handlerDefinitionClass) {
         this.handlerDefinition.update(c -> clazz -> handlerDefinitionClass.apply(c, clazz));
         return this;
     }
@@ -1129,7 +1129,7 @@ public class DefaultConfigurer implements Configurer {
     private class ConfigurationImpl implements Configuration {
 
         @Override
-        public <T> T getComponent(@Nonnull Class<T> componentType, @Nonnull Supplier<T> defaultImpl) {
+        public <T> T getComponent(@NonNull Class<T> componentType, @NonNull Supplier<T> defaultImpl) {
             Object component = components.computeIfAbsent(
                     componentType,
                     type -> new Component<>(config,
@@ -1140,8 +1140,8 @@ public class DefaultConfigurer implements Configurer {
         }
 
         @Override
-        public <M extends Message<?>> MessageMonitor<? super M> messageMonitor(@Nonnull Class<?> componentType,
-                                                                               @Nonnull String componentName) {
+        public <M extends Message<?>> MessageMonitor<? super M> messageMonitor(@NonNull Class<?> componentType,
+                                                                               @NonNull String componentName) {
             return messageMonitorFactoryComponent.get().apply(componentType, componentName);
         }
 

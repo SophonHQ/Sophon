@@ -33,6 +33,7 @@ import org.axonframework.messaging.MessageHandler;
 import org.axonframework.messaging.MessageHandlerInterceptor;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.tracing.TestSpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -41,7 +42,6 @@ import org.mockito.junit.jupiter.*;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
-import javax.annotation.Nonnull;
 
 import static org.awaitility.Awaitility.await;
 import static org.axonframework.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
@@ -300,13 +300,13 @@ class DistributedCommandBusTest {
     private static class StubCommandBusConnector implements CommandBusConnector {
 
         @Override
-        public <C> void send(@Nonnull Member destination, @Nonnull CommandMessage<? extends C> command) {
+        public <C> void send(@NonNull Member destination, @NonNull CommandMessage<? extends C> command) {
             //Do nothing
         }
 
         @Override
-        public <C, R> void send(@Nonnull Member destination, @Nonnull CommandMessage<C> command,
-                                @Nonnull CommandCallback<? super C, R> callback) {
+        public <C, R> void send(@NonNull Member destination, @NonNull CommandMessage<C> command,
+                                @NonNull CommandCallback<? super C, R> callback) {
             if ("fail".equals(command.getPayload())) {
                 callback.onResult(command, asCommandResultMessage(new Exception("Failing")));
             } else {
@@ -315,14 +315,14 @@ class DistributedCommandBusTest {
         }
 
         @Override
-        public Registration subscribe(@Nonnull String commandName,
-                                      @Nonnull MessageHandler<? super CommandMessage<?>> handler) {
+        public Registration subscribe(@NonNull String commandName,
+                                      @NonNull MessageHandler<? super CommandMessage<?>> handler) {
             return null;
         }
 
         @Override
         public Registration registerHandlerInterceptor(
-                @Nonnull MessageHandlerInterceptor<? super CommandMessage<?>> handlerInterceptor
+                @NonNull MessageHandlerInterceptor<? super CommandMessage<?>> handlerInterceptor
         ) {
             return null;
         }

@@ -17,8 +17,7 @@
 package org.axonframework.messaging;
 
 import org.axonframework.common.Registration;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface marking components capable of registering Handler Interceptors. Generally, these are Messaging components
@@ -39,5 +38,5 @@ public interface MessageHandlerInterceptorSupport<T extends Message<?>> {
      * @param handlerInterceptor The interceptor to register
      * @return A Registration, which may be used to deregister the interceptor.
      */
-    Registration registerHandlerInterceptor(@Nonnull MessageHandlerInterceptor<? super T> handlerInterceptor);
+    Registration registerHandlerInterceptor(@NonNull MessageHandlerInterceptor<? super T> handlerInterceptor);
 }

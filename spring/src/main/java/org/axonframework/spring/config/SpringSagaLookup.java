@@ -17,6 +17,7 @@
 package org.axonframework.spring.config;
 
 import org.axonframework.spring.stereotype.Saga;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -24,8 +25,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-
-import javax.annotation.Nonnull;
 
 /**
  * A {@link BeanDefinitionRegistryPostProcessor} implementation that scans for Saga types and registers a {@link
@@ -39,7 +38,7 @@ public class SpringSagaLookup implements BeanDefinitionRegistryPostProcessor {
     private static final Logger logger = LoggerFactory.getLogger(SpringSagaLookup.class);
 
     @Override
-    public void postProcessBeanFactory(@Nonnull ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
         if (!(beanFactory instanceof BeanDefinitionRegistry)) {
             logger.warn("Given bean factory is not a BeanDefinitionRegistry. Cannot auto-configure Sagas");
             return;
@@ -70,7 +69,7 @@ public class SpringSagaLookup implements BeanDefinitionRegistryPostProcessor {
 
     @Override
     public void postProcessBeanDefinitionRegistry(
-            @Nonnull BeanDefinitionRegistry beanDefinitionRegistry
+            @NonNull BeanDefinitionRegistry beanDefinitionRegistry
     ) throws BeansException {
         // No action required.
     }

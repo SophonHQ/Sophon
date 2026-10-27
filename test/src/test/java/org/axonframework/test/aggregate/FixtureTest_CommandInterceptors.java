@@ -16,7 +16,6 @@
 
 package org.axonframework.test.aggregate;
 
-
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.GenericCommandMessage;
@@ -33,6 +32,7 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateMember;
 import org.axonframework.modelling.command.CommandHandlerInterceptor;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 import static org.junit.jupiter.api.Assertions.*;
@@ -421,10 +420,10 @@ class FixtureTest_CommandInterceptors {
 
     private static class TestCommandDispatchInterceptor implements MessageDispatchInterceptor<CommandMessage<?>> {
 
-        @Nonnull
+        @NonNull
         @Override
         public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(
-                @Nonnull List<? extends CommandMessage<?>> messages
+                @NonNull List<? extends CommandMessage<?>> messages
         ) {
             return (index, message) -> {
                 Map<String, Object> testMetaDataMap = new HashMap<>();
@@ -438,8 +437,8 @@ class FixtureTest_CommandInterceptors {
     private static class TestCommandHandlerInterceptor implements MessageHandlerInterceptor<CommandMessage<?>> {
 
         @Override
-        public Object handle(@Nonnull UnitOfWork<? extends CommandMessage<?>> unitOfWork,
-                             @Nonnull InterceptorChain interceptorChain) throws Exception {
+        public Object handle(@NonNull UnitOfWork<? extends CommandMessage<?>> unitOfWork,
+                             @NonNull InterceptorChain interceptorChain) throws Exception {
             unitOfWork.registerCorrelationDataProvider(new SimpleCorrelationDataProvider(HANDLER_META_DATA_KEY));
             return interceptorChain.proceed();
         }

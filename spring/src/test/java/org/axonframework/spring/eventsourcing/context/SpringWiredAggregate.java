@@ -17,11 +17,10 @@
 package org.axonframework.spring.eventsourcing.context;
 
 import org.axonframework.spring.stereotype.Aggregate;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
-import javax.annotation.Nonnull;
 
 /**
  * Plain aggregate wired through Spring with the {@link Aggregate} annotation.
@@ -41,7 +40,7 @@ public class SpringWiredAggregate implements ApplicationContextAware {
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;
     }
 }

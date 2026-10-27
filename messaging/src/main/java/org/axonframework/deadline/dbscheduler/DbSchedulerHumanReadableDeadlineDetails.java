@@ -23,11 +23,11 @@ import org.axonframework.messaging.ScopeDescriptor;
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.SimpleSerializedObject;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.lang.String.format;
 
@@ -67,8 +67,8 @@ public class DbSchedulerHumanReadableDeadlineDetails implements Serializable {
      * @param metaData             The {@link String} containing the metadata about the deadline. This can be null.
      */
     @SuppressWarnings("squid:S107")
-    public DbSchedulerHumanReadableDeadlineDetails(@Nonnull String deadlineName, @Nonnull String scopeDescriptor,
-                                                   @Nonnull String scopeDescriptorClass, @Nullable String payload,
+    public DbSchedulerHumanReadableDeadlineDetails(@NonNull String deadlineName, @NonNull String scopeDescriptor,
+                                                   @NonNull String scopeDescriptorClass, @Nullable String payload,
                                                    @Nullable String payloadClass, @Nullable String payloadRevision,
                                                    @Nullable String metaData) {
         this.deadlineName = deadlineName;
@@ -93,10 +93,10 @@ public class DbSchedulerHumanReadableDeadlineDetails implements Serializable {
      * @return The serialized {@link String} representation of the details.
      */
     @SuppressWarnings("rawtypes")
-    static DbSchedulerHumanReadableDeadlineDetails serialized(@Nonnull String deadlineName,
-                                                              @Nonnull ScopeDescriptor descriptor,
-                                                              @Nonnull DeadlineMessage message,
-                                                              @Nonnull Serializer serializer) {
+    static DbSchedulerHumanReadableDeadlineDetails serialized(@NonNull String deadlineName,
+                                                              @NonNull ScopeDescriptor descriptor,
+                                                              @NonNull DeadlineMessage message,
+                                                              @NonNull Serializer serializer) {
         SerializedObject<String> serializedDescriptor = serializer.serialize(descriptor, String.class);
         SerializedObject<String> serializedPayload = serializer.serialize(message.getPayload(), String.class);
         SerializedObject<String> serializedMetaData = serializer.serialize(message.getMetaData(), String.class);

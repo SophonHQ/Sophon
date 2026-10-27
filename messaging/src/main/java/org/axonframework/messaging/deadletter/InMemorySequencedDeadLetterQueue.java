@@ -18,6 +18,7 @@ package org.axonframework.messaging.deadletter;
 
 import org.axonframework.common.StringUtils;
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertStrictPositive;
 
@@ -104,8 +104,8 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
     }
 
     @Override
-    public void enqueue(@Nonnull Object sequenceIdentifier,
-                        @Nonnull DeadLetter<? extends M> letter) throws DeadLetterQueueOverflowException {
+    public void enqueue(@NonNull Object sequenceIdentifier,
+                        @NonNull DeadLetter<? extends M> letter) throws DeadLetterQueueOverflowException {
         if (isFull(sequenceIdentifier)) {
             throw new DeadLetterQueueOverflowException(sequenceIdentifier);
         }
@@ -156,8 +156,8 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
 
     @Override
     public void requeue(
-            @Nonnull DeadLetter<? extends M> letter,
-            @Nonnull UnaryOperator<DeadLetter<? extends M>> letterUpdater
+            @NonNull DeadLetter<? extends M> letter,
+            @NonNull UnaryOperator<DeadLetter<? extends M>> letterUpdater
     ) throws NoSuchDeadLetterException {
         Optional<Map.Entry<String, Deque<DeadLetter<? extends M>>>> optionalSequence =
                 deadLetters.entrySet()
@@ -182,7 +182,7 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
     }
 
     @Override
-    public boolean contains(@Nonnull Object sequenceIdentifier) {
+    public boolean contains(@NonNull Object sequenceIdentifier) {
         if (logger.isDebugEnabled()) {
             logger.debug("Validating existence of sequence identifier [{}].", sequenceIdentifier);
         }
@@ -190,7 +190,7 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
     }
 
     @Override
-    public Iterable<DeadLetter<? extends M>> deadLetterSequence(@Nonnull Object sequenceIdentifier) {
+    public Iterable<DeadLetter<? extends M>> deadLetterSequence(@NonNull Object sequenceIdentifier) {
         String identifier = toIdentifier(sequenceIdentifier);
         return contains(identifier) ? new ArrayList<>(deadLetters.get(identifier)) : Collections.emptyList();
     }
@@ -207,7 +207,7 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
     }
 
     @Override
-    public boolean isFull(@Nonnull Object sequenceIdentifier) {
+    public boolean isFull(@NonNull Object sequenceIdentifier) {
         String identifier = toIdentifier(sequenceIdentifier);
         return maximumNumberOfSequencesReached(identifier) || maximumSequenceSizeReached(identifier);
     }
@@ -229,7 +229,7 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
     }
 
     @Override
-    public long sequenceSize(@Nonnull Object sequenceIdentifier) {
+    public long sequenceSize(@NonNull Object sequenceIdentifier) {
         String identifier = toIdentifier(sequenceIdentifier);
         return contains(identifier) ? deadLetters.get(identifier).size() : 0L;
     }
@@ -246,8 +246,8 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
     }
 
     @Override
-    public boolean process(@Nonnull Predicate<DeadLetter<? extends M>> sequenceFilter,
-                           @Nonnull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask) {
+    public boolean process(@NonNull Predicate<DeadLetter<? extends M>> sequenceFilter,
+                           @NonNull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask) {
         if (deadLetters.isEmpty()) {
             logger.debug("Received a request to process dead letters but there are none.");
             return false;

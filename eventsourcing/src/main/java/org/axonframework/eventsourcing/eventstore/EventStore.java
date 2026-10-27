@@ -22,9 +22,9 @@ import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.TrackedEventMessage;
 import org.axonframework.eventhandling.TrackingToken;
 import org.axonframework.messaging.StreamableMessageSource;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 /**
  * Provides a mechanism to open streams from events in the the underlying event storage.
@@ -47,7 +47,7 @@ public interface EventStore
      * @param aggregateIdentifier the identifier of the aggregate whose events to fetch
      * @return a stream of all currently stored events of the aggregate
      */
-    DomainEventStream readEvents(@Nonnull String aggregateIdentifier);
+    DomainEventStream readEvents(@NonNull String aggregateIdentifier);
 
     /**
      * Open an event stream containing all domain events belonging to the given {@code aggregateIdentifier}.
@@ -62,7 +62,7 @@ public interface EventStore
      * @param firstSequenceNumber the expected sequence number of the first event in the returned stream
      * @return a stream of all currently stored events of the aggregate
      */
-    default DomainEventStream readEvents(@Nonnull String aggregateIdentifier, long firstSequenceNumber) {
+    default DomainEventStream readEvents(@NonNull String aggregateIdentifier, long firstSequenceNumber) {
         DomainEventStream wholeStream = readEvents(aggregateIdentifier);
         return DomainEventStream
                 .of(wholeStream.asStream().filter(event -> event.getSequenceNumber() >= firstSequenceNumber),
@@ -84,7 +84,7 @@ public interface EventStore
      *
      * @param snapshot The snapshot to replace part of the DomainEventStream.
      */
-    void storeSnapshot(@Nonnull DomainEventMessage<?> snapshot);
+    void storeSnapshot(@NonNull DomainEventMessage<?> snapshot);
 
     @Override
     default Optional<Long> lastSequenceNumberFor(String aggregateIdentifier) {

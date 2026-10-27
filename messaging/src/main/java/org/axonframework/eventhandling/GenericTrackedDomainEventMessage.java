@@ -17,11 +17,11 @@
 package org.axonframework.eventhandling;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Instant;
 import java.util.Map;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 /**
  * Generic implementation of a {@link DomainEventMessage} that is also a {@link TrackedEventMessage}.
@@ -83,14 +83,14 @@ public class GenericTrackedDomainEventMessage<T> extends GenericDomainEventMessa
     }
 
     @Override
-    public GenericTrackedDomainEventMessage<T> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericTrackedDomainEventMessage<T> withMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericTrackedDomainEventMessage<>(trackingToken, getType(), getAggregateIdentifier(),
                                                       getSequenceNumber(), getDelegate().withMetaData(metaData),
                                                       getTimestamp());
     }
 
     @Override
-    public GenericTrackedDomainEventMessage<T> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericTrackedDomainEventMessage<T> andMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericTrackedDomainEventMessage<>(trackingToken, getType(), getAggregateIdentifier(),
                                                       getSequenceNumber(), getDelegate().andMetaData(metaData),
                                                       getTimestamp());

@@ -25,6 +25,7 @@ import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +33,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -74,7 +74,7 @@ public abstract class AbstractEventStore extends AbstractEventBus implements Eve
      * followed by subsequent domain events.
      */
     @Override
-    public DomainEventStream readEvents(@Nonnull String aggregateIdentifier) {
+    public DomainEventStream readEvents(@NonNull String aggregateIdentifier) {
         Optional<DomainEventMessage<?>> optionalSnapshot;
         try {
             optionalSnapshot = storageEngine.readSnapshot(aggregateIdentifier);
@@ -134,7 +134,7 @@ public abstract class AbstractEventStore extends AbstractEventBus implements Eve
     }
 
     @Override
-    public DomainEventStream readEvents(@Nonnull String aggregateIdentifier, long firstSequenceNumber) {
+    public DomainEventStream readEvents(@NonNull String aggregateIdentifier, long firstSequenceNumber) {
         return DomainEventStream.concat(storageEngine.readEvents(aggregateIdentifier, firstSequenceNumber),
                                         DomainEventStream.of(
                                                 stagedDomainEventMessages(aggregateIdentifier)
@@ -142,7 +142,7 @@ public abstract class AbstractEventStore extends AbstractEventBus implements Eve
     }
 
     @Override
-    public void storeSnapshot(@Nonnull DomainEventMessage<?> snapshot) {
+    public void storeSnapshot(@NonNull DomainEventMessage<?> snapshot) {
         storageEngine.storeSnapshot(snapshot);
     }
 
@@ -195,7 +195,7 @@ public abstract class AbstractEventStore extends AbstractEventBus implements Eve
         protected EventStorageEngine storageEngine;
 
         @Override
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super EventMessage<?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
             super.messageMonitor(messageMonitor);
             return this;
         }

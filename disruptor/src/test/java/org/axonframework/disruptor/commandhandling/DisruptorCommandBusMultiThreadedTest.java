@@ -42,6 +42,7 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.modelling.command.Repository;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.mockito.stubbing.*;
@@ -52,7 +53,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
@@ -227,14 +227,14 @@ class DisruptorCommandBusMultiThreadedTest {
         }
 
         @Override
-        public DomainEventStream readEvents(@Nonnull String identifier) {
+        public DomainEventStream readEvents(@NonNull String identifier) {
             loadCounter.incrementAndGet();
             DomainEventMessage<?> message = storedEvents.get(identifier);
             return message == null ? DomainEventStream.of() : DomainEventStream.of(message);
         }
 
         @Override
-        public void storeSnapshot(@Nonnull DomainEventMessage<?> snapshot) {
+        public void storeSnapshot(@NonNull DomainEventMessage<?> snapshot) {
         }
 
         @Override

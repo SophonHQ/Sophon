@@ -20,8 +20,7 @@ import org.axonframework.common.Registration;
 import org.axonframework.messaging.MessageDispatchInterceptorSupport;
 import org.axonframework.messaging.MessageHandler;
 import org.axonframework.messaging.MessageHandlerInterceptorSupport;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * The mechanism that dispatches Command objects to their appropriate CommandHandler. CommandHandlers can subscribe and
@@ -44,7 +43,7 @@ public interface CommandBus extends MessageHandlerInterceptorSupport<CommandMess
      * @throws NoHandlerForCommandException when no command handler is registered for the given {@code command}'s name.
      * @see GenericCommandMessage#asCommandMessage(Object)
      */
-    <C> void dispatch(@Nonnull CommandMessage<C> command);
+    <C> void dispatch(@NonNull CommandMessage<C> command);
 
     /**
      * Dispatch the given {@code command} to the CommandHandler subscribed to the given {@code command}'s name. When the
@@ -64,7 +63,7 @@ public interface CommandBus extends MessageHandlerInterceptorSupport<CommandMess
      * @throws NoHandlerForCommandException when no command handler is registered for the given {@code command}.
      * @see GenericCommandMessage#asCommandMessage(Object)
      */
-    <C, R> void dispatch(@Nonnull CommandMessage<C> command, @Nonnull CommandCallback<? super C, ? super R> callback);
+    <C, R> void dispatch(@NonNull CommandMessage<C> command, @NonNull CommandCallback<? super C, ? super R> callback);
 
     /**
      * Subscribe the given {@code handler} to commands with the given {@code commandName}.
@@ -77,5 +76,5 @@ public interface CommandBus extends MessageHandlerInterceptorSupport<CommandMess
      * @param handler     The handler instance that handles the given type of command
      * @return a handle to unsubscribe the {@code handler}. When unsubscribed it will no longer receive commands.
      */
-    Registration subscribe(@Nonnull String commandName, @Nonnull MessageHandler<? super CommandMessage<?>> handler);
+    Registration subscribe(@NonNull String commandName, @NonNull MessageHandler<? super CommandMessage<?>> handler);
 }

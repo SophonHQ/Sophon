@@ -17,6 +17,7 @@
 package org.axonframework.messaging.annotation;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
 import java.lang.annotation.Annotation;
@@ -28,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import javax.annotation.Nonnull;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -167,18 +167,18 @@ class HandlerComparatorTest {
         }
 
         @Override
-        public boolean canHandle(@Nonnull Message<?> message) {
+        public boolean canHandle(@NonNull Message<?> message) {
             throw new UnsupportedOperationException("Not implemented yet");
         }
 
         @Override
         @SuppressWarnings("rawtypes")
-        public boolean canHandleMessageType(@Nonnull Class<? extends Message> messageType) {
+        public boolean canHandleMessageType(@NonNull Class<? extends Message> messageType) {
             throw new UnsupportedOperationException("Not implemented (yet)");
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, Object target) {
+        public Object handle(@NonNull Message<?> message, Object target) {
             throw new UnsupportedOperationException("Not implemented yet");
         }
 
@@ -232,18 +232,18 @@ class HandlerComparatorTest {
         }
 
         @Override
-        public boolean canHandle(@Nonnull Message<?> message) {
+        public boolean canHandle(@NonNull Message<?> message) {
             throw new UnsupportedOperationException("Not implemented yet");
         }
 
         @Override
         @SuppressWarnings("rawtypes")
-        public boolean canHandleMessageType(@Nonnull Class<? extends Message> messageType) {
+        public boolean canHandleMessageType(@NonNull Class<? extends Message> messageType) {
             throw new UnsupportedOperationException("Not implemented (yet)");
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, Object target) {
+        public Object handle(@NonNull Message<?> message, Object target) {
             throw new UnsupportedOperationException("Not implemented yet");
         }
 

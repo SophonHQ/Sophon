@@ -38,6 +38,7 @@ import org.axonframework.messaging.deadletter.SequencedDeadLetterProcessor;
 import org.axonframework.messaging.deadletter.SequencedDeadLetterQueue;
 import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 import static org.axonframework.messaging.deadletter.ThrowableCause.truncated;
@@ -124,7 +124,7 @@ public class DeadLetteringEventHandlerInvoker
     }
 
     @Override
-    public void handle(@Nonnull EventMessage<?> message, @Nonnull Segment segment) throws Exception {
+    public void handle(@NonNull EventMessage<?> message, @NonNull Segment segment) throws Exception {
         if (!super.sequencingPolicyMatchesSegment(message, segment)) {
             logger.trace("Ignoring event with id [{}] as it is not assigned to segment [{}].",
                          message.getIdentifier(), segment);
@@ -164,7 +164,7 @@ public class DeadLetteringEventHandlerInvoker
         );
     }
 
-    private void invokeHandlers(@Nonnull EventMessage<?> message, @Nonnull Segment segment, Object sequenceIdentifier) {
+    private void invokeHandlers(@NonNull EventMessage<?> message, @NonNull Segment segment, Object sequenceIdentifier) {
         if (logger.isTraceEnabled()) {
             logger.trace("Event [{}] with queue id [{}] is not present in the dead-letter queue."
                                  + "Handle operation is delegated to the wrapped EventHandlerInvoker.",
@@ -186,8 +186,8 @@ public class DeadLetteringEventHandlerInvoker
     }
 
     private boolean mightBePresent(
-            @Nonnull Object sequenceIdentifier,
-            @Nonnull Segment segment
+            @NonNull Object sequenceIdentifier,
+            @NonNull Segment segment
     ) {
         if (!sequenceIdentifierCacheEnabled) {
             return true;
@@ -199,13 +199,13 @@ public class DeadLetteringEventHandlerInvoker
                                       .mightBePresent(sequenceIdentifier);
     }
 
-    private void markEnqueued(@Nonnull Object sequenceIdentifier, @Nonnull Segment segment) {
+    private void markEnqueued(@NonNull Object sequenceIdentifier, @NonNull Segment segment) {
         if (sequenceIdentifierCacheEnabled) {
             sequenceIdentifierCache.computeIfPresent(segment, (k, v) -> v.markEnqueued(sequenceIdentifier));
         }
     }
 
-    private void markNotEnqueued(@Nonnull Object sequenceIdentifier, @Nonnull Segment segment) {
+    private void markNotEnqueued(@NonNull Object sequenceIdentifier, @NonNull Segment segment) {
         if (sequenceIdentifierCacheEnabled) {
             sequenceIdentifierCache.computeIfPresent(segment, (k, v) -> v.markNotEnqueued(sequenceIdentifier));
         }
@@ -241,7 +241,7 @@ public class DeadLetteringEventHandlerInvoker
 
     @Override
     public Registration registerHandlerInterceptor(
-            @Nonnull MessageHandlerInterceptor<? super EventMessage<?>> interceptor) {
+            @NonNull MessageHandlerInterceptor<? super EventMessage<?>> interceptor) {
         interceptors.add(interceptor);
         return () -> interceptors.remove(interceptor);
     }
@@ -290,7 +290,7 @@ public class DeadLetteringEventHandlerInvoker
          *              with.
          * @return The current Builder instance for fluent interfacing.
          */
-        public Builder queue(@Nonnull SequencedDeadLetterQueue<EventMessage<?>> queue) {
+        public Builder queue(@NonNull SequencedDeadLetterQueue<EventMessage<?>> queue) {
             assertNonNull(queue, "The DeadLetterQueue may not be null");
             this.queue = queue;
             return this;
@@ -320,7 +320,7 @@ public class DeadLetteringEventHandlerInvoker
          *                           involving the configured {@link SequencedDeadLetterQueue}
          * @return The current Builder instance for fluent interfacing.
          */
-        public Builder transactionManager(@Nonnull TransactionManager transactionManager) {
+        public Builder transactionManager(@NonNull TransactionManager transactionManager) {
             assertNonNull(transactionManager, "The TransactionManager may not be null");
             this.transactionManager = transactionManager;
             return this;

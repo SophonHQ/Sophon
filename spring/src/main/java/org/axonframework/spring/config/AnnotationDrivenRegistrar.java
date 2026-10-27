@@ -20,12 +20,11 @@ import org.axonframework.spring.config.annotation.AnnotationCommandHandlerBeanPo
 import org.axonframework.spring.config.annotation.AnnotationQueryHandlerBeanPostProcessor;
 import org.axonframework.spring.config.annotation.SpringContextHandlerDefinitionBuilder;
 import org.axonframework.spring.config.annotation.SpringContextParameterResolverFactoryBuilder;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
-
-import javax.annotation.Nonnull;
 
 /**
  * Spring @Configuration related class that adds Axon Annotation PostProcessors to the BeanDefinitionRegistry.
@@ -47,8 +46,8 @@ public class AnnotationDrivenRegistrar implements ImportBeanDefinitionRegistrar 
 
 
     @Override
-    public void registerBeanDefinitions(@Nonnull AnnotationMetadata importingClassMetadata,
-                                        @Nonnull BeanDefinitionRegistry registry) {
+    public void registerBeanDefinitions(@NonNull AnnotationMetadata importingClassMetadata,
+                                        @NonNull BeanDefinitionRegistry registry) {
         registerAnnotationCommandHandlerBeanPostProcessor(registry);
         registerAnnotationQueryHandlerBeanPostProcessor(registry);
     }

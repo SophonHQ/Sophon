@@ -18,8 +18,7 @@ package org.axonframework.commandhandling.distributed.commandfilter;
 
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.distributed.CommandMessageFilter;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A command filter that accepts all {@link CommandMessage}s.
@@ -35,12 +34,12 @@ public enum AcceptAll implements CommandMessageFilter {
     INSTANCE;
 
     @Override
-    public boolean matches(@Nonnull CommandMessage<?> message) {
+    public boolean matches(@NonNull CommandMessage<?> message) {
         return true;
     }
 
     @Override
-    public CommandMessageFilter and(@Nonnull CommandMessageFilter other) {
+    public CommandMessageFilter and(@NonNull CommandMessageFilter other) {
         return other;
     }
 
@@ -50,7 +49,7 @@ public enum AcceptAll implements CommandMessageFilter {
     }
 
     @Override
-    public CommandMessageFilter or(@Nonnull CommandMessageFilter other) {
+    public CommandMessageFilter or(@NonNull CommandMessageFilter other) {
         return this;
     }
 

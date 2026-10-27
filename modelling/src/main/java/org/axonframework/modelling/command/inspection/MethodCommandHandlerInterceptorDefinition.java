@@ -22,10 +22,10 @@ import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.WrappedMessageHandlingMember;
 import org.axonframework.modelling.command.CommandHandlerInterceptor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.regex.Pattern;
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of {@link HandlerEnhancerDefinition} used for {@link CommandHandlerInterceptor} annotated methods.
@@ -36,8 +36,8 @@ import javax.annotation.Nonnull;
 public class MethodCommandHandlerInterceptorDefinition implements HandlerEnhancerDefinition {
 
     @Override
-    public @Nonnull
-    <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public @NonNull
+    <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
         return original.annotationAttributes(CommandHandlerInterceptor.class)
                        .map(attr -> (MessageHandlingMember<T>) new MethodCommandHandlerInterceptorHandlingMember<>(
                                original, attr))
@@ -60,7 +60,7 @@ public class MethodCommandHandlerInterceptorDefinition implements HandlerEnhance
         }
 
         @Override
-        public boolean canHandle(@Nonnull Message<?> message) {
+        public boolean canHandle(@NonNull Message<?> message) {
             return super.canHandle(message) && commandNamePattern.matcher(((CommandMessage) message).getCommandName())
                                                                  .matches();
         }

@@ -27,6 +27,7 @@ import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 import static org.axonframework.common.BuilderUtils.assertThat;
@@ -92,7 +92,7 @@ public abstract class AbstractEventProcessor implements EventProcessor {
 
     @Override
     public Registration registerHandlerInterceptor(
-            @Nonnull MessageHandlerInterceptor<? super EventMessage<?>> interceptor) {
+            @NonNull MessageHandlerInterceptor<? super EventMessage<?>> interceptor) {
         interceptors.add(interceptor);
         return () -> interceptors.remove(interceptor);
     }
@@ -253,7 +253,7 @@ public abstract class AbstractEventProcessor implements EventProcessor {
          * @param name a {@link String} defining this {@link EventProcessor} implementation
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder name(@Nonnull String name) {
+        public Builder name(@NonNull String name) {
             assertEventProcessorName(name, "The EventProcessor name may not be null or empty");
             this.name = name;
             return this;
@@ -266,7 +266,7 @@ public abstract class AbstractEventProcessor implements EventProcessor {
          *                            {@link EventMessage}s
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder eventHandlerInvoker(@Nonnull EventHandlerInvoker eventHandlerInvoker) {
+        public Builder eventHandlerInvoker(@NonNull EventHandlerInvoker eventHandlerInvoker) {
             assertNonNull(eventHandlerInvoker, "EventHandlerInvoker may not be null");
             this.eventHandlerInvoker = eventHandlerInvoker;
             return this;
@@ -280,7 +280,7 @@ public abstract class AbstractEventProcessor implements EventProcessor {
          *                              {@link UnitOfWork} while processing a batch of events.
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder rollbackConfiguration(@Nonnull RollbackConfiguration rollbackConfiguration) {
+        public Builder rollbackConfiguration(@NonNull RollbackConfiguration rollbackConfiguration) {
             assertNonNull(rollbackConfiguration, "RollbackConfiguration may not be null");
             this.rollbackConfiguration = rollbackConfiguration;
             return this;
@@ -294,7 +294,7 @@ public abstract class AbstractEventProcessor implements EventProcessor {
          *                     processing
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder errorHandler(@Nonnull ErrorHandler errorHandler) {
+        public Builder errorHandler(@NonNull ErrorHandler errorHandler) {
             assertNonNull(errorHandler, "ErrorHandler may not be null");
             this.errorHandler = errorHandler;
             return this;
@@ -308,7 +308,7 @@ public abstract class AbstractEventProcessor implements EventProcessor {
          *                       processed
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super EventMessage<?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
             assertNonNull(messageMonitor, "MessageMonitor may not be null");
             this.messageMonitor = messageMonitor;
             return this;
@@ -323,7 +323,7 @@ public abstract class AbstractEventProcessor implements EventProcessor {
          * @deprecated Use {@link #spanFactory(EventProcessorSpanFactory) for more configuration options instead
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = DefaultEventProcessorSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
@@ -337,7 +337,7 @@ public abstract class AbstractEventProcessor implements EventProcessor {
          * @param spanFactory The {@link SpanFactory} implementation
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull EventProcessorSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull EventProcessorSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = spanFactory;
             return this;

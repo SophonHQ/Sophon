@@ -53,6 +53,7 @@ import org.axonframework.eventsourcing.snapshotting.SnapshotFilter;
 import org.axonframework.modelling.command.ConcurrencyException;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.upcasting.event.EventUpcaster;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +75,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.common.Assert.isTrue;
@@ -431,7 +431,7 @@ public class JdbcEventStorageEngine extends BatchingEventStorageEngine {
     }
 
     @Override
-    public Optional<Long> lastSequenceNumberFor(@Nonnull String aggregateIdentifier) {
+    public Optional<Long> lastSequenceNumberFor(@NonNull String aggregateIdentifier) {
         return Optional.ofNullable(transactionManager.fetchInTransaction(
                 () -> executeQuery(getConnection(),
                                    connection -> lastSequenceNumberFor(connection, aggregateIdentifier),
@@ -459,7 +459,7 @@ public class JdbcEventStorageEngine extends BatchingEventStorageEngine {
     }
 
     @Override
-    public TrackingToken createTokenAt(@Nonnull Instant dateTime) {
+    public TrackingToken createTokenAt(@NonNull Instant dateTime) {
         Long index = transactionManager.fetchInTransaction(() -> executeQuery(
                 getConnection(),
                 connection -> createTokenAt(connection, dateTime),
@@ -1151,7 +1151,7 @@ public class JdbcEventStorageEngine extends BatchingEventStorageEngine {
          * @param connectionProvider a {@link ConnectionProvider} which provides access to a JDBC connection
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder connectionProvider(@Nonnull ConnectionProvider connectionProvider) {
+        public Builder connectionProvider(@NonNull ConnectionProvider connectionProvider) {
             assertNonNull(connectionProvider, "ConnectionProvider may not be null");
             this.connectionProvider = connectionProvider;
             return this;

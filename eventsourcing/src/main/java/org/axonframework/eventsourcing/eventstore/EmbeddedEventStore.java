@@ -29,6 +29,7 @@ import org.axonframework.lifecycle.Phase;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static java.util.stream.Collectors.toList;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -184,7 +184,7 @@ public class EmbeddedEventStore extends AbstractEventStore implements Lifecycle 
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry handle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry handle) {
         handle.onShutdown(Phase.INBOUND_EVENT_CONNECTORS - 10, this::shutDown);
     }
 
@@ -518,19 +518,19 @@ public class EmbeddedEventStore extends AbstractEventStore implements Lifecycle 
         }
 
         @Override
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super EventMessage<?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
             super.messageMonitor(messageMonitor);
             return this;
         }
 
         @Override
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }
 
         @Override
-        public Builder spanFactory(@Nonnull EventBusSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull EventBusSpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }

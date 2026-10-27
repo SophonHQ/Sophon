@@ -17,11 +17,11 @@
 package org.axonframework.messaging.annotation;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 /**
  * Abstract implementation of a {@link MessageHandlingMember} that delegates to a wrapped MessageHandlingMember. Extend
@@ -55,23 +55,23 @@ public abstract class WrappedMessageHandlingMember<T> implements MessageHandling
     }
 
     @Override
-    public boolean canHandle(@Nonnull Message<?> message) {
+    public boolean canHandle(@NonNull Message<?> message) {
         return delegate.canHandle(message);
     }
 
     @Override
-    public Object handle(@Nonnull Message<?> message, T target) throws Exception {
+    public Object handle(@NonNull Message<?> message, T target) throws Exception {
         return delegate.handle(message, target);
     }
 
     @Override
-    public boolean canHandleType(@Nonnull Class<?> payloadType) {
+    public boolean canHandleType(@NonNull Class<?> payloadType) {
         return delegate.canHandleType(payloadType);
     }
 
     @Override
     @SuppressWarnings("rawtypes")
-    public boolean canHandleMessageType(@Nonnull Class<? extends Message> messageType) {
+    public boolean canHandleMessageType(@NonNull Class<? extends Message> messageType) {
         return delegate.canHandleMessageType(messageType);
     }
 

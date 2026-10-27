@@ -21,9 +21,9 @@ import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.distributed.commandfilter.AndCommandMessageFilter;
 import org.axonframework.commandhandling.distributed.commandfilter.NegateCommandMessageFilter;
 import org.axonframework.commandhandling.distributed.commandfilter.OrCommandMessageFilter;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serializable;
-import javax.annotation.Nonnull;
 
 /**
  * Interface describing a filter that can be applied to commands to describe the type of commands supported by a node in
@@ -42,7 +42,7 @@ public interface CommandMessageFilter extends Serializable {
      * @param commandMessage the message to match
      * @return {@code true} if the command matches, otherwise {@code false}
      */
-    boolean matches(@Nonnull CommandMessage<?> commandMessage);
+    boolean matches(@NonNull CommandMessage<?> commandMessage);
 
     /**
      * Returns a filter that matches when both this instance and the given {@code other} match.
@@ -50,7 +50,7 @@ public interface CommandMessageFilter extends Serializable {
      * @param other the other filter to match against
      * @return a filter that matches when both this instance and the other match
      */
-    default CommandMessageFilter and(@Nonnull CommandMessageFilter other) {
+    default CommandMessageFilter and(@NonNull CommandMessageFilter other) {
         return new AndCommandMessageFilter(this, other);
     }
 
@@ -69,7 +69,7 @@ public interface CommandMessageFilter extends Serializable {
      * @param other the other filter to match against
      * @return a filter that matches when either this instance or the other matches
      */
-    default CommandMessageFilter or(@Nonnull CommandMessageFilter other) {
+    default CommandMessageFilter or(@NonNull CommandMessageFilter other) {
         return new OrCommandMessageFilter(this, other);
     }
 }

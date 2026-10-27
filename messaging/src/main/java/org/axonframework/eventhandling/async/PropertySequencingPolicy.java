@@ -20,9 +20,9 @@ import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.common.property.Property;
 import org.axonframework.common.property.PropertyAccessStrategy;
 import org.axonframework.eventhandling.EventMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -60,7 +60,7 @@ public class PropertySequencingPolicy<T, K> implements SequencingPolicy<EventMes
     }
 
     @Override
-    public Object getSequenceIdentifierFor(@Nonnull final EventMessage eventMessage) {
+    public Object getSequenceIdentifierFor(@NonNull final EventMessage eventMessage) {
         if (payloadClass.isAssignableFrom(eventMessage.getPayloadType())) {
             @SuppressWarnings("unchecked") final T castedPayload = (T) eventMessage.getPayload();
             return propertyExtractor.apply(castedPayload);
@@ -191,7 +191,7 @@ public class PropertySequencingPolicy<T, K> implements SequencingPolicy<EventMes
             }
 
             @Override
-            public Object getSequenceIdentifierFor(@Nonnull final EventMessage eventMessage) {
+            public Object getSequenceIdentifierFor(@NonNull final EventMessage eventMessage) {
                 throw new IllegalArgumentException(
                         "The event message payload is not of a supported type. "
                                 + "Either make sure that the processor only consumes supported events "

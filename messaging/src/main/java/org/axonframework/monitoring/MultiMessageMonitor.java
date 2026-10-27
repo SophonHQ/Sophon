@@ -18,12 +18,12 @@ package org.axonframework.monitoring;
 
 import org.axonframework.common.Assert;
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * Delegates messages and callbacks to the given list of message monitors
@@ -63,7 +63,7 @@ public class MultiMessageMonitor<T extends Message<?>> implements MessageMonitor
      * @return the callback that will trigger all the message monitor callbacks
      */
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull T message) {
+    public MonitorCallback onMessageIngested(@NonNull T message) {
         final List<MonitorCallback> monitorCallbacks = messageMonitors.stream()
                                                                       .map(messageMonitor -> messageMonitor.onMessageIngested(
                                                                               message))

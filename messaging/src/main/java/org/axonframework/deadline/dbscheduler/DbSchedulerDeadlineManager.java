@@ -56,6 +56,8 @@ import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
 import org.axonframework.tracing.SpanScope;
 import org.jobrunr.scheduling.JobScheduler;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.time.Instant;
@@ -63,8 +65,6 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.lang.String.format;
 import static java.util.Objects.isNull;
@@ -140,9 +140,9 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
     }
 
     @Override
-    public String schedule(@Nonnull Instant triggerDateTime, @Nonnull String deadlineName,
+    public String schedule(@NonNull Instant triggerDateTime, @NonNull String deadlineName,
                            @Nullable Object messageOrPayload,
-                           @Nonnull ScopeDescriptor deadlineScope) {
+                           @NonNull ScopeDescriptor deadlineScope) {
         DeadlineMessage<Object> deadlineMessage = asDeadlineMessage(deadlineName, messageOrPayload, triggerDateTime);
         String identifier = IdentifierFactory.getInstance().generateIdentifier();
         DbSchedulerDeadlineToken taskInstanceId = new DbSchedulerDeadlineToken(identifier);
@@ -234,7 +234,7 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
     }
 
     @Override
-    public void cancelSchedule(@Nonnull String deadlineName, @Nonnull String scheduleId) {
+    public void cancelSchedule(@NonNull String deadlineName, @NonNull String scheduleId) {
         Span span = spanFactory.createCancelScheduleSpan(deadlineName, scheduleId);
         runOnPrepareCommitOrNow(span.wrapRunnable(
                 () -> {
@@ -250,7 +250,7 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
     }
 
     @Override
-    public void cancelAll(@Nonnull String deadlineName) {
+    public void cancelAll(@NonNull String deadlineName) {
         Span span = spanFactory.createCancelAllSpan(deadlineName);
         if (useBinaryPojo) {
             runOnPrepareCommitOrNow(span.wrapRunnable(
@@ -270,7 +270,7 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
     }
 
     private Consumer<ScheduledExecution<DbSchedulerBinaryDeadlineDetails>> cancelIfBinaryDeadlineMatches(
-            @Nonnull String deadlineName
+            @NonNull String deadlineName
     ) {
         return scheduledExecution -> {
             if (deadlineName.equals(scheduledExecution.getData().getD())) {
@@ -280,7 +280,7 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
     }
 
     private Consumer<ScheduledExecution<DbSchedulerHumanReadableDeadlineDetails>> cancelIfHumanReadableDeadlineMatches(
-            @Nonnull String deadlineName
+            @NonNull String deadlineName
     ) {
         return scheduledExecution -> {
             if (deadlineName.equals(scheduledExecution.getData().getDeadlineName())) {
@@ -290,7 +290,7 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
     }
 
     @Override
-    public void cancelAllWithinScope(@Nonnull String deadlineName, @Nonnull ScopeDescriptor scope) {
+    public void cancelAllWithinScope(@NonNull String deadlineName, @NonNull ScopeDescriptor scope) {
         Span span = spanFactory.createCancelAllWithinScopeSpan(deadlineName, scope);
         if (useBinaryPojo) {
             runOnPrepareCommitOrNow(span.wrapRunnable(
@@ -314,8 +314,8 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
     }
 
     private Consumer<ScheduledExecution<DbSchedulerHumanReadableDeadlineDetails>> cancelIfDeadlineAndScopeMatches(
-            @Nonnull String deadlineName,
-            @Nonnull String scopeDescriptor
+            @NonNull String deadlineName,
+            @NonNull String scopeDescriptor
     ) {
         return scheduledExecution -> {
             DbSchedulerHumanReadableDeadlineDetails data = scheduledExecution.getData();
@@ -326,8 +326,8 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
     }
 
     private Consumer<ScheduledExecution<DbSchedulerBinaryDeadlineDetails>> cancelIfDeadlineAndScopeMatches(
-            @Nonnull String deadlineName,
-            @Nonnull byte[] scopeDescriptor
+            @NonNull String deadlineName,
+            byte @NonNull [] scopeDescriptor
     ) {
         return scheduledExecution -> {
             DbSchedulerBinaryDeadlineDetails data = scheduledExecution.getData();
@@ -433,7 +433,7 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry lifecycle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry lifecycle) {
         lifecycle.onStart(Phase.INBOUND_EVENT_CONNECTORS, this::start);
         lifecycle.onShutdown(Phase.INBOUND_EVENT_CONNECTORS, this::shutdown);
     }
@@ -531,7 +531,7 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
          * @deprecated Use {@link #spanFactory(DeadlineManagerSpanFactory)} instead as it provides more configuration options.
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = DefaultDeadlineManagerSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
@@ -545,7 +545,7 @@ public class DbSchedulerDeadlineManager extends AbstractDeadlineManager implemen
          * @param spanFactory The {@link DeadlineManagerSpanFactory} implementation
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull DeadlineManagerSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull DeadlineManagerSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = spanFactory;
             return this;

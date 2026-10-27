@@ -22,6 +22,7 @@ import org.axonframework.messaging.annotation.HandlerDefinition;
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MultiHandlerDefinition;
 import org.axonframework.messaging.annotation.MultiHandlerEnhancerDefinition;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
@@ -33,7 +34,6 @@ import static org.springframework.beans.factory.BeanFactoryUtils.beansOfTypeIncl
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Spring factory bean that creates a HandlerDefinition instance that is capable of resolving parameter values as Spring
@@ -118,12 +118,12 @@ public class SpringHandlerDefinitionBean implements FactoryBean<HandlerDefinitio
     }
 
     @Override
-    public void setBeanClassLoader(@Nonnull ClassLoader classLoader) {
+    public void setBeanClassLoader(@NonNull ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 

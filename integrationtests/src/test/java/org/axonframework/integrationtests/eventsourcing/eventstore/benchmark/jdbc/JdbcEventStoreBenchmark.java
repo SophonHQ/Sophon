@@ -21,6 +21,7 @@ import org.axonframework.common.transaction.NoTransactionManager;
 import org.axonframework.eventsourcing.eventstore.jdbc.JdbcEventStorageEngine;
 import org.axonframework.eventsourcing.eventstore.jdbc.MySqlEventTableFactory;
 import org.axonframework.integrationtests.eventsourcing.eventstore.benchmark.AbstractEventStoreBenchmark;
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -30,7 +31,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 /**
@@ -61,7 +61,7 @@ public class JdbcEventStoreBenchmark extends AbstractEventStoreBenchmark {
         TransactionTemplate template = new TransactionTemplate(transactionManager);
         template.execute(new TransactionCallbackWithoutResult() {
             @Override
-            protected void doInTransactionWithoutResult(@Nonnull TransactionStatus status) {
+            protected void doInTransactionWithoutResult(@NonNull TransactionStatus status) {
                 try {
                     Connection connection = dataSource.getConnection();
                     connection.prepareStatement("DROP TABLE IF EXISTS DomainEventEntry").executeUpdate();

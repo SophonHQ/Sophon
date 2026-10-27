@@ -16,9 +16,10 @@
 
 package org.axonframework.eventhandling;
 
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
+
 import java.util.Objects;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Interface for an event message handler that defers handling to one or more other handlers.
@@ -37,7 +38,7 @@ public interface EventHandlerInvoker {
      * @return {@code true} if the invoker has one or more handlers that can handle the given message, {@code false}
      * otherwise
      */
-    boolean canHandle(@Nonnull EventMessage<?> eventMessage, @Nonnull Segment segment);
+    boolean canHandle(@NonNull EventMessage<?> eventMessage, @NonNull Segment segment);
 
     /**
      * Check whether or not this invoker has handlers that can handle the given {@code payloadType}.
@@ -46,7 +47,7 @@ public interface EventHandlerInvoker {
      * @return {@code true} if the invoker has one or more handlers that can handle the given message, {@code false}
      * otherwise
      */
-    default boolean canHandleType(@Nonnull Class<?> payloadType) {
+    default boolean canHandleType(@NonNull Class<?> payloadType) {
         return true;
     }
 
@@ -60,7 +61,7 @@ public interface EventHandlerInvoker {
      * @param segment The segment for which to handle the message
      * @throws Exception when an exception occurs while handling the message
      */
-    void handle(@Nonnull EventMessage<?> message, @Nonnull Segment segment) throws Exception;
+    void handle(@NonNull EventMessage<?> message, @NonNull Segment segment) throws Exception;
 
     /**
      * Indicates whether the handlers managed by this invoker support a reset.

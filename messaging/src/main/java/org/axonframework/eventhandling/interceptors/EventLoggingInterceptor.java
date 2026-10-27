@@ -22,13 +22,13 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.messaging.unitofwork.ExecutionResult;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * Message Dispatch Interceptor that logs published events to a SLF4J logger. It does not alter or reject events.
@@ -67,10 +67,10 @@ public class EventLoggingInterceptor implements MessageDispatchInterceptor<Event
         this.logger = LoggerFactory.getLogger(loggerName);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public BiFunction<Integer, EventMessage<?>, EventMessage<?>> handle(
-            @Nonnull List<? extends EventMessage<?>> messages) {
+            @NonNull List<? extends EventMessage<?>> messages) {
         StringBuilder sb = new StringBuilder(String.format("Events published: [%s]",
                                                            messages.stream()
                                                                    .map(m -> m.getPayloadType().getSimpleName())

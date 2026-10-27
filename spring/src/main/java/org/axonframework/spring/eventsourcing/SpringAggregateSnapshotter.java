@@ -24,6 +24,7 @@ import org.axonframework.messaging.annotation.HandlerDefinition;
 import org.axonframework.messaging.annotation.ParameterResolverFactory;
 import org.axonframework.modelling.command.RepositoryProvider;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -35,7 +36,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 /**
  * Snapshotter implementation that uses the AggregateRoot as state for the snapshot. Unlike the
@@ -116,7 +116,7 @@ public class SpringAggregateSnapshotter extends AggregateSnapshotter implements 
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
@@ -180,13 +180,13 @@ public class SpringAggregateSnapshotter extends AggregateSnapshotter implements 
         }
 
         @Override
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }
 
         @Override
-        public Builder spanFactory(@Nonnull SnapshotterSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SnapshotterSpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }

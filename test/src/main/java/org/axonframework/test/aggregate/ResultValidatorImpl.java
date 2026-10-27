@@ -35,6 +35,7 @@ import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -46,7 +47,6 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.test.matchers.Matchers.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -490,8 +490,8 @@ public class ResultValidatorImpl<T> implements ResultValidator<T>, CommandCallba
     }
 
     @Override
-    public void onResult(@Nonnull CommandMessage<?> commandMessage,
-                         @Nonnull CommandResultMessage<?> commandResultMessage) {
+    public void onResult(@NonNull CommandMessage<?> commandMessage,
+                         @NonNull CommandResultMessage<?> commandResultMessage) {
         if (commandResultMessage.isExceptional()) {
             recordException(commandResultMessage.exceptionResult());
         } else {

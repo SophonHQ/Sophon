@@ -22,8 +22,7 @@ import org.axonframework.messaging.MessageHandlerInterceptor;
 import org.axonframework.messaging.annotation.InterceptorChainParameterResolverFactory;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Annotated command handler interceptor on aggregate. Will invoke the delegate to the real interceptor method.
@@ -50,8 +49,8 @@ public class AnnotatedCommandHandlerInterceptor<T> implements MessageHandlerInte
     }
 
     @Override
-    public Object handle(@Nonnull UnitOfWork<? extends CommandMessage<?>> unitOfWork,
-                         @Nonnull InterceptorChain interceptorChain)
+    public Object handle(@NonNull UnitOfWork<? extends CommandMessage<?>> unitOfWork,
+                         @NonNull InterceptorChain interceptorChain)
             throws Exception {
         return InterceptorChainParameterResolverFactory.callWithInterceptorChain(
                 interceptorChain,

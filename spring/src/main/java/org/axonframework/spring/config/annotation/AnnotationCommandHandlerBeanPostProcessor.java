@@ -25,11 +25,11 @@ import org.axonframework.messaging.MessageHandler;
 import org.axonframework.messaging.annotation.HandlerDefinition;
 import org.axonframework.messaging.annotation.ParameterResolverFactory;
 import org.axonframework.spring.config.AbstractAnnotationHandlerBeanPostProcessor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nonnull;
 
 /**
  * Spring Bean post processor that automatically generates an adapter for each bean containing {@link CommandHandler}
@@ -79,7 +79,7 @@ public class AnnotationCommandHandlerBeanPostProcessor
          * {@inheritDoc}
          */
         @Override
-        public void doWith(@Nonnull Method method) throws IllegalArgumentException {
+        public void doWith(@NonNull Method method) throws IllegalArgumentException {
             if (AnnotationUtils.findAnnotationAttributes(method, CommandHandler.class).isPresent()) {
                 result.set(true);
             }

@@ -18,9 +18,9 @@ package org.axonframework.queryhandling;
 
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.responsetypes.ResponseType;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Generic implementation of the {@link SubscriptionQueryMessage}. Unless explicitly provided, it assumes the {@code
@@ -86,7 +86,7 @@ public class GenericSubscriptionQueryMessage<Q, I, U> extends GenericQueryMessag
     }
 
     @Override
-    public GenericSubscriptionQueryMessage<Q, I, U> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericSubscriptionQueryMessage<Q, I, U> withMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericSubscriptionQueryMessage<>(getDelegate().withMetaData(metaData),
                                                      getQueryName(),
                                                      getResponseType(),
@@ -94,7 +94,7 @@ public class GenericSubscriptionQueryMessage<Q, I, U> extends GenericQueryMessag
     }
 
     @Override
-    public GenericSubscriptionQueryMessage<Q, I, U> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericSubscriptionQueryMessage<Q, I, U> andMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericSubscriptionQueryMessage<>(getDelegate().andMetaData(metaData),
                                                      getQueryName(),
                                                      getResponseType(),

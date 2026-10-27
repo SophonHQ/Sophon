@@ -16,7 +16,7 @@
 
 package org.axonframework.commandhandling;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface describing a callback that is invoked when command handler execution has finished.
@@ -35,8 +35,8 @@ public interface CommandCallback<C, R> {
      * @param commandMessage       the {@link CommandMessage} that was dispatched
      * @param commandResultMessage the {@link CommandResultMessage} of the command handling execution
      */
-    void onResult(@Nonnull CommandMessage<? extends C> commandMessage,
-                  @Nonnull CommandResultMessage<? extends R> commandResultMessage);
+    void onResult(@NonNull CommandMessage<? extends C> commandMessage,
+                  @NonNull CommandResultMessage<? extends R> commandResultMessage);
 
     /**
      * Wraps the command callback with another using a {@link WrappedCommandCallback}. If provided with a null

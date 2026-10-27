@@ -19,10 +19,10 @@ package org.axonframework.messaging;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.Serializer;
+import org.jspecify.annotations.NonNull;
 
 import java.io.Serializable;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Representation of a Message, containing a Payload and MetaData. Typical examples of Messages are Commands, Events and
@@ -83,7 +83,7 @@ public interface Message<T> extends Serializable {
      * @param metaData The new MetaData for the Message
      * @return a copy of this message with the given MetaData
      */
-    Message<T> withMetaData(@Nonnull Map<String, ?> metaData);
+    Message<T> withMetaData(@NonNull Map<String, ?> metaData);
 
     /**
      * Returns a copy of this Message with it MetaData merged with the given {@code metaData}. The payload remains
@@ -92,7 +92,7 @@ public interface Message<T> extends Serializable {
      * @param metaData The MetaData to merge with
      * @return a copy of this message with the given MetaData
      */
-    Message<T> andMetaData(@Nonnull Map<String, ?> metaData);
+    Message<T> andMetaData(@NonNull Map<String, ?> metaData);
 
     /**
      * Serialize the payload of this message to the {@code expectedRepresentation} using given {@code serializer}. This

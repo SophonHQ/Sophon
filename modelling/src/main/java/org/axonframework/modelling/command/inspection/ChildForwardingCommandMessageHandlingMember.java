@@ -24,14 +24,14 @@ import org.axonframework.messaging.annotation.MessageHandlerInterceptorMemberCha
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.NoMoreInterceptors;
 import org.axonframework.modelling.command.AggregateEntityNotFoundException;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Implementation of a {@link CommandMessageHandlingMember} that forwards commands to a child entity.
@@ -102,18 +102,18 @@ public class ChildForwardingCommandMessageHandlingMember<P, C> implements Forwar
     }
 
     @Override
-    public boolean canHandle(@Nonnull Message<?> message) {
+    public boolean canHandle(@NonNull Message<?> message) {
         return childHandler.canHandle(message);
     }
 
     @Override
     @SuppressWarnings("rawtypes")
-    public boolean canHandleMessageType(@Nonnull Class<? extends Message> messageType) {
+    public boolean canHandleMessageType(@NonNull Class<? extends Message> messageType) {
         return childHandler.canHandleMessageType(messageType);
     }
 
     @Override
-    public Object handle(@Nonnull Message<?> message, @Nullable P target) throws Exception {
+    public Object handle(@NonNull Message<?> message, @Nullable P target) throws Exception {
         C childEntity = childEntityResolver.apply((CommandMessage<?>) message, target);
         if (childEntity == null) {
             throw new AggregateEntityNotFoundException(

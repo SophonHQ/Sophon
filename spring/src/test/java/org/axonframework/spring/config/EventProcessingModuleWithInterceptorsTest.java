@@ -25,6 +25,7 @@ import org.axonframework.messaging.InterceptorChain;
 import org.axonframework.messaging.MessageHandlerInterceptor;
 import org.axonframework.messaging.annotation.MetaDataValue;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
-import javax.annotation.Nonnull;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -76,8 +76,8 @@ public class EventProcessingModuleWithInterceptorsTest {
         public class MyInterceptor implements MessageHandlerInterceptor<EventMessage<?>> {
 
             @Override
-            public Object handle(@Nonnull UnitOfWork<? extends EventMessage<?>> unitOfWork,
-                                 @Nonnull InterceptorChain interceptorChain)
+            public Object handle(@NonNull UnitOfWork<? extends EventMessage<?>> unitOfWork,
+                                 @NonNull InterceptorChain interceptorChain)
                     throws Exception {
                 unitOfWork.transformMessage(event -> event
                         .andMetaData(Collections.singletonMap("myMetaDataKey", "myMetaDataValue")));

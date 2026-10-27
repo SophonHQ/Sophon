@@ -17,9 +17,9 @@
 package org.axonframework.queryhandling;
 
 import org.axonframework.messaging.ResultMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Message which holds incremental update of an subscription query.
@@ -31,8 +31,8 @@ import javax.annotation.Nonnull;
 public interface SubscriptionQueryUpdateMessage<U> extends ResultMessage<U> {
 
     @Override
-    SubscriptionQueryUpdateMessage<U> withMetaData(@Nonnull Map<String, ?> metaData);
+    SubscriptionQueryUpdateMessage<U> withMetaData(@NonNull Map<String, ?> metaData);
 
     @Override
-    SubscriptionQueryUpdateMessage<U> andMetaData(@Nonnull Map<String, ?> metaData);
+    SubscriptionQueryUpdateMessage<U> andMetaData(@NonNull Map<String, ?> metaData);
 }

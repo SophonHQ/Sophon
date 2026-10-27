@@ -38,6 +38,7 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.modelling.command.ApplyMore;
 import org.axonframework.modelling.command.Repository;
 import org.axonframework.modelling.command.RepositoryProvider;
+import org.jspecify.annotations.NonNull;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +49,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 
@@ -560,7 +560,7 @@ public class AnnotatedAggregate<T> extends AggregateLifecycle implements Aggrega
         }
 
         @Override
-        public GenericDomainEventMessage<P> withMetaData(@Nonnull Map<String, ?> newMetaData) {
+        public GenericDomainEventMessage<P> withMetaData(@NonNull Map<String, ?> newMetaData) {
             String identifier = identifierAsString();
             if (identifier != null) {
                 return new GenericDomainEventMessage<>(getType(), getAggregateIdentifier(), getSequenceNumber(),
@@ -572,7 +572,7 @@ public class AnnotatedAggregate<T> extends AggregateLifecycle implements Aggrega
         }
 
         @Override
-        public GenericDomainEventMessage<P> andMetaData(@Nonnull Map<String, ?> additionalMetaData) {
+        public GenericDomainEventMessage<P> andMetaData(@NonNull Map<String, ?> additionalMetaData) {
             String identifier = identifierAsString();
             if (identifier != null) {
                 return new GenericDomainEventMessage<>(getType(), getAggregateIdentifier(), getSequenceNumber(),

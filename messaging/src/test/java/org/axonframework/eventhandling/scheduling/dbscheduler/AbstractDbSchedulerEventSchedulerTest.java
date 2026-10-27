@@ -28,6 +28,7 @@ import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.axonframework.serialization.Revision;
 import org.axonframework.serialization.TestSerializer;
 import org.hsqldb.jdbc.JDBCDataSource;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 import static org.awaitility.Awaitility.await;
@@ -218,18 +218,18 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
         }
 
         @Override
-        public void publish(@Nonnull List<? extends EventMessage<?>> events) {
+        public void publish(@NonNull List<? extends EventMessage<?>> events) {
             publishedMessages.addAll(events);
         }
 
         @Override
-        public Registration subscribe(@Nonnull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
+        public Registration subscribe(@NonNull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
             throw new UnsupportedOperationException();
         }
 
         @Override
         public Registration registerDispatchInterceptor(
-                @Nonnull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
+                @NonNull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
             throw new UnsupportedOperationException();
         }
     }

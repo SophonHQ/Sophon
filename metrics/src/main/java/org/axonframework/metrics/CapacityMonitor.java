@@ -25,11 +25,11 @@ import com.codahale.metrics.SlidingTimeWindowReservoir;
 import com.codahale.metrics.Snapshot;
 import org.axonframework.messaging.Message;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
 
 /**
  * Calculates capacity by tracking, within the configured time window, the average message processing time
@@ -88,7 +88,7 @@ public class CapacityMonitor implements MessageMonitor<Message<?>>, MetricSet {
     }
 
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull Message<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull Message<?> message) {
         final long start = clock.getTime();
         return new MonitorCallback() {
             @Override

@@ -17,9 +17,9 @@
 package org.axonframework.commandhandling;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Represents a Message carrying a command as its payload. These messages carry an intention to change application
@@ -50,7 +50,7 @@ public interface CommandMessage<T> extends Message<T> {
      * @return a copy of this message with the given MetaData
      */
     @Override
-    CommandMessage<T> withMetaData(@Nonnull Map<String, ?> metaData);
+    CommandMessage<T> withMetaData(@NonNull Map<String, ?> metaData);
 
     /**
      * Returns a copy of this CommandMessage with it MetaData merged with the given {@code metaData}. The payload
@@ -60,5 +60,5 @@ public interface CommandMessage<T> extends Message<T> {
      * @return a copy of this message with the given MetaData
      */
     @Override
-    CommandMessage<T> andMetaData(@Nonnull Map<String, ?> metaData);
+    CommandMessage<T> andMetaData(@NonNull Map<String, ?> metaData);
 }

@@ -28,14 +28,13 @@ import org.axonframework.modelling.saga.repository.inmemory.InMemorySagaStore;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.Nonnull;
 
 import static java.util.Collections.singleton;
 import static org.axonframework.messaging.unitofwork.DefaultUnitOfWork.startAndGet;
@@ -179,8 +178,8 @@ class AnnotatedSagaRepositoryTest {
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, @Nonnull TestSaga target,
-                             @Nonnull MessageHandlingMember<? super TestSaga> handler) throws Exception {
+        public Object handle(@NonNull Message<?> message, @NonNull TestSaga target,
+                             @NonNull MessageHandlingMember<? super TestSaga> handler) throws Exception {
             counter.incrementAndGet();
             return handler.handle(message, target);
         }

@@ -19,8 +19,8 @@ package org.axonframework.eventsourcing;
 import org.axonframework.eventhandling.DomainEventMessage;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 
 /**
@@ -50,7 +50,7 @@ public abstract class AbstractSnapshotTrigger implements SnapshotTrigger, Serial
     }
 
     @Override
-    public void eventHandled(@Nonnull EventMessage<?> msg) {
+    public void eventHandled(@NonNull EventMessage<?> msg) {
         if (msg instanceof DomainEventMessage && exceedsThreshold()) {
             prepareSnapshotScheduling((DomainEventMessage<?>) msg);
             reset();

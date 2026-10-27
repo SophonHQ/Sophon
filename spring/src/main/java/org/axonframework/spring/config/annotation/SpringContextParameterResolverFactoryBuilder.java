@@ -19,6 +19,7 @@ package org.axonframework.spring.config.annotation;
 import org.axonframework.messaging.annotation.ClasspathParameterResolverFactory;
 import org.axonframework.messaging.annotation.ParameterResolverFactory;
 import org.axonframework.spring.config.ApplicationContextLookupParameterResolverFactory;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -28,8 +29,6 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.ManagedList;
-
-import javax.annotation.Nonnull;
 
 /**
  * Creates and registers a bean definition for a Spring Context aware ParameterResolverFactory. It ensures that only one
@@ -100,7 +99,7 @@ public final class SpringContextParameterResolverFactoryBuilder {
         }
 
         @Override
-        public void setBeanClassLoader(@Nonnull ClassLoader classLoader) {
+        public void setBeanClassLoader(@NonNull ClassLoader classLoader) {
             this.classLoader = classLoader;
         }
     }

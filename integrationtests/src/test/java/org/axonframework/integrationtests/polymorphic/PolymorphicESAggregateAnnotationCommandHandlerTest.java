@@ -21,11 +21,11 @@ import org.axonframework.eventsourcing.eventstore.EmbeddedEventStore;
 import org.axonframework.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
 import org.axonframework.modelling.command.Repository;
 import org.axonframework.modelling.command.RepositoryProvider;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 
 /**
@@ -50,7 +50,7 @@ public class PolymorphicESAggregateAnnotationCommandHandlerTest
                                               .build())
                 .repositoryProvider(new RepositoryProvider() {
                     @Override
-                    public <R> Repository<R> repositoryFor(@Nonnull Class<R> aggregateType) {
+                    public <R> Repository<R> repositoryFor(@NonNull Class<R> aggregateType) {
                         //noinspection unchecked
                         return (Repository<R>) repositories.get(aggregateType);
                     }

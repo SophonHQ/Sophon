@@ -18,8 +18,7 @@ package org.axonframework.micrometer;
 
 import org.axonframework.config.Configurer;
 import org.axonframework.config.ConfigurerModule;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Implementation of the {@link ConfigurerModule} which uses the
@@ -46,7 +45,7 @@ public class MetricsConfigurerModule implements ConfigurerModule {
     }
 
     @Override
-    public void configureModule(@Nonnull Configurer configurer) {
+    public void configureModule(@NonNull Configurer configurer) {
         if (useDimensions) {
             globalMetricRegistry.registerWithConfigurerWithDefaultTags(configurer);
         } else {

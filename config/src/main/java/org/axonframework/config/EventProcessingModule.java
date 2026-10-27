@@ -58,6 +58,7 @@ import org.axonframework.messaging.unitofwork.RollbackConfigurationType;
 import org.axonframework.modelling.saga.repository.SagaStore;
 import org.axonframework.modelling.saga.repository.inmemory.InMemorySagaStore;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +75,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static java.util.Comparator.comparing;
@@ -533,7 +533,7 @@ public class EventProcessingModule
     }
 
     @Override
-    public Optional<SequencedDeadLetterQueue<EventMessage<?>>> deadLetterQueue(@Nonnull String processingGroup) {
+    public Optional<SequencedDeadLetterQueue<EventMessage<?>>> deadLetterQueue(@NonNull String processingGroup) {
         validateConfigInitialization();
         if (!deadLetterQueues.containsKey(processingGroup)) {
             registerDefaultDeadLetterQueueIfPresent(processingGroup);
@@ -543,7 +543,7 @@ public class EventProcessingModule
     }
 
     @Override
-    public Optional<EnqueuePolicy<EventMessage<?>>> deadLetterPolicy(@Nonnull String processingGroup) {
+    public Optional<EnqueuePolicy<EventMessage<?>>> deadLetterPolicy(@NonNull String processingGroup) {
         validateConfigInitialization();
         return deadLetterPolicies.containsKey(processingGroup)
                 ? Optional.ofNullable(deadLetterPolicies.get(processingGroup).get())
@@ -552,7 +552,7 @@ public class EventProcessingModule
 
     @Override
     public Optional<SequencedDeadLetterProcessor<EventMessage<?>>> sequencedDeadLetterProcessor(
-            @Nonnull String processingGroup
+            @NonNull String processingGroup
     ) {
         validateConfigInitialization();
         return Optional.ofNullable(deadLetteringEventHandlerInvokers.get(processingGroup));
@@ -871,8 +871,8 @@ public class EventProcessingModule
 
     @Override
     public EventProcessingConfigurer registerDeadLetterQueue(
-            @Nonnull String processingGroup,
-            @Nonnull Function<Configuration, SequencedDeadLetterQueue<EventMessage<?>>> queueBuilder
+            @NonNull String processingGroup,
+            @NonNull Function<Configuration, SequencedDeadLetterQueue<EventMessage<?>>> queueBuilder
     ) {
         this.deadLetterQueues.put(
                 processingGroup, new Component<>(() -> configuration, "deadLetterQueue", queueBuilder)
@@ -882,7 +882,7 @@ public class EventProcessingModule
 
     @Override
     public EventProcessingConfigurer registerDefaultDeadLetterPolicy(
-            @Nonnull Function<Configuration, EnqueuePolicy<EventMessage<?>>> policyBuilder
+            @NonNull Function<Configuration, EnqueuePolicy<EventMessage<?>>> policyBuilder
     ) {
         this.defaultDeadLetterPolicy.update(policyBuilder);
         return this;
@@ -890,8 +890,8 @@ public class EventProcessingModule
 
     @Override
     public EventProcessingConfigurer registerDeadLetterPolicy(
-            @Nonnull String processingGroup,
-            @Nonnull Function<Configuration, EnqueuePolicy<EventMessage<?>>> policyBuilder
+            @NonNull String processingGroup,
+            @NonNull Function<Configuration, EnqueuePolicy<EventMessage<?>>> policyBuilder
     ) {
         deadLetterPolicies.put(processingGroup,
                                new Component<>(() -> configuration, "deadLetterPolicy", policyBuilder));
@@ -900,8 +900,8 @@ public class EventProcessingModule
 
     @Override
     public EventProcessingConfigurer registerDeadLetteringEventHandlerInvokerConfiguration(
-            @Nonnull String processingGroup,
-            @Nonnull DeadLetteringInvokerConfiguration configuration
+            @NonNull String processingGroup,
+            @NonNull DeadLetteringInvokerConfiguration configuration
     ) {
         this.deadLetteringInvokerConfigs.put(processingGroup, configuration);
         return this;

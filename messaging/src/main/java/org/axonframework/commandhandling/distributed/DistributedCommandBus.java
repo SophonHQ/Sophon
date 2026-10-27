@@ -41,6 +41,7 @@ import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
 import org.axonframework.tracing.SpanScope;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +51,6 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
@@ -140,13 +140,13 @@ public class DistributedCommandBus implements CommandBus, Distributed<CommandBus
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry handle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry handle) {
         handle.onShutdown(Phase.INBOUND_COMMAND_CONNECTOR, this::disconnect);
         handle.onShutdown(Phase.OUTBOUND_COMMAND_CONNECTORS, this::shutdownDispatching);
     }
 
     @Override
-    public <C> void dispatch(@Nonnull CommandMessage<C> command) {
+    public <C> void dispatch(@NonNull CommandMessage<C> command) {
         logger.debug("Dispatch command [{}] with callback", command.getCommandName());
         dispatch(command, defaultCommandCallback);
     }
@@ -157,8 +157,8 @@ public class DistributedCommandBus implements CommandBus, Distributed<CommandBus
      * @throws CommandDispatchException when an error occurs while dispatching the command to a segment
      */
     @Override
-    public <C, R> void dispatch(@Nonnull CommandMessage<C> command,
-                                @Nonnull CommandCallback<? super C, ? super R> callback) {
+    public <C, R> void dispatch(@NonNull CommandMessage<C> command,
+                                @NonNull CommandCallback<? super C, ? super R> callback) {
         CommandMessage<? extends C> interceptedCommand = intercept(command);
         MessageMonitor.MonitorCallback messageMonitorCallback = messageMonitor.onMessageIngested(interceptedCommand);
         Optional<Member> optionalDestination = commandRouter.findDestination(interceptedCommand);
@@ -206,8 +206,8 @@ public class DistributedCommandBus implements CommandBus, Distributed<CommandBus
      * In the DistributedCommandBus, the handler is subscribed to the local segment only.
      */
     @Override
-    public Registration subscribe(@Nonnull String commandName,
-                                  @Nonnull MessageHandler<? super CommandMessage<?>> handler) {
+    public Registration subscribe(@NonNull String commandName,
+                                  @NonNull MessageHandler<? super CommandMessage<?>> handler) {
         logger.debug("Subscribing command with name [{}] to this distributed CommandBus. Expect similar logging on the local segment.", commandName);
         Registration reg = connector.subscribe(commandName, handler);
         updateFilter(commandFilter.get().or(new CommandNameFilter(commandName)));
@@ -262,14 +262,14 @@ public class DistributedCommandBus implements CommandBus, Distributed<CommandBus
      * @return handle to deregister the interceptor
      */
     public Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super CommandMessage<?>> dispatchInterceptor) {
+            @NonNull MessageDispatchInterceptor<? super CommandMessage<?>> dispatchInterceptor) {
         dispatchInterceptors.add(dispatchInterceptor);
         return () -> dispatchInterceptors.remove(dispatchInterceptor);
     }
 
     @Override
     public Registration registerHandlerInterceptor(
-            @Nonnull MessageHandlerInterceptor<? super CommandMessage<?>> handlerInterceptor) {
+            @NonNull MessageHandlerInterceptor<? super CommandMessage<?>> handlerInterceptor) {
         return connector.registerHandlerInterceptor(handlerInterceptor);
     }
 
@@ -352,7 +352,7 @@ public class DistributedCommandBus implements CommandBus, Distributed<CommandBus
          * @deprecated Use {@link #spanFactory(CommandBusSpanFactory)} instead as it provides more configurability.
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = DefaultCommandBusSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
@@ -366,7 +366,7 @@ public class DistributedCommandBus implements CommandBus, Distributed<CommandBus
          * @param spanFactory The {@link CommandBusSpanFactory} implementation
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull CommandBusSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull CommandBusSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = spanFactory;
             return this;

@@ -31,12 +31,12 @@ import org.axonframework.messaging.deadletter.SequencedDeadLetterQueue;
 import org.axonframework.messaging.unitofwork.RollbackConfiguration;
 import org.axonframework.modelling.saga.repository.SagaStore;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 /**
  * Defines a contract for accessor methods regarding event processing configuration.
@@ -228,7 +228,7 @@ public interface EventProcessingConfiguration {
      * if there is none.
      */
     default Optional<SequencedDeadLetterQueue<EventMessage<?>>> deadLetterQueue(
-            @Nonnull String processingGroup
+            @NonNull String processingGroup
     ) {
         return Optional.empty();
     }
@@ -241,7 +241,7 @@ public interface EventProcessingConfiguration {
      * @param processingGroup The name of the processing group for which to return an {@link EnqueuePolicy}.
      * @return The {@link EnqueuePolicy} belonging to the given {@code processingGroup}.
      */
-    default Optional<EnqueuePolicy<EventMessage<?>>> deadLetterPolicy(@Nonnull String processingGroup) {
+    default Optional<EnqueuePolicy<EventMessage<?>>> deadLetterPolicy(@NonNull String processingGroup) {
         return Optional.empty();
     }
 
@@ -255,7 +255,7 @@ public interface EventProcessingConfiguration {
      * {@link Optional}, {@link Optional#empty()} if there is none.
      */
     default Optional<SequencedDeadLetterProcessor<EventMessage<?>>> sequencedDeadLetterProcessor(
-            @Nonnull String processingGroup
+            @NonNull String processingGroup
     ) {
         return Optional.empty();
     }

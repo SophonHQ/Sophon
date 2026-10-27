@@ -27,13 +27,13 @@ import org.axonframework.commandhandling.callbacks.FutureCallback;
 import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.common.Registration;
 import org.axonframework.messaging.MessageDispatchInterceptor;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -79,7 +79,7 @@ public class DefaultCommandGateway extends AbstractCommandGateway implements Com
     }
 
     @Override
-    public <C, R> void send(@Nonnull C command, @Nonnull CommandCallback<? super C, ? super R> callback) {
+    public <C, R> void send(@NonNull C command, @NonNull CommandCallback<? super C, ? super R> callback) {
         super.send(command, callback);
     }
 
@@ -95,7 +95,7 @@ public class DefaultCommandGateway extends AbstractCommandGateway implements Com
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <R> R sendAndWait(@Nonnull Object command) {
+    public <R> R sendAndWait(@NonNull Object command) {
         FutureCallback<Object, R> futureCallback = new FutureCallback<>();
         send(command, futureCallback);
         CommandResultMessage<? extends R> commandResultMessage = futureCallback.getResult();
@@ -121,7 +121,7 @@ public class DefaultCommandGateway extends AbstractCommandGateway implements Com
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <R> R sendAndWait(@Nonnull Object command, long timeout, @Nonnull TimeUnit unit) {
+    public <R> R sendAndWait(@NonNull Object command, long timeout, @NonNull TimeUnit unit) {
         FutureCallback<Object, R> futureCallback = new FutureCallback<>();
         send(command, futureCallback);
         CommandResultMessage<? extends R> commandResultMessage = futureCallback.getResult(timeout, unit);
@@ -133,7 +133,7 @@ public class DefaultCommandGateway extends AbstractCommandGateway implements Com
 
     @SuppressWarnings("unchecked") // Cast for commandCallback wrap
     @Override
-    public <R> CompletableFuture<R> send(@Nonnull Object command) {
+    public <R> CompletableFuture<R> send(@NonNull Object command) {
         FutureCallback<Object, R> callback = new FutureCallback<>();
         send(command, callback.wrap((CommandCallback<Object, R>) commandCallback));
         CompletableFuture<R> result = new CompletableFuture<>();
@@ -153,9 +153,9 @@ public class DefaultCommandGateway extends AbstractCommandGateway implements Com
     }
 
     @Override
-    public @Nonnull
+    public @NonNull
     Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super CommandMessage<?>> dispatchInterceptor) {
+            @NonNull MessageDispatchInterceptor<? super CommandMessage<?>> dispatchInterceptor) {
         return super.registerDispatchInterceptor(dispatchInterceptor);
     }
 
@@ -179,7 +179,7 @@ public class DefaultCommandGateway extends AbstractCommandGateway implements Com
         private CommandCallback<Object, Object> commandCallback = new FailureLoggingCallback<>(logger);
 
         @Override
-        public Builder commandBus(@Nonnull CommandBus commandBus) {
+        public Builder commandBus(@NonNull CommandBus commandBus) {
             super.commandBus(commandBus);
             return this;
         }
@@ -199,7 +199,7 @@ public class DefaultCommandGateway extends AbstractCommandGateway implements Com
         }
 
         @Override
-        public Builder retryScheduler(@Nonnull RetryScheduler retryScheduler) {
+        public Builder retryScheduler(@NonNull RetryScheduler retryScheduler) {
             super.retryScheduler(retryScheduler);
             return this;
         }

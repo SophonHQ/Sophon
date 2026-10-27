@@ -18,9 +18,9 @@ package org.axonframework.tracing.opentelemetry;
 
 import io.opentelemetry.context.propagation.TextMapSetter;
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * This {@link TextMapSetter} implementation is able to insert the current OpenTelemetry span context into a
@@ -45,7 +45,7 @@ public class MetadataContextSetter implements TextMapSetter<Map<String, String>>
     }
 
     @Override
-    public void set(Map<String, String> metadata, @Nonnull String key, @Nonnull String value) {
+    public void set(Map<String, String> metadata, @NonNull String key, @NonNull String value) {
         if (metadata == null) {
             throw new IllegalArgumentException("The provided metadata may not be null!");
         }

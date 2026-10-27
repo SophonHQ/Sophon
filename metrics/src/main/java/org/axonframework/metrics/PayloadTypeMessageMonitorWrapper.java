@@ -20,13 +20,13 @@ import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricSet;
 import org.axonframework.messaging.Message;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 /**
  * A {@link MessageMonitor} implementation which creates a new MessageMonitor for every {@link Message} payload type
@@ -76,7 +76,7 @@ public class PayloadTypeMessageMonitorWrapper<T extends MessageMonitor<Message<?
     }
 
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull Message<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull Message<?> message) {
         String monitorName = monitorNameBuilder.apply(message.getPayloadType());
 
         MessageMonitor<Message<?>> messageMonitorForPayloadType =

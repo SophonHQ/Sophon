@@ -17,11 +17,11 @@
 package org.axonframework.modelling.command;
 
 import org.axonframework.messaging.ScopeAware;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * The {@link Repository} provides an abstraction of the storage of aggregates.
@@ -45,7 +45,7 @@ public interface Repository<T> extends ScopeAware {
      * @return The aggregate root with the given identifier.
      * @throws AggregateNotFoundException if aggregate with given id cannot be found
      */
-    Aggregate<T> load(@Nonnull String aggregateIdentifier);
+    Aggregate<T> load(@NonNull String aggregateIdentifier);
 
     /**
      * Load the aggregate with the given unique identifier.
@@ -56,7 +56,7 @@ public interface Repository<T> extends ScopeAware {
      *
      * @throws AggregateNotFoundException if aggregate with given id cannot be found
      */
-    Aggregate<T> load(@Nonnull String aggregateIdentifier, @Nullable Long expectedVersion);
+    Aggregate<T> load(@NonNull String aggregateIdentifier, @Nullable Long expectedVersion);
 
     /**
      * Creates a new managed instance for the aggregate, using the given {@code factoryMethod}
@@ -67,7 +67,7 @@ public interface Repository<T> extends ScopeAware {
      *
      * @throws Exception when the factoryMethod throws an exception
      */
-    Aggregate<T> newInstance(@Nonnull Callable<T> factoryMethod) throws Exception;
+    Aggregate<T> newInstance(@NonNull Callable<T> factoryMethod) throws Exception;
 
     /**
      * Creates a new managed instance for the aggregate, using the given {@code factoryMethod} to instantiate the
@@ -94,7 +94,7 @@ public interface Repository<T> extends ScopeAware {
      * @param factoryMethod       The method to create the aggregate's root instance
      * @return The aggregate root with the given identifier.
      */
-    default Aggregate<T> loadOrCreate(@Nonnull String aggregateIdentifier, @Nonnull Callable<T> factoryMethod)
+    default Aggregate<T> loadOrCreate(@NonNull String aggregateIdentifier, @NonNull Callable<T> factoryMethod)
             throws Exception {
         throw new UnsupportedOperationException("loadOrCreate not implemented on this repository");
     }

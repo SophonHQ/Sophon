@@ -21,12 +21,12 @@ import org.apache.avro.message.SchemaStore;
 import org.apache.avro.util.ClassUtils;
 import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.serialization.*;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 import static org.axonframework.common.BuilderUtils.assertThat;
@@ -68,7 +68,7 @@ public class AvroSerializer implements Serializer {
      *
      * @param builder builder containing relevant settings.
      */
-    protected AvroSerializer(@Nonnull Builder builder) {
+    protected AvroSerializer(@NonNull Builder builder) {
         builder.validate();
         this.revisionResolver = builder.revisionResolver;
         this.serializerDelegate = builder.serializerDelegate;
@@ -111,7 +111,7 @@ public class AvroSerializer implements Serializer {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> SerializedObject<T> serialize(Object object, @Nonnull Class<T> expectedRepresentation) {
+    public <T> SerializedObject<T> serialize(Object object, @NonNull Class<T> expectedRepresentation) {
         // assume: expectedRepresentation is byte[] (or possibly String), nothing else.
         // delegate null handling to serializerDelegate, since Avro can't serialize null.
         if (object != null) {
@@ -133,7 +133,7 @@ public class AvroSerializer implements Serializer {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <S, T> T deserialize(@Nonnull SerializedObject<S> serializedObject) {
+    public <S, T> T deserialize(@NonNull SerializedObject<S> serializedObject) {
         if (SerializedType.isEmptyType(serializedObject.getType())) {
             return null;
         }
@@ -170,7 +170,7 @@ public class AvroSerializer implements Serializer {
     }
 
     @Override
-    public <T> boolean canSerializeTo(@Nonnull Class<T> expectedRepresentation) {
+    public <T> boolean canSerializeTo(@NonNull Class<T> expectedRepresentation) {
         return GenericRecord.class.equals(expectedRepresentation)
                 || getConverter().canConvert(byte[].class, expectedRepresentation)
                 || serializerDelegate.canSerializeTo(expectedRepresentation);
@@ -178,7 +178,7 @@ public class AvroSerializer implements Serializer {
 
     @Override
     @SuppressWarnings("rawtypes")
-    public Class classForType(@Nonnull SerializedType type) {
+    public Class classForType(@NonNull SerializedType type) {
         if (SimpleSerializedType.emptyType().equals(type)) {
             return Void.class;
         }
@@ -249,7 +249,7 @@ public class AvroSerializer implements Serializer {
          * @param revisionResolver revision resolver to use.
          * @return builder instance.
          */
-        public Builder revisionResolver(@Nonnull RevisionResolver revisionResolver) {
+        public Builder revisionResolver(@NonNull RevisionResolver revisionResolver) {
             assertNonNull(revisionResolver, "RevisionResolver may not be null");
             this.revisionResolver = revisionResolver;
             return this;
@@ -261,7 +261,7 @@ public class AvroSerializer implements Serializer {
          * @param schemaStore schema store instance.
          * @return builder instance.
          */
-        public Builder schemaStore(@Nonnull SchemaStore schemaStore) {
+        public Builder schemaStore(@NonNull SchemaStore schemaStore) {
             assertNonNull(schemaStore, "SchemaStore may not be null");
             this.schemaStore = schemaStore;
             return this;
@@ -270,7 +270,7 @@ public class AvroSerializer implements Serializer {
         /**
          * Sets schema compatibility checker.
          */
-        public Builder schemaIncompatibilityChecker(@Nonnull SchemaIncompatibilityChecker incompatibilityChecker) {
+        public Builder schemaIncompatibilityChecker(@NonNull SchemaIncompatibilityChecker incompatibilityChecker) {
             assertNonNull(incompatibilityChecker, "SchemaIncompatibilityChecker may not be null");
             this.schemaIncompatibilityChecker = incompatibilityChecker;
             return this;
@@ -282,7 +282,7 @@ public class AvroSerializer implements Serializer {
          * @param serializerDelegate serializer delegate.
          * @return builder instance.
          */
-        public Builder serializerDelegate(@Nonnull Serializer serializerDelegate) {
+        public Builder serializerDelegate(@NonNull Serializer serializerDelegate) {
             assertNonNull(serializerDelegate, "Serializer delegate may not be null");
             this.serializerDelegate = serializerDelegate;
             return this;
@@ -294,7 +294,7 @@ public class AvroSerializer implements Serializer {
          * @param strategy strategy responsible for the serialization and deserialization.
          * @return builder instance.
          */
-        public Builder addSerializerStrategy(@Nonnull AvroSerializerStrategy strategy) {
+        public Builder addSerializerStrategy(@NonNull AvroSerializerStrategy strategy) {
             assertNonNull(strategy, "AvroSerializerStrategy may not be null");
             this.serializerStrategies.add(strategy);
             return this;

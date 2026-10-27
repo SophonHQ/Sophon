@@ -21,13 +21,13 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.WrappedMessageHandlingMember;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of a {@link HandlerEnhancerDefinition} that is used for {@link CommandHandler} annotated methods.
@@ -38,7 +38,7 @@ import javax.annotation.Nonnull;
 public class MethodCommandHandlerDefinition implements HandlerEnhancerDefinition {
 
     @Override
-    public <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
         return original.annotationAttributes(CommandHandler.class)
                        .map(attr -> (MessageHandlingMember<T>) new MethodCommandMessageHandlingMember<>(original, attr))
                        .orElse(original);
@@ -75,7 +75,7 @@ public class MethodCommandHandlerDefinition implements HandlerEnhancerDefinition
         }
 
         @Override
-        public boolean canHandle(@Nonnull Message<?> message) {
+        public boolean canHandle(@NonNull Message<?> message) {
             return super.canHandle(message) && commandName.equals(((CommandMessage<?>) message).getCommandName());
         }
 

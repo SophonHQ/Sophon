@@ -19,10 +19,9 @@ package org.axonframework.commandhandling.callbacks;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
 
 /**
  * CommandCallback implementation that simply logs the results of a command.
@@ -43,7 +42,7 @@ public class LoggingCallback implements CommandCallback<Object, Object> {
     }
 
     @Override
-    public void onResult(@Nonnull CommandMessage message, @Nonnull CommandResultMessage commandResultMessage) {
+    public void onResult(@NonNull CommandMessage message, @NonNull CommandResultMessage commandResultMessage) {
         if (commandResultMessage.isExceptional()) {
             logger.warn("Command resulted in exception: {}",
                         message.getCommandName(),

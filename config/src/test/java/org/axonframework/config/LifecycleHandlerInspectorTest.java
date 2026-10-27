@@ -21,6 +21,7 @@ import org.axonframework.lifecycle.Lifecycle;
 import org.axonframework.lifecycle.LifecycleHandlerInvocationException;
 import org.axonframework.lifecycle.ShutdownHandler;
 import org.axonframework.lifecycle.StartHandler;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
@@ -30,7 +31,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -145,7 +145,7 @@ class LifecycleHandlerInspectorTest {
         }
 
         @Override
-        public void registerLifecycleHandlers(@Nonnull LifecycleRegistry lifecycle) {
+        public void registerLifecycleHandlers(@NonNull LifecycleRegistry lifecycle) {
             registration.accept(lifecycle);
         }
     }

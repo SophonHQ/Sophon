@@ -40,13 +40,13 @@ import org.axonframework.messaging.unitofwork.UnitOfWork;
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.SimpleSerializedObject;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.isNull;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -302,7 +302,7 @@ public class DbSchedulerEventScheduler implements EventScheduler, Lifecycle {
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry lifecycle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry lifecycle) {
         lifecycle.onStart(Phase.INBOUND_EVENT_CONNECTORS, this::start);
         lifecycle.onShutdown(Phase.INBOUND_EVENT_CONNECTORS, this::shutdown);
     }

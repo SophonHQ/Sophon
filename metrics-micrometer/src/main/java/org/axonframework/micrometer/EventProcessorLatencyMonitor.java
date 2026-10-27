@@ -26,12 +26,12 @@ import org.axonframework.eventhandling.StreamingEventProcessor;
 import org.axonframework.messaging.Message;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitorCallback;
+import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonEmpty;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -127,7 +127,7 @@ public class EventProcessorLatencyMonitor implements MessageMonitor<EventMessage
 
     @SuppressWarnings("PackageAccessibility")
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull EventMessage<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull EventMessage<?> message) {
         //noinspection ConstantConditions
         if (message != null) {
             Tags tags = Tags.of(tagsBuilder.apply(message));

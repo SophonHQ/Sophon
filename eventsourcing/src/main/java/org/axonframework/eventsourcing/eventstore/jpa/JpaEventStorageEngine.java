@@ -38,6 +38,7 @@ import org.axonframework.eventsourcing.eventstore.BatchingEventStorageEngine;
 import org.axonframework.eventsourcing.snapshotting.SnapshotFilter;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.upcasting.event.EventUpcaster;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 import javax.sql.DataSource;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -341,7 +341,7 @@ public class JpaEventStorageEngine extends BatchingEventStorageEngine {
     }
 
     @Override
-    public Optional<Long> lastSequenceNumberFor(@Nonnull String aggregateIdentifier) {
+    public Optional<Long> lastSequenceNumberFor(@NonNull String aggregateIdentifier) {
         List<Long> results = entityManager().createQuery(
                                                     "SELECT MAX(e.sequenceNumber) FROM " + domainEventEntryEntityName()
                                                             + " e WHERE e.aggregateIdentifier = :aggregateId", Long.class)
@@ -367,7 +367,7 @@ public class JpaEventStorageEngine extends BatchingEventStorageEngine {
     }
 
     @Override
-    public TrackingToken createTokenAt(@Nonnull Instant dateTime) {
+    public TrackingToken createTokenAt(@NonNull Instant dateTime) {
         List<Long> results = entityManager()
                 .createQuery(
                         "SELECT MIN(e.globalIndex) - 1 FROM " + domainEventEntryEntityName() + " e "

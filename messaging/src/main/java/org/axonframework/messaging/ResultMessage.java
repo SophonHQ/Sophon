@@ -18,10 +18,10 @@ package org.axonframework.messaging;
 
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.Serializer;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 /**
  * Message that represents a result of handling some form of request message.
@@ -94,8 +94,8 @@ public interface ResultMessage<R> extends Message<R> {
     }
 
     @Override
-    ResultMessage<R> withMetaData(@Nonnull Map<String, ?> metaData);
+    ResultMessage<R> withMetaData(@NonNull Map<String, ?> metaData);
 
     @Override
-    ResultMessage<R> andMetaData(@Nonnull Map<String, ?> metaData);
+    ResultMessage<R> andMetaData(@NonNull Map<String, ?> metaData);
 }

@@ -17,8 +17,7 @@
 package org.axonframework.commandhandling.distributed;
 
 import org.axonframework.commandhandling.CommandMessage;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -41,7 +40,7 @@ public abstract class AbstractRoutingStrategy implements RoutingStrategy {
      * @deprecated in favor of {@link #AbstractRoutingStrategy(RoutingStrategy)}
      */
     @Deprecated
-    public AbstractRoutingStrategy(@Nonnull UnresolvedRoutingKeyPolicy fallbackRoutingStrategy) {
+    public AbstractRoutingStrategy(@NonNull UnresolvedRoutingKeyPolicy fallbackRoutingStrategy) {
         this((RoutingStrategy) fallbackRoutingStrategy);
     }
 
@@ -51,13 +50,13 @@ public abstract class AbstractRoutingStrategy implements RoutingStrategy {
      *
      * @param fallbackRoutingStrategy the fallback routing to use whenever this {@link RoutingStrategy} doesn't succeed
      */
-    protected AbstractRoutingStrategy(@Nonnull RoutingStrategy fallbackRoutingStrategy) {
+    protected AbstractRoutingStrategy(@NonNull RoutingStrategy fallbackRoutingStrategy) {
         assertNonNull(fallbackRoutingStrategy, "Fallback RoutingStrategy may not be null");
         this.fallbackRoutingStrategy = fallbackRoutingStrategy;
     }
 
     @Override
-    public String getRoutingKey(@Nonnull CommandMessage<?> command) {
+    public String getRoutingKey(@NonNull CommandMessage<?> command) {
         String routingKey = doResolveRoutingKey(command);
         if (routingKey == null) {
             routingKey = fallbackRoutingStrategy.getRoutingKey(command);
@@ -71,5 +70,5 @@ public abstract class AbstractRoutingStrategy implements RoutingStrategy {
      * @param command the command to resolve the routing key for
      * @return the String representing the Routing Key, or {@code null} if unresolved
      */
-    protected abstract String doResolveRoutingKey(@Nonnull CommandMessage<?> command);
+    protected abstract String doResolveRoutingKey(@NonNull CommandMessage<?> command);
 }

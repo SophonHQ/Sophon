@@ -16,9 +16,10 @@
 
 package org.axonframework.eventhandling;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.List;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 /**
  * Interface describing a strategy for the processing of a batch of events. This is used by the {@link
@@ -38,7 +39,7 @@ public interface EventProcessingStrategy {
      * @param events    Events to be processed
      * @param processor Callback method on the processor that carries out the actual processing of events
      */
-    void handle(@Nonnull List<? extends EventMessage<?>> events,
-                @Nonnull Consumer<List<? extends EventMessage<?>>> processor);
+    void handle(@NonNull List<? extends EventMessage<?>> events,
+                @NonNull Consumer<List<? extends EventMessage<?>>> processor);
 
 }

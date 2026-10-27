@@ -23,9 +23,8 @@ import org.axonframework.messaging.ScopeDescriptor;
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.SimpleSerializedObject;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Pojo that contains the information about a {@link org.jobrunr.jobs.Job}, will be serialized and deserialized using
@@ -62,9 +61,9 @@ public class DeadlineDetails {
      * @param metaData             The {@link String} containing the metadata about the deadline.
      */
     @SuppressWarnings("squid:S107")
-    public DeadlineDetails(@Nonnull String deadlineName, @Nonnull String scopeDescriptor,
-                           @Nonnull String scopeDescriptorClass, @Nullable String payload,
-                           @Nullable String payloadClass, @Nullable String payloadRevision, @Nonnull String metaData) {
+    public DeadlineDetails(@NonNull String deadlineName, @NonNull String scopeDescriptor,
+                           @NonNull String scopeDescriptorClass, @Nullable String payload,
+                           @Nullable String payloadClass, @Nullable String payloadRevision, @NonNull String metaData) {
         this.deadlineName = deadlineName;
         this.scopeDescriptor = scopeDescriptor;
         this.scopeDescriptorClass = scopeDescriptorClass;
@@ -88,9 +87,9 @@ public class DeadlineDetails {
      * @return The serialized {@link String} representation of the details.
      */
     @SuppressWarnings("rawtypes")
-    static String serialized(@Nonnull String deadlineName, @Nonnull ScopeDescriptor descriptor,
-                             @Nonnull DeadlineMessage message,
-                             @Nonnull Serializer serializer) {
+    static String serialized(@NonNull String deadlineName, @NonNull ScopeDescriptor descriptor,
+                             @NonNull DeadlineMessage message,
+                             @NonNull Serializer serializer) {
         SerializedObject<String> serializedDescriptor = serializer.serialize(descriptor, String.class);
         SerializedObject<String> serializedPayload = serializer.serialize(message.getPayload(), String.class);
         SerializedObject<String> serializedMetaData = serializer.serialize(message.getMetaData(), String.class);

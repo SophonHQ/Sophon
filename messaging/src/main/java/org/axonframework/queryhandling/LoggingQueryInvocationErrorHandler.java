@@ -18,10 +18,9 @@ package org.axonframework.queryhandling;
 
 import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.messaging.MessageHandler;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -58,8 +57,8 @@ public class LoggingQueryInvocationErrorHandler implements QueryInvocationErrorH
     }
 
     @Override
-    public void onError(@Nonnull Throwable error, @Nonnull QueryMessage<?, ?> queryMessage,
-                        @Nonnull MessageHandler messageHandler) {
+    public void onError(@NonNull Throwable error, @NonNull QueryMessage<?, ?> queryMessage,
+                        @NonNull MessageHandler messageHandler) {
         logger.warn("An error occurred while processing query message [{}]", queryMessage.getQueryName(), error);
     }
 

@@ -33,7 +33,7 @@ import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryMessage;
 import org.axonframework.springboot.utils.TestSerializer;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,7 +53,6 @@ import java.util.function.BiFunction;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-
 
 /**
  * Test class validating the behavior of the {@link InfraConfiguration}.
@@ -510,9 +509,9 @@ class InterceptorConfigurationTest {
                 this.axonConfiguration = axonConfiguration;
             }
 
-            @NotNull
+            @NonNull
             @Override
-            public BiFunction<Integer, T, T> handle(@NotNull List<? extends T> messages) {
+            public BiFunction<Integer, T, T> handle(@NonNull List<? extends T> messages) {
                 axonConfiguration.tags();
                 return (index, message) -> {
                     invocation.countDown();
@@ -548,9 +547,9 @@ class InterceptorConfigurationTest {
                 this.eventHandlingOutcome = eventHandlingOutcome;
             }
 
-            @NotNull
+            @NonNull
             @Override
-            public BiFunction<Integer, T, T> handle(@NotNull List<? extends T> messages) {
+            public BiFunction<Integer, T, T> handle(@NonNull List<? extends T> messages) {
                 return (index, message) -> {
                     if (message instanceof CommandMessage) {
                         commandInvocation.countDown();
@@ -593,7 +592,7 @@ class InterceptorConfigurationTest {
                 this.eventHandlingOutcome = eventHandlingOutcome;
             }
 
-            @NotNull
+            @NonNull
             @Override
             public Object handle(UnitOfWork<?> unitOfWork, InterceptorChain interceptorChain) throws Exception {
                 if (unitOfWork.getMessage() instanceof CommandMessage) {
@@ -645,7 +644,7 @@ class InterceptorConfigurationTest {
         public static class MyCommandHandlerInterceptor implements MessageHandlerInterceptor<CommandMessage<?>> {
 
             @Override
-            public Object handle(@NotNull UnitOfWork<? extends CommandMessage<?>> unitOfWork, @NotNull InterceptorChain interceptorChain) throws Exception {
+            public Object handle(@NonNull UnitOfWork<? extends CommandMessage<?>> unitOfWork, @NonNull InterceptorChain interceptorChain) throws Exception {
                 return interceptorChain.proceed();
             }
         }

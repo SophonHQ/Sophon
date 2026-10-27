@@ -20,12 +20,12 @@ import org.axonframework.eventhandling.GenericEventMessage;
 import org.axonframework.messaging.GenericMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MetaData;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.Map;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Generic implementation of the {@link DeadlineMessage}.
@@ -56,7 +56,7 @@ public class GenericDeadlineMessage<T> extends GenericEventMessage<T> implements
      * deadline, rather than the current time
      */
     @Deprecated
-    public static <T> DeadlineMessage<T> asDeadlineMessage(@Nonnull String deadlineName, Object messageOrPayload) {
+    public static <T> DeadlineMessage<T> asDeadlineMessage(@NonNull String deadlineName, Object messageOrPayload) {
         return asDeadlineMessage(deadlineName, messageOrPayload, clock.instant());
     }
 
@@ -74,9 +74,9 @@ public class GenericDeadlineMessage<T> extends GenericEventMessage<T> implements
      * {@code messageOrPayload} as the payload
      */
     @SuppressWarnings("unchecked")
-    public static <T> DeadlineMessage<T> asDeadlineMessage(@Nonnull String deadlineName,
+    public static <T> DeadlineMessage<T> asDeadlineMessage(@NonNull String deadlineName,
                                                            @Nullable Object messageOrPayload,
-                                                           @Nonnull Instant expiryTime) {
+                                                           @NonNull Instant expiryTime) {
         return messageOrPayload instanceof Message
                 ? new GenericDeadlineMessage<>(deadlineName, (Message) messageOrPayload, () -> expiryTime)
                 : new GenericDeadlineMessage<>(deadlineName,
@@ -90,7 +90,7 @@ public class GenericDeadlineMessage<T> extends GenericEventMessage<T> implements
      *
      * @param deadlineName A {@link String} denoting the deadline's name
      */
-    public GenericDeadlineMessage(@Nonnull String deadlineName) {
+    public GenericDeadlineMessage(@NonNull String deadlineName) {
         this(deadlineName, null);
     }
 
@@ -101,7 +101,7 @@ public class GenericDeadlineMessage<T> extends GenericEventMessage<T> implements
      * @param deadlineName A {@link String} denoting the deadline's name
      * @param payload      The payload of type {@code T} for the DeadlineMessage
      */
-    public GenericDeadlineMessage(@Nonnull String deadlineName, @Nullable T payload) {
+    public GenericDeadlineMessage(@NonNull String deadlineName, @Nullable T payload) {
         this(deadlineName, payload, MetaData.emptyInstance());
     }
 
@@ -113,7 +113,7 @@ public class GenericDeadlineMessage<T> extends GenericEventMessage<T> implements
      * @param payload      The payload of the Message
      * @param metaData     The MetaData of the Message
      */
-    public GenericDeadlineMessage(@Nonnull String deadlineName, @Nullable T payload, @Nonnull Map<String, ?> metaData) {
+    public GenericDeadlineMessage(@NonNull String deadlineName, @Nullable T payload, @NonNull Map<String, ?> metaData) {
         super(payload, metaData);
         this.deadlineName = deadlineName;
     }
@@ -127,8 +127,8 @@ public class GenericDeadlineMessage<T> extends GenericEventMessage<T> implements
      * @param metaData     The {@link MetaData} of the Message
      * @param timestamp    An {@link Instant} timestamp of the Message creation
      */
-    public GenericDeadlineMessage(@Nonnull String deadlineName,
-                                  @Nonnull String identifier,
+    public GenericDeadlineMessage(@NonNull String deadlineName,
+                                  @NonNull String identifier,
                                   @Nullable T payload,
                                   Map<String, ?> metaData,
                                   Instant timestamp) {
@@ -144,8 +144,8 @@ public class GenericDeadlineMessage<T> extends GenericEventMessage<T> implements
      * @param delegate          The {@link Message} containing the payload, identifier and {@link MetaData}
      * @param timestampSupplier {@link Supplier} for the timestamp of the Message creation
      */
-    public GenericDeadlineMessage(@Nonnull String deadlineName, @Nonnull Message<T> delegate,
-                                  @Nonnull Supplier<Instant> timestampSupplier) {
+    public GenericDeadlineMessage(@NonNull String deadlineName, @NonNull Message<T> delegate,
+                                  @NonNull Supplier<Instant> timestampSupplier) {
         super(delegate, timestampSupplier);
         this.deadlineName = deadlineName;
     }
@@ -156,12 +156,12 @@ public class GenericDeadlineMessage<T> extends GenericEventMessage<T> implements
     }
 
     @Override
-    public GenericDeadlineMessage<T> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericDeadlineMessage<T> withMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericDeadlineMessage<>(deadlineName, getDelegate().withMetaData(metaData), this::getTimestamp);
     }
 
     @Override
-    public GenericDeadlineMessage<T> andMetaData(@Nonnull Map<String, ?> additionalMetaData) {
+    public GenericDeadlineMessage<T> andMetaData(@NonNull Map<String, ?> additionalMetaData) {
         return new GenericDeadlineMessage<>(
                 deadlineName, getDelegate().andMetaData(additionalMetaData), this::getTimestamp
         );

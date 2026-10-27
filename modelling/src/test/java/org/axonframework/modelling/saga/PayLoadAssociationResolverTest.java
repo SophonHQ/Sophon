@@ -19,12 +19,12 @@ package org.axonframework.modelling.saga;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.*;
 
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static org.axonframework.eventhandling.GenericEventMessage.asEventMessage;
 import static org.axonframework.modelling.utils.ConcurrencyUtils.testConcurrent;
@@ -105,17 +105,17 @@ class PayloadAssociationResolverTest {
         }
 
         @Override
-        public Object handle(@Nonnull Message message, @Nullable Object target) throws Exception {
+        public Object handle(@NonNull Message message, @Nullable Object target) throws Exception {
             return null;
         }
 
         @Override
-        public boolean canHandleMessageType(@Nonnull Class messageType) {
+        public boolean canHandleMessageType(@NonNull Class messageType) {
             return true;
         }
 
         @Override
-        public boolean canHandle(@Nonnull Message message) {
+        public boolean canHandle(@NonNull Message message) {
             return true;
         }
     }

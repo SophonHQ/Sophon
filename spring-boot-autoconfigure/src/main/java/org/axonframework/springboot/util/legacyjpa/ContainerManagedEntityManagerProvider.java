@@ -17,8 +17,8 @@
 package org.axonframework.springboot.util.legacyjpa;
 
 import org.axonframework.common.legacyjpa.EntityManagerProvider;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -39,7 +39,7 @@ public class ContainerManagedEntityManagerProvider implements EntityManagerProvi
 
     private EntityManager entityManager;
 
-    @Nonnull
+    @NonNull
     @Override
     public EntityManager getEntityManager() {
         return entityManager;

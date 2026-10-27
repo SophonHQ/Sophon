@@ -21,12 +21,12 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageHandlerInterceptor;
 import org.axonframework.messaging.correlation.CorrelationDataProvider;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Message interceptor that registers {@link CorrelationDataProvider CorrelationDataProviders} with the Unit of Work.
@@ -61,7 +61,7 @@ public class CorrelationDataInterceptor<T extends Message<?>> implements Message
     }
 
     @Override
-    public Object handle(@Nonnull UnitOfWork<? extends T> unitOfWork, @Nonnull InterceptorChain interceptorChain)
+    public Object handle(@NonNull UnitOfWork<? extends T> unitOfWork, @NonNull InterceptorChain interceptorChain)
             throws Exception {
         correlationDataProviders.forEach(unitOfWork::registerCorrelationDataProvider);
         return interceptorChain.proceed();

@@ -22,13 +22,13 @@ import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.ParameterResolver;
 import org.axonframework.messaging.annotation.ParameterResolverFactory;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.test.matchers.Matchers.exactSequenceOf;
 import static org.axonframework.test.matchers.Matchers.predicate;
@@ -129,9 +129,9 @@ public class FixtureTest_RegisteringMethodEnhancements {
         }
 
         @Override
-        public <T> Optional<MessageHandlingMember<T>> createHandler(@Nonnull Class<T> declaringType,
-                                                                    @Nonnull Executable executable,
-                                                                    @Nonnull ParameterResolverFactory parameterResolverFactory) {
+        public <T> Optional<MessageHandlingMember<T>> createHandler(@NonNull Class<T> declaringType,
+                                                                    @NonNull Executable executable,
+                                                                    @NonNull ParameterResolverFactory parameterResolverFactory) {
             assertion.set(true);
             // We do not care about a specific MessageHandlingMember,
             //  only that this method is called to ensure its part of the FixtureConfiguration.
@@ -148,8 +148,8 @@ public class FixtureTest_RegisteringMethodEnhancements {
         }
 
         @Override
-        public @Nonnull
-        <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+        public @NonNull
+        <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
             assertion.set(true);
             // We do not care about a specific MessageHandlingMember,
             //  only that this method is called to ensure its part of the FixtureConfiguration.

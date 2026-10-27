@@ -20,9 +20,8 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.WrappedMessageHandlingMember;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A {@link HandlerEnhancerDefinition} inspecting the existence of the {@link EndSaga} annotation on {@link
@@ -35,8 +34,8 @@ import javax.annotation.Nullable;
 public class EndSagaMessageHandlerDefinition implements HandlerEnhancerDefinition {
 
     @Override
-    public @Nonnull
-    <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public @NonNull
+    <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
         return original.hasAnnotation(EndSaga.class) ? new EndSageMessageHandlingMember<>(original) : original;
     }
 
@@ -59,7 +58,7 @@ public class EndSagaMessageHandlerDefinition implements HandlerEnhancerDefinitio
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, @Nullable T target) throws Exception {
+        public Object handle(@NonNull Message<?> message, @Nullable T target) throws Exception {
             try {
                 return super.handle(message, target);
             } finally {

@@ -21,9 +21,9 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.WrappedMessageHandlingMember;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of a {@link HandlerEnhancerDefinition} that is used for {@link DeadlineHandler} annotated methods.
@@ -35,7 +35,7 @@ import javax.annotation.Nonnull;
 public class DeadlineMethodMessageHandlerDefinition implements HandlerEnhancerDefinition {
 
     @Override
-    public <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
         return original.annotationAttributes(DeadlineHandler.class)
                        .map(attr -> (MessageHandlingMember<T>) new DeadlineMethodMessageHandlingMember<>(original,
                                                                                                          attr))
@@ -54,7 +54,7 @@ public class DeadlineMethodMessageHandlerDefinition implements HandlerEnhancerDe
         }
 
         @Override
-        public boolean canHandle(@Nonnull Message<?> message) {
+        public boolean canHandle(@NonNull Message<?> message) {
             return message instanceof DeadlineMessage
                     && deadlineNameMatch((DeadlineMessage<?>) message)
                     && super.canHandle(message);

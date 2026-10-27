@@ -18,14 +18,13 @@ package org.axonframework.spring.messaging;
 
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.SubscribableMessageSource;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.PayloadApplicationEvent;
-
-import javax.annotation.Nonnull;
 
 /**
  * Component that forward events received from a {@link SubscribableMessageSource} as Spring {@link ApplicationEvent} to
@@ -47,7 +46,7 @@ public class ApplicationContextEventPublisher implements InitializingBean, Appli
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 

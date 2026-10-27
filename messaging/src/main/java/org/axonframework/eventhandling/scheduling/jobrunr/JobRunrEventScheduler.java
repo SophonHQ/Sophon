@@ -36,13 +36,13 @@ import org.axonframework.serialization.SimpleSerializedObject;
 import org.jobrunr.jobs.JobId;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobScheduler;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.isNull;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -168,7 +168,7 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry lifecycle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry lifecycle) {
         lifecycle.onShutdown(Phase.INBOUND_EVENT_CONNECTORS, this::shutdown);
     }
 

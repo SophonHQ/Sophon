@@ -22,11 +22,11 @@ import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.GenericEventMessage;
 import org.axonframework.messaging.MessageDispatchInterceptor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static java.util.Arrays.asList;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -63,7 +63,7 @@ public abstract class AbstractEventGateway {
      *
      * @param event The event to publish.
      */
-    protected void publish(@Nonnull Object event) {
+    protected void publish(@NonNull Object event) {
         this.eventBus.publish(processInterceptors(asEventMessage(event)));
     }
 
@@ -72,7 +72,7 @@ public abstract class AbstractEventGateway {
      *
      * @param events The {@link List} of events to publish.
      */
-    protected void publishAll(@Nonnull List<?> events) {
+    protected void publishAll(@NonNull List<?> events) {
         List<EventMessage<?>> interceptedEvents = events.stream()
                                                         .map(GenericEventMessage::asEventMessage)
                                                         .map(this::processInterceptors)
@@ -90,7 +90,7 @@ public abstract class AbstractEventGateway {
      * @return a registration which can be used to cancel the registration of given interceptor
      */
     public Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super EventMessage<?>> interceptor) {
+            @NonNull MessageDispatchInterceptor<? super EventMessage<?>> interceptor) {
         dispatchInterceptors.add(interceptor);
         return () -> dispatchInterceptors.remove(interceptor);
     }
@@ -137,7 +137,7 @@ public abstract class AbstractEventGateway {
          * @param eventBus an {@link EventBus} used to publish events
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder eventBus(@Nonnull EventBus eventBus) {
+        public Builder eventBus(@NonNull EventBus eventBus) {
             assertNonNull(eventBus, "EventBus may not be null");
             this.eventBus = eventBus;
             return this;

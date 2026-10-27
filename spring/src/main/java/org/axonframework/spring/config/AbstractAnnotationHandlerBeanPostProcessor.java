@@ -23,6 +23,7 @@ import org.axonframework.messaging.annotation.ClasspathHandlerDefinition;
 import org.axonframework.messaging.annotation.ClasspathParameterResolverFactory;
 import org.axonframework.messaging.annotation.HandlerDefinition;
 import org.axonframework.messaging.annotation.ParameterResolverFactory;
+import org.jspecify.annotations.NonNull;
 import org.springframework.aop.IntroductionInfo;
 import org.springframework.aop.IntroductionInterceptor;
 import org.springframework.aop.framework.Advised;
@@ -39,7 +40,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.stream.StreamSupport;
-import javax.annotation.Nonnull;
 
 import static java.lang.reflect.Modifier.isAbstract;
 
@@ -66,7 +66,7 @@ public abstract class AbstractAnnotationHandlerBeanPostProcessor<I, T extends I>
      * {@inheritDoc}
      */
     @Override
-    public Object postProcessBeforeInitialization(@Nonnull Object bean, @Nonnull String beanName)
+    public Object postProcessBeforeInitialization(@NonNull Object bean, @NonNull String beanName)
             throws BeansException {
         return bean;
     }
@@ -75,7 +75,7 @@ public abstract class AbstractAnnotationHandlerBeanPostProcessor<I, T extends I>
      * {@inheritDoc}
      */
     @Override
-    public Object postProcessAfterInitialization(@Nonnull final Object bean, @Nonnull final String beanName)
+    public Object postProcessAfterInitialization(@NonNull final Object bean, @NonNull final String beanName)
             throws BeansException {
         //noinspection ConstantConditions
         if (bean instanceof FactoryBean
@@ -218,7 +218,7 @@ public abstract class AbstractAnnotationHandlerBeanPostProcessor<I, T extends I>
     }
 
     @Override
-    public void setBeanFactory(@Nonnull BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(@NonNull BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
     }
 
@@ -236,7 +236,7 @@ public abstract class AbstractAnnotationHandlerBeanPostProcessor<I, T extends I>
         }
 
         @Override
-        public boolean implementsInterface(@Nonnull Class<?> intf) {
+        public boolean implementsInterface(@NonNull Class<?> intf) {
             for (Class<?> iFace : interfaces) {
                 if (intf.equals(iFace)) {
                     return true;
@@ -245,14 +245,13 @@ public abstract class AbstractAnnotationHandlerBeanPostProcessor<I, T extends I>
             return false;
         }
 
-        @Nonnull
         @Override
-        public Class<?>[] getInterfaces() {
+        public Class<?> @NonNull [] getInterfaces() {
             return interfaces;
         }
 
         @Override
-        public Object invoke(@Nonnull MethodInvocation invocation) throws Exception {
+        public Object invoke(@NonNull MethodInvocation invocation) throws Exception {
             try {
                 // if the method is declared on the proxy, invoke it there
                 for (Method proxyMethod : proxyMethods) {
@@ -337,9 +336,8 @@ public abstract class AbstractAnnotationHandlerBeanPostProcessor<I, T extends I>
             }
         }
 
-        @Nonnull
         @Override
-        public Class<?>[] getInterfaces() {
+        public Class<?> @NonNull [] getInterfaces() {
             return new Class[]{adapterInterface};
         }
     }

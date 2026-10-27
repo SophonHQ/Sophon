@@ -21,6 +21,7 @@ import org.axonframework.common.ReflectionUtils;
 import org.axonframework.common.annotation.AnnotationUtils;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.MessageHandler;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -40,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * A {@link BeanDefinitionRegistryPostProcessor} implementation that detects beans with Axon Message handlers and
@@ -104,7 +104,7 @@ public class MessageHandlerLookup implements BeanDefinitionRegistryPostProcessor
     }
 
     @Override
-    public void postProcessBeanFactory(@Nonnull ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
         if (!(beanFactory instanceof BeanDefinitionRegistry)) {
             logger.warn("Given bean factory is not a BeanDefinitionRegistry. Cannot auto-configure message handlers");
             return;
@@ -141,7 +141,7 @@ public class MessageHandlerLookup implements BeanDefinitionRegistryPostProcessor
      * @return A new {@link List} of sorted bean references, according to the value of the {@link Order} annotation
      * value on the beans.
      */
-    private List<String> sortByOrder(List<String> found, @Nonnull ConfigurableListableBeanFactory beanFactory) {
+    private List<String> sortByOrder(List<String> found, @NonNull ConfigurableListableBeanFactory beanFactory) {
         return found.stream()
                     .collect(Collectors.toMap(
                             beanRef -> beanRef,
@@ -158,7 +158,7 @@ public class MessageHandlerLookup implements BeanDefinitionRegistryPostProcessor
     }
 
     @Override
-    public void postProcessBeanDefinitionRegistry(@Nonnull BeanDefinitionRegistry registry) throws BeansException {
+    public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry) throws BeansException {
         // No action required.
     }
 }

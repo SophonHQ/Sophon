@@ -21,6 +21,7 @@ import org.axonframework.eventhandling.scheduling.quartz.EventJobDataBinder;
 import org.axonframework.eventhandling.scheduling.quartz.QuartzEventScheduler;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.spring.messaging.unitofwork.SpringTransactionManager;
+import org.jspecify.annotations.NonNull;
 import org.quartz.JobDataMap;
 import org.quartz.Scheduler;
 import org.springframework.beans.BeansException;
@@ -30,8 +31,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-
-import javax.annotation.Nonnull;
 
 /**
  * Spring FactoryBean that creates a QuartzEventScheduler instance using resources found in the Spring Application
@@ -100,7 +99,7 @@ public class QuartzEventSchedulerFactoryBean implements FactoryBean<QuartzEventS
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 

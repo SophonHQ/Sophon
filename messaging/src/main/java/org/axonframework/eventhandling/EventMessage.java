@@ -17,10 +17,10 @@
 package org.axonframework.eventhandling;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Instant;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Represents a Message wrapping an Event, which is represented by its payload. An Event is a representation of an
@@ -65,7 +65,7 @@ public interface EventMessage<T> extends Message<T> {
      * @return a copy of this message with the given MetaData
      */
     @Override
-    EventMessage<T> withMetaData(@Nonnull Map<String, ?> metaData);
+    EventMessage<T> withMetaData(@NonNull Map<String, ?> metaData);
 
     /**
      * Returns a copy of this EventMessage with it MetaData merged with the given {@code metaData}. The payload, {@link
@@ -75,5 +75,5 @@ public interface EventMessage<T> extends Message<T> {
      * @return a copy of this message with the given MetaData
      */
     @Override
-    EventMessage<T> andMetaData(@Nonnull Map<String, ?> metaData);
+    EventMessage<T> andMetaData(@NonNull Map<String, ?> metaData);
 }

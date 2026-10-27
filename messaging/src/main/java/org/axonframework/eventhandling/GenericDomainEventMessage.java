@@ -19,11 +19,11 @@ package org.axonframework.eventhandling;
 import org.axonframework.messaging.GenericMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MetaData;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Instant;
 import java.util.Map;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 /**
  * Generic implementation of a {@link DomainEventMessage}.
@@ -134,7 +134,7 @@ public class GenericDomainEventMessage<T> extends GenericEventMessage<T> impleme
     }
 
     @Override
-    public GenericDomainEventMessage<T> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericDomainEventMessage<T> withMetaData(@NonNull Map<String, ?> metaData) {
         if (getMetaData().equals(metaData)) {
             return this;
         }
@@ -143,7 +143,7 @@ public class GenericDomainEventMessage<T> extends GenericEventMessage<T> impleme
     }
 
     @Override
-    public GenericDomainEventMessage<T> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericDomainEventMessage<T> andMetaData(@NonNull Map<String, ?> metaData) {
         //noinspection ConstantConditions
         if (metaData == null || metaData.isEmpty() || getMetaData().equals(metaData)) {
             return this;

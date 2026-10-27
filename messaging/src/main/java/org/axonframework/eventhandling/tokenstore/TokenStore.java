@@ -19,13 +19,13 @@ package org.axonframework.eventhandling.tokenstore;
 import org.axonframework.eventhandling.EventProcessor;
 import org.axonframework.eventhandling.Segment;
 import org.axonframework.eventhandling.TrackingToken;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Describes a component capable of storing and retrieving event tracking tokens. An {@link EventProcessor} that is
@@ -51,7 +51,7 @@ public interface TokenStore {
      * @param segmentCount  The number of segments to initialize
      * @throws UnableToClaimTokenException when a segment has already been created
      */
-    default void initializeTokenSegments(@Nonnull String processorName, int segmentCount)
+    default void initializeTokenSegments(@NonNull String processorName, int segmentCount)
             throws UnableToClaimTokenException {
         for (int segment = 0; segment < segmentCount; segment++) {
             fetchToken(processorName, segment);
@@ -74,7 +74,7 @@ public interface TokenStore {
      * @param initialToken  The initial token which is used as a starting point for processor
      * @throws UnableToClaimTokenException when a segment has already been created
      */
-    default void initializeTokenSegments(@Nonnull String processorName, int segmentCount,
+    default void initializeTokenSegments(@NonNull String processorName, int segmentCount,
                                          @Nullable TrackingToken initialToken)
             throws UnableToClaimTokenException {
         for (int segment = 0; segment < segmentCount; segment++) {
@@ -100,7 +100,7 @@ public interface TokenStore {
      * @param segment       The index of the segment for which to store the token
      * @throws UnableToClaimTokenException when the token being updated has been claimed by another process.
      */
-    void storeToken(@Nullable TrackingToken token, @Nonnull String processorName, int segment)
+    void storeToken(@Nullable TrackingToken token, @NonNull String processorName, int segment)
             throws UnableToClaimTokenException;
 
     /**
@@ -123,7 +123,7 @@ public interface TokenStore {
      * @throws UnableToClaimTokenException if there is a token for given {@code processorName} and {@code segment}, but
      *                                     they are claimed by another process.
      */
-    TrackingToken fetchToken(@Nonnull String processorName, int segment) throws UnableToClaimTokenException;
+    TrackingToken fetchToken(@NonNull String processorName, int segment) throws UnableToClaimTokenException;
 
     /**
      * Returns the last stored {@link TrackingToken token} for the given {@code processorName} and {@code segment}. Returns {@code null} if the stored token for
@@ -143,7 +143,7 @@ public interface TokenStore {
      * @throws UnableToClaimTokenException if there is a token for given {@code processorName} and {@code segment}, but they are claimed by another process, or
      *                                     if the {@code segment has been split or merged concurrently}
      */
-    default TrackingToken fetchToken(@Nonnull String processorName, @Nonnull Segment segment)
+    default TrackingToken fetchToken(@NonNull String processorName, @NonNull Segment segment)
             throws UnableToClaimTokenException {
         return fetchToken(processorName, segment.getSegmentId());
     }
@@ -160,7 +160,7 @@ public interface TokenStore {
      * token is held. TokenStore implementations may choose to implement this method if they can provide a more efficient
      * way of extending this claim.
      */
-    default void extendClaim(@Nonnull String processorName, int segment) throws UnableToClaimTokenException {
+    default void extendClaim(@NonNull String processorName, int segment) throws UnableToClaimTokenException {
         fetchToken(processorName, segment);
     }
 
@@ -173,7 +173,7 @@ public interface TokenStore {
      * @param processorName The name of the process owning the token (e.g. a TrackingEventProcessor name)
      * @param segment       the segment for which a token was obtained
      */
-    void releaseClaim(@Nonnull String processorName, int segment);
+    void releaseClaim(@NonNull String processorName, int segment);
 
     /**
      * Initializes a segment with given {@code segment} for the processor with given {@code processorName} to contain
@@ -192,7 +192,7 @@ public interface TokenStore {
      * @throws UnsupportedOperationException    if this implementation does not support explicit initialization.
      *                                          See {@link #requiresExplicitSegmentInitialization()}.
      */
-    default void initializeSegment(@Nullable TrackingToken token, @Nonnull String processorName, int segment)
+    default void initializeSegment(@Nullable TrackingToken token, @NonNull String processorName, int segment)
             throws UnableToInitializeTokenException {
         throw new UnsupportedOperationException(
                 "Explicit initialization is not supported by this TokenStore implementation");
@@ -212,7 +212,7 @@ public interface TokenStore {
      * @throws UnableToClaimTokenException   if the token is not currently claimed by this node
      * @throws UnsupportedOperationException if this operation is not supported by this implementation
      */
-    default void deleteToken(@Nonnull String processorName, int segment) throws UnableToClaimTokenException {
+    default void deleteToken(@NonNull String processorName, int segment) throws UnableToClaimTokenException {
         throw new UnsupportedOperationException(
                 "Explicit initialization (which is required to reliably delete tokens) is not supported by this TokenStore implementation");
     }
@@ -239,7 +239,7 @@ public interface TokenStore {
      * @param processorName The process name for which to fetch the segments
      * @return an array of segment identifiers.
      */
-    int[] fetchSegments(@Nonnull String processorName);
+    int[] fetchSegments(@NonNull String processorName);
 
     /**
      * Returns a List of known available {@code segments} for a given {@code processorName}. A segment is considered available if it is not claimed by any
@@ -253,7 +253,7 @@ public interface TokenStore {
      * @param processorName the processor's name for which to fetch the segments
      * @return a List of available segment identifiers for the specified {@code processorName}
      */
-    default List<Segment> fetchAvailableSegments(@Nonnull String processorName) {
+    default List<Segment> fetchAvailableSegments(@NonNull String processorName) {
         int[] allSegments = fetchSegments(processorName);
         return Arrays.stream(allSegments).boxed()
                      .map(segment -> Segment.computeSegment(segment, allSegments))

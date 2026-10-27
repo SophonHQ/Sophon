@@ -17,8 +17,7 @@
 package org.axonframework.messaging.annotation;
 
 import org.axonframework.messaging.Message;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface to interact with a MessageHandlingMember instance through a chain of interceptors, which were used to build
@@ -43,6 +42,6 @@ public interface MessageHandlerInterceptorMemberChain<T> {
      * @return the result as returned by the handlers or interceptors
      * @throws Exception any exception thrown by the handler or any of the interceptors
      */
-    Object handle(@Nonnull Message<?> message, @Nonnull T target, @Nonnull MessageHandlingMember<? super T> handler)
+    Object handle(@NonNull Message<?> message, @NonNull T target, @NonNull MessageHandlingMember<? super T> handler)
             throws Exception;
 }

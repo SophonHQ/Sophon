@@ -21,9 +21,9 @@ import org.axonframework.messaging.GenericResultMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.messaging.ResultMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * QueryResponseMessage implementation that takes all properties as constructor parameters.
@@ -198,12 +198,12 @@ public class GenericQueryResponseMessage<R> extends GenericResultMessage<R> impl
     }
 
     @Override
-    public GenericQueryResponseMessage<R> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericQueryResponseMessage<R> withMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericQueryResponseMessage<>(getDelegate().withMetaData(metaData));
     }
 
     @Override
-    public GenericQueryResponseMessage<R> andMetaData(@Nonnull Map<String, ?> additionalMetaData) {
+    public GenericQueryResponseMessage<R> andMetaData(@NonNull Map<String, ?> additionalMetaData) {
         return new GenericQueryResponseMessage<>(getDelegate().andMetaData(additionalMetaData));
     }
 }

@@ -16,7 +16,7 @@
 
 package org.axonframework.eventhandling.async;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * SequencingPolicy that requires sequential handling of all events delivered to an event handler.
@@ -35,7 +35,7 @@ public class SequentialPolicy implements SequencingPolicy<Object> {
     public static final Object FULL_SEQUENTIAL_POLICY = "FULL_SEQUENTIAL_POLICY";
 
     @Override
-    public Object getSequenceIdentifierFor(@Nonnull Object task) {
+    public Object getSequenceIdentifierFor(@NonNull Object task) {
         return FULL_SEQUENTIAL_POLICY;
     }
 }

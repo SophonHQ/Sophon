@@ -16,7 +16,7 @@
 
 package org.axonframework.eventhandling.async;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface to a policy definition for concurrent processing, for example event handling.
@@ -48,5 +48,5 @@ public interface SequencingPolicy<T> {
      * @param event the event for which to get the sequencing identifier
      * @return a sequence identifier for the given event
      */
-    Object getSequenceIdentifierFor(@Nonnull T event);
+    Object getSequenceIdentifierFor(@NonNull T event);
 }

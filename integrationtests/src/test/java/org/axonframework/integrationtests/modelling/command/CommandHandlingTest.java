@@ -29,6 +29,7 @@ import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.integrationtests.utils.StubAggregate;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -37,7 +38,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -90,7 +90,7 @@ class CommandHandlingTest {
         }
 
         @Override
-        public DomainEventStream readEvents(@Nonnull String identifier) {
+        public DomainEventStream readEvents(@NonNull String identifier) {
             return DomainEventStream.of(new ArrayList<>(storedEvents));
         }
 
@@ -106,7 +106,7 @@ class CommandHandlingTest {
         }
 
         @Override
-        public void storeSnapshot(@Nonnull DomainEventMessage<?> snapshot) {
+        public void storeSnapshot(@NonNull DomainEventMessage<?> snapshot) {
         }
 
         @Override
@@ -115,7 +115,7 @@ class CommandHandlingTest {
         }
 
         @Override
-        public Registration subscribe(@Nonnull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
+        public Registration subscribe(@NonNull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
             throw new UnsupportedOperationException();
         }
 

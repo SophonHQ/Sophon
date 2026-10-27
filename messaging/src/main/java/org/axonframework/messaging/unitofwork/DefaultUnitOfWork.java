@@ -20,11 +20,11 @@ import org.axonframework.common.Assert;
 import org.axonframework.messaging.GenericResultMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.ResultMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.messaging.GenericResultMessage.asResultMessage;
 
@@ -65,7 +65,7 @@ public class DefaultUnitOfWork<T extends Message<?>> extends AbstractUnitOfWork<
 
     @Override
     public <R> ResultMessage<R> executeWithResult(Callable<R> task,
-                                                  @Nonnull RollbackConfiguration rollbackConfiguration) {
+                                                  @NonNull RollbackConfiguration rollbackConfiguration) {
         if (phase() == Phase.NOT_STARTED) {
             start();
         }

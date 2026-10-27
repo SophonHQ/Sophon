@@ -21,9 +21,9 @@ import org.axonframework.messaging.Message;
 import org.axonframework.queryhandling.QueryMessage;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanAttributesProvider;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
@@ -38,7 +38,7 @@ import static java.util.Collections.singletonMap;
 public class MessageNameSpanAttributesProvider implements SpanAttributesProvider {
 
     @Override
-    public @Nonnull Map<String, String> provideForMessage(@Nonnull Message<?> message) {
+    public @NonNull Map<String, String> provideForMessage(@NonNull Message<?> message) {
         String name = determineName(message);
         if (name != null) {
             return singletonMap("axon_message_name", name);

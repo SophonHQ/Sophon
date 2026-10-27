@@ -22,11 +22,11 @@ import org.axonframework.messaging.annotation.HandlerDefinition;
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MultiHandlerDefinition;
 import org.axonframework.messaging.annotation.MultiHandlerEnhancerDefinition;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.FactoryBean;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Spring {@link FactoryBean} that creates a {@link HandlerDefinition} using configured {@link HandlerDefinition} and
@@ -72,7 +72,7 @@ public class HandlerDefinitionFactoryBean implements FactoryBean<HandlerDefiniti
     }
 
     @Override
-    public void setBeanClassLoader(@Nonnull ClassLoader classLoader) {
+    public void setBeanClassLoader(@NonNull ClassLoader classLoader) {
         this.beanClassLoader = classLoader;
     }
 }

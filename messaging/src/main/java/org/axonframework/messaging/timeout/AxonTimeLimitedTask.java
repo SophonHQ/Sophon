@@ -15,13 +15,12 @@
  */
 package org.axonframework.messaging.timeout;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nullable;
 
 /**
  * Represents a task with a timeout. The task will be interrupted when the {@code timeout} is reached. If the

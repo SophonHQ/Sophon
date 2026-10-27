@@ -18,8 +18,7 @@ package org.axonframework.tracing.opentelemetry;
 
 import io.opentelemetry.context.propagation.TextMapGetter;
 import org.axonframework.messaging.Message;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * This {@link TextMapGetter} implementation is able to extract the parent OpenTelemetry span context from a
@@ -49,7 +48,7 @@ public class MetadataContextGetter implements TextMapGetter<Message<?>> {
     }
 
     @Override
-    public String get(Message<?> message, @Nonnull String key) {
+    public String get(Message<?> message, @NonNull String key) {
         if (message == null) {
             return null;
         }

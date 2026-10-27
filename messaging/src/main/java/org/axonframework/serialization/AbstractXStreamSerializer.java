@@ -35,6 +35,7 @@ import org.axonframework.messaging.MetaData;
 import org.axonframework.queryhandling.GenericQueryMessage;
 import org.axonframework.queryhandling.GenericQueryResponseMessage;
 import org.axonframework.queryhandling.GenericSubscriptionQueryUpdateMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -43,7 +44,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListSet;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -106,12 +106,12 @@ public abstract class AbstractXStreamSerializer implements Serializer {
     protected abstract void registerConverters(ChainingConverter converter);
 
     @Override
-    public <T> boolean canSerializeTo(@Nonnull Class<T> expectedRepresentation) {
+    public <T> boolean canSerializeTo(@NonNull Class<T> expectedRepresentation) {
         return converter.canConvert(byte[].class, expectedRepresentation);
     }
 
     @Override
-    public <T> SerializedObject<T> serialize(Object object, @Nonnull Class<T> expectedType) {
+    public <T> SerializedObject<T> serialize(Object object, @NonNull Class<T> expectedType) {
         T result = doSerialize(object, expectedType, xStream);
         return new SimpleSerializedObject<>(result, expectedType, typeForClass(ObjectUtils.nullSafeTypeOf(object)));
     }
@@ -157,7 +157,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <S, T> T deserialize(@Nonnull SerializedObject<S> serializedObject) {
+    public <S, T> T deserialize(@NonNull SerializedObject<S> serializedObject) {
         if (SerializedType.emptyType().equals(serializedObject.getType())) {
             return null;
         }
@@ -168,7 +168,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
     }
 
     @Override
-    public Class classForType(@Nonnull SerializedType type) {
+    public Class classForType(@NonNull SerializedType type) {
         if (SerializedType.emptyType().equals(type)) {
             return Void.class;
         }
@@ -305,7 +305,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
          * @param xStream the {@link XStream} used to perform the serialization of objects to XML, and vice versa
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder xStream(@Nonnull XStream xStream) {
+        public Builder xStream(@NonNull XStream xStream) {
             assertNonNull(xStream, "XStream may not be null");
             this.xStream = xStream;
             return this;
@@ -318,7 +318,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
          * @param charset the {@link Charset} used for the in- and output streams required by {@link XStream}
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder charset(@Nonnull Charset charset) {
+        public Builder charset(@NonNull Charset charset) {
             assertNonNull(charset, "Charset may not be null");
             this.charset = charset;
             return this;
@@ -333,7 +333,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
          *                         serialized
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder revisionResolver(@Nonnull RevisionResolver revisionResolver) {
+        public Builder revisionResolver(@NonNull RevisionResolver revisionResolver) {
             assertNonNull(revisionResolver, "RevisionResolver may not be null");
             this.revisionResolver = revisionResolver;
             return this;
@@ -348,7 +348,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
          *                  upcasters to convert between different content types
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder converter(@Nonnull Converter converter) {
+        public Builder converter(@NonNull Converter converter) {
             assertNonNull(converter, "Converter may not be null");
             this.converter = converter;
             return this;
@@ -361,7 +361,7 @@ public abstract class AbstractXStreamSerializer implements Serializer {
          * @param classLoader a {@link ClassLoader} used as a class loader in {@link XStream}
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder classLoader(@Nonnull ClassLoader classLoader) {
+        public Builder classLoader(@NonNull ClassLoader classLoader) {
             assertNonNull(classLoader, "ClassLoader may not be null");
             this.classLoader = classLoader;
             return this;

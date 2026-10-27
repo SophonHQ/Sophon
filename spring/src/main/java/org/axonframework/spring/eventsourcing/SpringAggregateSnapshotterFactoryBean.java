@@ -32,6 +32,7 @@ import org.axonframework.spring.config.annotation.HandlerDefinitionFactoryBean;
 import org.axonframework.spring.config.annotation.SpringBeanDependencyResolverFactory;
 import org.axonframework.spring.config.annotation.SpringBeanParameterResolverFactory;
 import org.axonframework.spring.messaging.unitofwork.SpringTransactionManager;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
@@ -45,7 +46,6 @@ import static org.springframework.beans.factory.BeanFactoryUtils.beansOfTypeIncl
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.Executor;
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of the {@link org.axonframework.eventsourcing.AggregateSnapshotter} that eases the configuration when
@@ -173,7 +173,7 @@ public class SpringAggregateSnapshotterFactoryBean
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 

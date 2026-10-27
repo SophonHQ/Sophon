@@ -28,6 +28,7 @@ import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
 import org.axonframework.tracing.SpanScope;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 import static org.axonframework.messaging.unitofwork.UnitOfWork.Phase.*;
@@ -78,7 +78,7 @@ public abstract class AbstractEventBus implements EventBus {
     }
 
     @Override
-    public Registration subscribe(@Nonnull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
+    public Registration subscribe(@NonNull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
         if (this.eventProcessors.add(eventProcessor)) {
             if (logger.isDebugEnabled()) {
                 logger.debug("EventProcessor [{}] subscribed successfully", eventProcessor);
@@ -109,13 +109,13 @@ public abstract class AbstractEventBus implements EventBus {
      */
     @Override
     public Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
+            @NonNull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
         dispatchInterceptors.add(dispatchInterceptor);
         return () -> dispatchInterceptors.remove(dispatchInterceptor);
     }
 
     @Override
-    public void publish(@Nonnull List<? extends EventMessage<?>> events) {
+    public void publish(@NonNull List<? extends EventMessage<?>> events) {
         List<? extends EventMessage<?>> eventsWithContext = events
                 .stream()
                 .map(e -> spanFactory.createPublishEventSpan(e)
@@ -303,7 +303,7 @@ public abstract class AbstractEventBus implements EventBus {
          * @param messageMonitor a {@link MessageMonitor} to monitor ingested {@link EventMessage}s
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super EventMessage<?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
             assertNonNull(messageMonitor, "MessageMonitor may not be null");
             this.messageMonitor = messageMonitor;
             return this;
@@ -318,7 +318,7 @@ public abstract class AbstractEventBus implements EventBus {
          * @deprecated Please use {@link #spanFactory(EventBusSpanFactory)} which is more configurable
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = DefaultEventBusSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
@@ -331,7 +331,7 @@ public abstract class AbstractEventBus implements EventBus {
          * @param spanFactory The {@link EventBusSpanFactory} implementation
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull EventBusSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull EventBusSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = spanFactory;
             return this;

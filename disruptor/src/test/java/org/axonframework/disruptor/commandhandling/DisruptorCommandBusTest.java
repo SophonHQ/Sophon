@@ -65,6 +65,7 @@ import org.axonframework.modelling.command.RepositoryProvider;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import org.axonframework.modelling.saga.SagaScopeDescriptor;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.mockito.invocation.*;
@@ -84,7 +85,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 import static java.util.Collections.singletonList;
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
@@ -850,13 +850,13 @@ class DisruptorCommandBusTest {
         private final CountDownLatch countDownLatch = new CountDownLatch((int) (COMMAND_COUNT + 1L));
 
         @Override
-        public DomainEventStream readEvents(@Nonnull String aggregateIdentifier) {
+        public DomainEventStream readEvents(@NonNull String aggregateIdentifier) {
             DomainEventMessage<?> message = storedEvents.get(aggregateIdentifier);
             return message == null ? DomainEventStream.empty() : DomainEventStream.of(message);
         }
 
         @Override
-        public void publish(@Nonnull List<? extends EventMessage<?>> events) {
+        public void publish(@NonNull List<? extends EventMessage<?>> events) {
             if (events == null || events.isEmpty()) {
                 return;
             }
@@ -878,18 +878,18 @@ class DisruptorCommandBusTest {
         }
 
         @Override
-        public Registration subscribe(@Nonnull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
+        public Registration subscribe(@NonNull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
             throw new UnsupportedOperationException();
         }
 
         @Override
         public Registration registerDispatchInterceptor(
-                @Nonnull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
+                @NonNull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public void storeSnapshot(@Nonnull DomainEventMessage<?> snapshot) {
+        public void storeSnapshot(@NonNull DomainEventMessage<?> snapshot) {
         }
     }
 

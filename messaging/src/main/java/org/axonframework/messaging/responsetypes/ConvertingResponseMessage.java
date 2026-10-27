@@ -21,10 +21,10 @@ import org.axonframework.messaging.MetaData;
 import org.axonframework.queryhandling.QueryResponseMessage;
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.Serializer;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of a QueryResponseMessage that is aware of the requested response type and performs a just-in-time
@@ -108,12 +108,12 @@ public class ConvertingResponseMessage<R> implements QueryResponseMessage<R> {
     }
 
     @Override
-    public QueryResponseMessage<R> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public QueryResponseMessage<R> withMetaData(@NonNull Map<String, ?> metaData) {
         return new ConvertingResponseMessage<>(expectedResponseType, responseMessage.withMetaData(metaData));
     }
 
     @Override
-    public QueryResponseMessage<R> andMetaData(@Nonnull Map<String, ?> additionalMetaData) {
+    public QueryResponseMessage<R> andMetaData(@NonNull Map<String, ?> additionalMetaData) {
         return new ConvertingResponseMessage<>(expectedResponseType, responseMessage.andMetaData(additionalMetaData));
     }
 }

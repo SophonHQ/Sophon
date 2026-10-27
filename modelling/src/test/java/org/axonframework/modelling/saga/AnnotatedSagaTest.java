@@ -24,13 +24,13 @@ import org.axonframework.messaging.MetaData;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.NoMoreInterceptors;
 import org.axonframework.modelling.saga.metamodel.AnnotationSagaMetaModelFactory;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.modelling.saga.SagaLifecycle.removeAssociationWith;
 import static org.junit.jupiter.api.Assertions.*;
@@ -285,13 +285,13 @@ class AnnotatedSagaTest {
         }
 
         @Override
-        public <T> void validate(@Nonnull String associationPropertyName, @Nonnull MessageHandlingMember<T> handler) {
+        public <T> void validate(@NonNull String associationPropertyName, @NonNull MessageHandlingMember<T> handler) {
 
         }
 
         @Override
-        public <T> Object resolve(@Nonnull String associationPropertyName, @Nonnull EventMessage<?> message,
-                                  @Nonnull MessageHandlingMember<T> handler) {
+        public <T> Object resolve(@NonNull String associationPropertyName, @NonNull EventMessage<?> message,
+                                  @NonNull MessageHandlingMember<T> handler) {
             return null;
         }
     }

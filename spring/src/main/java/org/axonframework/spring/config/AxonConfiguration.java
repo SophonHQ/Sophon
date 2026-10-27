@@ -37,6 +37,7 @@ import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.upcasting.event.EventUpcasterChain;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -46,7 +47,6 @@ import org.springframework.context.annotation.Bean;
 
 import java.util.List;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 /**
  * Spring Configuration class that defines a number of conditional beans. It also allows for access to components that
@@ -146,18 +146,18 @@ public class AxonConfiguration implements Configuration, InitializingBean, Appli
     }
 
     @Override
-    public <T> Repository<T> repository(@Nonnull Class<T> aggregateType) {
+    public <T> Repository<T> repository(@NonNull Class<T> aggregateType) {
         return config.repository(aggregateType);
     }
 
     @Override
-    public <T> T getComponent(@Nonnull Class<T> componentType, @Nonnull Supplier<T> defaultImpl) {
+    public <T> T getComponent(@NonNull Class<T> componentType, @NonNull Supplier<T> defaultImpl) {
         return config.getComponent(componentType, defaultImpl);
     }
 
     @Override
-    public <M extends Message<?>> MessageMonitor<? super M> messageMonitor(@Nonnull Class<?> componentType,
-                                                                           @Nonnull String componentName) {
+    public <M extends Message<?>> MessageMonitor<? super M> messageMonitor(@NonNull Class<?> componentType,
+                                                                           @NonNull String componentName) {
         return config.messageMonitor(componentType, componentName);
     }
 
@@ -246,7 +246,7 @@ public class AxonConfiguration implements Configuration, InitializingBean, Appli
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         configurer.registerComponent(ApplicationContext.class, c -> applicationContext);
     }
 }

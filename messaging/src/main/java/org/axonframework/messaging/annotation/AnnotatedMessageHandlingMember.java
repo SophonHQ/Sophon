@@ -20,6 +20,7 @@ import org.axonframework.common.ReflectionUtils;
 import org.axonframework.common.annotation.AnnotationUtils;
 import org.axonframework.messaging.HandlerAttributes;
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,6 @@ import java.lang.reflect.Parameter;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of a {@link MessageHandlingMember} that is used to invoke message handler methods on the target type.
@@ -100,20 +100,20 @@ public class AnnotatedMessageHandlingMember<T> implements MessageHandlingMember<
     }
 
     @Override
-    public boolean canHandle(@Nonnull Message<?> message) {
+    public boolean canHandle(@NonNull Message<?> message) {
         return typeMatches(message)
                 && payloadType.isAssignableFrom(message.getPayloadType())
                 && parametersMatch(message);
     }
 
     @Override
-    public boolean canHandleType(@Nonnull Class<?> payloadType) {
+    public boolean canHandleType(@NonNull Class<?> payloadType) {
         return this.payloadType.isAssignableFrom(payloadType);
     }
 
     @Override
     @SuppressWarnings("rawtypes")
-    public boolean canHandleMessageType(@Nonnull Class<? extends Message> messageType) {
+    public boolean canHandleMessageType(@NonNull Class<? extends Message> messageType) {
         return this.messageType.isAssignableFrom(messageType);
     }
 
@@ -147,7 +147,7 @@ public class AnnotatedMessageHandlingMember<T> implements MessageHandlingMember<
     }
 
     @Override
-    public Object handle(@Nonnull Message<?> message, T target) throws Exception {
+    public Object handle(@NonNull Message<?> message, T target) throws Exception {
         try {
             if (executable instanceof Method) {
                 return ((Method) executable).invoke(target, resolveParameterValues(message));

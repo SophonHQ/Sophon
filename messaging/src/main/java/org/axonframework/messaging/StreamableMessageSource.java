@@ -18,10 +18,10 @@ package org.axonframework.messaging;
 
 import org.axonframework.common.stream.BlockingStream;
 import org.axonframework.eventhandling.TrackingToken;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 import java.time.Instant;
-import javax.annotation.Nullable;
 
 /**
  * Interface for a source of {@link Message messages} that processors can track.

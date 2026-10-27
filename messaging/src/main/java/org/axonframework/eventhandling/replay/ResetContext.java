@@ -17,9 +17,9 @@
 package org.axonframework.eventhandling.replay;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Represents a Message initiating the reset of an Event Handling Component. A payload of {@code T} can be provided to
@@ -42,7 +42,7 @@ public interface ResetContext<T> extends Message<T> {
      * @return a copy of this message with the given MetaData
      */
     @Override
-    ResetContext<T> withMetaData(@Nonnull Map<String, ?> metaData);
+    ResetContext<T> withMetaData(@NonNull Map<String, ?> metaData);
 
     /**
      * Returns a copy of this {@link ResetContext} with it MetaData merged with the given {@code metaData}. The payload
@@ -52,5 +52,5 @@ public interface ResetContext<T> extends Message<T> {
      * @return a copy of this message with the given MetaData
      */
     @Override
-    ResetContext<T> andMetaData(@Nonnull Map<String, ?> metaData);
+    ResetContext<T> andMetaData(@NonNull Map<String, ?> metaData);
 }

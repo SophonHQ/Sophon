@@ -27,6 +27,7 @@ import org.axonframework.messaging.annotation.MetaDataValue;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.mockito.invocation.*;
@@ -40,7 +41,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.annotation.Nonnull;
 
 import static java.util.Collections.singletonMap;
 import static org.axonframework.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
@@ -817,8 +817,8 @@ class CommandGatewayFactoryTest {
     private static class StringCommandCallback implements CommandCallback<Object, String> {
 
         @Override
-        public void onResult(@Nonnull CommandMessage<?> commandMessage,
-                             @Nonnull CommandResultMessage<? extends String> commandResultMessage) {
+        public void onResult(@NonNull CommandMessage<?> commandMessage,
+                             @NonNull CommandResultMessage<? extends String> commandResultMessage) {
         }
     }
 

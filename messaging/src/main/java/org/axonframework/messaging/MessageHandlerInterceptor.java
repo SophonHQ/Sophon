@@ -17,8 +17,7 @@
 package org.axonframework.messaging;
 
 import org.axonframework.messaging.unitofwork.UnitOfWork;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Workflow interface that allows for customized message handler invocation chains. A MessageHandlerInterceptor can add
@@ -48,6 +47,6 @@ public interface MessageHandlerInterceptor<T extends Message<?>> {
      *
      * @throws Exception any exception that occurs while handling the message
      */
-    Object handle(@Nonnull UnitOfWork<? extends T> unitOfWork, @Nonnull InterceptorChain interceptorChain)
+    Object handle(@NonNull UnitOfWork<? extends T> unitOfWork, @NonNull InterceptorChain interceptorChain)
             throws Exception;
 }

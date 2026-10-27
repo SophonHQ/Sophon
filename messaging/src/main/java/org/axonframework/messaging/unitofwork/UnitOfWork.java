@@ -22,13 +22,13 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.messaging.ResultMessage;
 import org.axonframework.messaging.correlation.CorrelationDataProvider;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 /**
  * This class represents a Unit of Work that monitors the processing of a {@link Message}.
@@ -343,7 +343,7 @@ public interface UnitOfWork<T extends Message<?>> {
      *                              execution fails
      * @return The result of the task wrapped in Result Message
      */
-    <R> ResultMessage<R> executeWithResult(Callable<R> task, @Nonnull RollbackConfiguration rollbackConfiguration);
+    <R> ResultMessage<R> executeWithResult(Callable<R> task, @NonNull RollbackConfiguration rollbackConfiguration);
 
     /**
      * Get the result of the task that was executed by this Unit of Work. If the Unit of Work has not been given a task

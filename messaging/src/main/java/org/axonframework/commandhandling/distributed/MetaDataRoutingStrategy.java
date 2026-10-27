@@ -18,8 +18,7 @@ package org.axonframework.commandhandling.distributed;
 
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.common.AxonConfigurationException;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import static org.axonframework.common.BuilderUtils.assertNonEmpty;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -90,7 +89,7 @@ public class MetaDataRoutingStrategy extends AbstractRoutingStrategy {
     }
 
     @Override
-    protected String doResolveRoutingKey(@Nonnull CommandMessage<?> command) {
+    protected String doResolveRoutingKey(@NonNull CommandMessage<?> command) {
         Object value = command.getMetaData().get(metaDataKey);
         return value == null ? null : value.toString();
     }

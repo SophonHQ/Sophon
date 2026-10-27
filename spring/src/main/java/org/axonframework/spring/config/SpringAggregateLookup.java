@@ -22,6 +22,7 @@ import org.axonframework.config.Configuration;
 import org.axonframework.modelling.command.Repository;
 import org.axonframework.spring.eventsourcing.SpringPrototypeAggregateFactory;
 import org.axonframework.spring.stereotype.Aggregate;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -38,7 +39,6 @@ import org.springframework.core.ResolvableType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.common.StringUtils.lowerCaseFirstCharacterOf;
@@ -132,7 +132,7 @@ public class SpringAggregateLookup implements BeanDefinitionRegistryPostProcesso
     }
 
     @Override
-    public void postProcessBeanFactory(@Nonnull ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
         if (!(beanFactory instanceof BeanDefinitionRegistry)) {
             logger.warn("Given bean factory is not a BeanDefinitionRegistry. Cannot auto-configure Aggregates");
             return;
@@ -259,7 +259,7 @@ public class SpringAggregateLookup implements BeanDefinitionRegistryPostProcesso
     }
 
     @Override
-    public void postProcessBeanDefinitionRegistry(@Nonnull BeanDefinitionRegistry registry) throws BeansException {
+    public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry) throws BeansException {
         // No action required.
     }
 

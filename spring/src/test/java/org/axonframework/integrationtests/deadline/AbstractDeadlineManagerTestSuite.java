@@ -51,7 +51,7 @@ import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.modelling.saga.repository.SagaStore;
 import org.axonframework.tracing.TestSpanFactory;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1110,7 +1110,7 @@ public abstract class AbstractDeadlineManagerTestSuite {
 
 
         @Override
-        public BiFunction<Integer, Message<?>, Message<?>> handle(@NotNull List<? extends Message<?>> messages) {
+        public BiFunction<Integer, Message<?>, Message<?>> handle(@NonNull List<? extends Message<?>> messages) {
             return (i, m) -> m.andMetaData(MetaData.with(CUSTOM_CORRELATION_DATA_KEY, correlationData));
         }
     }

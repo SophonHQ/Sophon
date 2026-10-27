@@ -21,9 +21,9 @@ import org.axonframework.messaging.GenericResultMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.messaging.ResultMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Generic {@link SubscriptionQueryUpdateMessage} which holds incremental update of an subscription query.
@@ -132,12 +132,12 @@ public class GenericSubscriptionQueryUpdateMessage<U> extends GenericResultMessa
     }
 
     @Override
-    public GenericSubscriptionQueryUpdateMessage<U> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericSubscriptionQueryUpdateMessage<U> withMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericSubscriptionQueryUpdateMessage<>(getDelegate().withMetaData(metaData));
     }
 
     @Override
-    public GenericSubscriptionQueryUpdateMessage<U> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericSubscriptionQueryUpdateMessage<U> andMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericSubscriptionQueryUpdateMessage<>(getDelegate().andMetaData(metaData));
     }
 

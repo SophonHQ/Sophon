@@ -17,9 +17,8 @@
 package org.axonframework.commandhandling;
 
 import org.axonframework.monitoring.MessageMonitor;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Wrapper for a callback that notifies a Message Monitor of the message execution result.
@@ -40,14 +39,14 @@ public class MonitorAwareCallback<C, R> implements CommandCallback<C, R> {
      * @param messageMonitorCallback the callback for the Message Monitor
      */
     public MonitorAwareCallback(@Nullable CommandCallback<C, R> delegate,
-                                @Nonnull MessageMonitor.MonitorCallback messageMonitorCallback) {
+                                MessageMonitor.@NonNull MonitorCallback messageMonitorCallback) {
         this.delegate = delegate;
         this.messageMonitorCallback = messageMonitorCallback;
     }
 
     @Override
-    public void onResult(@Nonnull CommandMessage<? extends C> commandMessage,
-                         @Nonnull CommandResultMessage<? extends R> commandResultMessage) {
+    public void onResult(@NonNull CommandMessage<? extends C> commandMessage,
+                         @NonNull CommandResultMessage<? extends R> commandResultMessage) {
         if (commandResultMessage.isExceptional()) {
             messageMonitorCallback.reportFailure(commandResultMessage.exceptionResult());
         } else {

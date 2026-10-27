@@ -19,9 +19,9 @@ package org.axonframework.test.saga;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.EventMessageHandler;
 import org.axonframework.eventhandling.ListenerInvocationErrorHandler;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 /**
  * A wrapper around a {@link ListenerInvocationErrorHandler} that in itself also implements
@@ -53,8 +53,8 @@ public class RecordingListenerInvocationErrorHandler implements ListenerInvocati
     }
 
     @Override
-    public void onError(@Nonnull Exception exception, @Nonnull EventMessage<?> event,
-                        @Nonnull EventMessageHandler eventHandler) throws Exception {
+    public void onError(@NonNull Exception exception, @NonNull EventMessage<?> event,
+                        @NonNull EventMessageHandler eventHandler) throws Exception {
         if (!started && failOnErrorInPreparation) {
             throw exception;
         }

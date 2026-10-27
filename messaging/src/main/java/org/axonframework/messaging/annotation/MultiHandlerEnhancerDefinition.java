@@ -17,12 +17,12 @@
 package org.axonframework.messaging.annotation;
 
 import org.axonframework.common.annotation.PriorityAnnotationComparator;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * HandlerEnhancerDefinition instance that delegates to multiple other instances, in the order provided.
@@ -107,7 +107,7 @@ public class MultiHandlerEnhancerDefinition implements HandlerEnhancerDefinition
     }
 
     @Override
-    public <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
         MessageHandlingMember<T> resolver = original;
         for (HandlerEnhancerDefinition enhancer : enhancers) {
             resolver = enhancer.wrapHandler(resolver);

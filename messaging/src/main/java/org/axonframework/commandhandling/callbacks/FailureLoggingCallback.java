@@ -19,10 +19,9 @@ package org.axonframework.commandhandling.callbacks;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
 
 /**
  * A {@link CommandCallback} implementation wrapping another, that concisely logs failed commands. Since the full
@@ -72,14 +71,14 @@ public class FailureLoggingCallback<C, R> implements CommandCallback<C, R> {
      * @param delegate The command callback to forward invocations to
      */
     @Deprecated
-    public FailureLoggingCallback(@Nonnull Logger logger, @Nonnull CommandCallback<C, R> delegate) {
+    public FailureLoggingCallback(@NonNull Logger logger, @NonNull CommandCallback<C, R> delegate) {
         this.logger = logger;
         this.delegate = delegate;
     }
 
     @Override
-    public void onResult(@Nonnull CommandMessage<? extends C> commandMessage,
-                         @Nonnull CommandResultMessage<? extends R> commandResultMessage) {
+    public void onResult(@NonNull CommandMessage<? extends C> commandMessage,
+                         @NonNull CommandResultMessage<? extends R> commandResultMessage) {
         commandResultMessage.optionalExceptionResult()
                             .ifPresent(cause ->
                                                logger.warn("Command '{}' resulted in {}({})",

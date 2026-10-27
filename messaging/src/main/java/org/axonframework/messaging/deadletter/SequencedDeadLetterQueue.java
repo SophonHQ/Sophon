@@ -17,12 +17,12 @@
 package org.axonframework.messaging.deadletter;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
-import javax.annotation.Nonnull;
 
 /**
  * Interface describing the required functionality for a dead letter queue. Contains several FIFO-ordered sequences of
@@ -53,8 +53,8 @@ public interface SequencedDeadLetterQueue<M extends Message<?>> {
      * @param letter             The {@link DeadLetter} to enqueue.
      * @throws DeadLetterQueueOverflowException Thrown when this queue {@link #isFull(Object) is full}.
      */
-    void enqueue(@Nonnull Object sequenceIdentifier,
-                 @Nonnull DeadLetter<? extends M> letter) throws DeadLetterQueueOverflowException;
+    void enqueue(@NonNull Object sequenceIdentifier,
+                 @NonNull DeadLetter<? extends M> letter) throws DeadLetterQueueOverflowException;
 
     /**
      * Enqueue the result of the given {@code letterBuilder} only if there already are other
@@ -69,8 +69,8 @@ public interface SequencedDeadLetterQueue<M extends Message<?>> {
      *                                          {@code sequenceIdentifier}.
      */
     default boolean enqueueIfPresent(
-            @Nonnull Object sequenceIdentifier,
-            @Nonnull Supplier<DeadLetter<? extends M>> letterBuilder
+            @NonNull Object sequenceIdentifier,
+            @NonNull Supplier<DeadLetter<? extends M>> letterBuilder
     ) throws DeadLetterQueueOverflowException {
         if (!contains(sequenceIdentifier)) {
             return false;
@@ -100,8 +100,8 @@ public interface SequencedDeadLetterQueue<M extends Message<?>> {
      *                      {@link DeadLetter#diagnostics()}, for example.
      * @throws NoSuchDeadLetterException Thrown if the given {@code letter} does not exist in the queue.
      */
-    void requeue(@Nonnull DeadLetter<? extends M> letter,
-                 @Nonnull UnaryOperator<DeadLetter<? extends M>> letterUpdater) throws NoSuchDeadLetterException;
+    void requeue(@NonNull DeadLetter<? extends M> letter,
+                 @NonNull UnaryOperator<DeadLetter<? extends M>> letterUpdater) throws NoSuchDeadLetterException;
 
     /**
      * Check whether there's a sequence of {@link DeadLetter dead letters} for the given {@code sequenceIdentifier}.
@@ -111,7 +111,7 @@ public interface SequencedDeadLetterQueue<M extends Message<?>> {
      * @return {@code true} if there are {@link DeadLetter dead letters} present for the given
      * {@code sequenceIdentifier}, {@code false} otherwise.
      */
-    boolean contains(@Nonnull Object sequenceIdentifier);
+    boolean contains(@NonNull Object sequenceIdentifier);
 
     /**
      * Return all the {@link DeadLetter dead letters} for the given {@code sequenceIdentifier} in insert order.
@@ -119,7 +119,7 @@ public interface SequencedDeadLetterQueue<M extends Message<?>> {
      * @param sequenceIdentifier The identifier of the sequence of {@link DeadLetter dead letters}to return.
      * @return All the {@link DeadLetter dead letters} for the given {@code sequenceIdentifier} in insert order.
      */
-    Iterable<DeadLetter<? extends M>> deadLetterSequence(@Nonnull Object sequenceIdentifier);
+    Iterable<DeadLetter<? extends M>> deadLetterSequence(@NonNull Object sequenceIdentifier);
 
     /**
      * Return all {@link DeadLetter dead letter} sequences held by this queue. The sequences are not necessarily
@@ -138,7 +138,7 @@ public interface SequencedDeadLetterQueue<M extends Message<?>> {
      * @param sequenceIdentifier The identifier of the sequence to validate for.
      * @return {@code true} either when the limit of this queue is reached. Returns {@code false} otherwise.
      */
-    boolean isFull(@Nonnull Object sequenceIdentifier);
+    boolean isFull(@NonNull Object sequenceIdentifier);
 
     /**
      * Returns the number of dead letters contained in this queue.
@@ -157,7 +157,7 @@ public interface SequencedDeadLetterQueue<M extends Message<?>> {
      * @param sequenceIdentifier The identifier of the sequence to retrieve the size from.
      * @return The number of dead letters for the sequence matching the given {@code sequenceIdentifier}.
      */
-    long sequenceSize(@Nonnull Object sequenceIdentifier);
+    long sequenceSize(@NonNull Object sequenceIdentifier);
 
     /**
      * Returns the number of unique sequences contained in this queue.
@@ -195,8 +195,8 @@ public interface SequencedDeadLetterQueue<M extends Message<?>> {
      * {@code false} otherwise. This means the {@code processingTask} processed all {@link DeadLetter dead letters} of a
      * sequence and the outcome was to evict each instance.
      */
-    boolean process(@Nonnull Predicate<DeadLetter<? extends M>> sequenceFilter,
-                    @Nonnull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask);
+    boolean process(@NonNull Predicate<DeadLetter<? extends M>> sequenceFilter,
+                    @NonNull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask);
 
     /**
      * Process a sequence of enqueued {@link DeadLetter dead letters} with the given {@code processingTask}. Will pick
@@ -221,7 +221,7 @@ public interface SequencedDeadLetterQueue<M extends Message<?>> {
      * {@code false} otherwise. This means the {@code processingTask} processed all {@link DeadLetter dead letters} of a
      * sequence and the outcome was to evict each instance.
      */
-    default boolean process(@Nonnull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask) {
+    default boolean process(@NonNull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask) {
         return process(letter -> true, processingTask);
     }
 

@@ -17,8 +17,7 @@
 package org.axonframework.modelling.command;
 
 import org.axonframework.commandhandling.CommandMessage;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * CommandTargetResolver implementation that uses MetaData entries to extract the identifier and optionally the version
@@ -65,7 +64,7 @@ public class MetaDataCommandTargetResolver implements CommandTargetResolver {
     }
 
     @Override
-    public VersionedAggregateIdentifier resolveTarget(@Nonnull CommandMessage<?> command) {
+    public VersionedAggregateIdentifier resolveTarget(@NonNull CommandMessage<?> command) {
         Object identifier = command.getMetaData().get(identifierKey);
         if (identifier == null) {
             throw new IdentifierMissingException(

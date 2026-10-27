@@ -28,6 +28,7 @@ import org.axonframework.messaging.deadletter.Cause;
 import org.axonframework.messaging.deadletter.DeadLetter;
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.Serializer;
+import org.jspecify.annotations.NonNull;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,7 +37,6 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 import static org.axonframework.common.ObjectUtils.getOrDefault;
@@ -99,10 +99,10 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement enqueueStatement(@Nonnull Connection connection,
-                                              @Nonnull String processingGroup,
-                                              @Nonnull String sequenceIdentifier,
-                                              @Nonnull DeadLetter<? extends E> letter,
+    public PreparedStatement enqueueStatement(@NonNull Connection connection,
+                                              @NonNull String processingGroup,
+                                              @NonNull String sequenceIdentifier,
+                                              @NonNull DeadLetter<? extends E> letter,
                                               long sequenceIndex) throws SQLException {
         String sql = "INSERT INTO " + schema.deadLetterTable() + " "
                 + "(" + schema.deadLetterFields() + ") "
@@ -199,9 +199,9 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement maxIndexStatement(@Nonnull Connection connection,
-                                               @Nonnull String processingGroup,
-                                               @Nonnull String sequenceId) throws SQLException {
+    public PreparedStatement maxIndexStatement(@NonNull Connection connection,
+                                               @NonNull String processingGroup,
+                                               @NonNull String sequenceId) throws SQLException {
         String sql = "SELECT MAX(" + schema.sequenceIndexColumn() + ") "
                 + "FROM " + schema.deadLetterTable() + " "
                 + "WHERE " + schema.processingGroupColumn() + "=? "
@@ -213,8 +213,8 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement evictStatement(@Nonnull Connection connection,
-                                            @Nonnull String identifier) throws SQLException {
+    public PreparedStatement evictStatement(@NonNull Connection connection,
+                                            @NonNull String identifier) throws SQLException {
         String sql = "DELETE "
                 + "FROM " + schema.deadLetterTable() + " "
                 + "WHERE " + schema.deadLetterIdentifierColumn() + "=?";
@@ -224,10 +224,10 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement requeueStatement(@Nonnull Connection connection,
-                                              @Nonnull String letterIdentifier,
+    public PreparedStatement requeueStatement(@NonNull Connection connection,
+                                              @NonNull String letterIdentifier,
                                               Cause cause,
-                                              @Nonnull Instant lastTouched,
+                                              @NonNull Instant lastTouched,
                                               MetaData diagnostics) throws SQLException {
         String sql = "UPDATE " + schema.deadLetterTable() + " SET "
                 + schema.causeTypeColumn() + "=?, "
@@ -247,16 +247,16 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement containsStatement(@Nonnull Connection connection,
-                                               @Nonnull String processingGroup,
-                                               @Nonnull String sequenceId) throws SQLException {
+    public PreparedStatement containsStatement(@NonNull Connection connection,
+                                               @NonNull String processingGroup,
+                                               @NonNull String sequenceId) throws SQLException {
         return sequenceSizeStatement(connection, processingGroup, sequenceId);
     }
 
     @Override
-    public PreparedStatement letterSequenceStatement(@Nonnull Connection connection,
-                                                     @Nonnull String processingGroup,
-                                                     @Nonnull String sequenceId,
+    public PreparedStatement letterSequenceStatement(@NonNull Connection connection,
+                                                     @NonNull String processingGroup,
+                                                     @NonNull String sequenceId,
                                                      int offset,
                                                      int maxSize) throws SQLException {
         String sql = "SELECT * "
@@ -278,8 +278,8 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement sequenceIdentifiersStatement(@Nonnull Connection connection,
-                                                          @Nonnull String processingGroup) throws SQLException {
+    public PreparedStatement sequenceIdentifiersStatement(@NonNull Connection connection,
+                                                          @NonNull String processingGroup) throws SQLException {
         String sql = "SELECT dl." + schema.sequenceIdentifierColumn() + " "
                 + "FROM " + schema.deadLetterTable() + " dl "
                 + "WHERE dl." + schema.processingGroupColumn() + "=? "
@@ -297,8 +297,8 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement sizeStatement(@Nonnull Connection connection,
-                                           @Nonnull String processingGroup) throws SQLException {
+    public PreparedStatement sizeStatement(@NonNull Connection connection,
+                                           @NonNull String processingGroup) throws SQLException {
         String sql = "SELECT COUNT(*) "
                 + "FROM " + schema.deadLetterTable() + " "
                 + "WHERE " + schema.processingGroupColumn() + "=?";
@@ -308,9 +308,9 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement sequenceSizeStatement(@Nonnull Connection connection,
-                                                   @Nonnull String processingGroup,
-                                                   @Nonnull String sequenceId) throws SQLException {
+    public PreparedStatement sequenceSizeStatement(@NonNull Connection connection,
+                                                   @NonNull String processingGroup,
+                                                   @NonNull String sequenceId) throws SQLException {
         String sql = "SELECT COUNT(*) "
                 + "FROM " + schema.deadLetterTable() + " "
                 + "WHERE " + schema.processingGroupColumn() + "=? "
@@ -322,8 +322,8 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement amountOfSequencesStatement(@Nonnull Connection connection,
-                                                        @Nonnull String processingGroup) throws SQLException {
+    public PreparedStatement amountOfSequencesStatement(@NonNull Connection connection,
+                                                        @NonNull String processingGroup) throws SQLException {
         String sql = "SELECT COUNT(DISTINCT " + schema.sequenceIdentifierColumn() + ") "
                 + "FROM " + schema.deadLetterTable() + " "
                 + "WHERE " + schema.processingGroupColumn() + "=?";
@@ -333,9 +333,9 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement claimableSequencesStatement(@Nonnull Connection connection,
-                                                         @Nonnull String processingGroup,
-                                                         @Nonnull Instant processingStartedLimit,
+    public PreparedStatement claimableSequencesStatement(@NonNull Connection connection,
+                                                         @NonNull String processingGroup,
+                                                         @NonNull Instant processingStartedLimit,
                                                          int offset,
                                                          int maxSize) throws SQLException {
         String sql = "SELECT * "
@@ -368,10 +368,10 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement claimStatement(@Nonnull Connection connection,
-                                            @Nonnull String identifier,
-                                            @Nonnull Instant current,
-                                            @Nonnull Instant processingStartedLimit) throws SQLException {
+    public PreparedStatement claimStatement(@NonNull Connection connection,
+                                            @NonNull String identifier,
+                                            @NonNull Instant current,
+                                            @NonNull Instant processingStartedLimit) throws SQLException {
         String sql = "UPDATE " + schema.deadLetterTable() + " SET "
                 + schema.processingStartedColumn() + "=? "
                 + "WHERE " + schema.deadLetterIdentifierColumn() + "=? "
@@ -387,9 +387,9 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement nextLetterInSequenceStatement(@Nonnull Connection connection,
-                                                           @Nonnull String processingGroup,
-                                                           @Nonnull String sequenceIdentifier,
+    public PreparedStatement nextLetterInSequenceStatement(@NonNull Connection connection,
+                                                           @NonNull String processingGroup,
+                                                           @NonNull String sequenceIdentifier,
                                                            long sequenceIndex) throws SQLException {
         String sql = "SELECT * "
                 + "FROM " + schema.deadLetterTable() + " "
@@ -407,8 +407,8 @@ public class DefaultDeadLetterStatementFactory<E extends EventMessage<?>> implem
     }
 
     @Override
-    public PreparedStatement clearStatement(@Nonnull Connection connection,
-                                            @Nonnull String processingGroup) throws SQLException {
+    public PreparedStatement clearStatement(@NonNull Connection connection,
+                                            @NonNull String processingGroup) throws SQLException {
         String sql = "DELETE "
                 + "FROM " + schema.deadLetterTable() + " "
                 + "WHERE " + schema.processingGroupColumn() + "=?";

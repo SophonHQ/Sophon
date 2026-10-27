@@ -29,11 +29,11 @@ import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitor;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.eventhandling.GenericEventMessage.asEventMessage;
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,14 +47,14 @@ class GlobalMetricRegistryTest {
     @BeforeEach
     void setUp() {
         DropwizardConfig config = new DropwizardConfig() {
-            @Nonnull
+            @NonNull
             @Override
             public String prefix() {
                 return "dropwizard";
             }
 
             @Override
-            public String get(@Nonnull String key) {
+            public String get(@NonNull String key) {
                 return null;
             }
         };
@@ -63,7 +63,7 @@ class GlobalMetricRegistryTest {
                                                                        dropWizardRegistry,
                                                                        HierarchicalNameMapper.DEFAULT,
                                                                        Clock.SYSTEM) {
-            @Nonnull
+            @NonNull
             @Override
             protected Double nullGaugeValue() {
                 return 0.0;

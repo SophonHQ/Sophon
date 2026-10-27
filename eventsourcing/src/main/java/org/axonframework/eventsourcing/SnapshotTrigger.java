@@ -17,8 +17,7 @@
 package org.axonframework.eventsourcing;
 
 import org.axonframework.eventhandling.EventMessage;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface describing a mechanism that keeps track of an Aggregate's activity in order to trigger a snapshot.
@@ -43,7 +42,7 @@ public interface SnapshotTrigger {
      *
      * @param msg The message handled by the aggregate
      */
-    void eventHandled(@Nonnull EventMessage<?> msg);
+    void eventHandled(@NonNull EventMessage<?> msg);
 
     /**
      * Invoked when the initialization of the aggregate based on passed events is completed. Any subsequent invocation

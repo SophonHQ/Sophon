@@ -20,13 +20,13 @@ import org.axonframework.eventhandling.DomainEventMessage;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.TrackedEventMessage;
 import org.axonframework.eventhandling.TrackingToken;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.util.Arrays.asList;
 
@@ -48,7 +48,7 @@ public interface EventStorageEngine {
      *
      * @param events Events to append to the event storage
      */
-    default void appendEvents(@Nonnull EventMessage<?>... events) {
+    default void appendEvents(EventMessage<?> @NonNull ... events) {
         appendEvents(asList(events));
     }
 
@@ -60,7 +60,7 @@ public interface EventStorageEngine {
      *
      * @param events Events to append to the event storage
      */
-    void appendEvents(@Nonnull List<? extends EventMessage<?>> events);
+    void appendEvents(@NonNull List<? extends EventMessage<?>> events);
 
     /**
      * Store an event that contains a snapshot of an aggregate. If the event storage already contains a snapshot for the
@@ -68,7 +68,7 @@ public interface EventStorageEngine {
      *
      * @param snapshot The snapshot event of the aggregate that is to be stored
      */
-    void storeSnapshot(@Nonnull DomainEventMessage<?> snapshot);
+    void storeSnapshot(@NonNull DomainEventMessage<?> snapshot);
 
     /**
      * Open an event stream containing all events stored since given tracking token. The returned stream is comprised of
@@ -97,7 +97,7 @@ public interface EventStorageEngine {
      * @param aggregateIdentifier The identifier of the aggregate to return an event stream for
      * @return A non-blocking DomainEventStream of the given aggregate
      */
-    default DomainEventStream readEvents(@Nonnull String aggregateIdentifier) {
+    default DomainEventStream readEvents(@NonNull String aggregateIdentifier) {
         return readEvents(aggregateIdentifier, 0L);
     }
 
@@ -113,7 +113,7 @@ public interface EventStorageEngine {
      * @param firstSequenceNumber The expected sequence number of the first event in the returned stream
      * @return A non-blocking DomainEventStream of the given aggregate
      */
-    DomainEventStream readEvents(@Nonnull String aggregateIdentifier, long firstSequenceNumber);
+    DomainEventStream readEvents(@NonNull String aggregateIdentifier, long firstSequenceNumber);
 
     /**
      * Try to load a snapshot event of the aggregate with given {@code aggregateIdentifier}. If the storage engine has
@@ -122,7 +122,7 @@ public interface EventStorageEngine {
      * @param aggregateIdentifier The identifier of the aggregate
      * @return An optional with a snapshot of the aggregate
      */
-    Optional<DomainEventMessage<?>> readSnapshot(@Nonnull String aggregateIdentifier);
+    Optional<DomainEventMessage<?>> readSnapshot(@NonNull String aggregateIdentifier);
 
     /**
      * Returns the last known sequence number for the given {@code aggregateIdentifier}.
@@ -135,7 +135,7 @@ public interface EventStorageEngine {
      * @return an optional with the highest sequence number, or an empty optional if the aggregate identifier wasn't
      * found
      */
-    default Optional<Long> lastSequenceNumberFor(@Nonnull String aggregateIdentifier) {
+    default Optional<Long> lastSequenceNumberFor(@NonNull String aggregateIdentifier) {
         return readEvents(aggregateIdentifier).asStream().map(DomainEventMessage::getSequenceNumber)
                                               .max(Long::compareTo);
     }
@@ -167,7 +167,7 @@ public interface EventStorageEngine {
      * @return a tracking token at the given {@code dateTime}, if there aren't events matching this criteria {@code
      * null} is returned
      */
-    default TrackingToken createTokenAt(@Nonnull Instant dateTime) {
+    default TrackingToken createTokenAt(@NonNull Instant dateTime) {
         throw new UnsupportedOperationException("Creation of Time based Token not supported by this EventStorageEngine");
     }
 }

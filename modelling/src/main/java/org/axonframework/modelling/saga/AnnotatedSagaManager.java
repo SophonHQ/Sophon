@@ -25,12 +25,12 @@ import org.axonframework.messaging.annotation.ParameterResolverFactory;
 import org.axonframework.modelling.saga.metamodel.AnnotationSagaMetaModelFactory;
 import org.axonframework.modelling.saga.metamodel.SagaModel;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -92,7 +92,7 @@ public class AnnotatedSagaManager<T> extends AbstractSagaManager<T> {
 
 
     @Override
-    public boolean canHandle(@Nonnull EventMessage<?> eventMessage, @Nonnull Segment segment) {
+    public boolean canHandle(@NonNull EventMessage<?> eventMessage, @NonNull Segment segment) {
         // The segment is used to filter Saga instances, so all events match when there's a handler
         return sagaMetaModel.hasHandlerMethod(eventMessage);
     }

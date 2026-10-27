@@ -17,8 +17,7 @@
 package org.axonframework.commandhandling.distributed;
 
 import org.axonframework.commandhandling.CommandMessage;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface describing a mechanism that generates a routing key for a given command. Commands that should be handled by
@@ -36,5 +35,5 @@ public interface RoutingStrategy {
      * @param command the command to create a routing key for
      * @return the routing key for the command
      */
-    String getRoutingKey(@Nonnull CommandMessage<?> command);
+    String getRoutingKey(@NonNull CommandMessage<?> command);
 }

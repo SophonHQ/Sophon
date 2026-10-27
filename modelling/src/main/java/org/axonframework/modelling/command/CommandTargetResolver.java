@@ -17,8 +17,7 @@
 package org.axonframework.modelling.command;
 
 import org.axonframework.commandhandling.CommandMessage;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface towards a mechanism that is capable of extracting an Aggregate Identifier and Version form a command that
@@ -45,5 +44,5 @@ public interface CommandTargetResolver {
      * @see AggregateCreationPolicy#ALWAYS
      * @see AggregateCreationPolicy#CREATE_IF_MISSING
      */
-    VersionedAggregateIdentifier resolveTarget(@Nonnull CommandMessage<?> command);
+    VersionedAggregateIdentifier resolveTarget(@NonNull CommandMessage<?> command);
 }

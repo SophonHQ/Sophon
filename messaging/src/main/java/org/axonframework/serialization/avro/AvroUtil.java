@@ -23,8 +23,8 @@ import org.apache.avro.message.BadHeaderException;
 import org.apache.avro.specific.SpecificData;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.axonframework.serialization.SerializationException;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -90,7 +90,7 @@ public class AvroUtil {
      * @return fingerprint of the schema.
      * @throws AvroRuntimeException if fingerprint can not be read from input bytes.
      */
-    public static long fingerprint(@Nonnull byte[] singleObjectEncodedBytes) {
+    public static long fingerprint(byte @NonNull [] singleObjectEncodedBytes) {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(singleObjectEncodedBytes)) {
             int magicByte = bis.read();
             int versionByte = bis.read();
@@ -120,7 +120,7 @@ public class AvroUtil {
      * @return payload bytes.
      * @throws AvroRuntimeException if payload bytes can not be read from input bytes.
      */
-    public static byte[] payload(@Nonnull byte[] singleObjectEncodedBytes) {
+    public static byte[] payload(byte @NonNull [] singleObjectEncodedBytes) {
         try (ByteArrayInputStream bis = new ByteArrayInputStream(singleObjectEncodedBytes)) {
             if (AVRO_HEADER_LENGTH != bis.skip(AVRO_HEADER_LENGTH)) {
                 throw new BadHeaderException("Could not read header bytes, end of stream reached.");
@@ -154,8 +154,8 @@ public class AvroUtil {
      * @return schema.
      * @throws AvroRuntimeException on any errors.
      */
-    @Nonnull
-    public static Schema getClassSchemaChecked(@Nonnull Class<SpecificRecordBase> specificRecordBaseClass) {
+    @NonNull
+    public static Schema getClassSchemaChecked(@NonNull Class<SpecificRecordBase> specificRecordBaseClass) {
         try {
             return getClassSchema(specificRecordBaseClass);
         } catch (Exception e) {
@@ -173,8 +173,8 @@ public class AvroUtil {
      * @throws InvocationTargetException on wrong class structure.
      * @throws IllegalAccessException    on wrong class structure.
      */
-    @Nonnull
-    public static Schema getClassSchema(@Nonnull Class<SpecificRecordBase> clazz)
+    @NonNull
+    public static Schema getClassSchema(@NonNull Class<SpecificRecordBase> clazz)
             throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         return (Schema) clazz.getMethod("getClassSchema").invoke(null); // invoke static method
     }
@@ -186,7 +186,7 @@ public class AvroUtil {
      * @param schema A {@link Schema} to return the fingerprint for.
      * @return The fingerprint for the given {@code schema}.
      */
-    public static long fingerprint(@Nonnull Schema schema) {
+    public static long fingerprint(@NonNull Schema schema) {
         return SchemaNormalization.parsingFingerprint64(schema);
     }
 
@@ -197,8 +197,8 @@ public class AvroUtil {
      * @return list of incompatibilities if any, or empty list if schemas are compatible.
      */
     public static List<SchemaCompatibility.Incompatibility> checkCompatibility(
-            @Nonnull Schema readerSchema,
-            @Nonnull Schema writerSchema
+            @NonNull Schema readerSchema,
+            @NonNull Schema writerSchema
     ) {
         SchemaCompatibility.SchemaCompatibilityResult schemaPairCompatibilityResult = checkReaderWriterCompatibility(
                 readerSchema,
@@ -223,10 +223,10 @@ public class AvroUtil {
      * @param cause        the cause of exception.
      * @return serialization exception.
      */
-    @Nonnull
-    public static SerializationException createExceptionFailedToDeserialize(@Nonnull Class<?> readerType,
-                                                                            @Nonnull Schema readerSchema,
-                                                                            @Nonnull Schema writerSchema,
+    @NonNull
+    public static SerializationException createExceptionFailedToDeserialize(@NonNull Class<?> readerType,
+                                                                            @NonNull Schema readerSchema,
+                                                                            @NonNull Schema writerSchema,
                                                                             Exception cause,
                                                                             boolean includeSchemasInStackTraces
     ) {
@@ -240,9 +240,9 @@ public class AvroUtil {
                 cause);
     }
 
-    public static SerializationException createExceptionFailedToDeserialize(@Nonnull Class<?> readerType,
-                                                                            @Nonnull Schema readerSchema,
-                                                                            @Nonnull Schema writerSchema,
+    public static SerializationException createExceptionFailedToDeserialize(@NonNull Class<?> readerType,
+                                                                            @NonNull Schema readerSchema,
+                                                                            @NonNull Schema writerSchema,
                                                                             String message,
                                                                             boolean includeSchemasInStackTraces
     ) {
@@ -264,7 +264,7 @@ public class AvroUtil {
      * @param incompatibility incompatibility to display.
      * @return string representation.
      */
-    public static String incompatibilityPrinter(@Nonnull SchemaCompatibility.Incompatibility incompatibility) {
+    public static String incompatibilityPrinter(SchemaCompatibility.@NonNull Incompatibility incompatibility) {
         return String.format("%s located at \"%s\" with value \"%s\"",
                 incompatibility.getType(),
                 incompatibility.getLocation(),
@@ -279,7 +279,7 @@ public class AvroUtil {
      * @return exception to throw.
      */
     public static SerializationException createExceptionNoSchemaFound(
-            @Nonnull Class<?> readerType,
+            @NonNull Class<?> readerType,
             long fingerprint
     ) {
         return new SerializationException("Schema store could didn't contain schema deserializing "

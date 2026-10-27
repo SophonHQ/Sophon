@@ -31,6 +31,7 @@ import org.jobrunr.server.BackgroundJobServer;
 import org.jobrunr.server.JobActivator;
 import org.jobrunr.storage.InMemoryStorageProvider;
 import org.jobrunr.storage.StorageProvider;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
 import java.time.Duration;
@@ -41,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 import static org.awaitility.Awaitility.await;
 import static org.jobrunr.server.BackgroundJobServerConfiguration.usingStandardBackgroundJobServerConfiguration;
@@ -212,18 +212,18 @@ class JobRunrEventSchedulerTest {
         }
 
         @Override
-        public void publish(@Nonnull List<? extends EventMessage<?>> events) {
+        public void publish(@NonNull List<? extends EventMessage<?>> events) {
             publishedMessages.addAll(events);
         }
 
         @Override
-        public Registration subscribe(@Nonnull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
+        public Registration subscribe(@NonNull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
             throw new UnsupportedOperationException();
         }
 
         @Override
         public Registration registerDispatchInterceptor(
-                @Nonnull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
+                @NonNull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
             throw new UnsupportedOperationException();
         }
     }

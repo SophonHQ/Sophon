@@ -16,7 +16,7 @@
 
 package org.axonframework.eventhandling;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface of the error handler that will be invoked if event processing fails. The error handler is generally invoked
@@ -42,6 +42,6 @@ public interface ErrorHandler {
      * @param errorContext Contextual information describing the error
      * @throws Exception if the handler decides to propagate the error
      */
-    void handleError(@Nonnull ErrorContext errorContext) throws Exception;
+    void handleError(@NonNull ErrorContext errorContext) throws Exception;
 
 }

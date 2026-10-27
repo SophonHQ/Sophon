@@ -48,12 +48,12 @@ import org.jobrunr.jobs.states.IllegalJobStateChangeException;
 import org.jobrunr.jobs.states.StateName;
 import org.jobrunr.scheduling.JobBuilder;
 import org.jobrunr.scheduling.JobScheduler;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.time.Instant;
 import java.util.UUID;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.lang.String.format;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -131,9 +131,9 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
     }
 
     @Override
-    public String schedule(@Nonnull Instant triggerDateTime, @Nonnull String deadlineName,
+    public String schedule(@NonNull Instant triggerDateTime, @NonNull String deadlineName,
                            @Nullable Object messageOrPayload,
-                           @Nonnull ScopeDescriptor deadlineScope) {
+                           @NonNull ScopeDescriptor deadlineScope) {
         DeadlineMessage<Object> deadlineMessage = asDeadlineMessage(deadlineName, messageOrPayload, triggerDateTime);
         UUID deadlineId = UUID.randomUUID();
         Span span = spanFactory.createScheduleSpan(deadlineName, deadlineId.toString(), deadlineMessage);
@@ -159,7 +159,7 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
     }
 
     @Override
-    public void cancelSchedule(@Nonnull String deadlineName, @Nonnull String scheduleId) {
+    public void cancelSchedule(@NonNull String deadlineName, @NonNull String scheduleId) {
         Span span = spanFactory.createCancelScheduleSpan(deadlineName, scheduleId);
         runOnPrepareCommitOrNow(span.wrapRunnable(() -> {
             try {
@@ -181,11 +181,11 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
     }
 
     @Override
-    public void cancelAll(@Nonnull String deadlineName) {
+    public void cancelAll(@NonNull String deadlineName) {
         throw new UnsupportedOperationException(String.format(NOT_SUPPORTED_MSG, "cancelAll"));
     }
 
-    private UUID toUuid(@Nonnull String scheduleId) {
+    private UUID toUuid(@NonNull String scheduleId) {
         try {
             return UUID.fromString(scheduleId);
         } catch (IllegalArgumentException e) {
@@ -194,7 +194,7 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
     }
 
     @Override
-    public void cancelAllWithinScope(@Nonnull String deadlineName, @Nonnull ScopeDescriptor scope) {
+    public void cancelAllWithinScope(@NonNull String deadlineName, @NonNull ScopeDescriptor scope) {
         throw new UnsupportedOperationException(String.format(NOT_SUPPORTED_MSG, "cancelAllWithinScope"));
     }
 
@@ -209,7 +209,7 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
      * @deprecated Kept for backwards compatibility, use {@link #execute(String, String)} instead.
      */
     @Deprecated
-    public void execute(@Nonnull String serializedDeadlineDetails) {
+    public void execute(@NonNull String serializedDeadlineDetails) {
         execute(serializedDeadlineDetails, null);
     }
 
@@ -223,7 +223,7 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
      * @param deadlineId                The {@link UUID} of the deadline.
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void execute(@Nonnull String serializedDeadlineDetails, String deadlineId) {
+    public void execute(@NonNull String serializedDeadlineDetails, String deadlineId) {
         SimpleSerializedObject<String> serializedDeadlineMetaData = new SimpleSerializedObject<>(
                 serializedDeadlineDetails, String.class, DeadlineDetails.class.getName(), null
         );
@@ -280,7 +280,7 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry lifecycle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry lifecycle) {
         lifecycle.onShutdown(Phase.INBOUND_EVENT_CONNECTORS, this::shutdown);
     }
 
@@ -370,7 +370,7 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
          * options.
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = DefaultDeadlineManagerSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
@@ -384,7 +384,7 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
          * @param spanFactory The {@link DeadlineManagerSpanFactory} implementation
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull DeadlineManagerSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull DeadlineManagerSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = spanFactory;
             return this;

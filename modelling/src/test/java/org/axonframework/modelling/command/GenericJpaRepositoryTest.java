@@ -30,6 +30,7 @@ import org.axonframework.eventhandling.SimpleEventBus;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
 import org.axonframework.tracing.TestSpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.mockito.internal.stubbing.answers.*;
@@ -42,7 +43,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.modelling.command.AggregateLifecycle.apply;
 import static org.junit.jupiter.api.Assertions.*;
@@ -352,7 +352,7 @@ class GenericJpaRepositoryTest {
         }
 
         @Override
-        public void publish(@Nonnull List<? extends EventMessage<?>> events) {
+        public void publish(@NonNull List<? extends EventMessage<?>> events) {
             publishedEvents.addAll(events);
             super.publish(events);
         }

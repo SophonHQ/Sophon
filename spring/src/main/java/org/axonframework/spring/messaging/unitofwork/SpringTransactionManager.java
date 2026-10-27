@@ -19,12 +19,11 @@ package org.axonframework.spring.messaging.unitofwork;
 import org.axonframework.common.Assert;
 import org.axonframework.common.transaction.Transaction;
 import org.axonframework.common.transaction.TransactionManager;
+import org.jspecify.annotations.NonNull;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-
-import javax.annotation.Nonnull;
 
 /**
  * TransactionManager implementation that uses a {@link org.springframework.transaction.PlatformTransactionManager} as
@@ -59,7 +58,7 @@ public class SpringTransactionManager implements TransactionManager {
         this(transactionManager, new DefaultTransactionDefinition());
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Transaction startTransaction() {
         TransactionStatus status = transactionManager.getTransaction(transactionDefinition);

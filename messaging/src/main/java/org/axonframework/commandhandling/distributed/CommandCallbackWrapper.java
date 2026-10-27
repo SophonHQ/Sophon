@@ -19,8 +19,7 @@ package org.axonframework.commandhandling.distributed;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Wrapper for a Command callback. This is used in a CommandCallbackRepository
@@ -75,13 +74,13 @@ public class CommandCallbackWrapper<A, C, R> implements CommandCallback<C, R> {
      *
      * @param result the result of the command
      */
-    public void reportResult(@Nonnull CommandResultMessage<R> result) {
+    public void reportResult(@NonNull CommandResultMessage<R> result) {
         onResult(getMessage(), result);
     }
 
     @Override
-    public void onResult(@Nonnull CommandMessage<? extends C> message,
-                         @Nonnull CommandResultMessage<? extends R> commandResultMessage) {
+    public void onResult(@NonNull CommandMessage<? extends C> message,
+                         @NonNull CommandResultMessage<? extends R> commandResultMessage) {
         wrapped.onResult(message, commandResultMessage);
     }
 }

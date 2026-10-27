@@ -32,6 +32,8 @@ import org.axonframework.eventhandling.tokenstore.jpa.TokenEntry;
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.SerializedType;
 import org.axonframework.serialization.Serializer;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,8 +50,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.lang.String.format;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -132,13 +132,13 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public void initializeTokenSegments(@Nonnull String processorName, int segmentCount)
+    public void initializeTokenSegments(@NonNull String processorName, int segmentCount)
             throws UnableToClaimTokenException {
         initializeTokenSegments(processorName, segmentCount, null);
     }
 
     @Override
-    public void initializeTokenSegments(@Nonnull String processorName, int segmentCount, TrackingToken initialToken)
+    public void initializeTokenSegments(@NonNull String processorName, int segmentCount, TrackingToken initialToken)
             throws UnableToClaimTokenException {
         Connection connection = getConnection();
         try {
@@ -159,7 +159,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public void initializeSegment(@Nullable TrackingToken token, @Nonnull String processorName, int segment)
+    public void initializeSegment(@Nullable TrackingToken token, @NonNull String processorName, int segment)
             throws UnableToInitializeTokenException {
         Connection connection = getConnection();
         try {
@@ -223,7 +223,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public void storeToken(TrackingToken token, @Nonnull String processorName, int segment)
+    public void storeToken(TrackingToken token, @NonNull String processorName, int segment)
             throws UnableToClaimTokenException {
         Connection connection = getConnection();
         try {
@@ -259,7 +259,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public TrackingToken fetchToken(@Nonnull String processorName, int segment) throws UnableToClaimTokenException {
+    public TrackingToken fetchToken(@NonNull String processorName, int segment) throws UnableToClaimTokenException {
         Connection connection = getConnection();
         try {
             return executeQuery(connection, c -> selectForUpdate(c, processorName, segment),
@@ -273,7 +273,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public TrackingToken fetchToken(@Nonnull String processorName, @Nonnull Segment segment)
+    public TrackingToken fetchToken(@NonNull String processorName, @NonNull Segment segment)
             throws UnableToClaimTokenException {
         Connection connection = getConnection();
         try {
@@ -288,7 +288,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public void releaseClaim(@Nonnull String processorName, int segment) {
+    public void releaseClaim(@NonNull String processorName, int segment) {
         Connection connection = getConnection();
         try {
             executeUpdates(connection, e -> {
@@ -303,7 +303,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public void deleteToken(@Nonnull String processorName, int segment) {
+    public void deleteToken(@NonNull String processorName, int segment) {
         Connection connection = getConnection();
         try {
             int[] result = executeUpdates(connection, e -> {
@@ -321,7 +321,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public int[] fetchSegments(@Nonnull String processorName) {
+    public int[] fetchSegments(@NonNull String processorName) {
         Connection connection = getConnection();
         try {
             List<Integer> integers = executeQuery(connection,
@@ -338,7 +338,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public List<Segment> fetchAvailableSegments(@Nonnull String processorName) {
+    public List<Segment> fetchAvailableSegments(@NonNull String processorName) {
         Connection connection = getConnection();
         try {
             List<AbstractTokenEntry<?>> tokenEntries = executeQuery(connection,

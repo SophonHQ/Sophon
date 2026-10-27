@@ -29,6 +29,7 @@ import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -96,7 +96,7 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
     }
 
     @Override
-    public boolean queryUpdateHandlerRegistered(@Nonnull SubscriptionQueryMessage<?, ?, ?> query) {
+    public boolean queryUpdateHandlerRegistered(@NonNull SubscriptionQueryMessage<?, ?, ?> query) {
         return updateHandlers.keySet()
                              .stream()
                              .anyMatch(m -> m.getIdentifier().equals(query.getIdentifier()));
@@ -129,7 +129,7 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
     }
 
     @Override
-    public <U> UpdateHandlerRegistration<U> registerUpdateHandler(@Nonnull SubscriptionQueryMessage<?, ?, ?> query,
+    public <U> UpdateHandlerRegistration<U> registerUpdateHandler(@NonNull SubscriptionQueryMessage<?, ?, ?> query,
                                                                   int updateBufferSize) {
         Sinks.Many<SubscriptionQueryUpdateMessage<U>> sink = Sinks.many().replay().limit(updateBufferSize);
         SinksManyWrapper<SubscriptionQueryUpdateMessage<U>> sinksManyWrapper = new SinksManyWrapper<>(sink);
@@ -148,8 +148,8 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
     }
 
     @Override
-    public <U> void emit(@Nonnull Predicate<SubscriptionQueryMessage<?, ?, U>> filter,
-                         @Nonnull SubscriptionQueryUpdateMessage<U> update) {
+    public <U> void emit(@NonNull Predicate<SubscriptionQueryMessage<?, ?, U>> filter,
+                         @NonNull SubscriptionQueryUpdateMessage<U> update) {
         SubscriptionQueryUpdateMessage<U> updateMessage = spanFactory.propagateContext(update);
         Span span = spanFactory.createUpdateScheduleEmitSpan(updateMessage);
         span.run(() -> {
@@ -169,20 +169,20 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
     }
 
     @Override
-    public void complete(@Nonnull Predicate<SubscriptionQueryMessage<?, ?, ?>> filter) {
+    public void complete(@NonNull Predicate<SubscriptionQueryMessage<?, ?, ?>> filter) {
         runOnAfterCommitOrNow(() -> doComplete(filter));
     }
 
     @Override
-    public void completeExceptionally(@Nonnull Predicate<SubscriptionQueryMessage<?, ?, ?>> filter,
-                                      @Nonnull Throwable cause) {
+    public void completeExceptionally(@NonNull Predicate<SubscriptionQueryMessage<?, ?, ?>> filter,
+                                      @NonNull Throwable cause) {
         runOnAfterCommitOrNow(() -> doCompleteExceptionally(filter, cause));
     }
 
     @Override
-    public @Nonnull
+    public @NonNull
     Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super SubscriptionQueryUpdateMessage<?>> interceptor) {
+            @NonNull MessageDispatchInterceptor<? super SubscriptionQueryUpdateMessage<?>> interceptor) {
         dispatchInterceptors.add(interceptor);
         return () -> dispatchInterceptors.remove(interceptor);
     }
@@ -332,7 +332,7 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
          * @return the current Builder instance, for fluent interfacing
          */
         public Builder updateMessageMonitor(
-                @Nonnull MessageMonitor<? super SubscriptionQueryUpdateMessage<?>> updateMessageMonitor) {
+                @NonNull MessageMonitor<? super SubscriptionQueryUpdateMessage<?>> updateMessageMonitor) {
             assertNonNull(updateMessageMonitor, "MessageMonitor may not be null");
             this.updateMessageMonitor = updateMessageMonitor;
             return this;
@@ -348,7 +348,7 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
          * @deprecated Use {@link #spanFactory(QueryUpdateEmitterSpanFactory)}  instead as it provides more configurability.
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = DefaultQueryUpdateEmitterSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
@@ -360,7 +360,7 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
          * @param spanFactory The {@link QueryUpdateEmitterSpanFactory} implementation.
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull QueryUpdateEmitterSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull QueryUpdateEmitterSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = spanFactory;
             return this;

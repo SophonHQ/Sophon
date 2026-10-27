@@ -5,7 +5,7 @@ import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.modelling.saga.AssociationResolver;
 import org.axonframework.modelling.saga.PayloadAssociationResolver;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import static org.junit.Assert.*;
 
@@ -14,13 +14,13 @@ public class AssociationResolverStub implements AssociationResolver {
     private final PayloadAssociationResolver defaultResolver = new PayloadAssociationResolver();
 
     @Override
-    public <T> void validate(@NotNull String associationPropertyName, @NotNull MessageHandlingMember<T> handler) {
+    public <T> void validate(@NonNull String associationPropertyName, @NonNull MessageHandlingMember<T> handler) {
         defaultResolver.validate(associationPropertyName, handler);
     }
 
     @Override
-    public <T> Object resolve(@NotNull String associationPropertyName, @NotNull EventMessage<?> message,
-                              @NotNull MessageHandlingMember<T> handler) {
+    public <T> Object resolve(@NonNull String associationPropertyName, @NonNull EventMessage<?> message,
+                              @NonNull MessageHandlingMember<T> handler) {
 
 
         if (!DomainEventMessage.class.isAssignableFrom(message.getClass())) {

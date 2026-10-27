@@ -23,13 +23,13 @@ import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.StreamingEventProcessor;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitorCallback;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Clock;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.annotation.Nonnull;
 
 /**
  * A {@link MessageMonitor} implementation dedicated to {@link EventMessage EventMessages}.
@@ -68,7 +68,7 @@ public class EventProcessorLatencyMonitor implements MessageMonitor<EventMessage
     }
 
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull EventMessage<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull EventMessage<?> message) {
         //noinspection ConstantConditions
         if (message != null) {
             this.processTime.set(Duration.between(message.getTimestamp(), clock.instant()).toMillis());

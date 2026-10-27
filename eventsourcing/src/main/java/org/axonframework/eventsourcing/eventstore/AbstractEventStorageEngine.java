@@ -31,13 +31,13 @@ import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.upcasting.event.EventUpcaster;
 import org.axonframework.serialization.upcasting.event.NoOpEventUpcaster;
 import org.axonframework.serialization.xml.XStreamSerializer;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -82,13 +82,13 @@ public abstract class AbstractEventStorageEngine implements EventStorageEngine {
     }
 
     @Override
-    public DomainEventStream readEvents(@Nonnull String aggregateIdentifier, long firstSequenceNumber) {
+    public DomainEventStream readEvents(@NonNull String aggregateIdentifier, long firstSequenceNumber) {
         Stream<? extends DomainEventData<?>> input = readEventData(aggregateIdentifier, firstSequenceNumber);
         return upcastAndDeserializeDomainEvents(input, getEventSerializer(), upcasterChain);
     }
 
     @Override
-    public Optional<DomainEventMessage<?>> readSnapshot(@Nonnull String aggregateIdentifier) {
+    public Optional<DomainEventMessage<?>> readSnapshot(@NonNull String aggregateIdentifier) {
         return readSnapshotData(aggregateIdentifier)
                 .filter(snapshotFilter::allow)
                 .map(snapshot -> upcastAndDeserializeDomainEvents(Stream.of(snapshot),
@@ -101,12 +101,12 @@ public abstract class AbstractEventStorageEngine implements EventStorageEngine {
     }
 
     @Override
-    public void appendEvents(@Nonnull List<? extends EventMessage<?>> events) {
+    public void appendEvents(@NonNull List<? extends EventMessage<?>> events) {
         appendEvents(events, getEventSerializer());
     }
 
     @Override
-    public void storeSnapshot(@Nonnull DomainEventMessage<?> snapshot) {
+    public void storeSnapshot(@NonNull DomainEventMessage<?> snapshot) {
         storeSnapshot(snapshot, getSnapshotSerializer());
     }
 

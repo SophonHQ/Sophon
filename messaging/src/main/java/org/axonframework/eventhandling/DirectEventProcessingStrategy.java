@@ -16,9 +16,10 @@
 
 package org.axonframework.eventhandling;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.List;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 /**
  * Event processing strategy that directly initiates event processing.
@@ -32,8 +33,8 @@ public enum DirectEventProcessingStrategy implements EventProcessingStrategy {
     INSTANCE;
 
     @Override
-    public void handle(@Nonnull List<? extends EventMessage<?>> events,
-                       @Nonnull Consumer<List<? extends EventMessage<?>>> processor) {
+    public void handle(@NonNull List<? extends EventMessage<?>> events,
+                       @NonNull Consumer<List<? extends EventMessage<?>>> processor) {
         processor.accept(events);
     }
 }

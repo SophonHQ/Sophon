@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.distributed.CommandMessageFilter;
+import org.jspecify.annotations.NonNull;
 
 import java.beans.ConstructorProperties;
 import java.util.Collections;
@@ -28,7 +29,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 /**
  * A {@link CommandMessageFilter} implementation which filters {@link CommandMessage}s by the {@link
@@ -62,7 +62,7 @@ public class CommandNameFilter implements CommandMessageFilter {
     }
 
     @Override
-    public boolean matches(@Nonnull CommandMessage<?> commandMessage) {
+    public boolean matches(@NonNull CommandMessage<?> commandMessage) {
         return commandNames.contains(commandMessage.getCommandName());
     }
 
@@ -72,7 +72,7 @@ public class CommandNameFilter implements CommandMessageFilter {
     }
 
     @Override
-    public CommandMessageFilter and(@Nonnull CommandMessageFilter other) {
+    public CommandMessageFilter and(@NonNull CommandMessageFilter other) {
         if (other instanceof CommandNameFilter) {
             return new CommandNameFilter(commandNames.stream()
                                                      .filter(((CommandNameFilter) other).commandNames::contains)
@@ -83,7 +83,7 @@ public class CommandNameFilter implements CommandMessageFilter {
     }
 
     @Override
-    public CommandMessageFilter or(@Nonnull CommandMessageFilter other) {
+    public CommandMessageFilter or(@NonNull CommandMessageFilter other) {
         if (other instanceof CommandNameFilter) {
             return new CommandNameFilter(
                     Stream.concat(

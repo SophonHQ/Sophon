@@ -17,9 +17,9 @@
 package org.axonframework.queryhandling;
 
 import org.axonframework.messaging.ResultMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Message that contains the results of a Query. Results are represented as a Collection of result objects. When a query
@@ -37,7 +37,7 @@ public interface QueryResponseMessage<T> extends ResultMessage<T> {
      * @param metaData The new MetaData for the QueryResponseMessage
      * @return a copy of this message with the given MetaData
      */
-    QueryResponseMessage<T> withMetaData(@Nonnull Map<String, ?> metaData);
+    QueryResponseMessage<T> withMetaData(@NonNull Map<String, ?> metaData);
 
     /**
      * Returns a copy of this QueryResponseMessage with its MetaData merged with given {@code metaData}. The payload
@@ -46,5 +46,5 @@ public interface QueryResponseMessage<T> extends ResultMessage<T> {
      * @param additionalMetaData The MetaData to merge into the QueryResponseMessage
      * @return a copy of this message with the given additional MetaData
      */
-    QueryResponseMessage<T> andMetaData(@Nonnull Map<String, ?> additionalMetaData);
+    QueryResponseMessage<T> andMetaData(@NonNull Map<String, ?> additionalMetaData);
 }

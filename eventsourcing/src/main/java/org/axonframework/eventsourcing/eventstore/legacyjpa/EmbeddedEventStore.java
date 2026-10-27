@@ -30,10 +30,10 @@ import org.axonframework.eventsourcing.eventstore.EventStore;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.annotation.PreDestroy;
 import java.util.*;
 import java.util.concurrent.*;
@@ -510,19 +510,19 @@ public class EmbeddedEventStore extends AbstractEventStore {
         }
 
         @Override
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super EventMessage<?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
             super.messageMonitor(messageMonitor);
             return this;
         }
 
         @Override
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }
 
         @Override
-        public Builder spanFactory(@Nonnull EventBusSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull EventBusSpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }

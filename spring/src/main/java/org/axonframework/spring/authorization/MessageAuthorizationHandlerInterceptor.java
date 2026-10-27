@@ -21,6 +21,7 @@ import org.axonframework.messaging.InterceptorChain;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageHandlerInterceptor;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
@@ -30,8 +31,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-
 
 /**
  * A {@link MessageHandlerInterceptor} that verifies authorization based on {@link Secured} annotations on the payload
@@ -45,8 +44,8 @@ public class MessageAuthorizationHandlerInterceptor<T extends Message<?>> implem
     private static final Logger logger = LoggerFactory.getLogger(MessageAuthorizationHandlerInterceptor.class);
 
     @Override
-    public Object handle(@Nonnull UnitOfWork<? extends T> unitOfWork,
-                         @Nonnull InterceptorChain interceptorChain) throws Exception {
+    public Object handle(@NonNull UnitOfWork<? extends T> unitOfWork,
+                         @NonNull InterceptorChain interceptorChain) throws Exception {
         T message = unitOfWork.getMessage();
         if (!AnnotationUtils.isAnnotationPresent(message.getPayloadType(), Secured.class)) {
             return interceptorChain.proceed();

@@ -19,11 +19,10 @@ package org.axonframework.spring.config;
 import org.axonframework.config.Configurer;
 import org.axonframework.config.ConfigurerModule;
 import org.axonframework.modelling.saga.repository.SagaStore;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
-import javax.annotation.Nonnull;
 
 /**
  * A {@link ConfigurerModule} implementation that configures a Saga based on configuration found in the Application
@@ -71,7 +70,7 @@ public class SpringSagaConfigurer implements ConfigurerModule, ApplicationContex
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 }

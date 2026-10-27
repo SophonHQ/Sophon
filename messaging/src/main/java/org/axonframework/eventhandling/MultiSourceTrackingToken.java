@@ -21,8 +21,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.axonframework.common.Assert;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -142,7 +142,7 @@ public class MultiSourceTrackingToken implements TrackingToken, Serializable {
         return true;
     }
 
-    @Nonnull
+    @NonNull
     private MultiSourceTrackingToken assertSameKeysMultiSourceTrackingToken(TrackingToken other) {
         Assert.isTrue(other instanceof MultiSourceTrackingToken, () -> "Incompatible token type provided.");
 

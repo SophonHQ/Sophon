@@ -32,13 +32,13 @@ import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
 import org.axonframework.modelling.command.ConcurrencyException;
 import org.axonframework.tracing.SpanFactory;
 import org.axonframework.tracing.TestSpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -292,7 +292,7 @@ class AbstractSnapshotterTest {
             }
 
             @Override
-            public Builder spanFactory(@Nonnull SnapshotterSpanFactory spanFactory) {
+            public Builder spanFactory(@NonNull SnapshotterSpanFactory spanFactory) {
                 super.spanFactory(spanFactory);
                 return this;
             }
@@ -322,7 +322,7 @@ class AbstractSnapshotterTest {
         private final Queue<Runnable> tasks = new LinkedList<>();
 
         @Override
-        public void execute(@Nonnull Runnable runnable) {
+        public void execute(@NonNull Runnable runnable) {
             tasks.add(runnable);
         }
 

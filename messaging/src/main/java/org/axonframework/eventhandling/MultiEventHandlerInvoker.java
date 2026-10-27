@@ -16,11 +16,12 @@
 
 package org.axonframework.eventhandling;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of {@link EventHandlerInvoker} with capabilities to invoke several different invokers.
@@ -48,7 +49,7 @@ public class MultiEventHandlerInvoker implements EventHandlerInvoker {
      *
      * @param delegates which will be used to do the actual event handling
      */
-    public MultiEventHandlerInvoker(@Nonnull List<EventHandlerInvoker> delegates) {
+    public MultiEventHandlerInvoker(@NonNull List<EventHandlerInvoker> delegates) {
         this.delegates = flatten(delegates);
     }
 
@@ -64,13 +65,13 @@ public class MultiEventHandlerInvoker implements EventHandlerInvoker {
         return flattened;
     }
 
-    @Nonnull
+    @NonNull
     public List<EventHandlerInvoker> delegates() {
         return Collections.unmodifiableList(delegates);
     }
 
     @Override
-    public boolean canHandle(@Nonnull EventMessage<?> eventMessage, @Nonnull Segment segment) {
+    public boolean canHandle(@NonNull EventMessage<?> eventMessage, @NonNull Segment segment) {
         return delegates.stream().anyMatch(i -> canHandle(i, eventMessage, segment));
     }
 
@@ -80,12 +81,12 @@ public class MultiEventHandlerInvoker implements EventHandlerInvoker {
     }
 
     @Override
-    public boolean canHandleType(@Nonnull Class<?> payloadType) {
+    public boolean canHandleType(@NonNull Class<?> payloadType) {
         return delegates.stream().anyMatch(i -> i.canHandleType(payloadType));
     }
 
     @Override
-    public void handle(@Nonnull EventMessage<?> message, @Nonnull Segment segment) throws Exception {
+    public void handle(@NonNull EventMessage<?> message, @NonNull Segment segment) throws Exception {
         for (EventHandlerInvoker i : delegates) {
             if (canHandle(i, message, segment)) {
                 i.handle(message, segment);

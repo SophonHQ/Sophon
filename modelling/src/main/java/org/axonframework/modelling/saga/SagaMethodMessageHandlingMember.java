@@ -20,8 +20,7 @@ import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.WrappedMessageHandlingMember;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A data holder containing information of {@link SagaEventHandler} annotated methods.
@@ -76,7 +75,7 @@ public class SagaMethodMessageHandlingMember<T> extends WrappedMessageHandlingMe
     }
 
     @Override
-    public Object handle(@Nonnull Message<?> message, T target) throws Exception {
+    public Object handle(@NonNull Message<?> message, T target) throws Exception {
         return delegate.handle(message, target);
     }
 

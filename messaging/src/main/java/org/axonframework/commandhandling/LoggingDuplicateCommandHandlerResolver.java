@@ -17,10 +17,9 @@
 package org.axonframework.commandhandling;
 
 import org.axonframework.messaging.MessageHandler;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of the DuplicateCommandHandlerResolver that allows registrations to be overridden by new handlers, but
@@ -48,9 +47,9 @@ public class LoggingDuplicateCommandHandlerResolver implements DuplicateCommandH
     }
 
     @Override
-    public MessageHandler<? super CommandMessage<?>> resolve(@Nonnull String commandName,
-                                                             @Nonnull MessageHandler<? super CommandMessage<?>> registeredHandler,
-                                                             @Nonnull MessageHandler<? super CommandMessage<?>> candidateHandler) {
+    public MessageHandler<? super CommandMessage<?>> resolve(@NonNull String commandName,
+                                                             @NonNull MessageHandler<? super CommandMessage<?>> registeredHandler,
+                                                             @NonNull MessageHandler<? super CommandMessage<?>> candidateHandler) {
 
         logger.warn("A duplicate command handler was found for command [{}]. "
                             + "The handler in [{}] has been replaced by the handler in [{}].",

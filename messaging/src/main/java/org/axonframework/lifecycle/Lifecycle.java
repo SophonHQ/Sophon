@@ -16,8 +16,9 @@
 
 package org.axonframework.lifecycle;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.concurrent.CompletableFuture;
-import javax.annotation.Nonnull;
 
 /**
  * Interface for components that can be started and shut down as part of the Application lifecycle.
@@ -38,7 +39,7 @@ public interface Lifecycle {
      * @see LifecycleRegistry#onStart(int, Runnable)
      * @see LifecycleRegistry#onStart(int, LifecycleHandler)
      */
-    void registerLifecycleHandlers(@Nonnull LifecycleRegistry lifecycle);
+    void registerLifecycleHandlers(@NonNull LifecycleRegistry lifecycle);
 
     /**
      * Interface towards the registry that holds all lifecycle handlers for components.
@@ -62,7 +63,7 @@ public interface Lifecycle {
          * @param action The action to perform
          * @see Phase
          */
-        default void onStart(int phase, @Nonnull Runnable action) {
+        default void onStart(int phase, @NonNull Runnable action) {
             onStart(phase, () -> {
                 try {
                     action.run();
@@ -84,7 +85,7 @@ public interface Lifecycle {
          *
          * @see Phase
          */
-        default void onShutdown(int phase, @Nonnull Runnable action) {
+        default void onShutdown(int phase, @NonNull Runnable action) {
             onShutdown(phase, () -> {
                 try {
                     action.run();
@@ -109,7 +110,7 @@ public interface Lifecycle {
          *
          * @see Phase
          */
-        void onStart(int phase, @Nonnull LifecycleHandler action);
+        void onStart(int phase, @NonNull LifecycleHandler action);
 
         /**
          * Registers the given {@code action} to run during the given {@code phase} during shutdown. Higher
@@ -123,7 +124,7 @@ public interface Lifecycle {
          *
          * @see Phase
          */
-        void onShutdown(int phase, @Nonnull LifecycleHandler action);
+        void onShutdown(int phase, @NonNull LifecycleHandler action);
     }
 
     /**

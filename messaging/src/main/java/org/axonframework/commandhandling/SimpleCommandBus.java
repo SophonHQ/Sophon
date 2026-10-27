@@ -36,6 +36,7 @@ import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
@@ -114,13 +114,13 @@ public class SimpleCommandBus implements CommandBus {
     }
 
     @Override
-    public <C> void dispatch(@Nonnull CommandMessage<C> command) {
+    public <C> void dispatch(@NonNull CommandMessage<C> command) {
         dispatch(command, defaultCommandCallback);
     }
 
     @Override
-    public <C, R> void dispatch(@Nonnull CommandMessage<C> command,
-                                @Nonnull final CommandCallback<? super C, ? super R> callback) {
+    public <C, R> void dispatch(@NonNull CommandMessage<C> command,
+                                @NonNull final CommandCallback<? super C, ? super R> callback) {
         Span span = spanFactory.createDispatchCommandSpan(command, false);
         span.run(() -> {
             CommandCallback<? super C, ? super R> spanAwareCallback = callback.wrap((commandMessage, commandResultMessage) -> {
@@ -209,8 +209,8 @@ public class SimpleCommandBus implements CommandBus {
      * should be subscribed.
      */
     @Override
-    public Registration subscribe(@Nonnull String commandName,
-                                  @Nonnull MessageHandler<? super CommandMessage<?>> handler) {
+    public Registration subscribe(@NonNull String commandName,
+                                  @NonNull MessageHandler<? super CommandMessage<?>> handler) {
         logger.debug("Subscribing command with name [{}]", commandName);
         assertNonNull(handler, "handler may not be null");
         subscriptions.compute(commandName, (k, existingHandler) -> {
@@ -232,7 +232,7 @@ public class SimpleCommandBus implements CommandBus {
      */
     @Override
     public Registration registerHandlerInterceptor(
-            @Nonnull MessageHandlerInterceptor<? super CommandMessage<?>> handlerInterceptor
+            @NonNull MessageHandlerInterceptor<? super CommandMessage<?>> handlerInterceptor
     ) {
         handlerInterceptors.add(handlerInterceptor);
         return () -> handlerInterceptors.remove(handlerInterceptor);
@@ -247,7 +247,7 @@ public class SimpleCommandBus implements CommandBus {
      */
     @Override
     public Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super CommandMessage<?>> dispatchInterceptor
+            @NonNull MessageDispatchInterceptor<? super CommandMessage<?>> dispatchInterceptor
     ) {
         dispatchInterceptors.add(dispatchInterceptor);
         return () -> dispatchInterceptors.remove(dispatchInterceptor);
@@ -261,7 +261,7 @@ public class SimpleCommandBus implements CommandBus {
      * @param rollbackConfiguration a {@link RollbackConfiguration} specifying when a {@link UnitOfWork} should be
      *                              rolled back
      */
-    public void setRollbackConfiguration(@Nonnull RollbackConfiguration rollbackConfiguration) {
+    public void setRollbackConfiguration(@NonNull RollbackConfiguration rollbackConfiguration) {
         this.rollbackConfiguration = rollbackConfiguration;
     }
 
@@ -294,7 +294,7 @@ public class SimpleCommandBus implements CommandBus {
          * @param transactionManager a {@link TransactionManager} used to manage transactions
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder transactionManager(@Nonnull TransactionManager transactionManager) {
+        public Builder transactionManager(@NonNull TransactionManager transactionManager) {
             assertNonNull(transactionManager, "TransactionManager may not be null");
             this.transactionManager = transactionManager;
             return this;
@@ -307,7 +307,7 @@ public class SimpleCommandBus implements CommandBus {
          * @param messageMonitor a {@link MessageMonitor} used the message monitor to monitor the command bus
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super CommandMessage<?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super CommandMessage<?>> messageMonitor) {
             assertNonNull(messageMonitor, "MessageMonitor may not be null");
             this.messageMonitor = messageMonitor;
             return this;
@@ -322,7 +322,7 @@ public class SimpleCommandBus implements CommandBus {
          *                              rolled back
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder rollbackConfiguration(@Nonnull RollbackConfiguration rollbackConfiguration) {
+        public Builder rollbackConfiguration(@NonNull RollbackConfiguration rollbackConfiguration) {
             assertNonNull(rollbackConfiguration, "RollbackConfiguration may not be null");
             this.rollbackConfiguration = rollbackConfiguration;
             return this;
@@ -337,7 +337,7 @@ public class SimpleCommandBus implements CommandBus {
          * @return the current Builder instance, for fluent interfacing
          */
         public Builder duplicateCommandHandlerResolver(
-                @Nonnull DuplicateCommandHandlerResolver duplicateCommandHandlerResolver) {
+                @NonNull DuplicateCommandHandlerResolver duplicateCommandHandlerResolver) {
             assertNonNull(duplicateCommandHandlerResolver, "DuplicateCommandHandlerResolver may not be null");
             this.duplicateCommandHandlerResolver = duplicateCommandHandlerResolver;
             return this;
@@ -351,7 +351,7 @@ public class SimpleCommandBus implements CommandBus {
          * @param defaultCommandCallback the callback to invoke when no explicit callback is provided for a command
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder defaultCommandCallback(@Nonnull CommandCallback<Object, Object> defaultCommandCallback) {
+        public Builder defaultCommandCallback(@NonNull CommandCallback<Object, Object> defaultCommandCallback) {
             this.defaultCommandCallback = getOrDefault(defaultCommandCallback, NoOpCallback.INSTANCE);
             return this;
         }
@@ -365,7 +365,7 @@ public class SimpleCommandBus implements CommandBus {
          * @deprecated Use {@link #spanFactory(CommandBusSpanFactory)} instead as it provides more configurability.
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.builderSpanFactory = DefaultCommandBusSpanFactory
                     .builder().spanFactory(spanFactory).build();
@@ -380,7 +380,7 @@ public class SimpleCommandBus implements CommandBus {
          * @param spanFactory The {@link CommandBusSpanFactory} implementation.
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull CommandBusSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull CommandBusSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.builderSpanFactory = spanFactory;
             return this;

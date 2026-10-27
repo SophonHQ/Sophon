@@ -26,11 +26,11 @@ import org.axonframework.eventhandling.tokenstore.*;
 import org.axonframework.serialization.SerializedObject;
 import org.axonframework.serialization.SerializedType;
 import org.axonframework.serialization.Serializer;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.time.temporal.TemporalAmount;
@@ -99,13 +99,13 @@ public class JpaTokenStore implements TokenStore {
     }
 
     @Override
-    public void initializeTokenSegments(@Nonnull String processorName, int segmentCount)
+    public void initializeTokenSegments(@NonNull String processorName, int segmentCount)
             throws UnableToClaimTokenException {
         initializeTokenSegments(processorName, segmentCount, null);
     }
 
     @Override
-    public void initializeTokenSegments(@Nonnull String processorName, int segmentCount,
+    public void initializeTokenSegments(@NonNull String processorName, int segmentCount,
                                         @Nullable TrackingToken initialToken)
             throws UnableToClaimTokenException {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
@@ -120,7 +120,7 @@ public class JpaTokenStore implements TokenStore {
     }
 
     @Override
-    public void storeToken(@Nullable TrackingToken token, @Nonnull String processorName, int segment) {
+    public void storeToken(@Nullable TrackingToken token, @NonNull String processorName, int segment) {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
         TokenEntry tokenToStore = new TokenEntry(processorName, segment, token, serializer);
         byte[] tokenDataToStore =
@@ -152,7 +152,7 @@ public class JpaTokenStore implements TokenStore {
     }
 
     @Override
-    public void releaseClaim(@Nonnull String processorName, int segment) {
+    public void releaseClaim(@NonNull String processorName, int segment) {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
 
         entityManager.createQuery(
@@ -165,7 +165,7 @@ public class JpaTokenStore implements TokenStore {
     }
 
     @Override
-    public void initializeSegment(@Nullable TrackingToken token, @Nonnull String processorName, int segment)
+    public void initializeSegment(@Nullable TrackingToken token, @NonNull String processorName, int segment)
             throws UnableToInitializeTokenException {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
 
@@ -180,7 +180,7 @@ public class JpaTokenStore implements TokenStore {
     }
 
     @Override
-    public void deleteToken(@Nonnull String processorName, int segment) throws UnableToClaimTokenException {
+    public void deleteToken(@NonNull String processorName, int segment) throws UnableToClaimTokenException {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
 
         int updates = entityManager.createQuery(
@@ -198,20 +198,20 @@ public class JpaTokenStore implements TokenStore {
     }
 
     @Override
-    public TrackingToken fetchToken(@Nonnull String processorName, int segment) {
+    public TrackingToken fetchToken(@NonNull String processorName, int segment) {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
         return loadToken(processorName, segment, entityManager).getToken(serializer);
     }
 
     @Override
-    public TrackingToken fetchToken(@Nonnull String processorName, @Nonnull Segment segment)
+    public TrackingToken fetchToken(@NonNull String processorName, @NonNull Segment segment)
             throws UnableToClaimTokenException {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
         return loadToken(processorName, segment, entityManager).getToken(serializer);
     }
 
     @Override
-    public void extendClaim(@Nonnull String processorName, int segment) throws UnableToClaimTokenException {
+    public void extendClaim(@NonNull String processorName, int segment) throws UnableToClaimTokenException {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
         int updates = entityManager.createQuery("UPDATE TokenEntry te SET te.timestamp = :timestamp " +
                                                         "WHERE te.processorName = :processorName " +
@@ -231,7 +231,7 @@ public class JpaTokenStore implements TokenStore {
     }
 
     @Override
-    public int[] fetchSegments(@Nonnull String processorName) {
+    public int[] fetchSegments(@NonNull String processorName) {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
 
         final List<Integer> resultList = entityManager.createQuery(
@@ -246,7 +246,7 @@ public class JpaTokenStore implements TokenStore {
     }
 
     @Override
-    public List<Segment> fetchAvailableSegments(@Nonnull String processorName) {
+    public List<Segment> fetchAvailableSegments(@NonNull String processorName) {
         EntityManager entityManager = entityManagerProvider.getEntityManager();
 
         final List<TokenEntry> resultList = entityManager.createQuery(

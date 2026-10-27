@@ -20,6 +20,7 @@ import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.eventhandling.EventProcessingStrategy;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 import static java.util.Objects.requireNonNull;
 
@@ -64,8 +64,8 @@ public class AsynchronousEventProcessingStrategy implements EventProcessingStrat
     }
 
     @Override
-    public void handle(@Nonnull List<? extends EventMessage<?>> events,
-                       @Nonnull Consumer<List<? extends EventMessage<?>>> processor) {
+    public void handle(@NonNull List<? extends EventMessage<?>> events,
+                       @NonNull Consumer<List<? extends EventMessage<?>>> processor) {
         if (CurrentUnitOfWork.isStarted()) {
             UnitOfWork<?> unitOfWorkRoot = CurrentUnitOfWork.get().root();
             unitOfWorkRoot.getOrComputeResource(scheduledEventsKey, key -> {

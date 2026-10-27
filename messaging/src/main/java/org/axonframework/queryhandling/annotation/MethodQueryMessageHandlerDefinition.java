@@ -23,6 +23,8 @@ import org.axonframework.messaging.annotation.UnsupportedHandlerException;
 import org.axonframework.messaging.annotation.WrappedMessageHandlingMember;
 import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryMessage;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -31,8 +33,6 @@ import java.lang.reflect.WildcardType;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Future;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static org.axonframework.common.ReflectionUtils.resolvePrimitiveWrapperTypeIfPrimitive;
 import static org.axonframework.common.ReflectionUtils.unwrapIfType;
@@ -47,8 +47,8 @@ import static org.axonframework.common.ReflectionUtils.unwrapIfType;
 public class MethodQueryMessageHandlerDefinition implements HandlerEnhancerDefinition {
 
     @Override
-    public @Nonnull
-    <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public @NonNull
+    <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
         return original.annotationAttributes(QueryHandler.class)
                        .map(attr -> (MessageHandlingMember<T>)
                                new MethodQueryMessageHandlerDefinition.MethodQueryMessageHandlingMember<>(
@@ -89,7 +89,7 @@ public class MethodQueryMessageHandlerDefinition implements HandlerEnhancerDefin
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, @Nullable T target) throws Exception {
+        public Object handle(@NonNull Message<?> message, @Nullable T target) throws Exception {
             Object result = super.handle(message, target);
             if (result instanceof Optional) {
                 return ((Optional<?>) result).orElse(null);
@@ -122,7 +122,7 @@ public class MethodQueryMessageHandlerDefinition implements HandlerEnhancerDefin
         }
 
         @Override
-        public boolean canHandle(@Nonnull Message<?> message) {
+        public boolean canHandle(@NonNull Message<?> message) {
             return super.canHandle(message)
                     && message instanceof QueryMessage
                     && queryName.equals(((QueryMessage<?, ?>) message).getQueryName())

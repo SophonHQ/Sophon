@@ -22,10 +22,10 @@ import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.common.lock.DeadlockException;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
 
@@ -67,8 +67,8 @@ public class RetryingCallback<C, R> implements CommandCallback<C, R> {
     }
 
     @Override
-    public void onResult(@Nonnull CommandMessage<? extends C> commandMessage,
-                         @Nonnull CommandResultMessage<? extends R> commandResultMessage) {
+    public void onResult(@NonNull CommandMessage<? extends C> commandMessage,
+                         @NonNull CommandResultMessage<? extends R> commandResultMessage) {
         if (commandResultMessage.isExceptional()) {
             Throwable cause = commandResultMessage.exceptionResult();
             history.add(simplify(cause));

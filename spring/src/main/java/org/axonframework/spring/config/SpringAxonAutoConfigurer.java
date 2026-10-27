@@ -66,6 +66,7 @@ import org.axonframework.spring.messaging.unitofwork.SpringTransactionManager;
 import org.axonframework.spring.saga.SpringResourceInjector;
 import org.axonframework.spring.stereotype.Aggregate;
 import org.axonframework.spring.stereotype.Saga;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -96,7 +97,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.ReflectionUtils.methodsOf;
 import static org.axonframework.common.annotation.AnnotationUtils.findAnnotationAttributes;
@@ -151,7 +151,7 @@ public class SpringAxonAutoConfigurer implements ImportBeanDefinitionRegistrar, 
     private ConfigurableListableBeanFactory beanFactory;
 
     @Override
-    public void registerBeanDefinitions(@Nonnull AnnotationMetadata importingClassMetadata,
+    public void registerBeanDefinitions(@NonNull AnnotationMetadata importingClassMetadata,
                                         BeanDefinitionRegistry registry) {
         registry.registerBeanDefinition("commandHandlerSubscriber",
                                         genericBeanDefinition(CommandHandlerSubscriber.class).getBeanDefinition());
@@ -577,7 +577,7 @@ public class SpringAxonAutoConfigurer implements ImportBeanDefinitionRegistrar, 
     }
 
     @Override
-    public void setBeanFactory(@Nonnull BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(@NonNull BeanFactory beanFactory) throws BeansException {
         this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
     }
 
@@ -587,9 +587,8 @@ public class SpringAxonAutoConfigurer implements ImportBeanDefinitionRegistrar, 
      */
     public static class ImportSelector implements DeferredImportSelector {
 
-        @Nonnull
         @Override
-        public String[] selectImports(@Nonnull AnnotationMetadata importingClassMetadata) {
+        public String @NonNull [] selectImports(@NonNull AnnotationMetadata importingClassMetadata) {
             return new String[]{SpringAxonAutoConfigurer.class.getName()};
         }
     }

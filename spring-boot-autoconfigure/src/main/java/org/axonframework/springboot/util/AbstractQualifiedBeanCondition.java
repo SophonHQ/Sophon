@@ -16,6 +16,7 @@
 
 package org.axonframework.springboot.util;
 
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -28,7 +29,6 @@ import org.springframework.util.MultiValueMap;
 
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.spring.SpringUtils.isQualifierMatch;
 
@@ -56,7 +56,7 @@ public abstract class AbstractQualifiedBeanCondition extends SpringBootCondition
         this.qualifierAttribute = qualifierAttribute;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public ConfigurationPhase getConfigurationPhase() {
         return ConfigurationPhase.REGISTER_BEAN;

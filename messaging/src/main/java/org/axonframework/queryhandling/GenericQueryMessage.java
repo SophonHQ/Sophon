@@ -20,9 +20,9 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageDecorator;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.messaging.responsetypes.ResponseType;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Generic implementation of the QueryMessage. Unless explicitly provided, it assumes the {@code queryName} of the
@@ -87,12 +87,12 @@ public class GenericQueryMessage<T, R> extends MessageDecorator<T> implements Qu
     }
 
     @Override
-    public QueryMessage<T, R> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public QueryMessage<T, R> withMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericQueryMessage<>(getDelegate().withMetaData(metaData), queryName, responseType);
     }
 
     @Override
-    public QueryMessage<T, R> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public QueryMessage<T, R> andMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericQueryMessage<>(getDelegate().andMetaData(metaData), queryName, responseType);
     }
 

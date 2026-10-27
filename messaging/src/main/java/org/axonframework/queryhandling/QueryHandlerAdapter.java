@@ -16,8 +16,7 @@
 package org.axonframework.queryhandling;
 
 import org.axonframework.common.Registration;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Describes a class capable of subscribing to the query bus.
@@ -33,5 +32,5 @@ public interface QueryHandlerAdapter {
      * @param queryBus the query bus to subscribe
      * @return a {@link Registration} to unsubscribe this {@link QueryHandlerAdapter}
      */
-    Registration subscribe(@Nonnull QueryBus queryBus);
+    Registration subscribe(@NonNull QueryBus queryBus);
 }

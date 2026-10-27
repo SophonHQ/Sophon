@@ -18,8 +18,7 @@ package org.axonframework.eventhandling.async;
 
 import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.eventhandling.EventMessage;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -66,7 +65,7 @@ public class MetaDataSequencingPolicy implements SequencingPolicy<EventMessage<?
     }
 
     @Override
-    public Object getSequenceIdentifierFor(@Nonnull EventMessage<?> event) {
+    public Object getSequenceIdentifierFor(@NonNull EventMessage<?> event) {
         return event.getMetaData()
                     .getOrDefault(metaDataKey, event.getIdentifier());
     }

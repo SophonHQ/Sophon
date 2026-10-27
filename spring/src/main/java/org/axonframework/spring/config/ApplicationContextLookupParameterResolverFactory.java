@@ -18,6 +18,7 @@ package org.axonframework.spring.config;
 
 import org.axonframework.messaging.annotation.MultiParameterResolverFactory;
 import org.axonframework.messaging.annotation.ParameterResolverFactory;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -28,7 +29,6 @@ import static org.springframework.beans.factory.BeanFactoryUtils.beansOfTypeIncl
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * FactoryBean implementation that create a ParameterResolverFactory, which auto-detects beans implementing
@@ -72,7 +72,7 @@ public class ApplicationContextLookupParameterResolverFactory implements Factory
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 

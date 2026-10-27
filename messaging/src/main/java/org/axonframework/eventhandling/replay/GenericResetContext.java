@@ -20,9 +20,9 @@ import org.axonframework.messaging.GenericMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageDecorator;
 import org.axonframework.messaging.MetaData;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Generic implementation of the {@link ResetContext}.
@@ -84,12 +84,12 @@ public class GenericResetContext<T> extends MessageDecorator<T> implements Reset
     }
 
     @Override
-    public GenericResetContext<T> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericResetContext<T> withMetaData(@NonNull Map<String, ?> metaData) {
         return new GenericResetContext<>(getDelegate().withMetaData(metaData));
     }
 
     @Override
-    public GenericResetContext<T> andMetaData(@Nonnull Map<String, ?> additionalMetaData) {
+    public GenericResetContext<T> andMetaData(@NonNull Map<String, ?> additionalMetaData) {
         return new GenericResetContext<>(getDelegate().andMetaData(additionalMetaData));
     }
 

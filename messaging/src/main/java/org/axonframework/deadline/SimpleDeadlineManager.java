@@ -35,6 +35,7 @@ import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
 import org.axonframework.tracing.SpanScope;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -111,10 +111,10 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
     }
 
     @Override
-    public String schedule(@Nonnull Instant triggerDateTime,
-                           @Nonnull String deadlineName,
+    public String schedule(@NonNull Instant triggerDateTime,
+                           @NonNull String deadlineName,
                            Object messageOrPayload,
-                           @Nonnull ScopeDescriptor deadlineScope) {
+                           @NonNull ScopeDescriptor deadlineScope) {
         DeadlineMessage<?> deadlineMessage = asDeadlineMessage(deadlineName, messageOrPayload);
         String deadlineMessageId = deadlineMessage.getIdentifier();
         DeadlineId deadlineId = new DeadlineId(deadlineName, deadlineScope, deadlineMessageId);
@@ -135,7 +135,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
     }
 
     @Override
-    public void cancelSchedule(@Nonnull String deadlineName, @Nonnull String scheduleId) {
+    public void cancelSchedule(@NonNull String deadlineName, @NonNull String scheduleId) {
         Span span = spanFactory.createCancelScheduleSpan(deadlineName, scheduleId);
         runOnPrepareCommitOrNow(span.wrapRunnable(
                 () -> scheduledTasks.keySet().stream()
@@ -146,7 +146,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
     }
 
     @Override
-    public void cancelAll(@Nonnull String deadlineName) {
+    public void cancelAll(@NonNull String deadlineName) {
         Span span = spanFactory.createCancelAllSpan(deadlineName);
         runOnPrepareCommitOrNow(span.wrapRunnable(
                 () -> scheduledTasks.keySet().stream()
@@ -156,7 +156,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
     }
 
     @Override
-    public void cancelAllWithinScope(@Nonnull String deadlineName, @Nonnull ScopeDescriptor scope) {
+    public void cancelAllWithinScope(@NonNull String deadlineName, @NonNull ScopeDescriptor scope) {
         Span span = spanFactory.createCancelAllWithinScopeSpan(deadlineName, scope);
         runOnPrepareCommitOrNow(span.wrapRunnable(
                 () -> scheduledTasks.keySet().stream()
@@ -174,7 +174,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry lifecycle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry lifecycle) {
         lifecycle.onShutdown(Phase.INBOUND_EVENT_CONNECTORS, this::shutdown);
     }
 
@@ -189,8 +189,8 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
         private final ScopeDescriptor deadlineScope;
         private final String deadlineId;
 
-        private DeadlineId(@Nonnull String deadlineName, @Nonnull ScopeDescriptor deadlineScope,
-                           @Nonnull String deadlineId) {
+        private DeadlineId(@NonNull String deadlineName, @NonNull ScopeDescriptor deadlineScope,
+                           @NonNull String deadlineId) {
             this.deadlineScope = deadlineScope;
             this.deadlineId = deadlineId;
             this.deadlineName = deadlineName;
@@ -265,7 +265,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
          *                           {@link org.axonframework.messaging.Scope} to trigger a deadline in
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder scopeAwareProvider(@Nonnull ScopeAwareProvider scopeAwareProvider) {
+        public Builder scopeAwareProvider(@NonNull ScopeAwareProvider scopeAwareProvider) {
             assertNonNull(scopeAwareProvider, "ScopeAwareProvider may not be null");
             this.scopeAwareProvider = scopeAwareProvider;
             return this;
@@ -279,7 +279,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
          *                                 deadlines
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder scheduledExecutorService(@Nonnull ScheduledExecutorService scheduledExecutorService) {
+        public Builder scheduledExecutorService(@NonNull ScheduledExecutorService scheduledExecutorService) {
             assertNonNull(scheduledExecutorService, "ScheduledExecutorService may not be null");
             this.scheduledExecutorService = scheduledExecutorService;
             return this;
@@ -292,7 +292,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
          * @param transactionManager a {@link TransactionManager} used to build transactions and ties them to deadline
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder transactionManager(@Nonnull TransactionManager transactionManager) {
+        public Builder transactionManager(@NonNull TransactionManager transactionManager) {
             assertNonNull(transactionManager, "TransactionManager may not be null");
             this.transactionManager = transactionManager;
             return this;
@@ -308,7 +308,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
          * options.
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = DefaultDeadlineManagerSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
@@ -322,7 +322,7 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
          * @param spanFactory The {@link SpanFactory} implementation
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull DeadlineManagerSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull DeadlineManagerSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.spanFactory = spanFactory;
             return this;

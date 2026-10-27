@@ -16,7 +16,7 @@
 
 package org.axonframework.eventhandling;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Singleton ErrorHandler implementation that does not do anything.
@@ -40,13 +40,13 @@ public enum PropagatingErrorHandler implements ErrorHandler, ListenerInvocationE
     }
 
     @Override
-    public void onError(@Nonnull Exception exception, @Nonnull EventMessage<?> event,
-                        @Nonnull EventMessageHandler eventHandler) throws Exception {
+    public void onError(@NonNull Exception exception, @NonNull EventMessage<?> event,
+                        @NonNull EventMessageHandler eventHandler) throws Exception {
         throw exception;
     }
 
     @Override
-    public void handleError(@Nonnull ErrorContext errorContext) throws Exception {
+    public void handleError(@NonNull ErrorContext errorContext) throws Exception {
         Throwable error = errorContext.error();
         if (error instanceof Error) {
             throw (Error) error;

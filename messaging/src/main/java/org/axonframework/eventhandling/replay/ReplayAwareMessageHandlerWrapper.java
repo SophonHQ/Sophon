@@ -24,11 +24,11 @@ import org.axonframework.messaging.Message;
 import org.axonframework.messaging.annotation.HandlerEnhancerDefinition;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
 import org.axonframework.messaging.annotation.WrappedMessageHandlingMember;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Member;
 import java.util.Map;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 import static java.util.Collections.singletonMap;
 
@@ -44,8 +44,8 @@ public class ReplayAwareMessageHandlerWrapper implements HandlerEnhancerDefiniti
     private static final Map<String, Object> DEFAULT_SETTING = singletonMap("allowReplay", Boolean.TRUE);
 
     @Override
-    public @Nonnull
-    <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+    public @NonNull
+    <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
         boolean isReplayAllowed = (boolean) original
                 .attribute(HandlerAttributes.ALLOW_REPLAY)
                 .orElseGet(() -> original.unwrap(Member.class)
@@ -70,7 +70,7 @@ public class ReplayAwareMessageHandlerWrapper implements HandlerEnhancerDefiniti
         }
 
         @Override
-        public Object handle(@Nonnull Message<?> message, T target) throws Exception {
+        public Object handle(@NonNull Message<?> message, T target) throws Exception {
             if (ReplayToken.isReplay(message)) {
                 return null;
             }

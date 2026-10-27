@@ -21,6 +21,7 @@ import org.axonframework.commandhandling.RoutingKey;
 import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.common.ReflectionUtils;
 import org.axonframework.common.annotation.AnnotationUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -29,7 +30,6 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 import static org.axonframework.common.ReflectionUtils.*;
@@ -148,7 +148,7 @@ public class AnnotationRoutingStrategy extends AbstractRoutingStrategy {
     }
 
     @Override
-    protected String doResolveRoutingKey(@Nonnull CommandMessage<?> command) {
+    protected String doResolveRoutingKey(@NonNull CommandMessage<?> command) {
         String routingKey;
         try {
             routingKey = findIdentifier(command);

@@ -19,10 +19,10 @@ import org.axonframework.messaging.InterceptorChain;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageHandlerInterceptor;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 
 import java.util.concurrent.ScheduledExecutorService;
-import javax.annotation.Nonnull;
 
 /**
  * Message handler interceptor that sets a timeout on the processing of the current {@link UnitOfWork}. If the timeout
@@ -101,8 +101,8 @@ public class UnitOfWorkTimeoutInterceptor implements MessageHandlerInterceptor<M
     }
 
     @Override
-    public Object handle(@Nonnull UnitOfWork<? extends Message<?>> unitOfWork,
-                         @Nonnull InterceptorChain interceptorChain) throws Exception {
+    public Object handle(@NonNull UnitOfWork<? extends Message<?>> unitOfWork,
+                         @NonNull InterceptorChain interceptorChain) throws Exception {
         UnitOfWork<?> root = unitOfWork.root();
         String taskName = "UnitOfWork of " + componentName;
         if (!root.resources().containsKey(TRANSACTION_TIME_LIMIT_RESOURCE_KEY)) {

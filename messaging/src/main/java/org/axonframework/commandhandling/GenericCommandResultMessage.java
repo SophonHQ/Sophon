@@ -18,10 +18,10 @@ package org.axonframework.commandhandling;
 
 import org.axonframework.messaging.GenericResultMessage;
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Generic implementation of {@link CommandResultMessage}.
@@ -46,7 +46,7 @@ public class GenericCommandResultMessage<R> extends GenericResultMessage<R> impl
      * implements {@link CommandResultMessage}
      */
     @SuppressWarnings("unchecked")
-    public static <T> CommandResultMessage<T> asCommandResultMessage(@Nonnull Object commandResult) {
+    public static <T> CommandResultMessage<T> asCommandResultMessage(@NonNull Object commandResult) {
         if (commandResult instanceof CommandResultMessage) {
             return (CommandResultMessage<T>) commandResult;
         } else if (commandResult instanceof Message) {
@@ -63,7 +63,7 @@ public class GenericCommandResultMessage<R> extends GenericResultMessage<R> impl
      * @param <T>       the type of payload
      * @return a message containing exception result
      */
-    public static <T> CommandResultMessage<T> asCommandResultMessage(@Nonnull Throwable exception) {
+    public static <T> CommandResultMessage<T> asCommandResultMessage(@NonNull Throwable exception) {
         return new GenericCommandResultMessage<>(exception);
     }
 
@@ -81,7 +81,7 @@ public class GenericCommandResultMessage<R> extends GenericResultMessage<R> impl
      *
      * @param exception the Exception describing the cause of an error
      */
-    public GenericCommandResultMessage(@Nonnull Throwable exception) {
+    public GenericCommandResultMessage(@NonNull Throwable exception) {
         super(exception);
     }
 
@@ -92,7 +92,7 @@ public class GenericCommandResultMessage<R> extends GenericResultMessage<R> impl
      * @param commandResult the payload for the Message
      * @param metaData      the meta data for the Message
      */
-    public GenericCommandResultMessage(@Nonnull R commandResult, @Nonnull Map<String, ?> metaData) {
+    public GenericCommandResultMessage(@NonNull R commandResult, @NonNull Map<String, ?> metaData) {
         super(commandResult, metaData);
     }
 
@@ -102,7 +102,7 @@ public class GenericCommandResultMessage<R> extends GenericResultMessage<R> impl
      * @param exception the Exception describing the cause of an error
      * @param metaData  the meta data for the Message
      */
-    public GenericCommandResultMessage(@Nonnull Throwable exception, @Nonnull Map<String, ?> metaData) {
+    public GenericCommandResultMessage(@NonNull Throwable exception, @NonNull Map<String, ?> metaData) {
         super(exception, metaData);
     }
 
@@ -111,7 +111,7 @@ public class GenericCommandResultMessage<R> extends GenericResultMessage<R> impl
      *
      * @param delegate the message delegate
      */
-    public GenericCommandResultMessage(@Nonnull Message<R> delegate) {
+    public GenericCommandResultMessage(@NonNull Message<R> delegate) {
         super(delegate);
     }
 
@@ -121,18 +121,18 @@ public class GenericCommandResultMessage<R> extends GenericResultMessage<R> impl
      * @param delegate  the Message delegate
      * @param exception the Exception describing the cause of an error
      */
-    public GenericCommandResultMessage(@Nonnull Message<R> delegate, @Nullable Throwable exception) {
+    public GenericCommandResultMessage(@NonNull Message<R> delegate, @Nullable Throwable exception) {
         super(delegate, exception);
     }
 
     @Override
-    public GenericCommandResultMessage<R> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericCommandResultMessage<R> withMetaData(@NonNull Map<String, ?> metaData) {
         Throwable exception = optionalExceptionResult().orElse(null);
         return new GenericCommandResultMessage<>(getDelegate().withMetaData(metaData), exception);
     }
 
     @Override
-    public GenericCommandResultMessage<R> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public GenericCommandResultMessage<R> andMetaData(@NonNull Map<String, ?> metaData) {
         Throwable exception = optionalExceptionResult().orElse(null);
         return new GenericCommandResultMessage<>(getDelegate().andMetaData(metaData), exception);
     }

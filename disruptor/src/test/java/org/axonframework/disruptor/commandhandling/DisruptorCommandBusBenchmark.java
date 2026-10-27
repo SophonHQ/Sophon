@@ -34,6 +34,7 @@ import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.modelling.command.Repository;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.commandhandling.GenericCommandMessage.asCommandMessage;
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,7 +91,7 @@ public class DisruptorCommandBusBenchmark {
         private final CountDownLatch countDownLatch = new CountDownLatch((int) (COMMAND_COUNT + 1L));
 
         @Override
-        public void publish(@Nonnull List<? extends EventMessage<?>> events) {
+        public void publish(@NonNull List<? extends EventMessage<?>> events) {
             if (events == null || events.isEmpty()) {
                 return;
             }
@@ -105,12 +105,12 @@ public class DisruptorCommandBusBenchmark {
         }
 
         @Override
-        public DomainEventStream readEvents(@Nonnull String identifier) {
+        public DomainEventStream readEvents(@NonNull String identifier) {
             return DomainEventStream.of(storedEvents.get(identifier));
         }
 
         @Override
-        public void storeSnapshot(@Nonnull DomainEventMessage<?> snapshot) {
+        public void storeSnapshot(@NonNull DomainEventMessage<?> snapshot) {
             // not implemented
         }
 
@@ -120,13 +120,13 @@ public class DisruptorCommandBusBenchmark {
         }
 
         @Override
-        public Registration subscribe(@Nonnull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
+        public Registration subscribe(@NonNull Consumer<List<? extends EventMessage<?>>> eventProcessor) {
             throw new UnsupportedOperationException();
         }
 
         @Override
         public Registration registerDispatchInterceptor(
-                @Nonnull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
+                @NonNull MessageDispatchInterceptor<? super EventMessage<?>> dispatchInterceptor) {
             throw new UnsupportedOperationException();
         }
     }

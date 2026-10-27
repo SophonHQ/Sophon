@@ -17,11 +17,11 @@
 package org.axonframework.monitoring;
 
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * Specifies a mechanism to monitor message processing. When a message is supplied to
@@ -44,7 +44,7 @@ public interface MessageMonitor<T extends Message<?>> {
      * @param message the message to monitor
      * @return the callback
      */
-    MonitorCallback onMessageIngested(@Nonnull T message);
+    MonitorCallback onMessageIngested(@NonNull T message);
 
     /**
      * Takes a collection of messages and returns a map containing events along with their callbacks
@@ -52,7 +52,7 @@ public interface MessageMonitor<T extends Message<?>> {
      * @param messages to monitor
      * @return map where key = event and value = the callback
      */
-    default Map<? super T, MonitorCallback> onMessagesIngested(@Nonnull Collection<? extends T> messages) {
+    default Map<? super T, MonitorCallback> onMessagesIngested(@NonNull Collection<? extends T> messages) {
         return messages.stream().collect(Collectors.toMap(msg -> msg, this::onMessageIngested));
     }
 

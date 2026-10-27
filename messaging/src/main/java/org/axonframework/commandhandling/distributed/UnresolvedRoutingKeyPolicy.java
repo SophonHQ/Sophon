@@ -17,9 +17,9 @@
 package org.axonframework.commandhandling.distributed;
 
 import org.axonframework.commandhandling.CommandMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 
@@ -73,7 +73,7 @@ public enum UnresolvedRoutingKeyPolicy implements RoutingStrategy {
     }
 
     @Override
-    public String getRoutingKey(@Nonnull CommandMessage<?> command) {
+    public String getRoutingKey(@NonNull CommandMessage<?> command) {
         return routingKeyResolver.apply(command);
     }
 }

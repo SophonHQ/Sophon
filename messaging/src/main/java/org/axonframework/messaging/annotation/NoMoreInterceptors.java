@@ -17,8 +17,7 @@
 package org.axonframework.messaging.annotation;
 
 import org.axonframework.messaging.Message;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * This will implement {@link MessageHandlerInterceptorMemberChain} with no more interceptors. It can be used a default
@@ -41,8 +40,8 @@ public class NoMoreInterceptors<T> implements MessageHandlerInterceptorMemberCha
     }
 
     @Override
-    public Object handle(@Nonnull Message<?> message, @Nonnull T target,
-                         @Nonnull MessageHandlingMember<? super T> handler) throws Exception {
+    public Object handle(@NonNull Message<?> message, @NonNull T target,
+                         @NonNull MessageHandlingMember<? super T> handler) throws Exception {
         return handler.handle(message, target);
     }
 }

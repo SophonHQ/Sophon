@@ -28,11 +28,11 @@ import org.axonframework.queryhandling.QueryBus;
 import org.axonframework.queryhandling.QueryHandler;
 import org.axonframework.queryhandling.QueryHandlerAdapter;
 import org.axonframework.queryhandling.QueryMessage;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * Adapter that turns any {@link QueryHandler @QueryHandler} annotated bean into a {@link MessageHandler}
@@ -88,7 +88,7 @@ public class AnnotationQueryHandlerAdapter<T> implements QueryHandlerAdapter, Me
     }
 
     @Override
-    public Registration subscribe(@Nonnull QueryBus queryBus) {
+    public Registration subscribe(@NonNull QueryBus queryBus) {
         Collection<Registration> registrations = model.getHandlers(target.getClass())
                                                       .map(handler -> handler.unwrap(QueryHandlingMember.class))
                                                       .filter(Optional::isPresent)

@@ -23,6 +23,7 @@ import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.messaging.unitofwork.DefaultUnitOfWork;
 import org.axonframework.modelling.command.legacyjpa.GenericJpaRepository;
 import org.axonframework.tracing.TestSpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.internal.stubbing.answers.Returns;
 
-import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
 import javax.persistence.LockModeType;
@@ -345,7 +345,7 @@ class LegacyGenericJpaRepositoryTest {
         }
 
         @Override
-        public void publish(@Nonnull List<? extends EventMessage<?>> events) {
+        public void publish(@NonNull List<? extends EventMessage<?>> events) {
             publishedEvents.addAll(events);
             super.publish(events);
         }

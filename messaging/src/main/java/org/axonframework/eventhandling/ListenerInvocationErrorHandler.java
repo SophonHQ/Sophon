@@ -16,7 +16,7 @@
 
 package org.axonframework.eventhandling;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface of an error handler that is invoked when an exception is triggered as result of an {@link
@@ -41,7 +41,7 @@ public interface ListenerInvocationErrorHandler {
      * @param eventHandler The listener that failed to handle given event
      * @throws Exception To stop further handling of the event
      */
-    void onError(@Nonnull Exception exception, @Nonnull EventMessage<?> event,
-                 @Nonnull EventMessageHandler eventHandler) throws Exception;
+    void onError(@NonNull Exception exception, @NonNull EventMessage<?> event,
+                 @NonNull EventMessageHandler eventHandler) throws Exception;
 
 }

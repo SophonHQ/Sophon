@@ -17,8 +17,7 @@
 package org.axonframework.queryhandling;
 
 import org.axonframework.messaging.MessageHandler;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Interface describing a mechanism for the QueryMessage components to report errors.
@@ -48,6 +47,6 @@ public interface QueryInvocationErrorHandler {
      * @param queryMessage   The message causing the exception in the handler
      * @param messageHandler The handler that reported the exception
      */
-    void onError(@Nonnull Throwable error, @Nonnull QueryMessage<?, ?> queryMessage,
-                 @Nonnull MessageHandler messageHandler);
+    void onError(@NonNull Throwable error, @NonNull QueryMessage<?, ?> queryMessage,
+                 @NonNull MessageHandler messageHandler);
 }

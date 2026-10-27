@@ -31,9 +31,9 @@ import org.axonframework.modelling.command.AggregateVersion;
 import org.axonframework.modelling.command.inspection.AggregateModel;
 import org.axonframework.modelling.command.inspection.AggregateModellingException;
 import org.axonframework.modelling.command.inspection.AnnotatedAggregateMetaModelFactory;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Nonnull;
 import javax.persistence.Id;
 import java.lang.annotation.*;
 import java.math.BigDecimal;
@@ -903,7 +903,7 @@ class AnnotatedAggregateMetaModelFactoryTest {
             this.contents = contents;
         }
 
-        @Nonnull
+        @NonNull
         @Override
         public Iterator<T> iterator() {
             return contents.iterator();

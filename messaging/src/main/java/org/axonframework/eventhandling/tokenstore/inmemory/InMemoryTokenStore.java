@@ -22,6 +22,7 @@ import org.axonframework.eventhandling.tokenstore.TokenStore;
 import org.axonframework.eventhandling.tokenstore.UnableToClaimTokenException;
 import org.axonframework.eventhandling.tokenstore.UnableToInitializeTokenException;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.ObjectUtils.getOrDefault;
 
@@ -57,13 +57,13 @@ public class InMemoryTokenStore implements TokenStore {
     }
 
     @Override
-    public void initializeTokenSegments(@Nonnull String processorName, int segmentCount)
+    public void initializeTokenSegments(@NonNull String processorName, int segmentCount)
             throws UnableToClaimTokenException {
         initializeTokenSegments(processorName, segmentCount, null);
     }
 
     @Override
-    public void initializeTokenSegments(@Nonnull String processorName, int segmentCount, TrackingToken initialToken)
+    public void initializeTokenSegments(@NonNull String processorName, int segmentCount, TrackingToken initialToken)
             throws UnableToClaimTokenException {
         if (fetchSegments(processorName).length > 0) {
             throw new UnableToClaimTokenException("Could not initialize segments. Some segments were already present.");
@@ -74,7 +74,7 @@ public class InMemoryTokenStore implements TokenStore {
     }
 
     @Override
-    public void storeToken(TrackingToken token, @Nonnull String processorName, int segment) {
+    public void storeToken(TrackingToken token, @NonNull String processorName, int segment) {
         if (CurrentUnitOfWork.isStarted()) {
             CurrentUnitOfWork.get().afterCommit(uow -> tokens.put(new ProcessAndSegment(processorName, segment),
                                                                   getOrDefault(token, NULL_TOKEN)));
@@ -84,7 +84,7 @@ public class InMemoryTokenStore implements TokenStore {
     }
 
     @Override
-    public TrackingToken fetchToken(@Nonnull String processorName, int segment) {
+    public TrackingToken fetchToken(@NonNull String processorName, int segment) {
         TrackingToken trackingToken = tokens.get(new ProcessAndSegment(processorName, segment));
         if (trackingToken == null) {
             throw new UnableToClaimTokenException(
@@ -96,17 +96,17 @@ public class InMemoryTokenStore implements TokenStore {
     }
 
     @Override
-    public void releaseClaim(@Nonnull String processorName, int segment) {
+    public void releaseClaim(@NonNull String processorName, int segment) {
         // no-op, the in-memory implementation isn't accessible by multiple processes
     }
 
     @Override
-    public void deleteToken(@Nonnull String processorName, int segment) throws UnableToClaimTokenException {
+    public void deleteToken(@NonNull String processorName, int segment) throws UnableToClaimTokenException {
         tokens.remove(new ProcessAndSegment(processorName, segment));
     }
 
     @Override
-    public void initializeSegment(TrackingToken token, @Nonnull String processorName, int segment)
+    public void initializeSegment(TrackingToken token, @NonNull String processorName, int segment)
             throws UnableToInitializeTokenException {
         TrackingToken previous = tokens.putIfAbsent(new ProcessAndSegment(processorName, segment),
                                                     token == null ? NULL_TOKEN : token);
@@ -121,7 +121,7 @@ public class InMemoryTokenStore implements TokenStore {
     }
 
     @Override
-    public int[] fetchSegments(@Nonnull String processorName) {
+    public int[] fetchSegments(@NonNull String processorName) {
         return tokens.keySet().stream()
                      .filter(ps -> ps.processorName.equals(processorName))
                      .map(ProcessAndSegment::getSegment)

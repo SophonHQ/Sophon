@@ -27,6 +27,7 @@ import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.axonframework.messaging.MetaData;
 import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.modelling.command.ConcurrencyException;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.BiFunction;
-import javax.annotation.Nonnull;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -96,10 +96,10 @@ class CommandRetryAndDispatchInterceptorIntegrationTest {
         final Thread testThread = Thread.currentThread();
         //noinspection resource
         commandBus.registerDispatchInterceptor(new MessageDispatchInterceptor<CommandMessage<?>>() {
-            @Nonnull
+            @NonNull
             @Override
             public BiFunction<Integer, CommandMessage<?>, CommandMessage<?>> handle(
-                    @Nonnull List<? extends CommandMessage<?>> messages) {
+                    @NonNull List<? extends CommandMessage<?>> messages) {
                 return (index, message) -> {
                     if (Thread.currentThread() == testThread) {
                         return message; // ok

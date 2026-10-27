@@ -21,6 +21,8 @@ import org.axonframework.messaging.IllegalPayloadAccessException;
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageDispatchInterceptor;
 import org.axonframework.messaging.responsetypes.ResponseType;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import reactor.core.publisher.Mono;
 
@@ -30,8 +32,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import static java.util.Arrays.asList;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -78,8 +78,8 @@ public class DefaultQueryGateway implements QueryGateway {
     }
 
     @Override
-    public <R, Q> CompletableFuture<R> query(@Nonnull String queryName, @Nonnull Q query,
-                                             @Nonnull ResponseType<R> responseType) {
+    public <R, Q> CompletableFuture<R> query(@NonNull String queryName, @NonNull Q query,
+                                             @NonNull ResponseType<R> responseType) {
         CompletableFuture<QueryResponseMessage<R>> queryResponse = queryBus
                 .query(processInterceptors(new GenericQueryMessage<>(asMessage(query), queryName, responseType)));
         CompletableFuture<R> result = new CompletableFuture<>();
@@ -111,11 +111,11 @@ public class DefaultQueryGateway implements QueryGateway {
     }
 
     @Override
-    public <R, Q> Stream<R> scatterGather(@Nonnull String queryName,
-                                          @Nonnull Q query,
-                                          @Nonnull ResponseType<R> responseType,
+    public <R, Q> Stream<R> scatterGather(@NonNull String queryName,
+                                          @NonNull Q query,
+                                          @NonNull ResponseType<R> responseType,
                                           long timeout,
-                                          @Nonnull TimeUnit timeUnit) {
+                                          @NonNull TimeUnit timeUnit) {
         GenericQueryMessage<?, R> queryMessage = new GenericQueryMessage<>(asMessage(query), queryName, responseType);
         return queryBus.scatterGather(processInterceptors(queryMessage), timeout, timeUnit)
                        .map(QueryResponseMessage::getPayload);
@@ -126,10 +126,10 @@ public class DefaultQueryGateway implements QueryGateway {
      */
     @Deprecated
     @Override
-    public <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@Nonnull String queryName,
-                                                                     @Nonnull Q query,
-                                                                     @Nonnull ResponseType<I> initialResponseType,
-                                                                     @Nonnull ResponseType<U> updateResponseType,
+    public <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull String queryName,
+                                                                     @NonNull Q query,
+                                                                     @NonNull ResponseType<I> initialResponseType,
+                                                                     @NonNull ResponseType<U> updateResponseType,
                                                                      @Nullable SubscriptionQueryBackpressure backpressure,
                                                                      int updateBufferSize) {
         SubscriptionQueryMessage<?, I, U> interceptedQuery =
@@ -142,10 +142,10 @@ public class DefaultQueryGateway implements QueryGateway {
     }
 
     @Override
-    public <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@Nonnull String queryName,
-                                                                     @Nonnull Q query,
-                                                                     @Nonnull ResponseType<I> initialResponseType,
-                                                                     @Nonnull ResponseType<U> updateResponseType,
+    public <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull String queryName,
+                                                                     @NonNull Q query,
+                                                                     @NonNull ResponseType<I> initialResponseType,
+                                                                     @NonNull ResponseType<U> updateResponseType,
                                                                      int updateBufferSize) {
         SubscriptionQueryMessage<?, I, U> interceptedQuery =
                 getSubscriptionQueryMessage(queryName, query, initialResponseType, updateResponseType);
@@ -182,7 +182,7 @@ public class DefaultQueryGateway implements QueryGateway {
 
     @Override
     public Registration registerDispatchInterceptor(
-            @Nonnull MessageDispatchInterceptor<? super QueryMessage<?, ?>> interceptor) {
+            @NonNull MessageDispatchInterceptor<? super QueryMessage<?, ?>> interceptor) {
         dispatchInterceptors.add(interceptor);
         return () -> dispatchInterceptors.remove(interceptor);
     }
@@ -216,7 +216,7 @@ public class DefaultQueryGateway implements QueryGateway {
          *                 implementation
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder queryBus(@Nonnull QueryBus queryBus) {
+        public Builder queryBus(@NonNull QueryBus queryBus) {
             assertNonNull(queryBus, "QueryBus may not be null");
             this.queryBus = queryBus;
             return this;

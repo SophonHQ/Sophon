@@ -21,10 +21,10 @@ import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricSet;
 import org.axonframework.messaging.Message;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Counts the number of ingested, successful, failed and processed messages
@@ -41,7 +41,7 @@ public class MessageCountingMonitor implements MessageMonitor<Message<?>>, Metri
     private final Counter ignoredCounter = new Counter();
 
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull Message<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull Message<?> message) {
         ingestedCounter.inc();
         return new MessageMonitor.MonitorCallback() {
             @Override

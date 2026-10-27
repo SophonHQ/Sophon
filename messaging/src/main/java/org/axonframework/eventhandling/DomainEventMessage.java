@@ -16,8 +16,9 @@
 
 package org.axonframework.eventhandling;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Represents a Message that wraps a DomainEvent and an Event representing an important change in the Domain. In
@@ -64,7 +65,7 @@ public interface DomainEventMessage<T> extends EventMessage<T> {
      * @return a copy of this message with the given MetaData
      */
     @Override
-    DomainEventMessage<T> withMetaData(@Nonnull Map<String, ?> metaData);
+    DomainEventMessage<T> withMetaData(@NonNull Map<String, ?> metaData);
 
     /**
      * Returns a copy of this DomainEventMessage with its MetaData merged with the given {@code metaData}. The payload,
@@ -76,5 +77,5 @@ public interface DomainEventMessage<T> extends EventMessage<T> {
      * @return a copy of this message with the given MetaData
      */
     @Override
-    DomainEventMessage<T> andMetaData(@Nonnull Map<String, ?> metaData);
+    DomainEventMessage<T> andMetaData(@NonNull Map<String, ?> metaData);
 }

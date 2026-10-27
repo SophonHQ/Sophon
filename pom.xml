@@ -109,8 +109,7 @@
         <byte-buddy.version>1.17.6</byte-buddy.version>
         <commons-io.version>2.20.0</commons-io.version>
         <disruptor.version>3.4.4</disruptor.version>
-        <findbugs-jsr305.version>3.0.2</findbugs-jsr305.version>
-        <jetbrains-annotations.version>24.0.1</jetbrains-annotations.version>
+        <jspecify.version>1.0.1</jspecify.version>
         <javassist.version>3.30.2-GA</javassist.version>
         <eaio-uuid.version>3.2</eaio-uuid.version>
         <!-- Reactive -->
@@ -383,14 +382,9 @@
                 <version>${javassist.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>${findbugs-jsr305.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jetbrains</groupId>
-                <artifactId>annotations</artifactId>
-                <version>${jetbrains-annotations.version}</version>
+                <groupId>org.jspecify</groupId>
+                <artifactId>jspecify</artifactId>
+                <version>${jspecify.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.eaio.uuid</groupId>

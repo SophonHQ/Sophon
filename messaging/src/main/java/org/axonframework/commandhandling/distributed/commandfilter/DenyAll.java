@@ -18,8 +18,7 @@ package org.axonframework.commandhandling.distributed.commandfilter;
 
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.distributed.CommandMessageFilter;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A {@link CommandMessageFilter} that denies all {@link CommandMessage}s.
@@ -35,12 +34,12 @@ public enum DenyAll implements CommandMessageFilter {
     INSTANCE;
 
     @Override
-    public boolean matches(@Nonnull CommandMessage<?> message) {
+    public boolean matches(@NonNull CommandMessage<?> message) {
         return false;
     }
 
     @Override
-    public CommandMessageFilter and(@Nonnull CommandMessageFilter other) {
+    public CommandMessageFilter and(@NonNull CommandMessageFilter other) {
         return this;
     }
 
@@ -51,7 +50,7 @@ public enum DenyAll implements CommandMessageFilter {
     }
 
     @Override
-    public CommandMessageFilter or(@Nonnull CommandMessageFilter other) {
+    public CommandMessageFilter or(@NonNull CommandMessageFilter other) {
         return other;
     }
 

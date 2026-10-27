@@ -19,12 +19,12 @@ package org.axonframework.eventhandling;
 import org.axonframework.messaging.unitofwork.BatchingUnitOfWork;
 import org.axonframework.messaging.unitofwork.RollbackConfigurationType;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.utils.EventTestUtils.createEvent;
 import static org.axonframework.utils.EventTestUtils.createEvents;
@@ -118,19 +118,19 @@ class AbstractEventProcessorTest {
             }
 
             @Override
-            public Builder name(@Nonnull String name) {
+            public Builder name(@NonNull String name) {
                 super.name(name);
                 return this;
             }
 
             @Override
-            public Builder eventHandlerInvoker(@Nonnull EventHandlerInvoker eventHandlerInvoker) {
+            public Builder eventHandlerInvoker(@NonNull EventHandlerInvoker eventHandlerInvoker) {
                 super.eventHandlerInvoker(eventHandlerInvoker);
                 return this;
             }
 
             @Override
-            public Builder messageMonitor(@Nonnull MessageMonitor<? super EventMessage<?>> messageMonitor) {
+            public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
                 super.messageMonitor(messageMonitor);
                 return this;
             }

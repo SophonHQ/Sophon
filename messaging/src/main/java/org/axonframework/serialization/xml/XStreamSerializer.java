@@ -28,6 +28,7 @@ import org.axonframework.serialization.ChainingConverter;
 import org.axonframework.serialization.Converter;
 import org.axonframework.serialization.RevisionResolver;
 import org.axonframework.serialization.SerializedObject;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
-import javax.annotation.Nonnull;
 
 /**
  * Serializer that uses XStream to serialize and deserialize arbitrary objects. The XStream instance is configured to
@@ -178,31 +178,31 @@ public class XStreamSerializer extends AbstractXStreamSerializer {
          * CompactDriver}.
          */
         @Override
-        public Builder xStream(@Nonnull XStream xStream) {
+        public Builder xStream(@NonNull XStream xStream) {
             super.xStream(xStream);
             return this;
         }
 
         @Override
-        public Builder charset(@Nonnull Charset charset) {
+        public Builder charset(@NonNull Charset charset) {
             super.charset(charset);
             return this;
         }
 
         @Override
-        public Builder revisionResolver(@Nonnull RevisionResolver revisionResolver) {
+        public Builder revisionResolver(@NonNull RevisionResolver revisionResolver) {
             super.revisionResolver(revisionResolver);
             return this;
         }
 
         @Override
-        public Builder converter(@Nonnull Converter converter) {
+        public Builder converter(@NonNull Converter converter) {
             super.converter(converter);
             return this;
         }
 
         @Override
-        public Builder classLoader(@Nonnull ClassLoader classLoader) {
+        public Builder classLoader(@NonNull ClassLoader classLoader) {
             super.classLoader(classLoader);
             return this;
         }

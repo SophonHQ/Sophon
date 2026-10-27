@@ -26,6 +26,7 @@ import org.axonframework.messaging.unitofwork.UnitOfWork;
 import org.axonframework.modelling.utils.MockException;
 import org.axonframework.tracing.SpanFactory;
 import org.axonframework.tracing.TestSpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 
@@ -34,7 +35,6 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.*;
@@ -281,7 +281,7 @@ class SagaManagerTest {
         }
 
         @Override
-        public boolean canHandle(@Nonnull EventMessage<?> eventMessage, @Nonnull Segment segment) {
+        public boolean canHandle(@NonNull EventMessage<?> eventMessage, @NonNull Segment segment) {
             return true;
         }
 

@@ -17,6 +17,7 @@
 package org.axonframework.messaging.annotation;
 
 import org.axonframework.common.annotation.PriorityAnnotationComparator;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.reflect.Executable;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 /**
  * HandlerDefinition instance that delegates to multiple other instances, in the order provided. Also, it wraps the
@@ -175,9 +175,9 @@ public class MultiHandlerDefinition implements HandlerDefinition {
     }
 
     @Override
-    public <T> Optional<MessageHandlingMember<T>> createHandler(@Nonnull Class<T> declaringType,
-                                                                @Nonnull Executable executable,
-                                                                @Nonnull ParameterResolverFactory parameterResolverFactory) {
+    public <T> Optional<MessageHandlingMember<T>> createHandler(@NonNull Class<T> declaringType,
+                                                                @NonNull Executable executable,
+                                                                @NonNull ParameterResolverFactory parameterResolverFactory) {
         Optional<MessageHandlingMember<T>> handler = Optional.empty();
         for (HandlerDefinition handlerDefinition : handlerDefinitions) {
             handler = handlerDefinition.createHandler(declaringType, executable, parameterResolverFactory);

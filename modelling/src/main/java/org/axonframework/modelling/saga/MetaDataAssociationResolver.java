@@ -18,8 +18,7 @@ package org.axonframework.modelling.saga;
 
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.annotation.MessageHandlingMember;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Used to derive the value of an association property by looking it up the event message's {@link
@@ -33,7 +32,7 @@ public class MetaDataAssociationResolver implements AssociationResolver {
      * Does nothing because we can only check for existence of property in the metadata during event handling.
      */
     @Override
-    public <T> void validate(@Nonnull String associationPropertyName, @Nonnull MessageHandlingMember<T> handler) {
+    public <T> void validate(@NonNull String associationPropertyName, @NonNull MessageHandlingMember<T> handler) {
         // Do nothing
     }
 
@@ -42,8 +41,8 @@ public class MetaDataAssociationResolver implements AssociationResolver {
      * org.axonframework.messaging.MetaData}.
      */
     @Override
-    public <T> Object resolve(@Nonnull String associationPropertyName, @Nonnull EventMessage<?> message,
-                              @Nonnull MessageHandlingMember<T> handler) {
+    public <T> Object resolve(@NonNull String associationPropertyName, @NonNull EventMessage<?> message,
+                              @NonNull MessageHandlingMember<T> handler) {
         return message.getMetaData().get(associationPropertyName);
     }
 }

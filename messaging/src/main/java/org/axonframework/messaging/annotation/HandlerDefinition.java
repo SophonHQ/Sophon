@@ -16,9 +16,10 @@
 
 package org.axonframework.messaging.annotation;
 
+import org.jspecify.annotations.NonNull;
+
 import java.lang.reflect.Executable;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 /**
  * Interface that describes an object capable of inspecting a method to determine if the method is suitable for message
@@ -39,7 +40,7 @@ public interface HandlerDefinition {
      * @param parameterResolverFactory Factory for a {@link ParameterResolver} of the method
      * @return An optional containing the handler if the method is suitable, or an empty Nullable otherwise
      */
-    <T> Optional<MessageHandlingMember<T>> createHandler(@Nonnull Class<T> declaringType,
-                                                         @Nonnull Executable executable,
-                                                         @Nonnull ParameterResolverFactory parameterResolverFactory);
+    <T> Optional<MessageHandlingMember<T>> createHandler(@NonNull Class<T> declaringType,
+                                                         @NonNull Executable executable,
+                                                         @NonNull ParameterResolverFactory parameterResolverFactory);
 }

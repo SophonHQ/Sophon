@@ -16,8 +16,9 @@
 
 package org.axonframework.messaging;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.Map;
-import javax.annotation.Nonnull;
 
 /**
  * Abstract base class for Messages.
@@ -44,7 +45,7 @@ public abstract class AbstractMessage<T> implements Message<T> {
     }
 
     @Override
-    public Message<T> withMetaData(@Nonnull Map<String, ?> metaData) {
+    public Message<T> withMetaData(@NonNull Map<String, ?> metaData) {
         if (getMetaData().equals(metaData)) {
             return this;
         }
@@ -52,7 +53,7 @@ public abstract class AbstractMessage<T> implements Message<T> {
     }
 
     @Override
-    public Message<T> andMetaData(@Nonnull Map<String, ?> metaData) {
+    public Message<T> andMetaData(@NonNull Map<String, ?> metaData) {
         if (metaData.isEmpty()) {
             return this;
         }

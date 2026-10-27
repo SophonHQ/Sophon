@@ -16,7 +16,7 @@
 
 package org.axonframework.commandhandling;
 
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents a {@link CommandCallback} that was wrapped with another. When the {@link WrappedCommandCallback} is
@@ -45,8 +45,8 @@ public class WrappedCommandCallback<C, R> implements CommandCallback<C, R> {
     }
 
     @Override
-    public void onResult(@Nonnull CommandMessage<? extends C> commandMessage,
-                         @Nonnull CommandResultMessage<? extends R> commandResultMessage) {
+    public void onResult(@NonNull CommandMessage<? extends C> commandMessage,
+                         @NonNull CommandResultMessage<? extends R> commandResultMessage) {
         outerCallback.onResult(commandMessage, commandResultMessage);
         innerCallback.onResult(commandMessage, commandResultMessage);
     }

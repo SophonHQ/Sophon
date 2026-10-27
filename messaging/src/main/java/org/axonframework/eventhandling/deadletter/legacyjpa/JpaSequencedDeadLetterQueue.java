@@ -35,6 +35,7 @@ import org.axonframework.messaging.deadletter.NoSuchDeadLetterException;
 import org.axonframework.messaging.deadletter.SequencedDeadLetterQueue;
 import org.axonframework.messaging.deadletter.WrongDeadLetterTypeException;
 import org.axonframework.serialization.Serializer;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
-import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
@@ -133,7 +133,7 @@ public class JpaSequencedDeadLetterQueue<M extends EventMessage<?>> implements S
     }
 
     @Override
-    public void enqueue(@Nonnull Object sequenceIdentifier, @Nonnull DeadLetter<? extends M> letter)
+    public void enqueue(@NonNull Object sequenceIdentifier, @NonNull DeadLetter<? extends M> letter)
             throws DeadLetterQueueOverflowException {
         String stringSequenceIdentifier = toStringSequenceIdentifier(sequenceIdentifier);
         if (isFull(stringSequenceIdentifier)) {
@@ -217,8 +217,8 @@ public class JpaSequencedDeadLetterQueue<M extends EventMessage<?>> implements S
 
     @Override
     @SuppressWarnings("unchecked")
-    public void requeue(@Nonnull DeadLetter<? extends M> letter,
-                        @Nonnull UnaryOperator<DeadLetter<? extends M>> letterUpdater)
+    public void requeue(@NonNull DeadLetter<? extends M> letter,
+                        @NonNull UnaryOperator<DeadLetter<? extends M>> letterUpdater)
             throws NoSuchDeadLetterException {
         if (!(letter instanceof JpaDeadLetter)) {
             throw new WrongDeadLetterTypeException(String.format(
@@ -244,13 +244,13 @@ public class JpaSequencedDeadLetterQueue<M extends EventMessage<?>> implements S
     }
 
     @Override
-    public boolean contains(@Nonnull Object sequenceIdentifier) {
+    public boolean contains(@NonNull Object sequenceIdentifier) {
         String stringSequenceIdentifier = toStringSequenceIdentifier(sequenceIdentifier);
         return sequenceSize(stringSequenceIdentifier) > 0;
     }
 
     @Override
-    public Iterable<DeadLetter<? extends M>> deadLetterSequence(@Nonnull Object sequenceIdentifier) {
+    public Iterable<DeadLetter<? extends M>> deadLetterSequence(@NonNull Object sequenceIdentifier) {
         String stringSequenceIdentifier = toStringSequenceIdentifier(sequenceIdentifier);
 
         return new PagingJpaQueryIterable<>(
@@ -325,15 +325,15 @@ public class JpaSequencedDeadLetterQueue<M extends EventMessage<?>> implements S
     }
 
     @Override
-    public boolean isFull(@Nonnull Object sequenceIdentifier) {
+    public boolean isFull(@NonNull Object sequenceIdentifier) {
         String stringSequenceIdentifier = toStringSequenceIdentifier(sequenceIdentifier);
         long numberInSequence = sequenceSize(stringSequenceIdentifier);
         return numberInSequence > 0 ? numberInSequence >= maxSequenceSize : amountOfSequences() >= maxSequences;
     }
 
     @Override
-    public boolean process(@Nonnull Predicate<DeadLetter<? extends M>> sequenceFilter,
-                           @Nonnull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask) {
+    public boolean process(@NonNull Predicate<DeadLetter<? extends M>> sequenceFilter,
+                           @NonNull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask) {
 
         JpaDeadLetter<M> claimedLetter = null;
         Iterator<JpaDeadLetter<M>> iterator = findFirstLetterOfEachAvailableSequence(10);
@@ -352,7 +352,7 @@ public class JpaSequencedDeadLetterQueue<M extends EventMessage<?>> implements S
     }
 
     @Override
-    public boolean process(@Nonnull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask) {
+    public boolean process(@NonNull Function<DeadLetter<? extends M>, EnqueueDecision<M>> processingTask) {
         Iterator<JpaDeadLetter<M>> iterator = findFirstLetterOfEachAvailableSequence(1);
         if (iterator.hasNext()) {
             JpaDeadLetter<M> deadLetter = iterator.next();
@@ -508,7 +508,7 @@ public class JpaSequencedDeadLetterQueue<M extends EventMessage<?>> implements S
     }
 
     @Override
-    public long sequenceSize(@Nonnull Object sequenceIdentifier) {
+    public long sequenceSize(@NonNull Object sequenceIdentifier) {
         return transactionManager.fetchInTransaction(
                 () -> entityManagerProvider.getEntityManager().createQuery(
                                                    "select count(dl) from DeadLetterEntry dl "

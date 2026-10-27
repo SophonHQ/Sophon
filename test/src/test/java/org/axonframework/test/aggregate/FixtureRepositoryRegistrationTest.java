@@ -30,7 +30,7 @@ import org.axonframework.modelling.command.Repository;
 import org.axonframework.modelling.command.RepositoryProvider;
 import org.axonframework.modelling.saga.SagaMethodMessageHandlerDefinition;
 import org.axonframework.test.FixtureExecutionException;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -92,7 +92,7 @@ class FixtureRepositoryRegistrationTest {
         assertThrows(FixtureExecutionException.class,
                      () -> testSubject.registerRepositoryProvider(new RepositoryProvider() {
                          @Override
-                         public <T> Repository<T> repositoryFor(@NotNull Class<T> aggregateType) {
+                         public <T> Repository<T> repositoryFor(@NonNull Class<T> aggregateType) {
                              return null;
                          }
                      }));
@@ -105,7 +105,7 @@ class FixtureRepositoryRegistrationTest {
         assertThrows(FixtureExecutionException.class,
                      () -> testSubject.registerRepositoryProvider(new RepositoryProvider() {
                          @Override
-                         public <T> Repository<T> repositoryFor(@NotNull Class<T> aggregateType) {
+                         public <T> Repository<T> repositoryFor(@NonNull Class<T> aggregateType) {
                              return null;
                          }
                      }));

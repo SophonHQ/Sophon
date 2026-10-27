@@ -23,6 +23,7 @@ import org.axonframework.lifecycle.Lifecycle;
 import org.axonframework.lifecycle.LifecycleHandlerInvocationException;
 import org.axonframework.lifecycle.ShutdownHandler;
 import org.axonframework.lifecycle.StartHandler;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +31,6 @@ import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 import java.util.concurrent.CompletableFuture;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.common.ReflectionUtils.invokeAndGetMethodValue;
@@ -78,12 +78,12 @@ public abstract class LifecycleHandlerInspector {
         if (component instanceof Lifecycle) {
             ((Lifecycle) component).registerLifecycleHandlers(new Lifecycle.LifecycleRegistry() {
                 @Override
-                public void onStart(int phase, @Nonnull Lifecycle.LifecycleHandler action) {
+                public void onStart(int phase, Lifecycle.@NonNull LifecycleHandler action) {
                     configuration.onStart(phase, action::run);
                 }
 
                 @Override
-                public void onShutdown(int phase, @Nonnull Lifecycle.LifecycleHandler action) {
+                public void onShutdown(int phase, Lifecycle.@NonNull LifecycleHandler action) {
                     configuration.onShutdown(phase, action::run);
                 }
             });

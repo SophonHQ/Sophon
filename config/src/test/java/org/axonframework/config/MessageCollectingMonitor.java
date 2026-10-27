@@ -19,12 +19,12 @@ package org.axonframework.config;
 import org.axonframework.messaging.Message;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitorCallback;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
 
 public class MessageCollectingMonitor implements MessageMonitor<Message<?>> {
     private final List<Message<?>> messages = new ArrayList<>();
@@ -39,7 +39,7 @@ public class MessageCollectingMonitor implements MessageMonitor<Message<?>> {
     }
 
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull Message<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull Message<?> message) {
         messages.add(message);
         if (latch != null) {
             latch.countDown();

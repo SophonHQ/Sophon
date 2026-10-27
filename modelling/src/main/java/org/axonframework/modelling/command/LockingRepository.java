@@ -27,6 +27,7 @@ import org.axonframework.messaging.unitofwork.CurrentUnitOfWork;
 import org.axonframework.messaging.unitofwork.UnitOfWork;
 import org.axonframework.modelling.command.inspection.AggregateModel;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 import static org.axonframework.common.ObjectUtils.sameInstanceSupplier;
@@ -281,31 +281,31 @@ public abstract class LockingRepository<T, A extends Aggregate<T>> extends
         }
 
         @Override
-        public Builder<T> parameterResolverFactory(@Nonnull ParameterResolverFactory parameterResolverFactory) {
+        public Builder<T> parameterResolverFactory(@NonNull ParameterResolverFactory parameterResolverFactory) {
             super.parameterResolverFactory(parameterResolverFactory);
             return this;
         }
 
         @Override
-        public Builder<T> handlerDefinition(@Nonnull HandlerDefinition handlerDefinition) {
+        public Builder<T> handlerDefinition(@NonNull HandlerDefinition handlerDefinition) {
             super.handlerDefinition(handlerDefinition);
             return this;
         }
 
         @Override
-        public Builder<T> aggregateModel(@Nonnull AggregateModel<T> aggregateModel) {
+        public Builder<T> aggregateModel(@NonNull AggregateModel<T> aggregateModel) {
             super.aggregateModel(aggregateModel);
             return this;
         }
 
         @Override
-        public Builder<T> subtypes(@Nonnull Set<Class<? extends T>> subtypes) {
+        public Builder<T> subtypes(@NonNull Set<Class<? extends T>> subtypes) {
             super.subtypes(subtypes);
             return this;
         }
 
         @Override
-        public Builder<T> subtype(@Nonnull Class<? extends T> subtype) {
+        public Builder<T> subtype(@NonNull Class<? extends T> subtype) {
             super.subtype(subtype);
             return this;
         }

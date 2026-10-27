@@ -20,9 +20,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.beans.ConstructorProperties;
 import java.io.Serializable;
 import java.util.Objects;
@@ -191,7 +191,7 @@ public class ReplayToken implements TrackingToken, WrappedToken, Serializable {
      * @param <T>          The type of the context
      * @return The context, if present in the message
      */
-    public static <T> Optional<T> replayContext(EventMessage<?> message, @Nonnull Class<T> contextClass) {
+    public static <T> Optional<T> replayContext(EventMessage<?> message, @NonNull Class<T> contextClass) {
         if (message instanceof TrackedEventMessage) {
             return replayContext(((TrackedEventMessage<?>) message).trackingToken(), contextClass);
         }
@@ -221,7 +221,7 @@ public class ReplayToken implements TrackingToken, WrappedToken, Serializable {
      * @param <T>           The type of the context
      * @return The context, if present in the token
      */
-    public static <T> Optional<T> replayContext(TrackingToken trackingToken, @Nonnull Class<T> contextClass) {
+    public static <T> Optional<T> replayContext(TrackingToken trackingToken, @NonNull Class<T> contextClass) {
         return WrappedToken.unwrap(trackingToken, ReplayToken.class)
                            .map(ReplayToken::context)
                            .filter(c -> c.getClass().isAssignableFrom(contextClass))
@@ -287,7 +287,7 @@ public class ReplayToken implements TrackingToken, WrappedToken, Serializable {
         return new ReplayToken(tokenAtReset.upperBound(newToken), newToken, context, false);
     }
 
-    private static boolean isStrictlyAfter(@Nonnull TrackingToken newToken, @Nonnull TrackingToken tokenAtReset) {
+    private static boolean isStrictlyAfter(@NonNull TrackingToken newToken, @NonNull TrackingToken tokenAtReset) {
         return !newToken.samePositionAs(WrappedToken.unwrapUpperBound(tokenAtReset))
                 && newToken.covers(WrappedToken.unwrapUpperBound(tokenAtReset))
                 && !tokenAtReset.covers(WrappedToken.unwrapLowerBound(newToken));

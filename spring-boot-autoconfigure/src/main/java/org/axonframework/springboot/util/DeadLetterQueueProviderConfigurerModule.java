@@ -22,11 +22,11 @@ import org.axonframework.config.ConfigurerModule;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.deadletter.SequencedDeadLetterQueue;
 import org.axonframework.springboot.EventProcessorProperties;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 /**
  * A {@link ConfigurerModule} implementation dedicated towards registering a {@link SequencedDeadLetterQueue} provider
@@ -64,7 +64,7 @@ public class DeadLetterQueueProviderConfigurerModule implements ConfigurerModule
     }
 
     @Override
-    public void configureModule(@Nonnull Configurer configurer) {
+    public void configureModule(@NonNull Configurer configurer) {
         configurer.eventProcessing().registerDeadLetterQueueProvider(
                 processingGroup -> dlqEnabled(processingGroup)
                         ? deadLetterQueueProvider.apply(processingGroup)

@@ -16,9 +16,8 @@
 
 package org.axonframework.eventhandling;
 
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
-
-import javax.annotation.Nonnull;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -32,12 +31,12 @@ class EventHandlerInvokerTest {
 
     private final EventHandlerInvoker testSubject = spy(new EventHandlerInvoker() {
         @Override
-        public boolean canHandle(@Nonnull EventMessage<?> eventMessage, @Nonnull Segment segment) {
+        public boolean canHandle(@NonNull EventMessage<?> eventMessage, @NonNull Segment segment) {
             return true;
         }
 
         @Override
-        public void handle(@Nonnull EventMessage<?> message, @Nonnull Segment segment) throws Exception {
+        public void handle(@NonNull EventMessage<?> message, @NonNull Segment segment) throws Exception {
             // Do nothing
         }
     });

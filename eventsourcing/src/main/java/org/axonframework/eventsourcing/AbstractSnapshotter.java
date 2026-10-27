@@ -30,6 +30,7 @@ import org.axonframework.tracing.NoOpSpanFactory;
 import org.axonframework.tracing.Span;
 import org.axonframework.tracing.SpanFactory;
 import org.axonframework.tracing.SpanScope;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -79,7 +79,7 @@ public abstract class AbstractSnapshotter implements Snapshotter {
     }
 
     @Override
-    public void scheduleSnapshot(@Nonnull Class<?> aggregateType, @Nonnull String aggregateIdentifier) {
+    public void scheduleSnapshot(@NonNull Class<?> aggregateType, @NonNull String aggregateIdentifier) {
         if (CurrentUnitOfWork.isStarted() && CurrentUnitOfWork.get().phase().isBefore(UnitOfWork.Phase.COMMIT)) {
             CurrentUnitOfWork.get().afterCommit(u -> doScheduleSnapshot(aggregateType, aggregateIdentifier));
         } else {
@@ -241,7 +241,7 @@ public abstract class AbstractSnapshotter implements Snapshotter {
          * @return The current Builder instance, for fluent interfacing.
          */
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.builderSpanFactory = DefaultSnapshotterSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
@@ -254,7 +254,7 @@ public abstract class AbstractSnapshotter implements Snapshotter {
          * @param spanFactory The {@link SpanFactory} implementation.
          * @return The current Builder instance, for fluent interfacing.
          */
-        public Builder spanFactory(@Nonnull SnapshotterSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SnapshotterSpanFactory spanFactory) {
             assertNonNull(spanFactory, "SpanFactory may not be null");
             this.builderSpanFactory = spanFactory;
             return this;

@@ -19,8 +19,8 @@ package org.axonframework.serialization.avro;
 import org.apache.avro.Schema;
 import org.apache.avro.SchemaCompatibility;
 import org.axonframework.serialization.SerializationException;
+import org.jspecify.annotations.NonNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,9 +41,9 @@ public interface SchemaIncompatibilityChecker {
      * @throws SerializationException if the schema check has not passed.
      */
     default void assertSchemaCompatibility(
-            @Nonnull Class<?> readerType,
-            @Nonnull Schema readerSchema,
-            @Nonnull Schema writerSchema,
+            @NonNull Class<?> readerType,
+            @NonNull Schema readerSchema,
+            @NonNull Schema writerSchema,
             boolean includeSchemasInStackTraces) {
         List<SchemaCompatibility.Incompatibility> incompatibilities = checkCompatibility(
                 readerSchema, writerSchema
@@ -71,10 +71,10 @@ public interface SchemaIncompatibilityChecker {
      * @param writerSchema writer schema to check.
      * @return list of compatibilities if any, or empty list
      */
-    @Nonnull
+    @NonNull
     default List<SchemaCompatibility.Incompatibility> checkCompatibility(
-            @Nonnull Schema readerSchema,
-            @Nonnull Schema writerSchema
+            @NonNull Schema readerSchema,
+            @NonNull Schema writerSchema
     ) {
         return AvroUtil.checkCompatibility(
                 readerSchema,

@@ -18,6 +18,7 @@ package org.axonframework.spring.authorization;
 
 import org.axonframework.messaging.Message;
 import org.axonframework.messaging.MessageDispatchInterceptor;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -29,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 /**
  * A {@link MessageDispatchInterceptor} that adds the {$code authorities} from the authorized principle.
@@ -41,9 +41,9 @@ public class MessageAuthorizationDispatchInterceptor<T extends Message<?>> imple
 
     private static final Logger logger = LoggerFactory.getLogger(MessageAuthorizationDispatchInterceptor.class);
 
-    @Nonnull
+    @NonNull
     @Override
-    public T handle(@Nonnull T message) {
+    public T handle(@NonNull T message) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             logger.debug("No authentication found.");
@@ -61,9 +61,9 @@ public class MessageAuthorizationDispatchInterceptor<T extends Message<?>> imple
         return (T) message.andMetaData(authenticationDetails);
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public BiFunction<Integer, T, T> handle(@Nonnull List<? extends T> list) {
+    public BiFunction<Integer, T, T> handle(@NonNull List<? extends T> list) {
         return (position, message) -> handle(message);
     }
 }

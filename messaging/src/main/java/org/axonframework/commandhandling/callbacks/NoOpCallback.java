@@ -19,8 +19,7 @@ package org.axonframework.commandhandling.callbacks;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
-
-import javax.annotation.Nonnull;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Callback that does absolutely nothing when invoked. For performance reasons, an instance of this callback can be
@@ -43,8 +42,8 @@ public final class NoOpCallback implements CommandCallback<Object, Object> {
      * This implementation does nothing.
      */
     @Override
-    public void onResult(@Nonnull CommandMessage<?> commandMessage,
-                         @Nonnull CommandResultMessage<?> commandResultMessage) {
+    public void onResult(@NonNull CommandMessage<?> commandMessage,
+                         @NonNull CommandResultMessage<?> commandResultMessage) {
         // No-op
     }
 }

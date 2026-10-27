@@ -30,11 +30,11 @@ import org.axonframework.messaging.unitofwork.RollbackConfigurationType;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonNull;
 
@@ -91,7 +91,7 @@ public class SubscribingEventProcessor extends AbstractEventProcessor implements
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry handle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry handle) {
         handle.onStart(Phase.LOCAL_MESSAGE_HANDLER_REGISTRATIONS, this::start);
         handle.onShutdown(Phase.LOCAL_MESSAGE_HANDLER_REGISTRATIONS, this::shutDown);
     }
@@ -202,13 +202,13 @@ public class SubscribingEventProcessor extends AbstractEventProcessor implements
         }
 
         @Override
-        public Builder name(@Nonnull String name) {
+        public Builder name(@NonNull String name) {
             super.name(name);
             return this;
         }
 
         @Override
-        public Builder eventHandlerInvoker(@Nonnull EventHandlerInvoker eventHandlerInvoker) {
+        public Builder eventHandlerInvoker(@NonNull EventHandlerInvoker eventHandlerInvoker) {
             super.eventHandlerInvoker(eventHandlerInvoker);
             return this;
         }
@@ -217,32 +217,32 @@ public class SubscribingEventProcessor extends AbstractEventProcessor implements
          * {@inheritDoc}. Defaults to a {@link RollbackConfigurationType#ANY_THROWABLE})
          */
         @Override
-        public Builder rollbackConfiguration(@Nonnull RollbackConfiguration rollbackConfiguration) {
+        public Builder rollbackConfiguration(@NonNull RollbackConfiguration rollbackConfiguration) {
             super.rollbackConfiguration(rollbackConfiguration);
             return this;
         }
 
         @Override
-        public Builder errorHandler(@Nonnull ErrorHandler errorHandler) {
+        public Builder errorHandler(@NonNull ErrorHandler errorHandler) {
             super.errorHandler(errorHandler);
             return this;
         }
 
         @Override
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super EventMessage<?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
             super.messageMonitor(messageMonitor);
             return this;
         }
 
         @Override
-        public Builder spanFactory(@Nonnull EventProcessorSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull EventProcessorSpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }
 
         @Override
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }
@@ -255,7 +255,7 @@ public class SubscribingEventProcessor extends AbstractEventProcessor implements
          *                      EventProcessor} implementation will subscribe itself to receive {@link EventMessage}s
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder messageSource(@Nonnull SubscribableMessageSource<? extends EventMessage<?>> messageSource) {
+        public Builder messageSource(@NonNull SubscribableMessageSource<? extends EventMessage<?>> messageSource) {
             assertNonNull(messageSource, "SubscribableMessageSource may not be null");
             this.messageSource = messageSource;
             return this;
@@ -270,7 +270,7 @@ public class SubscribingEventProcessor extends AbstractEventProcessor implements
          *
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder processingStrategy(@Nonnull EventProcessingStrategy processingStrategy) {
+        public Builder processingStrategy(@NonNull EventProcessingStrategy processingStrategy) {
             assertNonNull(processingStrategy, "EventProcessingStrategy may not be null");
             this.processingStrategy = processingStrategy;
             return this;
@@ -283,7 +283,7 @@ public class SubscribingEventProcessor extends AbstractEventProcessor implements
          *
          * @return the current Builder instance, for fluent interfacing
          */
-        public Builder transactionManager(@Nonnull TransactionManager transactionManager) {
+        public Builder transactionManager(@NonNull TransactionManager transactionManager) {
             assertNonNull(transactionManager, "TransactionManager may not be null");
             this.transactionManager = transactionManager;
             return this;

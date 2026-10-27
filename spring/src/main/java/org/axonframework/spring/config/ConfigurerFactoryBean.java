@@ -18,6 +18,7 @@ package org.axonframework.spring.config;
 
 import org.axonframework.config.Configurer;
 import org.axonframework.config.ConfigurerModule;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ import org.springframework.context.ApplicationContextAware;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * FactoryBean that creates an instance of a {@link Configurer} for use in a Spring Application Context.
@@ -81,7 +81,7 @@ public class ConfigurerFactoryBean implements FactoryBean<Configurer>, Applicati
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         configurer.registerComponent(ApplicationContext.class, c -> applicationContext);
     }
 

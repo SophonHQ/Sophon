@@ -19,12 +19,12 @@ package org.axonframework.modelling.command;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.common.annotation.AnnotationUtils;
 import org.axonframework.messaging.Message;
+import org.jspecify.annotations.NonNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -85,7 +85,7 @@ public class AnnotationCommandTargetResolver implements CommandTargetResolver {
      * {@inheritDoc}
      */
     @Override
-    public VersionedAggregateIdentifier resolveTarget(@Nonnull CommandMessage<?> command) {
+    public VersionedAggregateIdentifier resolveTarget(@NonNull CommandMessage<?> command) {
         Long aggregateVersion;
         Object aggregateIdentifier;
         try {

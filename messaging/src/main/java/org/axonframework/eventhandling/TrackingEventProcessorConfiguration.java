@@ -19,12 +19,12 @@ package org.axonframework.eventhandling;
 import org.axonframework.common.Assert;
 import org.axonframework.common.AxonThreadFactory;
 import org.axonframework.messaging.StreamableMessageSource;
+import org.jspecify.annotations.NonNull;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.*;
 import static org.axonframework.eventhandling.ReplayToken.createReplayToken;
@@ -124,7 +124,7 @@ public class TrackingEventProcessorConfiguration {
      * @return {@code this} for method chaining.
      */
     public TrackingEventProcessorConfiguration andThreadFactory(
-            @Nonnull Function<String, ThreadFactory> threadFactory
+            @NonNull Function<String, ThreadFactory> threadFactory
     ) {
         this.threadFactory = threadFactory;
         return this;
@@ -173,7 +173,7 @@ public class TrackingEventProcessorConfiguration {
      * @return {@code this} for method chaining.
      */
     public TrackingEventProcessorConfiguration andInitialTrackingToken(
-            @Nonnull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenBuilder
+            @NonNull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenBuilder
     ) {
         this.initialTrackingTokenBuilder = initialTrackingTokenBuilder;
         return this;
@@ -187,7 +187,7 @@ public class TrackingEventProcessorConfiguration {
      * @return {@code this} for method chaining.
      */
     public TrackingEventProcessorConfiguration andTokenClaimInterval(long tokenClaimInterval,
-                                                                     @Nonnull TimeUnit timeUnit) {
+                                                                     @NonNull TimeUnit timeUnit) {
         this.tokenClaimInterval = timeUnit.toMillis(tokenClaimInterval);
         return this;
     }
@@ -218,7 +218,7 @@ public class TrackingEventProcessorConfiguration {
      * @return {@code this} for method chaining.
      */
     public TrackingEventProcessorConfiguration andEventTrackerStatusChangeListener(
-            @Nonnull EventTrackerStatusChangeListener eventTrackerStatusChangeListener
+            @NonNull EventTrackerStatusChangeListener eventTrackerStatusChangeListener
     ) {
         assertNonNull(eventTrackerStatusChangeListener, "EventTrackerStatusChangeListener may not be null");
         this.eventTrackerStatusChangeListener = eventTrackerStatusChangeListener;

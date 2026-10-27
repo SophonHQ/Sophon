@@ -22,12 +22,12 @@ import org.axonframework.config.ConfigurerModule;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.Message;
 import org.axonframework.queryhandling.QueryMessage;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * An implementation of a {@link ConfigurerModule} that will register a list of beans as handlers for a specific type of
@@ -61,7 +61,7 @@ public class MessageHandlerConfigurer implements ConfigurerModule, ApplicationCo
     }
 
     @Override
-    public void configureModule(@Nonnull Configurer configurer) {
+    public void configureModule(@NonNull Configurer configurer) {
         switch (type) {
             case EVENT:
                 handlerBeans.forEach(handler -> configurer.registerEventHandler(c -> applicationContext.getBean(handler)));
@@ -77,7 +77,7 @@ public class MessageHandlerConfigurer implements ConfigurerModule, ApplicationCo
     }
 
     @Override
-    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 

@@ -36,6 +36,7 @@ import org.axonframework.messaging.unitofwork.UnitOfWork;
 import org.axonframework.monitoring.MessageMonitor;
 import org.axonframework.monitoring.NoOpMessageMonitor;
 import org.axonframework.tracing.SpanFactory;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonMap;
@@ -205,7 +205,7 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
     }
 
     @Override
-    public void registerLifecycleHandlers(@Nonnull LifecycleRegistry handle) {
+    public void registerLifecycleHandlers(@NonNull LifecycleRegistry handle) {
         if (autoStart) {
             handle.onStart(Phase.INBOUND_EVENT_CONNECTORS, this::start);
         }
@@ -661,25 +661,25 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
 
     @Override
     public void resetTokens(
-            @Nonnull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenSupplier) {
+            @NonNull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenSupplier) {
         resetTokens(initialTrackingTokenSupplier.apply(messageSource));
     }
 
     @Override
     public <R> void resetTokens(
-            @Nonnull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenSupplier,
+            @NonNull Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialTrackingTokenSupplier,
             R resetContext
     ) {
         resetTokens(initialTrackingTokenSupplier.apply(messageSource), resetContext);
     }
 
     @Override
-    public void resetTokens(@Nonnull TrackingToken startPosition) {
+    public void resetTokens(@NonNull TrackingToken startPosition) {
         resetTokens(startPosition, null);
     }
 
     @Override
-    public <R> void resetTokens(@Nonnull TrackingToken startPosition, R resetContext) {
+    public <R> void resetTokens(@NonNull TrackingToken startPosition, R resetContext) {
         Assert.state(supportsReset(), () -> "The handlers assigned to this Processor do not support a reset");
         Assert.state(!isRunning() && activeProcessorThreads() == 0 && !workLauncherRunning.get(),
                      () -> "TrackingProcessor must be shut down before triggering a reset");
@@ -952,13 +952,13 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
         }
 
         @Override
-        public Builder name(@Nonnull String name) {
+        public Builder name(@NonNull String name) {
             super.name(name);
             return this;
         }
 
         @Override
-        public Builder eventHandlerInvoker(@Nonnull EventHandlerInvoker eventHandlerInvoker) {
+        public Builder eventHandlerInvoker(@NonNull EventHandlerInvoker eventHandlerInvoker) {
             super.eventHandlerInvoker(eventHandlerInvoker);
             return this;
         }
@@ -967,32 +967,32 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
          * {@inheritDoc}. Defaults to a {@link RollbackConfigurationType#ANY_THROWABLE})
          */
         @Override
-        public Builder rollbackConfiguration(@Nonnull RollbackConfiguration rollbackConfiguration) {
+        public Builder rollbackConfiguration(@NonNull RollbackConfiguration rollbackConfiguration) {
             super.rollbackConfiguration(rollbackConfiguration);
             return this;
         }
 
         @Override
-        public Builder errorHandler(@Nonnull ErrorHandler errorHandler) {
+        public Builder errorHandler(@NonNull ErrorHandler errorHandler) {
             super.errorHandler(errorHandler);
             return this;
         }
 
         @Override
-        public Builder messageMonitor(@Nonnull MessageMonitor<? super EventMessage<?>> messageMonitor) {
+        public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
             super.messageMonitor(messageMonitor);
             return this;
         }
 
         @Override
-        public Builder spanFactory(@Nonnull EventProcessorSpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull EventProcessorSpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }
 
         @Override
         @Deprecated
-        public Builder spanFactory(@Nonnull SpanFactory spanFactory) {
+        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }

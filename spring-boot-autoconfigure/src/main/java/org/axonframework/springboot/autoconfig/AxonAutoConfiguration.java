@@ -83,6 +83,7 @@ import org.axonframework.springboot.EventProcessorProperties;
 import org.axonframework.springboot.SerializerProperties;
 import org.axonframework.springboot.TagsConfigurationProperties;
 import org.axonframework.springboot.util.ConditionalOnMissingQualifiedBean;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +101,6 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;
-import javax.annotation.Nonnull;
 
 import static java.lang.String.format;
 import static org.springframework.beans.factory.BeanFactoryUtils.beansOfTypeIncludingAncestors;
@@ -513,7 +513,7 @@ public class AxonAutoConfiguration implements BeanClassLoaderAware {
     }
 
     @Override
-    public void setBeanClassLoader(@Nonnull ClassLoader classLoader) {
+    public void setBeanClassLoader(@NonNull ClassLoader classLoader) {
         this.beanClassLoader = classLoader;
     }
 }

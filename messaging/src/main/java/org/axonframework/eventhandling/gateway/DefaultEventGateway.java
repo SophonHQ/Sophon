@@ -20,9 +20,9 @@ import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.MessageDispatchInterceptor;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
-import javax.annotation.Nonnull;
 
 /**
  * Default implementation of the EventGateway interface. It allow configuration of
@@ -61,7 +61,7 @@ public class DefaultEventGateway extends AbstractEventGateway implements EventGa
     }
 
     @Override
-    public void publish(@Nonnull List<?> events) {
+    public void publish(@NonNull List<?> events) {
         this.publishAll(events);
     }
 
@@ -74,7 +74,7 @@ public class DefaultEventGateway extends AbstractEventGateway implements EventGa
     public static class Builder extends AbstractEventGateway.Builder {
 
         @Override
-        public Builder eventBus(@Nonnull EventBus eventBus) {
+        public Builder eventBus(@NonNull EventBus eventBus) {
             super.eventBus(eventBus);
             return this;
         }

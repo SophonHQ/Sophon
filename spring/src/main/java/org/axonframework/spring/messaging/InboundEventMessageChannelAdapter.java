@@ -20,13 +20,13 @@ import org.axonframework.common.Registration;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.EventMessage;
 import org.axonframework.messaging.SubscribableMessageSource;
+import org.jspecify.annotations.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
-import javax.annotation.Nonnull;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -76,9 +76,9 @@ public class InboundEventMessageChannelAdapter implements MessageHandler, Subscr
         this.eventMessageConverter = eventMessageConverter;
     }
 
-    @Nonnull
+    @NonNull
     @Override
-    public Registration subscribe(@Nonnull Consumer<List<? extends EventMessage<?>>> messageProcessor) {
+    public Registration subscribe(@NonNull Consumer<List<? extends EventMessage<?>>> messageProcessor) {
         messageProcessors.add(messageProcessor);
         return () -> messageProcessors.remove(messageProcessor);
     }
@@ -90,7 +90,7 @@ public class InboundEventMessageChannelAdapter implements MessageHandler, Subscr
      */
     @SuppressWarnings({"unchecked"})
     @Override
-    public void handleMessage(@Nonnull Message<?> message) {
+    public void handleMessage(@NonNull Message<?> message) {
         List<? extends EventMessage<?>> messages = singletonList(transformMessage(message));
         for (Consumer<List<? extends EventMessage<?>>> messageProcessor : messageProcessors) {
             messageProcessor.accept(messages);

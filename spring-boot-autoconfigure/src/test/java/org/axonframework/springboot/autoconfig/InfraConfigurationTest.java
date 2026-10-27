@@ -36,6 +36,7 @@ import org.axonframework.spring.config.SpringAxonConfiguration;
 import org.axonframework.spring.config.SpringConfigurer;
 import org.axonframework.spring.config.SpringSagaLookup;
 import org.axonframework.springboot.utils.TestSerializer;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -56,12 +57,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
 
 /**
  * Test class validating the behavior of the {@link InfraConfiguration}.
@@ -390,7 +389,7 @@ class InfraConfigurationTest {
         public ConfigurerModule handlerEnhancerConfigurerModule(AtomicBoolean enhancerInvoked) {
             return configurer -> configurer.registerHandlerEnhancerDefinition(c -> new HandlerEnhancerDefinition() {
                 @Override
-                public <T> MessageHandlingMember<T> wrapHandler(@Nonnull MessageHandlingMember<T> original) {
+                public <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
                     enhancerInvoked.set(true);
                     return original;
                 }
@@ -431,7 +430,7 @@ class InfraConfigurationTest {
         }
 
         @Override
-        public void configureModule(@Nonnull Configurer configurer) {
+        public void configureModule(@NonNull Configurer configurer) {
             initOrder.add(this);
         }
 

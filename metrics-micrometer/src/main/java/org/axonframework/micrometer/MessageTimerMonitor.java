@@ -24,13 +24,13 @@ import io.micrometer.core.instrument.Timer;
 import org.axonframework.common.AxonConfigurationException;
 import org.axonframework.messaging.Message;
 import org.axonframework.monitoring.MessageMonitor;
+import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-import javax.annotation.Nonnull;
 
 import static org.axonframework.common.BuilderUtils.assertNonEmpty;
 import static org.axonframework.common.BuilderUtils.assertNonNull;
@@ -149,7 +149,7 @@ public class MessageTimerMonitor implements MessageMonitor<Message<?>> {
     }
 
     @Override
-    public MonitorCallback onMessageIngested(@Nonnull Message<?> message) {
+    public MonitorCallback onMessageIngested(@NonNull Message<?> message) {
         Iterable<Tag> tags = tagsBuilder.apply(message);
         Timer allTimer = buildTimer(meterNamePrefix, "allTimer", meterRegistry, tags, timerCustomization);
         Timer successTimer = buildTimer(meterNamePrefix, "successTimer", meterRegistry, tags, timerCustomization);
