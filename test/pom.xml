@@ -94,7 +94,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>org.axonframework.test</Automatic-Module-Name>
+                            <Automatic-Module-Name>io.github.sophonhq.sophon.test</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>

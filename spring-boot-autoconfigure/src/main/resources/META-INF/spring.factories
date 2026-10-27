@@ -1,24 +1,24 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.axonframework.springboot.autoconfig.MetricsAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.MicrometerMetricsAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.EventProcessingAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.AvroSerializerAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.AxonAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.AxonTimeoutAutoConfiguration, \
-  org.axonframework.springboot.autoconfig.AxonJobRunrAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.AxonDbSchedulerAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.JpaAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.JpaEventStoreAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.JdbcAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.TransactionAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.NoOpTransactionAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.InfraConfiguration,\
-  org.axonframework.springboot.autoconfig.InterceptorAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.ObjectMapperAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.CBORMapperAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.XStreamAutoConfiguration,\
-  org.axonframework.springboot.autoconfig.AxonTracingAutoConfiguration, \
-  org.axonframework.springboot.autoconfig.OpenTelemetryAutoConfiguration, \
-  org.axonframework.springboot.autoconfig.SecurityAutoConfiguration
+  io.github.sophonhq.sophon.springboot.autoconfig.MetricsAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.MicrometerMetricsAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.EventProcessingAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.AvroSerializerAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.AxonAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.AxonTimeoutAutoConfiguration, \
+  io.github.sophonhq.sophon.springboot.autoconfig.AxonJobRunrAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.AxonDbSchedulerAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.TransactionAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.NoOpTransactionAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.InfraConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.InterceptorAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.ObjectMapperAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.CBORMapperAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.XStreamAutoConfiguration,\
+  io.github.sophonhq.sophon.springboot.autoconfig.AxonTracingAutoConfiguration, \
+  io.github.sophonhq.sophon.springboot.autoconfig.OpenTelemetryAutoConfiguration, \
+  io.github.sophonhq.sophon.springboot.autoconfig.SecurityAutoConfiguration

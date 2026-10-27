@@ -284,7 +284,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>org.axonframework.messaging</Automatic-Module-Name>
+                            <Automatic-Module-Name>io.github.sophonhq.sophon.messaging</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -308,7 +308,7 @@
                         <Bundle-Description>${project.description}</Bundle-Description>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>
-                            org.axonframework.*
+                            io.github.sophonhq.sophon.*
                         </Export-Package>
                         <Import-Package>
                             org.slf4j.*,

@@ -21,12 +21,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="eventStoreBenchMark"
-          class="org.axonframework.integrationtests.eventsourcing.eventstore.benchmark.jpa.JpaEventStoreBenchMark">
+          class="io.github.sophonhq.sophon.integrationtests.eventsourcing.eventstore.benchmark.jpa.JpaEventStoreBenchMark">
         <constructor-arg index="0" ref="eventStorageEngine"/>
         <constructor-arg index="1" ref="transactionManager"/>
     </bean>
 
-    <bean id="eventStorageEngine" class="org.axonframework.eventsourcing.eventstore.jpa.JpaEventStorageEngine">
+    <bean id="eventStorageEngine" class="io.github.sophonhq.sophon.eventsourcing.eventstore.jpa.JpaEventStorageEngine">
         <constructor-arg name="entityManagerProvider" ref="entityManagerProvider"/>
         <constructor-arg name="transactionManager" ref="axonTransactionManager"/>
     </bean>
@@ -54,13 +54,13 @@
         </property>
     </bean>
 
-    <bean id="entityManagerProvider" class="org.axonframework.springboot.util.jpa.ContainerManagedEntityManagerProvider"/>
+    <bean id="entityManagerProvider" class="io.github.sophonhq.sophon.springboot.util.jpa.ContainerManagedEntityManagerProvider"/>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
-    <bean id="axonTransactionManager" class="org.axonframework.spring.messaging.unitofwork.SpringTransactionManager">
+    <bean id="axonTransactionManager" class="io.github.sophonhq.sophon.spring.messaging.unitofwork.SpringTransactionManager">
         <constructor-arg name="transactionManager" ref="transactionManager"/>
     </bean>
 

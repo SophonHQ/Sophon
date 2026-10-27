@@ -120,7 +120,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>org.axonframework.config</Automatic-Module-Name>
+                            <Automatic-Module-Name>io.github.sophonhq.sophon.config</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -144,7 +144,7 @@
                         <Bundle-Description>${project.description}</Bundle-Description>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>
-                            org.axonframework.config.*
+                            io.github.sophonhq.sophon.config.*
                         </Export-Package>
                         <Import-Package>
                             *;resolution:=optional

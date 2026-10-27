@@ -25,7 +25,7 @@
     <moduleSets>
         <moduleSet>
             <includes>
-                <include>org.axonframework:*</include>
+                <include>io.github.sophonhq.sophon:*</include>
             </includes>
             <excludes>
                 <exclude>*:axon-integrationtests</exclude>

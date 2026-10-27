@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2010-2022. Axon Framework
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.github.sophonhq.sophon.eventhandling.replay;
+
+import io.github.sophonhq.sophon.eventhandling.ReplayStatus;
+import io.github.sophonhq.sophon.eventhandling.ReplayToken;
+import io.github.sophonhq.sophon.messaging.Message;
+import io.github.sophonhq.sophon.messaging.annotation.ParameterResolver;
+import io.github.sophonhq.sophon.messaging.annotation.ParameterResolverFactory;
+
+import java.lang.reflect.Executable;
+import java.lang.reflect.Parameter;
+
+/**
+ * An implementation of the {@link io.github.sophonhq.sophon.messaging.annotation.ParameterResolverFactory} which resolves the
+ * {@link io.github.sophonhq.sophon.eventhandling.ReplayStatus} parameter. Will resolve a {@link ReplayStatus#REPLAY} parameter
+ * if the {@link io.github.sophonhq.sophon.messaging.Message} is a {@link io.github.sophonhq.sophon.eventhandling.TrackedEventMessage},
+ * containing a {@link io.github.sophonhq.sophon.eventhandling.ReplayToken}. Otherwise, it will resolve a
+ * {@link ReplayStatus#REGULAR} parameter.
+ *
+ * @author Allard Buijze
+ * @since axon-3.2
+ */
+public class ReplayParameterResolverFactory implements ParameterResolverFactory {
+
+    @Override
+    public ParameterResolver createInstance(Executable executable, Parameter[] parameters, int parameterIndex) {
+        if (ReplayStatus.class.isAssignableFrom(parameters[parameterIndex].getType())) {
+            return new ReplayParameterResolver();
+        }
+        return null;
+    }
+
+    private class ReplayParameterResolver implements ParameterResolver {
+
+        @Override
+        public Object resolveParameterValue(Message message) {
+            return ReplayToken.isReplay(message) ? ReplayStatus.REPLAY : ReplayStatus.REGULAR;
+        }
+
+        @Override
+        public boolean matches(Message message) {
+            return true;
+        }
+    }
+}

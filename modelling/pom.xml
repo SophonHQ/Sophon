@@ -197,7 +197,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>org.axonframework.modelling</Automatic-Module-Name>
+                            <Automatic-Module-Name>io.github.sophonhq.sophon.modelling</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -221,7 +221,7 @@
                         <Bundle-Description>${project.description}</Bundle-Description>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>
-                            org.axonframework.modelling.*
+                            io.github.sophonhq.sophon.modelling.*
                         </Export-Package>
                         <Import-Package>
                             org.slf4j.*,

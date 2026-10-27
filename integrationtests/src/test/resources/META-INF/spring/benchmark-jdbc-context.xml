@@ -21,7 +21,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="eventStoreBenchMark"
-          class="org.axonframework.integrationtests.eventsourcing.eventstore.benchmark.jdbc.JdbcEventStoreBenchmark">
+          class="io.github.sophonhq.sophon.integrationtests.eventsourcing.eventstore.benchmark.jdbc.JdbcEventStoreBenchmark">
         <constructor-arg index="0" ref="dataSource"/>
         <constructor-arg index="1" ref="transactionManager"/>
     </bean>

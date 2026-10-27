@@ -248,7 +248,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Automatic-Module-Name>org.axonframework.springboot</Automatic-Module-Name>
+                            <Automatic-Module-Name>io.github.sophonhq.sophon.springboot</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
