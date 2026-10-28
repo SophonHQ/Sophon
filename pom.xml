@@ -16,7 +16,9 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         child.project.url.inherit.append.path="false">
 
     <groupId>org.sophonhq.sophon</groupId>
     <artifactId>sophon</artifactId>
@@ -889,7 +891,9 @@
                         <configuration>
                             <doclint>none</doclint>
                             <legacyMode>true</legacyMode>
-                            <skippedModules>sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-3-integrationtests,sophon-spring-boot-4-integrationtests</skippedModules>
+                            <skippedModules>
+                                sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-3-integrationtests,sophon-spring-boot-4-integrationtests
+                            </skippedModules>
                             <!-- These parameters are in preparation for resolution of this issue: -->
                             <!-- https://bugs.openjdk.java.net/browse/JDK-8068562 -->
                             <tags>
@@ -945,7 +949,22 @@
         </profile>
     </profiles>
 
-    <scm>
+    <developers>
+        <developer>
+            <id>mjagus</id>
+            <name>Marcin Jaguś</name>
+            <organization>SophonHQ</organization>
+            <organizationUrl>https://github.com/SophonHQ</organizationUrl>
+            <roles>
+                <role>Maintainer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <scm child.scm.connection.inherit.append.path="false"
+         child.scm.developerConnection.inherit.append.path="false"
+         child.scm.url.inherit.append.path="false">
+
         <connection>scm:git:https://github.com/SophonHQ/Sophon.git</connection>
         <developerConnection>scm:git:git@github.com:SophonHQ/Sophon.git</developerConnection>
         <url>https://github.com/SophonHQ/Sophon</url>
