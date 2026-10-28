@@ -48,8 +48,7 @@ Review the result: the recipe cannot see everything, as described in the next se
 
 ## 2. Complete the migration manually
 
-* **`axon-bom`**: Sophon has no BOM yet. Remove the `axon-bom` import and give the Sophon dependencies an explicit
-  version.
+* **`axon-bom`**: replace the `org.axonframework:axon-bom` import with `org.sophonhq.sophon:sophon-bom`.
 * **Removed modules**: remove dependencies on `axon-server-connector`, `axon-legacy` and Axon Framework extensions, and
   any code using them, including exclusions of removed auto-configurations such as `AxonServerAutoConfiguration`.
 * **Property names in code**: property names that are not `${...}` placeholders, for example in
