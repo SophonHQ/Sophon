@@ -32,7 +32,7 @@
     </description>
 
     <properties>
-        <opentelemetry-sdk.test.version>1.52.0</opentelemetry-sdk.test.version>
+        <opentelemetry-sdk.test.version>1.67.0</opentelemetry-sdk.test.version>
     </properties>
 
     <dependencies>
