@@ -1,6 +1,7 @@
 # Documentation for Sophon
 
 This folder contains the Sophon documentation, written in AsciiDoc and built with [Antora](https://antora.org/).
+The documentation is published at [docs.sophonhq.org](https://docs.sophonhq.org).
 
 The following are the current documentation sources (folders):
 
@@ -20,6 +21,25 @@ The reference guide is derived from the Axon Framework 4 documentation.
 
 You are welcome to contribute to these docs. Whether you want to fix a typo, or you find something missing, unclear or
 open to improvement, please send a pull request to this repository.
+
+## Versions and publishing
+
+The site contains one version of the docs per branch:
+
+- `main` is published as the `development` version.
+- Each release line branch `sophon-x.y.x` is published as version `x.y`.
+
+`main`, and release lines that have no release yet (no `sophon-x.y.*` tag), are marked as prereleases by
+`_playbook/extensions/prerelease-by-branch.js`.
+The newest released version is the one the site opens on, and the only version included in search.
+
+The [documentation workflow](../.github/workflows/docs.yml) publishes the site to GitHub Pages:
+
+- on every push to `main` or a `sophon-*.*.x` branch that changes `docs/`,
+- when a GitHub release is published,
+- and when it is run manually.
+
+It always builds with the playbook on `main`, so changes to `_playbook` take effect once they are on `main`.
 
 ## Building and testing the docs locally
 

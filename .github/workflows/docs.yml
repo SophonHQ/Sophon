@@ -1,0 +1,86 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+      - sophon-*.*.x
+    paths:
+      - 'docs/**'
+  pull_request:
+    branches:
+      - main
+      - sophon-*.*.x
+    paths:
+      - 'docs/**'
+  # A release line becomes a released version once its first tag exists, see docs/_playbook/extensions
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          # Antora reads the other published branches from origin/* and the extension checks the release tags
+          fetch-depth: 0
+          # The tag of a release isn't a published branch, so the site is rebuilt from main
+          ref: ${{ github.event_name == 'release' && 'main' || '' }}
+
+      # A pull request is checked out as a detached HEAD, which Antora would publish as a version named "HEAD".
+      # Naming it after the target branch builds the pull request as the version it changes.
+      - name: Name the pull request after its target branch
+        if: github.event_name == 'pull_request'
+        run: git checkout -B "$GITHUB_BASE_REF"
+
+      # The site contains every published branch, so it is always built with the playbook of main
+      - name: Use the playbook of main
+        run: |
+          if [ "$(git branch --show-current)" != main ]; then
+            git restore --source origin/main -- docs/_playbook
+          fi
+
+      - name: Install Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Generate site
+        run: |
+          cd docs/_playbook/
+          npm ci
+          npx antora playbook.yaml
+
+      - name: Upload site
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs/_playbook/build/site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
