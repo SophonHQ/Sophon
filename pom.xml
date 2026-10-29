@@ -16,13 +16,11 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-         child.project.url.inherit.append.path="false">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" child.project.url.inherit.append.path="false">
 
     <groupId>org.sophonhq.sophon</groupId>
     <artifactId>sophon</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <modules>
         <module>bom</module>
         <module>disruptor</module>
@@ -963,13 +961,11 @@
         </developer>
     </developers>
 
-    <scm child.scm.connection.inherit.append.path="false"
-         child.scm.developerConnection.inherit.append.path="false"
-         child.scm.url.inherit.append.path="false">
+    <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
 
         <connection>scm:git:https://github.com/SophonHQ/Sophon.git</connection>
         <developerConnection>scm:git:git@github.com:SophonHQ/Sophon.git</developerConnection>
         <url>https://github.com/SophonHQ/Sophon</url>
-        <tag>HEAD</tag>
+        <tag>sophon-1.0.0</tag>
     </scm>
 </project>
