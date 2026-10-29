@@ -126,9 +126,9 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
         String payloadClass = serialized.getType().getName();
         String revision = serialized.getType().getRevision();
         if (isNull(revision)) {
-            job.withDetails(() -> publish(serializedPayload, payloadClass));
+            job.withJobLambda(() -> publish(serializedPayload, payloadClass));
         } else {
-            job.withDetails(() -> publishWithRevision(serializedPayload, payloadClass, revision));
+            job.withJobLambda(() -> publishWithRevision(serializedPayload, payloadClass, revision));
         }
     }
 
@@ -140,12 +140,12 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
         String revision = serialized.getType().getRevision();
         String serializedMetadata = serializer.serialize(eventMessage.getMetaData(), String.class).getData();
         if (isNull(revision)) {
-            job.withDetails(() -> publish(serializedPayload, payloadClass, serializedMetadata));
+            job.withJobLambda(() -> publish(serializedPayload, payloadClass, serializedMetadata));
         } else {
-            job.withDetails(() -> publishWithRevision(serializedPayload,
-                                                      payloadClass,
-                                                      revision,
-                                                      serializedMetadata));
+            job.withJobLambda(() -> publishWithRevision(serializedPayload,
+                                                        payloadClass,
+                                                        revision,
+                                                        serializedMetadata));
         }
     }
 
@@ -156,10 +156,9 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
 
     @Override
     public void cancelSchedule(ScheduleToken scheduleToken) {
-        if (!(scheduleToken instanceof JobRunrScheduleToken)) {
+        if (!(scheduleToken instanceof JobRunrScheduleToken reference)) {
             throw new IllegalArgumentException("The given ScheduleToken was not provided by this scheduler.");
         }
-        JobRunrScheduleToken reference = (JobRunrScheduleToken) scheduleToken;
         jobScheduler.delete(reference.getJobIdentifier(), "Deleted via Sophon EventScheduler API");
     }
 
@@ -355,7 +354,7 @@ public class JobRunrEventScheduler implements EventScheduler, Lifecycle {
          * Validates whether the fields contained in this Builder are set accordingly.
          *
          * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
-         *                                    specifications
+         *                                      specifications
          */
         protected void validate() throws SophonConfigurationException {
             assertNonNull(jobScheduler, "The JobScheduler is a hard requirement and should be provided.");

@@ -150,8 +150,8 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
                                        .withId(deadlineId)
                                        .withName(deadlineName)
                                        .withLabels(getLabel(deadlineName), combinedLabel)
-                                       .withDetails(() -> this.execute(serializedDeadlineDetails,
-                                                                       deadlineId.toString()))
+                                       .withJobLambda(() -> this.execute(serializedDeadlineDetails,
+                                                                         deadlineId.toString()))
                                        .scheduleAt(triggerDateTime);
             JobId id = jobScheduler.create(job);
             logger.debug("Job with id: [{}] was successfully created.", id);
@@ -334,8 +334,8 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
 
         /**
          * Sets the {@link Serializer} used to de-/serialize the {@code payload},
-         * {@link org.sophonhq.sophon.messaging.MetaData} and the {@link ScopeDescriptor} into the {@link DeadlineDetails}
-         * as well as the whole {@link DeadlineDetails} itself.
+         * {@link org.sophonhq.sophon.messaging.MetaData} and the {@link ScopeDescriptor} into the
+         * {@link DeadlineDetails} as well as the whole {@link DeadlineDetails} itself.
          *
          * @param serializer a {@link Serializer} used to de-/serialize the {@code payload},
          *                   {@link org.sophonhq.sophon.messaging.MetaData} and the {@link ScopeDescriptor} into the
@@ -404,7 +404,7 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
          * Validates whether the fields contained in this Builder are set accordingly.
          *
          * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
-         *                                    specifications
+         *                                      specifications
          */
         protected void validate() throws SophonConfigurationException {
             assertNonNull(scopeAwareProvider, "The ScopeAwareProvider is a hard requirement and should be provided.");

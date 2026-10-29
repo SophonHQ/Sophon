@@ -53,6 +53,8 @@ updates:
         versions: [ "[9.0.0,)" ]
       - dependency-name: "org.hibernate.orm:hibernate-core"
         versions: [ "[7.0.0,)" ]
+      - dependency-name: "org.jobrunr:jobrunr"
+        versions: [ "[8.0.0,)" ]
       - dependency-name: "org.mockito:*"
         versions: [ "[5.0.0,)" ]
       - dependency-name: "org.quartz-scheduler:quartz"
