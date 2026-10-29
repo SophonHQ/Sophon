@@ -1,5 +1,8 @@
 # Sophon
 
+[![Maven Central](https://img.shields.io/maven-central/v/org.sophonhq.sophon/sophon)](https://central.sonatype.com/artifact/org.sophonhq.sophon/sophon)
+[![Build Status](https://github.com/SophonHQ/Sophon/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/SophonHQ/Sophon/actions/workflows/main.yml)
+
 Sophon is a Java framework for building monoliths and microservices alike using tactical DDD, CQRS, and Event Sourcing.
 
 This project is a fork of Axon Framework 4, originally developed by AxonIQ B.V. and contributors. Not affiliated
