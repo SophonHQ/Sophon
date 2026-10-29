@@ -16,7 +16,10 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" child.project.url.inherit.append.path="false">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         child.project.url.inherit.append.path="false">
 
     <groupId>org.sophonhq.sophon</groupId>
     <artifactId>sophon</artifactId>
@@ -90,7 +93,8 @@
         <jakarta.el-impl.version>4.0.2</jakarta.el-impl.version>
         <jakarta.inject.version>2.0.1.MR</jakarta.inject.version>
         <jakarta.persistence.version>3.2.0</jakarta.persistence.version><!-- Don't upgrade due to JDK8 -->
-        <jakarta.persistence.with11.version>3.2.0</jakarta.persistence.with11.version><!-- Don't upgrade due to JDK11 -->
+        <jakarta.persistence.with11.version>3.2.0
+        </jakarta.persistence.with11.version><!-- Don't upgrade due to JDK11 -->
         <jakarta.validation.version>3.1.1</jakarta.validation.version>
         <!-- Javax -->
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
@@ -126,7 +130,7 @@
         <xstream.version>1.4.21</xstream.version>
         <!-- Scheduling -->
         <db-scheduler.version>16.12.0</db-scheduler.version>
-        <jobrunr.version>9.0.2</jobrunr.version>
+        <jobrunr.version>8.8.2</jobrunr.version>
         <quartz.version>2.4.1</quartz.version>
         <!-- Spring -->
         <spring.version>5.3.39</spring.version>
@@ -961,7 +965,9 @@
         </developer>
     </developers>
 
-    <scm child.scm.connection.inherit.append.path="false" child.scm.developerConnection.inherit.append.path="false" child.scm.url.inherit.append.path="false">
+    <scm child.scm.connection.inherit.append.path="false"
+         child.scm.developerConnection.inherit.append.path="false"
+         child.scm.url.inherit.append.path="false">
 
         <connection>scm:git:https://github.com/SophonHQ/Sophon.git</connection>
         <developerConnection>scm:git:git@github.com:SophonHQ/Sophon.git</developerConnection>
