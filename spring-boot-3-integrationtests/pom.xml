@@ -40,7 +40,7 @@
         <!-- Scheduling -->
         <jobrunr.version>9.0.2</jobrunr.version>
         <!-- Build / Plugin -->
-        <jacoco-maven.version>0.8.15</jacoco-maven.version>
+        <jacoco-maven.version>0.8.16</jacoco-maven.version>
         <maven-compiler.version>3.16.0</maven-compiler.version>
         <maven-surefire.version>3.6.1</maven-surefire.version>
     </properties>
