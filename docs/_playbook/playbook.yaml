@@ -1,11 +1,14 @@
 site:
-  title: Sophon docs PREVIEW
+  title: Sophon
+  url: https://docs.sophonhq.org
   start_page: sophon-reference::index.adoc
 
 content:
   sources:
   - url: ../..
-    start_paths: ['docs/*', '!docs/_*', '!docs/reference/*']
+    # the checked-out branch (read from the worktree), main as the development version, and every release line
+    branches: [HEAD, main, 'sophon-*.*.x']
+    start_paths: ['docs/*', '!docs/_*']
 
 asciidoc:
   attributes:
@@ -18,6 +21,8 @@ asciidoc:
 
 antora:
   extensions:
+  - id: prerelease-by-branch
+    require: ./extensions/prerelease-by-branch.js
   - id: lunr
     require: '@antora/lunr-extension'
     enabled: true

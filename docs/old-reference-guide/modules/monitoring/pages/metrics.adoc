@@ -27,7 +27,7 @@ The following example shows you how to configure default metrics for your messag
 
 == Dropwizard
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 [source,java]
 ----
@@ -46,7 +46,7 @@ public class MetricsConfiguration {
 }
 ----
 
-==== Spring Boot auto configuration
+=== Spring Boot auto configuration
 
 [source,text]
 ----
@@ -56,7 +56,7 @@ sophon.metrics.auto-configuration.enabled=true
 
 == Micrometer
 
-==== Sophon Configuration API - without tags
+=== Sophon Configuration API - without tags
 
 [source,java]
 ----
@@ -74,7 +74,7 @@ public class MetricsConfiguration {
 }
 ----
 
-==== Sophon Configuration API - with tags
+=== Sophon Configuration API - with tags
 
 [source,java]
 ----
@@ -92,7 +92,7 @@ public class MetricsConfiguration {
 }
 ----
 
-==== Spring Boot auto configuration - without tags
+=== Spring Boot auto configuration - without tags
 
 [source,properties]
 ----
@@ -109,7 +109,7 @@ management.metrics.export.prometheus.enabled=true
 management.endpoint.prometheus.enabled=true
 ----
 
-==== Spring Boot auto configuration - with tags
+=== Spring Boot auto configuration - with tags
 
 [source,properties]
 ----

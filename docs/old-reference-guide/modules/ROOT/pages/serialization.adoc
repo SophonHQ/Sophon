@@ -76,7 +76,7 @@ In turn, if no message `Serializer` is configured, the default `Serializer` will
 
 See the following example on how to configure each serializer specifically, were we use the `XStreamSerializer` as the default and the `JacksonSerializer` for all our messages:
 
-==== Sophon Configuration API using XStream/JacksonSerializer
+=== Sophon Configuration API using XStream/JacksonSerializer
 
 [source,java]
 ----
@@ -100,7 +100,7 @@ public class SerializerConfiguration {
 }
 ----
 
-==== Sophon Configuration API using XStream/AvroSerializer
+=== Sophon Configuration API using XStream/AvroSerializer
 
 
 [source,java]
@@ -128,7 +128,7 @@ public class SerializerConfiguration {
 }
 ----
 
-===== Spring Boot - configuration class using XStream/JacksonSerializer
+==== Spring Boot - configuration class using XStream/JacksonSerializer
 
 [source,java]
 ----
@@ -154,7 +154,7 @@ public class SerializerConfiguration {
 }
 ----
 
-===== Spring Boot - configuration class using XStream/AvroSerializer
+==== Spring Boot - configuration class using XStream/AvroSerializer
 
 [source,java]
 ----
@@ -184,7 +184,7 @@ public class SerializerConfiguration {
 ----
 
 
-===== Spring Boot - properties file
+==== Spring Boot - properties file
 
 [source,text]
 ----
@@ -194,7 +194,7 @@ sophon.serializer.events
 sophon.serializer.messages
 ----
 
-===== Spring Boot - YAML file
+==== Spring Boot - YAML file
 
 [source,yaml]
 ----

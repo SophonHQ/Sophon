@@ -286,7 +286,7 @@ They will help you get the most out of your caching solution:
 
 To configure a cache for your Aggregates, consider the following snippet:
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 [source,java]
 ----
@@ -302,7 +302,7 @@ public class SophonConfig {
 }
 ----
 
-==== Spring Boot auto configuration
+=== Spring Boot auto configuration
 The `Aggregate` annotation allows specification of the cache bean:
 
 [source,java]

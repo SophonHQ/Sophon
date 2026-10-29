@@ -24,7 +24,7 @@ The following standards are currently supported:
 
 You configure a `SpanFactory` in the following ways:
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 [source,java]
 ----
@@ -37,7 +37,7 @@ public class SophonConfig {
 
 ----
 
-==== Spring Boot auto configuration
+=== Spring Boot auto configuration
 
 [source,java]
 ----
@@ -325,7 +325,7 @@ There are three common ways to put an OpenTelemetry SDK in place. They all work 
 
 To get OpenTelemetry support enabled you will need to add the following dependency to your application's dependencies:
 
-===== Maven
+==== Maven
 
 [source,xml  ]
 ----
@@ -336,7 +336,7 @@ To get OpenTelemetry support enabled you will need to add the following dependen
 </dependency>
 ----
 
-===== Gradle
+==== Gradle
 
 [source,gradle]
 ----
@@ -404,7 +404,7 @@ For this purpose, the framework provides a `LoggingSpanFactory`.
 
 You can configure the `LoggingSpanFactory` in the following ways:
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 [source,java]
 ----
@@ -416,7 +416,7 @@ public class SophonConfig {
 }
 ----
 
-==== Spring Boot auto configuration
+=== Spring Boot auto configuration
 
 [source,java]
 ----

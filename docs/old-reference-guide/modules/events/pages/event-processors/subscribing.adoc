@@ -38,7 +38,7 @@ ____
 Other than configuring that an app uses a Subscribing Event Processor, everything is covered xref:event-processors/index.adoc#general_processor_configuration[here].
 Firstly, to specify that a new Event Processors should default to a `SubscribingEventProcessor`, you can use the `usingSubscribingEventProcessors` method:
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 [source,java]
 ----
@@ -50,7 +50,7 @@ public class SophonConfig {
 }
 ----
 
-==== Spring Boot auto configuration
+=== Spring Boot auto configuration
 
 [source,java]
 ----
@@ -68,7 +68,7 @@ public class SophonConfig {
 
 For a specific Event Processor to be a Subscribing instance, `registerSubscribingEventProcessor` is used:
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 [source,java]
 ----
@@ -83,7 +83,7 @@ public class SophonConfig {
 }
 ----
 
-==== Spring Boot auto configuration - Java
+=== Spring Boot auto configuration - Java
 
 [source,java]
 ----
@@ -105,7 +105,7 @@ public class SophonConfig {
 }
 ----
 
-==== Spring Boot auto configuration - Properties file
+=== Spring Boot auto configuration - Properties file
 
 A properties file allows the configuration of some fields on an Event Processor.
 Do note that the Java configuration provides more degrees of freedom.
