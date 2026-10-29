@@ -10,7 +10,7 @@ Sophon supports life cycle management through the `AnnotatedSagaManager`, which 
 
 When using the Configuration API, Sophon will use sensible defaults for most components. However, it is highly recommended to define a `SagaStore` implementation to use. The `SagaStore` is the mechanism that 'physically' stores the saga instances somewhere. The `AnnotatedSagaRepository` (the default) uses the `SagaStore` to store and retrieve Saga instances as they are required.
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 [source,java]
 ----

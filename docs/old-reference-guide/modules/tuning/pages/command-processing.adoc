@@ -10,7 +10,7 @@ How a Sophon application reacts to such a duplicate registration is defined by t
 
 To configure the used `DuplicateCommandHandlerResolver` it is suggested to use the `DuplicateCommandHandlerResolution`, as this class gives a handle to all provided implementations. To configure the duplicate resolver to, for example, throw a `DuplicateCommandHandlerSubscriptionException` as a warning, the following approach can be taken:
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 Somewhere in a configuration class:
 

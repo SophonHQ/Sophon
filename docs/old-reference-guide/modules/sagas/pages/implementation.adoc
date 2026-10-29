@@ -126,7 +126,7 @@ ____
 Internally, Sophon uses a `SagaConfigurer` to construct the Saga, Saga Manager, Saga Repository and Saga Store.
 A default configuration for a Saga called `MySaga` would look as follows:
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 As a specific type of event handler, registering a Saga is done through the `EventProcessingConfigurer`:
 
@@ -159,7 +159,7 @@ The `SagaStore` represents the mechanism that 'physically' stores the Saga insta
 If no `SagaStore` is configured Sophon defaults an `InMemorySagaStore`, thus not persisting the Saga on shutdown.
 To configure a `SagaStore` for `MySaga` consider the following snippet:
 
-==== Sophon Configuration API
+=== Sophon Configuration API
 
 To define a custom `SagaStore`, the `SagaConfigurer` should be used through the `EventProcessingConfigurer#registerSaga(Class&lt;T&gt;, Consumer&lt;SagaConfigurer&lt;T&gt;&gt;)` method:
 
