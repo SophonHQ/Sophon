@@ -29,6 +29,11 @@ modifications included:
 3. Migrated from jsr305 and JetBrains annotations to JSpecify
 4. `legacy` module deleted
 
+## Documentation
+
+The reference guide is published at [docs.sophonhq.org](https://docs.sophonhq.org).
+Their sources are in the [docs](docs/README.md) folder.
+
 ## Feature requests and issue reporting
 
 Use GitHub's [issue tracking system](https://github.com/SophonHQ/Sophon/issues) for new feature requests, enhancements,
