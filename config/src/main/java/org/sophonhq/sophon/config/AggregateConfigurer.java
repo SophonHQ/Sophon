@@ -40,11 +40,11 @@ import org.sophonhq.sophon.eventsourcing.snapshotting.SnapshotFilter;
 import org.sophonhq.sophon.lifecycle.Phase;
 import org.sophonhq.sophon.messaging.Distributed;
 import org.sophonhq.sophon.modelling.command.AggregateAnnotationCommandHandler;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifierConverter;
 import org.sophonhq.sophon.modelling.command.AnnotationCommandTargetResolver;
 import org.sophonhq.sophon.modelling.command.CommandTargetResolver;
 import org.sophonhq.sophon.modelling.command.CreationPolicyAggregateFactory;
 import org.sophonhq.sophon.modelling.command.GenericJpaRepository;
-import org.sophonhq.sophon.modelling.command.NoArgumentConstructorCreationPolicyAggregateFactory;
 import org.sophonhq.sophon.modelling.command.Repository;
 import org.sophonhq.sophon.modelling.command.RepositorySpanFactory;
 import org.sophonhq.sophon.modelling.command.inspection.AggregateMetaModelFactory;
@@ -65,8 +65,8 @@ import static java.lang.String.format;
 import static org.sophonhq.sophon.common.Assert.state;
 
 /**
- * Sophon Configuration API extension that allows the definition of an Aggregate. This component will automatically set up
- * all components required for the Aggregate to operate.
+ * Sophon Configuration API extension that allows the definition of an Aggregate. This component will automatically set
+ * up all components required for the Aggregate to operate.
  *
  * @param <A> the type of Aggregate configured
  * @author Allard Buijze
@@ -114,6 +114,9 @@ public class AggregateConfigurer<A> implements AggregateConfiguration<A> {
      * The EntityManagerProvider is expected to have been registered with the Configurer (which would be the case when
      * using {@link DefaultConfigurer#jpaConfiguration(EntityManagerProvider)}. If that is not the case, consider using
      * {@link #jpaMappedConfiguration(Class, EntityManagerProvider)} instead.
+     * <p>
+     * Aggregate identifiers are converted with the {@link AggregateIdentifierConverter} registered with the Configurer,
+     * if any. This is required for aggregates whose JPA identifier is not a {@code String}.
      *
      * @param aggregateType The type of Aggregate to configure
      * @param <A>           The type of Aggregate to configure
@@ -139,6 +142,10 @@ public class AggregateConfigurer<A> implements AggregateConfiguration<A> {
                                                .aggregateModel(configurer.metaModel.get())
                                                .lockFactory(configurer.lockFactory.get())
                                                .entityManagerProvider(entityManagerProvider)
+                                               .identifierConverter(c.getComponent(
+                                                       AggregateIdentifierConverter.class,
+                                                       AggregateIdentifierConverter::identity
+                                               ).forAggregateType(aggregateType))
                                                .eventBus(c.eventBus())
                                                .repositoryProvider(c::repository)
                                                .spanFactory(c.getComponent(RepositorySpanFactory.class))
@@ -150,6 +157,9 @@ public class AggregateConfigurer<A> implements AggregateConfiguration<A> {
      * Creates a Configuration for an aggregate of given {@code aggregateType}, which is mapped to a relational database
      * using an EntityManager provided by given {@code entityManagerProvider}. The given {@code aggregateType} is
      * expected to be a proper JPA Entity.
+     * <p>
+     * Aggregate identifiers are converted with the {@link AggregateIdentifierConverter} registered with the Configurer,
+     * if any. This is required for aggregates whose JPA identifier is not a {@code String}.
      *
      * @param aggregateType         The type of Aggregate to configure
      * @param entityManagerProvider The provider for Sophon to retrieve the EntityManager from
@@ -165,6 +175,10 @@ public class AggregateConfigurer<A> implements AggregateConfiguration<A> {
                                          .aggregateModel(configurer.metaModel.get())
                                          .lockFactory(configurer.lockFactory.get())
                                          .entityManagerProvider(entityManagerProvider)
+                                         .identifierConverter(c.getComponent(
+                                                 AggregateIdentifierConverter.class,
+                                                 AggregateIdentifierConverter::identity
+                                         ).forAggregateType(aggregateType))
                                          .eventBus(c.eventBus())
                                          .repositoryProvider(c::repository)
                                          .spanFactory(c.getComponent(RepositorySpanFactory.class))

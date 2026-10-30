@@ -86,6 +86,7 @@ This identifier must be initialized at the latest when the first event is publis
 This identifier field must be annotated by the `@AggregateIdentifier` annotation.
 When using JPA to store the Aggregate, Sophon knows to use the `@Id` annotation provided by JPA.
 Since the Aggregate is an entity, the `@Id` annotation is a hard requirement.
+If the `@Id` is not a `String`, see xref:configuration.adoc#standard-repositories[Standard repositories] on how to convert the identifier.
 
 <3> This Aggregate has several 'xref:modeling/multi-entity-aggregates.adoc[Aggregate Members]'.
 Since the Aggregate is stored as is, the correct mapping of the entities should be taken into account.

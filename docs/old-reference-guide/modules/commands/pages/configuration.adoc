@@ -179,6 +179,39 @@ Standard repositories store the actual state of an aggregate. Upon each change, 
 
 Sophon provides one out-of-the-box implementation for a standard Repository: the `GenericJpaRepository`. It expects the Aggregate to be a valid JPA Entity. It is configured with an `EntityManagerProvider` which provides the `EntityManager` to manage the actual persistence, and a class specifying the actual type of aggregate stored in the repository. You also pass in the `EventBus` to which events are to be published when the aggregate invokes the static `AggregateLifecycle.apply()` method.
 
+A `GenericJpaRepository` receives aggregate identifiers as ``String``s. When Sophon configures the repository for you, either through `AggregateConfigurer.jpaMappedConfiguration(...)` or for an `@Aggregate` that is also an `@Entity` in Spring Boot, you can provide an `AggregateIdentifierConverter` to turn that `String` back into the type of the aggregate's `@Id`, such as a `UUID`, a `Long` or a value object. The converter receives the aggregate type, so a single converter can serve aggregates with different identifier types. Without a converter, the `String` identifier is used as is.
+
+[tabs]
+====
+Configuration API::
++
+--
+[source,java]
+----
+Configurer configurer = DefaultConfigurer.jpaConfiguration(entityManagerProvider)
+        .registerComponent(AggregateIdentifierConverter.class,
+                           c -> (aggregateType, id) -> UUID.fromString(id))
+        .configureAggregate(AggregateConfigurer.jpaMappedConfiguration(GiftCard.class));
+----
+--
+
+Spring Boot::
++
+--
+Define the converter as a bean. If more than one `AggregateIdentifierConverter` bean is defined, mark one of them as `@Primary`.
+
+[source,java]
+----
+@Bean
+public AggregateIdentifierConverter aggregateIdentifierConverter() {
+    return (aggregateType, id) -> aggregateType == GiftCard.class ? UUID.fromString(id) : id;
+}
+----
+--
+====
+
+The converter is not applied to a repository you define yourself. In that case, set it through `GenericJpaRepository.Builder#identifierConverter(...)`.
+
 You can also easily implement your own repository. In that case, it is best to extend from the abstract `LockingRepository`. As aggregate wrapper type, it is recommended to use the `AnnotatedAggregate`. See the sources of `GenericJpaRepository` for an example.
 
 [[event-sourcing-repositories]]

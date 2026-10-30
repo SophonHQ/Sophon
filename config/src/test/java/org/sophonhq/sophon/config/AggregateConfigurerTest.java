@@ -19,6 +19,7 @@ package org.sophonhq.sophon.config;
 
 import com.thoughtworks.xstream.XStream;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.LockModeType;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
@@ -45,6 +46,7 @@ import org.sophonhq.sophon.messaging.annotation.AnnotatedMessageHandlingMemberDe
 import org.sophonhq.sophon.messaging.annotation.ParameterResolverFactory;
 import org.sophonhq.sophon.modelling.command.AggregateCreationPolicy;
 import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifierConverter;
 import org.sophonhq.sophon.modelling.command.CreationPolicy;
 import org.sophonhq.sophon.modelling.command.CreationPolicyAggregateFactory;
 import org.sophonhq.sophon.modelling.command.Repository;
@@ -74,6 +76,11 @@ import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
  * @author Steven van Beelen
  */
 public class AggregateConfigurerTest {
+
+    private static final AggregateIdentifierConverter LONG_IDENTIFIER_CONVERTER =
+            (aggregateType, aggregateIdentifier) -> aggregateType == LongIdentifiedAggregate.class
+                    ? Long.valueOf(aggregateIdentifier)
+                    : aggregateIdentifier;
 
     private Configuration mockConfiguration;
 
@@ -363,6 +370,79 @@ public class AggregateConfigurerTest {
     }
 
     @Test
+    void jpaMappedConfigurationConvertsIdentifierWithRegisteredAggregateIdentifierConverter() {
+        EntityManager entityManager = mock(EntityManager.class);
+        when(entityManager.find(LongIdentifiedAggregate.class, 42L, LockModeType.PESSIMISTIC_WRITE))
+                .thenReturn(new LongIdentifiedAggregate(42L));
+
+        Configuration config = DefaultConfigurer.defaultConfiguration()
+                                                .configureAggregate(AggregateConfigurer.jpaMappedConfiguration(
+                                                        LongIdentifiedAggregate.class
+                                                ))
+                                                .configureEmbeddedEventStore(c -> new InMemoryEventStorageEngine())
+                                                .registerComponent(
+                                                        EntityManagerProvider.class,
+                                                        c -> new SimpleEntityManagerProvider(entityManager)
+                                                )
+                                                .registerComponent(AggregateIdentifierConverter.class,
+                                                                   c -> LONG_IDENTIFIER_CONVERTER)
+                                                .start();
+
+        Long result = config.commandGateway().sendAndWait(new LoadLongIdentifiedAggregateCommand(42L));
+
+        assertEquals(42L, result);
+        verify(entityManager).find(LongIdentifiedAggregate.class, 42L, LockModeType.PESSIMISTIC_WRITE);
+
+        config.shutdown();
+    }
+
+    @Test
+    void jpaMappedConfigurationWithEntityManagerProviderConvertsIdentifierWithRegisteredAggregateIdentifierConverter() {
+        EntityManager entityManager = mock(EntityManager.class);
+        when(entityManager.find(LongIdentifiedAggregate.class, 42L, LockModeType.PESSIMISTIC_WRITE))
+                .thenReturn(new LongIdentifiedAggregate(42L));
+
+        Configuration config = DefaultConfigurer.defaultConfiguration()
+                                                .configureAggregate(AggregateConfigurer.jpaMappedConfiguration(
+                                                        LongIdentifiedAggregate.class,
+                                                        new SimpleEntityManagerProvider(entityManager)
+                                                ))
+                                                .configureEmbeddedEventStore(c -> new InMemoryEventStorageEngine())
+                                                .registerComponent(AggregateIdentifierConverter.class,
+                                                                   c -> LONG_IDENTIFIER_CONVERTER)
+                                                .start();
+
+        Long result = config.commandGateway().sendAndWait(new LoadLongIdentifiedAggregateCommand(42L));
+
+        assertEquals(42L, result);
+        verify(entityManager).find(LongIdentifiedAggregate.class, 42L, LockModeType.PESSIMISTIC_WRITE);
+
+        config.shutdown();
+    }
+
+    @Test
+    void jpaMappedConfigurationPassesIdentifierUnchangedWithoutAggregateIdentifierConverter() {
+        EntityManager entityManager = mock(EntityManager.class);
+        when(entityManager.find(LongIdentifiedAggregate.class, "42", LockModeType.PESSIMISTIC_WRITE))
+                .thenReturn(new LongIdentifiedAggregate(42L));
+
+        Configuration config = DefaultConfigurer.defaultConfiguration()
+                                                .configureAggregate(AggregateConfigurer.jpaMappedConfiguration(
+                                                        LongIdentifiedAggregate.class,
+                                                        new SimpleEntityManagerProvider(entityManager)
+                                                ))
+                                                .configureEmbeddedEventStore(c -> new InMemoryEventStorageEngine())
+                                                .start();
+
+        Long result = config.commandGateway().sendAndWait(new LoadLongIdentifiedAggregateCommand(42L));
+
+        assertEquals(42L, result);
+        verify(entityManager).find(LongIdentifiedAggregate.class, "42", LockModeType.PESSIMISTIC_WRITE);
+
+        config.shutdown();
+    }
+
+    @Test
     void nullRevisionEventAndNullRevisionAggregateAllowed() {
         DomainEventMessage<TestAggregate> snapshotEvent = new GenericDomainEventMessage<>(
                 TestAggregate.class.getSimpleName(), "some-aggregate-id", 0, new TestAggregate());
@@ -572,6 +652,35 @@ public class AggregateConfigurerTest {
         @CommandHandler
         public String handle(BSpecificCommand cmd) {
             return "bSpecific" + cmd.getId();
+        }
+    }
+
+    private static class LoadLongIdentifiedAggregateCommand {
+
+        @TargetAggregateIdentifier
+        private final Long id;
+
+        private LoadLongIdentifiedAggregateCommand(Long id) {
+            this.id = id;
+        }
+    }
+
+    private static class LongIdentifiedAggregate {
+
+        @AggregateIdentifier
+        private Long id;
+
+        LongIdentifiedAggregate() {
+            // No-op constructor
+        }
+
+        LongIdentifiedAggregate(Long id) {
+            this.id = id;
+        }
+
+        @CommandHandler
+        public Long handle(LoadLongIdentifiedAggregateCommand cmd) {
+            return id;
         }
     }
 }

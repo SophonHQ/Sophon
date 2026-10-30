@@ -29,6 +29,7 @@ import org.sophonhq.sophon.config.ConfigurerModule;
 import org.sophonhq.sophon.eventsourcing.AggregateFactory;
 import org.sophonhq.sophon.eventsourcing.SnapshotTriggerDefinition;
 import org.sophonhq.sophon.eventsourcing.snapshotting.SnapshotFilter;
+import org.sophonhq.sophon.modelling.command.AggregateIdentifierConverter;
 import org.sophonhq.sophon.modelling.command.CommandTargetResolver;
 import org.sophonhq.sophon.modelling.command.GenericJpaRepository;
 import org.sophonhq.sophon.modelling.command.Repository;
@@ -42,6 +43,10 @@ import java.util.Set;
 /**
  * A {@link ConfigurerModule} implementation that will configure an Aggregate with the Sophon {@link
  * org.sophonhq.sophon.config.Configuration}.
+ * <p>
+ * When no {@link Repository} is configured for an Aggregate that is a JPA entity, a {@link GenericJpaRepository} is
+ * configured for it. That repository converts aggregate identifiers with the {@link AggregateIdentifierConverter}
+ * bean, if one is defined.
  *
  * @param <T> The type of Aggregate to configure
  *
@@ -175,6 +180,10 @@ public class SpringAggregateConfigurer<T> implements ConfigurerModule, Applicati
                                                                                      LockFactory.class, () -> NullLockFactory.INSTANCE
                                                                              ))
                                                                              .entityManagerProvider(c.getComponent(EntityManagerProvider.class))
+                                                                             .identifierConverter(c.getComponent(
+                                                                                     AggregateIdentifierConverter.class,
+                                                                                     AggregateIdentifierConverter::identity
+                                                                             ).forAggregateType(aggregateType))
                                                                              .eventBus(c.eventBus())
                                                                              .repositoryProvider(c::repository)
                                                                              .spanFactory(c.getComponent(RepositorySpanFactory.class))
