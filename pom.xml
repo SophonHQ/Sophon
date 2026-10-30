@@ -20,7 +20,7 @@
 
     <groupId>org.sophonhq.sophon</groupId>
     <artifactId>sophon</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
     <modules>
         <module>bom</module>
         <module>disruptor</module>
@@ -967,6 +967,6 @@
         <connection>scm:git:https://github.com/SophonHQ/Sophon.git</connection>
         <developerConnection>scm:git:git@github.com:SophonHQ/Sophon.git</developerConnection>
         <url>https://github.com/SophonHQ/Sophon</url>
-        <tag>sophon-1.1.0</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>

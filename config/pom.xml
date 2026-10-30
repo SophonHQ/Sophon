@@ -21,7 +21,7 @@
     <parent>
         <artifactId>sophon</artifactId>
         <groupId>org.sophonhq.sophon</groupId>
-        <version>1.1.0</version>
+        <version>1.1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>sophon-configuration</artifactId>
