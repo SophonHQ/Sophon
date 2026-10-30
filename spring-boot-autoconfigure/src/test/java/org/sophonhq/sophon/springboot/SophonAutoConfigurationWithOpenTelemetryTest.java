@@ -26,6 +26,8 @@ import io.opentelemetry.context.propagation.ContextPropagators;
 import io.opentelemetry.context.propagation.TextMapPropagator;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
+import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
+import io.opentelemetry.sdk.trace.export.SpanExporter;
 import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.common.ReflectionUtils;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -62,9 +64,14 @@ class SophonAutoConfigurationWithOpenTelemetryTest {
     @Test
     void spanFactoryUsesSpringManagedOpenTelemetryWhenAvailable() {
         TextMapPropagator expectedPropagator = W3CTraceContextPropagator.getInstance();
+        SdkTracerProvider tracerProvider
+                = SdkTracerProvider.builder()
+                                   .addSpanProcessor(SimpleSpanProcessor.create(SpanExporter.composite()))
+                                   .build();
+
         //noinspection resource
         OpenTelemetry openTelemetry = OpenTelemetrySdk.builder()
-                                                      .setTracerProvider(SdkTracerProvider.builder().build())
+                                                      .setTracerProvider(tracerProvider)
                                                       .setPropagators(ContextPropagators.create(expectedPropagator))
                                                       .build();
         Tracer expectedTracer = openTelemetry.getTracer("Sophon-OpenTelemetry");
