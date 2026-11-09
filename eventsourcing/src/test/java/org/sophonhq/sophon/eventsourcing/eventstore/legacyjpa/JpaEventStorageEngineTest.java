@@ -200,7 +200,11 @@ class JpaEventStorageEngineTest
 
         int testBatchSize = 2;
         testSubject = createEngine(engineBuilder -> engineBuilder.batchSize(testBatchSize));
-        EmbeddedEventStore testEventStore = EmbeddedEventStore.builder().storageEngine(testSubject).build();
+
+        EmbeddedEventStore testEventStore = EmbeddedEventStore.builder()
+                                                              .storageEngine(testSubject)
+                                                              .optimizeEventConsumption(false)
+                                                              .build();
 
         testSubject.appendEvents(createEvent(AGGREGATE, 1, "Payload1"), createEvent(AGGREGATE, 2, "Payload2"));
         // Update events which will be part of the first batch to an unknown payload type

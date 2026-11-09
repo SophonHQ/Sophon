@@ -21,16 +21,21 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
 import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import org.sophonhq.sophon.common.jpa.SimpleEntityManagerProvider;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.common.transaction.Transaction;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
-import org.sophonhq.sophon.eventhandling.*;
+import org.sophonhq.sophon.eventhandling.DomainEventData;
+import org.sophonhq.sophon.eventhandling.DomainEventMessage;
+import org.sophonhq.sophon.eventhandling.EventData;
+import org.sophonhq.sophon.eventhandling.EventMessage;
+import org.sophonhq.sophon.eventhandling.GapAwareTrackingToken;
+import org.sophonhq.sophon.eventhandling.GenericEventMessage;
+import org.sophonhq.sophon.eventhandling.TrackedEventData;
+import org.sophonhq.sophon.eventhandling.TrackingEventStream;
 import org.sophonhq.sophon.eventsourcing.eventstore.BatchingEventStorageEngineTest;
 import org.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStore;
 import org.sophonhq.sophon.serialization.Serializer;
@@ -130,8 +135,8 @@ class JpaEventStorageEngineTest
         entityManager.createQuery("DELETE FROM DomainEventEntry dee WHERE dee.sequenceNumber < 0").executeUpdate();
 
         testSubject.fetchTrackedEvents(null, 100).stream()
-                .map(i -> (GapAwareTrackingToken) i.trackingToken())
-                .forEach(i -> assertTrue(!i.hasGaps() || i.getGaps().first() >= 5L));
+                   .map(i -> (GapAwareTrackingToken) i.trackingToken())
+                   .forEach(i -> assertTrue(!i.hasGaps() || i.getGaps().first() >= 5L));
     }
 
     @DirtiesContext
@@ -151,25 +156,25 @@ class JpaEventStorageEngineTest
 
         entityManager.clear();
         entityManager.createQuery(
-                        "DELETE FROM DomainEventEntry dee WHERE dee.aggregateIdentifier <> :aggregateIdentifier")
-                .setParameter("aggregateIdentifier", "aggregateId")
-                .executeUpdate();
+                             "DELETE FROM DomainEventEntry dee WHERE dee.aggregateIdentifier <> :aggregateIdentifier")
+                     .setParameter("aggregateIdentifier", "aggregateId")
+                     .executeUpdate();
 
         // some "magic" because sequences aren't reset between tests. Finding the sequence positions to use in assertions
         List<Long> sequences = entityManager.createQuery(
-                        "SELECT e.globalIndex FROM DomainEventEntry e WHERE e.aggregateIdentifier = :aggregateIdentifier",
-                        Long.class
-                )
-                .setParameter("aggregateIdentifier", "aggregateId").getResultList();
+                                                    "SELECT e.globalIndex FROM DomainEventEntry e WHERE e.aggregateIdentifier = :aggregateIdentifier",
+                                                    Long.class
+                                            )
+                                            .setParameter("aggregateIdentifier", "aggregateId").getResultList();
         Optional<Long> maxResult = sequences.stream().max(Long::compareTo);
         assertTrue(maxResult.isPresent());
         long largestIndex = maxResult.get();
         long secondLastEventIndex = largestIndex - 2;
         // create a lot of gaps most of them fake (< 0), but some of them real
         List<Long> gaps = LongStream.range(-50, largestIndex).boxed()
-                .filter(g -> !sequences.contains(g))
-                .filter(g -> g < secondLastEventIndex)
-                .collect(toList());
+                                    .filter(g -> !sequences.contains(g))
+                                    .filter(g -> g < secondLastEventIndex)
+                                    .collect(toList());
         List<? extends TrackedEventData<?>> events = testSubject.fetchTrackedEvents(
                 GapAwareTrackingToken.newInstance(secondLastEventIndex, gaps), 100
         );
@@ -188,7 +193,7 @@ class JpaEventStorageEngineTest
     void unknownSerializedTypeCausesException() {
         testSubject.appendEvents(createEvent());
         entityManager.createQuery("UPDATE DomainEventEntry e SET e.payloadType = :type").setParameter("type", "unknown")
-                .executeUpdate();
+                     .executeUpdate();
         DomainEventMessage<?> actual = testSubject.readEvents(AGGREGATE).peek();
         assertEquals(UnknownSerializedType.class, actual.getPayloadType());
     }
@@ -200,12 +205,12 @@ class JpaEventStorageEngineTest
         XStreamSerializer serializer = xStreamSerializer();
         JpaEventStorageEngine.Builder jpaEventStorageEngineBuilder =
                 JpaEventStorageEngine.builder()
-                        .snapshotSerializer(serializer)
-                        .persistenceExceptionResolver(defaultPersistenceExceptionResolver)
-                        .eventSerializer(serializer)
-                        .entityManagerProvider(entityManagerProvider)
-                        .transactionManager(NoTransactionManager.INSTANCE)
-                        .explicitFlush(false);
+                                     .snapshotSerializer(serializer)
+                                     .persistenceExceptionResolver(defaultPersistenceExceptionResolver)
+                                     .eventSerializer(serializer)
+                                     .entityManagerProvider(entityManagerProvider)
+                                     .transactionManager(NoTransactionManager.INSTANCE)
+                                     .explicitFlush(false);
         testSubject = new JpaEventStorageEngine(jpaEventStorageEngineBuilder) {
 
             @Override
@@ -247,19 +252,23 @@ class JpaEventStorageEngineTest
 
         int testBatchSize = 2;
         testSubject = createEngine(engineBuilder -> engineBuilder.batchSize(testBatchSize));
-        EmbeddedEventStore testEventStore = EmbeddedEventStore.builder().storageEngine(testSubject).build();
+
+        EmbeddedEventStore testEventStore = EmbeddedEventStore.builder()
+                                                              .storageEngine(testSubject)
+                                                              .optimizeEventConsumption(false)
+                                                              .build();
 
         testSubject.appendEvents(createEvent(AGGREGATE, 1, "Payload1"), createEvent(AGGREGATE, 2, "Payload2"));
         // Update events which will be part of the first batch to an unknown payload type
         entityManager.createQuery("UPDATE DomainEventEntry e SET e.payloadType = :type").setParameter("type", "unknown")
-                .executeUpdate();
+                     .executeUpdate();
         testSubject.appendEvents(createEvent(AGGREGATE, 3, expectedPayloadOne),
-                createEvent(AGGREGATE, 4, expectedPayloadTwo));
+                                 createEvent(AGGREGATE, 4, expectedPayloadTwo));
 
         List<String> eventStorageEngineResult = testSubject.readEvents(null, false)
-                .filter(m -> m.getPayload() instanceof String)
-                .map(m -> (String) m.getPayload())
-                .collect(toList());
+                                                           .filter(m -> m.getPayload() instanceof String)
+                                                           .map(m -> (String) m.getPayload())
+                                                           .collect(toList());
         assertEquals(Arrays.asList(expectedPayloadOne, expectedPayloadTwo), eventStorageEngineResult);
 
         TrackingEventStream eventStoreResult = testEventStore.openStream(null);
@@ -283,13 +292,13 @@ class JpaEventStorageEngineTest
     protected JpaEventStorageEngine createEngine(UnaryOperator<JpaEventStorageEngine.Builder> customization) {
         JpaEventStorageEngine.Builder engineBuilder =
                 JpaEventStorageEngine.builder()
-                        .upcasterChain(NoOpEventUpcaster.INSTANCE)
-                        .persistenceExceptionResolver(defaultPersistenceExceptionResolver)
-                        .batchSize(100)
-                        .entityManagerProvider(entityManagerProvider)
-                        .transactionManager(transactionManager)
-                        .eventSerializer(xStreamSerializer())
-                        .snapshotSerializer(xStreamSerializer());
+                                     .upcasterChain(NoOpEventUpcaster.INSTANCE)
+                                     .persistenceExceptionResolver(defaultPersistenceExceptionResolver)
+                                     .batchSize(100)
+                                     .entityManagerProvider(entityManagerProvider)
+                                     .transactionManager(transactionManager)
+                                     .eventSerializer(xStreamSerializer())
+                                     .snapshotSerializer(xStreamSerializer());
         return new JpaEventStorageEngine(customization.apply(engineBuilder));
     }
 
