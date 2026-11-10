@@ -41,9 +41,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -90,13 +87,11 @@ public class InMemoryEventStorageEngine implements EventStorageEngine {
     private void storeEvents(List<? extends EventMessage<?>> events) {
         synchronized (this.events) {
             GlobalSequenceTrackingToken trackingToken = nextTrackingToken();
-            this.events.putAll(
-                    IntStream.range(0, events.size())
-                             .mapToObj(i -> asTrackedEventMessage(
-                                     (EventMessage<?>) events.get(i), trackingToken.offsetBy(i)
-                             ))
-                             .collect(Collectors.toMap(TrackedEventMessage::trackingToken, Function.identity()))
-            );
+            for (int i = 0; i < events.size(); i++) {
+                TrackedEventMessage<?> trackedEvent =
+                        asTrackedEventMessage((EventMessage<?>) events.get(i), trackingToken.offsetBy(i));
+                this.events.put(trackedEvent.trackingToken(), trackedEvent);
+            }
         }
     }
 
@@ -144,7 +139,7 @@ public class InMemoryEventStorageEngine implements EventStorageEngine {
 
     @Override
     public TrackingToken createTailToken() {
-        if (events.size() == 0) {
+        if (events.isEmpty()) {
             return null;
         }
         GlobalSequenceTrackingToken firstToken = (GlobalSequenceTrackingToken) events.firstKey();
@@ -153,7 +148,7 @@ public class InMemoryEventStorageEngine implements EventStorageEngine {
 
     @Override
     public TrackingToken createHeadToken() {
-        if (events.size() == 0) {
+        if (events.isEmpty()) {
             return null;
         }
         return events.lastKey();

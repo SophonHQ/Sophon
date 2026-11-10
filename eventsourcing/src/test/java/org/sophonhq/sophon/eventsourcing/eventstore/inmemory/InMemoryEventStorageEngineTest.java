@@ -21,14 +21,20 @@ import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.eventhandling.TrackedEventMessage;
-import org.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStore;
+import org.sophonhq.sophon.eventhandling.TrackingToken;
 import org.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngineTest;
-import org.sophonhq.sophon.eventsourcing.eventstore.EventStore;
 import org.sophonhq.sophon.messaging.unitofwork.DefaultUnitOfWork;
 import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalLong;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -107,5 +113,42 @@ class InMemoryEventStorageEngineTest extends EventStorageEngineTest {
         // then there are *still* no events in the storage engine.
         eventStream = testSubject.readEvents(null, true);
         assertEquals(0L, eventStream.count());
+    }
+
+    @Test
+    void concurrentReaderDoesNotSkipEventsAppendedInBatches() throws InterruptedException {
+        int numberOfBatches = 500;
+        int batchSize = 10;
+        long lastPosition = (long) numberOfBatches * batchSize - 1;
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+        List<Long> readPositions = new ArrayList<>();
+
+        Thread reader = startReaderThread(lastPosition, deadline, readPositions);
+        for (int batch = 0; batch < numberOfBatches; batch++) {
+            testSubject.appendEvents(IntStream.range(0, batchSize)
+                                              .mapToObj(i -> GenericEventMessage.asEventMessage("event-" + i))
+                                              .collect(Collectors.toList()));
+        }
+        reader.join();
+
+        List<Long> expectedPositions = LongStream.rangeClosed(0, lastPosition).boxed().collect(Collectors.toList());
+        assertEquals(expectedPositions, readPositions);
+    }
+
+    private Thread startReaderThread(long lastPosition, long deadline, List<Long> readPositions) {
+        Thread reader = new Thread(() -> {
+            TrackingToken lastToken = null;
+            while ((lastToken == null || lastToken.position().orElse(-1) < lastPosition)
+                    && System.nanoTime() < deadline) {
+                Iterator<? extends TrackedEventMessage<?>> events =
+                        testSubject.readEvents(lastToken, false).iterator();
+                while (events.hasNext()) {
+                    lastToken = events.next().trackingToken();
+                    readPositions.add(lastToken.position().orElse(-1));
+                }
+            }
+        });
+        reader.start();
+        return reader;
     }
 }
