@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
-import org.hsqldb.jdbc.JDBCDataSource;
+import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.common.IdentifierFactory;
 import org.sophonhq.sophon.common.SophonConfigurationException;
@@ -83,8 +83,8 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
     }
 
     private DataSource dataSource() {
-        JDBCDataSource dataSource = new JDBCDataSource();
-        dataSource.setUrl("jdbc:hsqldb:mem:sophontest");
+        JdbcDataSource dataSource = new JdbcDataSource();
+        dataSource.setURL("jdbc:h2:mem:sophontest;DB_CLOSE_DELAY=-1");
         dataSource.setUser("sa");
         dataSource.setPassword("");
         return dataSource;

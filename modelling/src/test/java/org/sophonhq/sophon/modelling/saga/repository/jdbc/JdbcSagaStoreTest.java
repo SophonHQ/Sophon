@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.modelling.saga.repository.jdbc;
 
-import org.hsqldb.jdbc.JDBCDataSource;
+import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.modelling.saga.AssociationValue;
 import org.sophonhq.sophon.modelling.saga.AssociationValues;
@@ -32,7 +32,6 @@ import java.util.Set;
 
 import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * Test class validating the {@link JdbcSagaStore}.
@@ -45,22 +44,21 @@ class JdbcSagaStoreTest {
 
     private JdbcSagaStore testSubject;
 
-    private JDBCDataSource dataSource;
+    private JdbcDataSource dataSource;
 
     @BeforeEach
     void setUp() throws SQLException {
-        dataSource = spy(new JDBCDataSource());
-        dataSource.setUrl("jdbc:hsqldb:mem:test");
+        dataSource = new JdbcDataSource();
+        dataSource.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+        dataSource.setUser("sa");
 
         connection = dataSource.getConnection();
         testSubject = JdbcSagaStore.builder()
                                    .dataSource(dataSource)
-                                   .sqlSchema(new HsqlSagaSqlSchema())
+                                   .sqlSchema(new GenericSagaSqlSchema())
                                    .serializer(TestSerializer.xStreamSerializer())
                                    .build();
         testSubject.createSchema();
-
-        reset(dataSource);
     }
 
     @AfterEach

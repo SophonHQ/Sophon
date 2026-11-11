@@ -19,6 +19,7 @@ package org.sophonhq.sophon.spring.jdbc;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
+import org.mockito.*;
 import org.sophonhq.sophon.common.jdbc.ConnectionProvider;
 import org.sophonhq.sophon.common.jdbc.UnitOfWorkAwareConnectionProviderWrapper;
 import org.sophonhq.sophon.common.transaction.Transaction;
@@ -102,7 +103,9 @@ class SpringDataSourceConnectionProviderTest {
         verify(mockConnection, never()).commit();
 
         uow.commit();
-        verify(mockConnection).commit();
+        InOrder inOrder = inOrder(mockConnection);
+        inOrder.verify(mockConnection).commit();
+        inOrder.verify(mockConnection).setAutoCommit(true);
     }
 
     @Configuration
@@ -111,10 +114,10 @@ class SpringDataSourceConnectionProviderTest {
         @Bean
         public DataSource dataSource() {
             DriverManagerDataSource dataSource = new DriverManagerDataSource();
-            dataSource.setUrl("jdbc:hsqldb:mem:sophontest");
+            dataSource.setUrl("jdbc:h2:mem:sophontest;DB_CLOSE_DELAY=-1");
             dataSource.setUsername("sa");
             dataSource.setPassword("");
-            dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
+            dataSource.setDriverClassName("org.h2.Driver");
             return spy(dataSource);
         }
 

@@ -48,7 +48,6 @@ import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -229,14 +228,11 @@ class JpaStorageEngineInsertionReadOrderTest {
         @Bean
         public ComboPooledDataSource dataSource() throws PropertyVetoException {
             ComboPooledDataSource dataSource = new ComboPooledDataSource();
-            dataSource.setDriverClass("org.hsqldb.jdbcDriver");
-            dataSource.setJdbcUrl("jdbc:hsqldb:mem:sophontest");
+            dataSource.setDriverClass("org.h2.Driver");
+            dataSource.setJdbcUrl("jdbc:h2:mem:sophontest;DB_CLOSE_DELAY=-1");
             dataSource.setUser("sa");
             dataSource.setMaxPoolSize(50);
             dataSource.setMinPoolSize(1);
-            Properties dataSourceProperties = new Properties();
-            dataSourceProperties.setProperty("hsqldb.log_size", "0");
-            dataSource.setProperties(dataSourceProperties);
             return dataSource;
         }
 
@@ -246,7 +242,7 @@ class JpaStorageEngineInsertionReadOrderTest {
             entityManagerFactory.setPersistenceUnitName("SophonSpringTest");
 
             HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-            vendorAdapter.setDatabasePlatform("org.hibernate.dialect.HSQLDialect");
+            vendorAdapter.setDatabasePlatform("org.hibernate.dialect.H2Dialect");
             vendorAdapter.setShowSql(false);
             entityManagerFactory.setJpaVendorAdapter(vendorAdapter);
 

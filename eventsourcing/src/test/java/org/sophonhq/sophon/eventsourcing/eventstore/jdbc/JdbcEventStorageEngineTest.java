@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventsourcing.eventstore.jdbc;
 
-import org.hsqldb.jdbc.JDBCDataSource;
+import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
@@ -78,15 +78,16 @@ import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.create
 class JdbcEventStorageEngineTest
         extends BatchingEventStorageEngineTest<JdbcEventStorageEngine, JdbcEventStorageEngine.Builder> {
 
-    private JDBCDataSource dataSource;
+    private JdbcDataSource dataSource;
     private PersistenceExceptionResolver defaultPersistenceExceptionResolver;
     private JdbcEventStorageEngine testSubject;
     private ReadEventDataForAggregateStatementBuilder readForAggregateStatementBuilder;
 
     @BeforeEach
     void setUp() throws SQLException {
-        dataSource = new JDBCDataSource();
-        dataSource.setUrl("jdbc:hsqldb:mem:test");
+        dataSource = new JdbcDataSource();
+        dataSource.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+        dataSource.setUser("sa");
         defaultPersistenceExceptionResolver = new SQLErrorCodesResolver(dataSource);
         //noinspection Convert2Lambda,Anonymous2MethodRef
         readForAggregateStatementBuilder = spy(new ReadEventDataForAggregateStatementBuilder() {
@@ -142,7 +143,7 @@ class JdbcEventStorageEngineTest
                                             .build();
         setTestSubject(testSubject = createEngine(
                 engineBuilder -> engineBuilder.schema(testSchema).dataType(String.class),
-                new HsqlEventTableFactory() {
+                new H2EventTableFactory() {
                     @Override
                     protected String payloadType() {
                         return "LONGVARCHAR";
@@ -156,7 +157,7 @@ class JdbcEventStorageEngineTest
     @Test
     @DirtiesContext
     void customSchemaConfigTimestampColumn() {
-        setTestSubject(testSubject = createTimestampEngine(new HsqlEventTableFactory() {
+        setTestSubject(testSubject = createTimestampEngine(new H2EventTableFactory() {
             @Override
             protected String timestampType() {
                 return "timestamp";
@@ -279,7 +280,7 @@ class JdbcEventStorageEngineTest
             Connection connection = dataSource.getConnection();
             connection.prepareStatement("DROP TABLE IF EXISTS DomainEventEntry").executeUpdate();
             connection.prepareStatement("DROP TABLE IF EXISTS SnapshotEventEntry").executeUpdate();
-            testSubject.createSchema(HsqlEventTableFactory.INSTANCE);
+            testSubject.createSchema(H2EventTableFactory.INSTANCE);
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
@@ -429,7 +430,7 @@ class JdbcEventStorageEngineTest
 
     @Override
     protected JdbcEventStorageEngine createEngine(UnaryOperator<JdbcEventStorageEngine.Builder> customization) {
-        return createEngine(customization, HsqlEventTableFactory.INSTANCE);
+        return createEngine(customization, H2EventTableFactory.INSTANCE);
     }
 
     private JdbcEventStorageEngine createEngine(UnaryOperator<JdbcEventStorageEngine.Builder> customization,

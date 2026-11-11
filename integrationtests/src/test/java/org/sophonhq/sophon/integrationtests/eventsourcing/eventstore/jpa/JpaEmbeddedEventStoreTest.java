@@ -59,7 +59,7 @@ import javax.sql.DataSource;
 @ExtendWith(SpringExtension.class)
 @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 @ContextConfiguration(classes = JpaEmbeddedEventStoreTest.TestContext.class)
-@TestPropertySource("classpath:hsqldb.database.properties")
+@TestPropertySource("classpath:h2.database.properties")
 class JpaEmbeddedEventStoreTest extends EmbeddedEventStoreTest {
 
     @Autowired

@@ -25,8 +25,8 @@
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.AssociationValueEntry</class>
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry</class>
         <properties>
-            <property name="jakarta.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>
-            <property name="jakarta.persistence.jdbc.url" value="jdbc:hsqldb:mem:tokens"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:mem:tokens;DB_CLOSE_DELAY=-1"/>
             <property name="jakarta.persistence.jdbc.user" value="sa"/>
             <property name="jakarta.persistence.jdbc.password" value=""/>
             <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
