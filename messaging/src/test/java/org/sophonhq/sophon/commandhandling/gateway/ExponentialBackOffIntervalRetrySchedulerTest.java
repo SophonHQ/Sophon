@@ -45,14 +45,16 @@ class ExponentialBackOffIntervalRetrySchedulerTest {
     @Test
     void scheduleRetry() {
         for (int nrOfFailures = 1; nrOfFailures <= MAX_RETRIES; nrOfFailures++) {
-            long delay = BACKOFF_FACTOR * (1L << (nrOfFailures - 1));
+            long expectedDelay = BACKOFF_FACTOR * (1L << (nrOfFailures - 1));
+            long actualDelay = doScheduleRetry(retryScheduler, nrOfFailures);
 
-            assertTrue(doScheduleRetry(retryScheduler, nrOfFailures) >= delay,
-                    "Scheduling a retry should wait the required delay.");
+            assertTrue(actualDelay >= expectedDelay,
+                       "Scheduling a retry after " + nrOfFailures + " failure(s) should wait at least "
+                               + expectedDelay + "ms, but waited " + actualDelay + "ms.");
         }
 
         assertEquals(0, doScheduleRetry(retryScheduler, MAX_RETRIES + 1),
-                "Scheduling a retry when past maxRetryCount should have failed.");
+                     "Scheduling a retry when past maxRetryCount should have failed.");
     }
 
     @Test
