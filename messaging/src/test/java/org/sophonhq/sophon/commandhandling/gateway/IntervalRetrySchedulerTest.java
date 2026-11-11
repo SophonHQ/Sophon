@@ -26,12 +26,12 @@ import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.common.jdbc.JdbcException;
 
 import java.lang.invoke.MethodHandles;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,12 +64,12 @@ class IntervalRetrySchedulerTest {
      *
      * @param retryScheduler the scheduler to use.
      * @param nrOfFailures   the number of (transient) failures .
-     * @return the nr of milliseconds delay actually achieved.
+     * @return the nr of milliseconds delay actually achieved, or {@code 0} if no retry was scheduled.
      */
     static long doScheduleRetry(RetryScheduler retryScheduler, int nrOfFailures) {
         final CommandMessage<?> msg = GenericCommandMessage.asCommandMessage("Hello world");
-        final Instant before = Instant.now();
-        final FutureTask<Instant> after = new FutureTask<>(Instant::now);
+        final long before = System.nanoTime();
+        final FutureTask<Long> after = new FutureTask<>(System::nanoTime);
 
         final JdbcException exc = new JdbcException("Exception", new NullPointerException());
         List<Class<? extends Throwable>[]> failures = new ArrayList<>();
@@ -82,12 +82,10 @@ class IntervalRetrySchedulerTest {
         }
         if (retryScheduler.scheduleRetry(msg, exc, failures, after)) {
             try {
-                final Instant afterInstant = after.get();
-                logger.info("scheduleRetry(): Actual delay was {}ms. (nr of failures {} out of max {})",
-                            afterInstant.toEpochMilli() - before.toEpochMilli(),
-                            nrOfFailures, MAX_RETRIES);
+                final long actualDelay = TimeUnit.NANOSECONDS.toMillis(after.get() - before);
+                logger.info("scheduleRetry(): Actual delay was {}ms. (nr of failures {})", actualDelay, nrOfFailures);
 
-                return afterInstant.toEpochMilli() - before.toEpochMilli();
+                return actualDelay;
             } catch (InterruptedException ex) {
                 fail("Test failed: somebody interrupted us.");
             } catch (ExecutionException ex) {
@@ -100,12 +98,14 @@ class IntervalRetrySchedulerTest {
     @Test
     void scheduleRetry() {
         for (int nrOfFailures = 1; nrOfFailures <= MAX_RETRIES; nrOfFailures++) {
-            assertTrue(doScheduleRetry(retryScheduler, nrOfFailures) >= RETRY_INTERVAL,
-                    "Scheduling a retry should wait the required delay.");
+            long actualDelay = doScheduleRetry(retryScheduler, nrOfFailures);
+            assertTrue(actualDelay >= RETRY_INTERVAL,
+                       "Scheduling a retry after " + nrOfFailures + " failure(s) should wait at least "
+                               + RETRY_INTERVAL + "ms, but waited " + actualDelay + "ms.");
         }
 
         assertEquals(0, doScheduleRetry(retryScheduler, MAX_RETRIES + 1),
-                "Scheduling a retry when past maxRetryCount should have failed.");
+                     "Scheduling a retry when past maxRetryCount should have failed.");
     }
 
     @Test
