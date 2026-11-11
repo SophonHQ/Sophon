@@ -62,7 +62,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 @ContextConfiguration(classes = GenericJpaRepositoryIntegrationTest.TestContext.class)
-@TestPropertySource("classpath:hsqldb.database.properties")
+@TestPropertySource("classpath:h2.database.properties")
 @Transactional
 class GenericJpaRepositoryIntegrationTest implements EventMessageHandler {
 

@@ -71,7 +71,7 @@ public abstract class DbSchedulerTestUtil {
                                      + "  consecutive_failures INT,\n"
                                      + "  last_heartbeat timestamp(6) null,\n"
                                      + "  version BIGINT not null,\n"
-                                     + "  PRIMARY KEY (task_name, task_instance),\n"
+                                     + "  PRIMARY KEY (task_name, task_instance)\n"
                                      + ")")) {
             statement.execute();
         } catch (SQLException e) {

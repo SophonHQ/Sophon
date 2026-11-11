@@ -19,7 +19,7 @@ package org.sophonhq.sophon.eventhandling.scheduling.dbscheduler;
 
 import com.github.kagkarlsson.scheduler.Scheduler;
 import com.github.kagkarlsson.scheduler.task.Task;
-import org.hsqldb.jdbc.JDBCDataSource;
+import org.h2.jdbcx.JdbcDataSource;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.*;
@@ -254,8 +254,8 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
         @SuppressWarnings("Duplicates")
         @Bean
         public DataSource dataSource() {
-            JDBCDataSource dataSource = new JDBCDataSource();
-            dataSource.setUrl("jdbc:hsqldb:mem:testdb");
+            JdbcDataSource dataSource = new JdbcDataSource();
+            dataSource.setURL("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1");
             dataSource.setUser("sa");
             dataSource.setPassword("");
             return dataSource;

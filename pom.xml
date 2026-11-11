@@ -78,8 +78,7 @@
         <ehcache3.version>3.12.0</ehcache3.version>
         <!-- Database -->
         <c3p0.version>0.9.1.2</c3p0.version>
-        <hsqldb.version>2.7.4</hsqldb.version><!-- Don't upgrade due to JDK8 -->
-        <hsqldb.with11.version>2.7.4</hsqldb.with11.version><!-- Don't upgrade due to JDK8 -->
+        <h2.version>2.5.252</h2.version>
         <hibernate-core.version>5.6.15.Final</hibernate-core.version>
         <hibernate-core.6.version>6.6.59.Final</hibernate-core.6.version>
         <mysql-connector-java.version>26.10.0</mysql-connector-java.version>
@@ -278,9 +277,9 @@
                 <version>${hibernate-core.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.hsqldb</groupId>
-                <artifactId>hsqldb</artifactId>
-                <version>${hsqldb.version}</version>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.mysql</groupId>

@@ -22,14 +22,14 @@
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry</class>
         <properties>
             <property name="hibernate.dialect"
-                      value="org.hibernate.dialect.HSQLDialect"/>
+                      value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.connection.driver_class"
-                      value="org.hsqldb.jdbcDriver"/>
+                      value="org.h2.Driver"/>
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
             <property name="hibernate.connection.username" value="sa"/>
             <property name="hibernate.connection.password" value=""/>
             <property name="hibernate.connection.url"
-                      value="jdbc:hsqldb:mem:sophontest"/>
+                      value="jdbc:h2:mem:sophontest;DB_CLOSE_DELAY=-1"/>
         </properties>
     </persistence-unit>
 </persistence>

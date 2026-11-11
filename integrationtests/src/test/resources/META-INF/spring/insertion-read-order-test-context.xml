@@ -24,7 +24,7 @@
     <context:annotation-config/>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations" value="classpath:hsqldb.database.properties"/>
+        <property name="locations" value="classpath:h2.database.properties"/>
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

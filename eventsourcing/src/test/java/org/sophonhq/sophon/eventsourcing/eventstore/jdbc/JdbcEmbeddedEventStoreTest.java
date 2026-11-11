@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventsourcing.eventstore.jdbc;
 
-import org.hsqldb.jdbc.JDBCDataSource;
+import org.h2.jdbcx.JdbcDataSource;
 import org.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStoreTest;
 import org.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngine;
 import org.sophonhq.sophon.serialization.Serializer;
@@ -33,14 +33,15 @@ import java.sql.SQLException;
  */
 class JdbcEmbeddedEventStoreTest extends EmbeddedEventStoreTest {
 
-    private JDBCDataSource dataSource;
+    private JdbcDataSource dataSource;
 
     @Override
     public EventStorageEngine createStorageEngine() {
         Serializer testSerializer = TestSerializer.JACKSON.getSerializer();
         if (dataSource == null) {
-            dataSource = new JDBCDataSource();
-            dataSource.setUrl("jdbc:hsqldb:mem:test");
+            dataSource = new JdbcDataSource();
+            dataSource.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+            dataSource.setUser("sa");
         }
         return createTables(JdbcEventStorageEngine.builder()
                                                   .eventSerializer(testSerializer)
@@ -55,7 +56,7 @@ class JdbcEmbeddedEventStoreTest extends EmbeddedEventStoreTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.prepareStatement("DROP TABLE IF EXISTS DomainEventEntry").executeUpdate();
             connection.prepareStatement("DROP TABLE IF EXISTS SnapshotEventEntry").executeUpdate();
-            testEngine.createSchema(HsqlEventTableFactory.INSTANCE);
+            testEngine.createSchema(H2EventTableFactory.INSTANCE);
             return testEngine;
         } catch (SQLException e) {
             throw new IllegalStateException(e);

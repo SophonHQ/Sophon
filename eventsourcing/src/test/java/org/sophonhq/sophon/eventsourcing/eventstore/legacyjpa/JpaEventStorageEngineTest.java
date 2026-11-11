@@ -75,7 +75,7 @@ class JpaEventStorageEngineTest
 
     @BeforeEach
     void setUp() {
-        String databaseProductName = "HSQL Database Engine";
+        String databaseProductName = "H2";
         defaultPersistenceExceptionResolver = new SQLErrorCodesResolver(databaseProductName);
         setTestSubject(testSubject = createEngine());
 
