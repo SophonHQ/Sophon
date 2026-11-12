@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@v7.0.1
 
       - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v6.2.0
@@ -37,7 +37,7 @@ jobs:
           ./mvnw -B -U -Dstyle.color=always -Pintegration-test -Djacoco.skip=true -Dsurefire.rerunFailingTestsCount=5 clean verify
 
       - name: Create test summary
-        uses: test-summary/action@v2
+        uses: test-summary/action@v2.6
         with:
           paths: "**/target/surefire-reports/TEST-*.xml"
           show: "fail, skip"

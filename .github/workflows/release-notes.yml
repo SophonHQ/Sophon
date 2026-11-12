@@ -15,10 +15,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v7
+      uses: actions/checkout@v7.0.1
 
     - name: Create Release Notes Markdown
-      uses: docker://decathlon/release-notes-generator-action:3.1.5
+      uses: docker://decathlon/release-notes-generator-action:3.1.5@sha256:e12bd62dd12817584206ab5a9f60841c49039609bd709b6d7397ca824075a3e1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         OUTPUT_FOLDER: temp_release_notes
@@ -34,7 +34,7 @@ jobs:
 
     - name: Create a Draft Release Notes on GitHub
       id: create_release
-      uses: actions/create-release@v1
+      uses: actions/create-release@v1.1.4
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
