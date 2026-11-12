@@ -8,6 +8,9 @@ on:
     paths-ignore:
       - 'docs/**'
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Test and Build on JDK ${{ matrix.java-version }}
@@ -25,6 +28,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v6.2.0

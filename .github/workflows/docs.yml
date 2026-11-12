@@ -15,7 +15,7 @@ on:
       - 'docs/**'
   # A release line becomes a released version once its first tag exists, see docs/_playbook/extensions
   release:
-    types: [published]
+    types: [ published ]
   workflow_dispatch:
 
 permissions:
@@ -34,6 +34,7 @@ jobs:
           fetch-depth: 0
           # The tag of a release isn't a published branch, so the site is rebuilt from main
           ref: ${{ github.event_name == 'release' && 'main' || '' }}
+          persist-credentials: false
 
       # A pull request is checked out as a detached HEAD, which Antora would publish as a version named "HEAD".
       # Naming it after the target branch builds the pull request as the version it changes.
@@ -52,6 +53,7 @@ jobs:
         uses: actions/setup-node@v7.1.0
         with:
           node-version: '24'
+          package-manager-cache: false
 
       - name: Generate site
         run: |

@@ -2,7 +2,7 @@ name: Milestone Closure
 
 on:
   milestone:
-    types: [closed]
+    types: [ closed ]
 
 permissions:
   contents: write
@@ -14,31 +14,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v7.0.1
+      - name: Checkout code
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
 
-    - name: Create Release Notes Markdown
-      uses: docker://decathlon/release-notes-generator-action:3.1.5@sha256:e12bd62dd12817584206ab5a9f60841c49039609bd709b6d7397ca824075a3e1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        OUTPUT_FOLDER: temp_release_notes
-        USE_MILESTONE_TITLE: "true"
+      - name: Create Release Notes Markdown
+        uses: docker://decathlon/release-notes-generator-action:3.1.5@sha256:e12bd62dd12817584206ab5a9f60841c49039609bd709b6d7397ca824075a3e1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OUTPUT_FOLDER: temp_release_notes
+          USE_MILESTONE_TITLE: "true"
 
-    - name: Set Release environment variables
-      id: extract-version-and-notes
-      run: |
-        RELEASE_NOTES_FILE=$(ls temp_release_notes/*.md | head -n 1)
-        echo "RELEASE_NOTES_FILE=$RELEASE_NOTES_FILE" >> $GITHUB_ENV
-        VERSION=$(echo ${{ github.event.milestone.title }} | cut -d' ' -f2)
-        echo "VERSION=$VERSION" >> $GITHUB_ENV
+      - name: Set Release environment variables
+        id: extract-version-and-notes
+        env:
+          MILESTONE_TITLE: ${{ github.event.milestone.title }}
+        run: |
+          RELEASE_NOTES_FILE=$(ls temp_release_notes/*.md | head -n 1)
+          echo "RELEASE_NOTES_FILE=$RELEASE_NOTES_FILE" >> $GITHUB_ENV
+          VERSION=$(echo "$MILESTONE_TITLE" | cut -d' ' -f2)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-    - name: Create a Draft Release Notes on GitHub
-      id: create_release
-      uses: actions/create-release@v1.1.4
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: sophon-${{ env.VERSION }}
-        release_name: Sophon v${{ env.VERSION }}
-        body_path: ${{ env.RELEASE_NOTES_FILE }}
-        draft: true
+      - name: Create a Draft Release Notes on GitHub
+        id: create_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "sophon-$VERSION" \
+            --repo "$GITHUB_REPOSITORY" \
+            --draft \
+            --verify-tag \
+            --title "Sophon v$VERSION" \
+            --notes-file "$RELEASE_NOTES_FILE"
