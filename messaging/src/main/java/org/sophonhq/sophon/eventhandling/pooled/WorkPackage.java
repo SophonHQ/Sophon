@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.sophonhq.sophon.common.Assert;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
 import org.sophonhq.sophon.eventhandling.EventMessage;
+import org.sophonhq.sophon.eventhandling.EventProcessingException;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.eventhandling.Segment;
 import org.sophonhq.sophon.eventhandling.TrackedEventMessage;
@@ -285,6 +286,10 @@ class WorkPackage {
                 logger.warn("Error while processing batch in Work Package [{}]-[{}]. Aborting Work Package...",
                             segment.getSegmentId(), name, e);
                 abort(e);
+            } catch (Error e) {
+                logger.warn("Error while processing batch in Work Package [{}]-[{}]. Aborting Work Package...",
+                            segment.getSegmentId(), name, e);
+                abort(new EventProcessingException("An error occurred while processing a batch of events", e));
             }
             scheduled.set(false);
             if (!processingQueue.isEmpty() || abortFlag.get() != null) {
