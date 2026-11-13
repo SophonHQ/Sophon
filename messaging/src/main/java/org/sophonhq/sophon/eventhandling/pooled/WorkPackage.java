@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.sophonhq.sophon.common.Assert;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
 import org.sophonhq.sophon.eventhandling.EventMessage;
-import org.sophonhq.sophon.eventhandling.EventProcessingException;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.eventhandling.Segment;
 import org.sophonhq.sophon.eventhandling.TrackedEventMessage;
@@ -49,6 +48,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
+
+import static org.sophonhq.sophon.common.ProcessUtils.safeguard;
 
 /**
  * Defines the process of handling {@link EventMessage}s for a specific {@link Segment}. This entails validating if the
@@ -99,8 +100,8 @@ class WorkPackage {
 
     private final Queue<ProcessingEntry> processingQueue = new ConcurrentLinkedQueue<>();
     private final AtomicBoolean scheduled = new AtomicBoolean();
-    private final AtomicReference<CompletableFuture<Exception>> abortFlag = new AtomicReference<>();
-    private final AtomicReference<Exception> abortException = new AtomicReference<>();
+    private final AtomicReference<CompletableFuture<Throwable>> abortFlag = new AtomicReference<>();
+    private final AtomicReference<Throwable> abortException = new AtomicReference<>();
 
     /**
      * Instantiate a Builder to be able to create a {@link WorkPackage}. This builder <b>does not</b> validate the
@@ -249,7 +250,7 @@ class WorkPackage {
     private boolean canHandle(TrackedEventMessage<?> event) {
         try {
             return eventFilter.canHandle(event, segment);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             logger.warn("Error while detecting whether event can be handled in Work Package [{}]-[{}]. "
                                 + "Aborting Work Package...",
                         segment.getSegmentId(), name, e);
@@ -270,8 +271,8 @@ class WorkPackage {
         }
         logger.debug("Scheduling Work Package [{}]-[{}] to process events.", segment.getSegmentId(), name);
 
-        executorService.submit(() -> {
-            CompletableFuture<Exception> aborting = abortFlag.get();
+        executorService.submit(safeguard(() -> {
+            CompletableFuture<Throwable> aborting = abortFlag.get();
             if (aborting != null) {
                 logger.debug("Work Package [{}]-[{}] should be aborted. Will shutdown this work package.",
                              segment.getSegmentId(), name);
@@ -282,14 +283,10 @@ class WorkPackage {
 
             try {
                 processEvents();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 logger.warn("Error while processing batch in Work Package [{}]-[{}]. Aborting Work Package...",
                             segment.getSegmentId(), name, e);
                 abort(e);
-            } catch (Error e) {
-                logger.warn("Error while processing batch in Work Package [{}]-[{}]. Aborting Work Package...",
-                            segment.getSegmentId(), name, e);
-                abort(new EventProcessingException("An error occurred while processing a batch of events", e));
             }
             scheduled.set(false);
             if (!processingQueue.isEmpty() || abortFlag.get() != null) {
@@ -297,7 +294,9 @@ class WorkPackage {
                              segment.getSegmentId(), name);
                 scheduleWorker();
             }
-        });
+        }, "Work Package [" + segment.getSegmentId() + "]-[" + name + "]. "
+                                                 + "Unexpected error escaped the worker task. "
+                                                 + "This Work Package may no longer be scheduled for further processing."));
     }
 
     private void processEvents() throws Exception {
@@ -391,8 +390,8 @@ class WorkPackage {
     }
 
     /**
-     * Returns the {@link TrackingToken} of the {@link TrackedEventMessage} that was delivered in the last {@link
-     * #scheduleEvent(TrackedEventMessage)} call.
+     * Returns the {@link TrackingToken} of the {@link TrackedEventMessage} that was delivered in the last
+     * {@link #scheduleEvent(TrackedEventMessage)} call.
      * <p>
      * <b>Threading note:</b> This method is only safe to call from {@link Coordinator} threads. The {@link
      * WorkPackage} threads must not rely on this method.
@@ -408,7 +407,7 @@ class WorkPackage {
      * Indicates whether an abort has been triggered for this {@link WorkPackage}. When {@code true}, any events
      * scheduled for processing by this {@code WorkPackage} are likely to be ignored.
      * <p>
-     * Use {@link #abort(Exception)} (possibly with a {@code null} reason) to obtain a {@link CompletableFuture} with a
+     * Use {@link #abort(Throwable)} (possibly with a {@code null} reason) to obtain a {@link CompletableFuture} with a
      * reference to the abort reason.
      *
      * @return {@code true} if an abort was scheduled, otherwise {@code false}
@@ -430,7 +429,7 @@ class WorkPackage {
      * @return a {@link CompletableFuture} that completes with the first reason once the {@link WorkPackage} has stopped
      * processing
      */
-    public CompletableFuture<Exception> abort(Exception abortReason) {
+    public CompletableFuture<Throwable> abort(Throwable abortReason) {
         if (abortReason != null) {
             logger.debug("Abort request received for Work Package [{}]-[{}].",
                          name, segment.getSegmentId(), abortReason);
@@ -444,7 +443,7 @@ class WorkPackage {
             );
         }
 
-        CompletableFuture<Exception> abortTask = abortFlag.updateAndGet(
+        CompletableFuture<Throwable> abortTask = abortFlag.updateAndGet(
                 currentFlag -> {
                     if (currentFlag == null) {
                         abortException.set(abortReason);
@@ -718,15 +717,8 @@ class WorkPackage {
      * handled in this package. The combination constitutes to a processing entry the {@link WorkPackage} should
      * ingest.
      */
-    private static class DefaultProcessingEntry implements ProcessingEntry {
-
-        private final TrackedEventMessage<?> eventMessage;
-        private final boolean canHandle;
-
-        public DefaultProcessingEntry(TrackedEventMessage<?> eventMessage, boolean canHandle) {
-            this.eventMessage = eventMessage;
-            this.canHandle = canHandle;
-        }
+    private record DefaultProcessingEntry(TrackedEventMessage<?> eventMessage, boolean canHandle)
+            implements ProcessingEntry {
 
         @Override
         public TrackingToken trackingToken() {
