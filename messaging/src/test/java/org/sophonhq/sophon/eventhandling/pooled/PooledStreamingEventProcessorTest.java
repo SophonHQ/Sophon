@@ -395,6 +395,42 @@ class PooledStreamingEventProcessorTest {
     }
 
     @Test
+    void errorWhileHandlingEventAbortsWorker() throws Exception {
+        List<EventMessage<Integer>> events = Stream.of(1, 2, 2, 4, 5)
+                                                   .map(GenericEventMessage::new)
+                                                   .collect(Collectors.toList());
+        mockEventHandlerInvoker();
+        doThrow(new LinkageError("Simulating worker error"))
+                .doNothing()
+                .when(stubEventHandler)
+                .handle(argThat(em -> em.getIdentifier().equals(events.get(2).getIdentifier())), any());
+
+        testSubject.start();
+
+        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(8, testSubject.processingStatus().size()));
+        assertEquals(8, tokenStore.fetchSegments(PROCESSOR_NAME).length);
+
+        events.forEach(e -> stubMessageSource.publishMessage(e));
+
+        assertWithin(1, TimeUnit.SECONDS, () -> {
+            try {
+                verify(stubEventHandler).handle(
+                        argThat(em -> em.getIdentifier().equals(events.get(2).getIdentifier())),
+                        argThat(s -> s.getSegmentId() == events.get(2).getPayload())
+                );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        assertWithin(1, TimeUnit.SECONDS, () -> {
+            assertEquals(7, testSubject.processingStatus().size());
+            assertFalse(testSubject.processingStatus().containsKey(2));
+        });
+        assertTrue(testSubject.isRunning());
+    }
+
+    @Test
     void workPackageIsAbortedWhenExtendingClaimFails() {
         InMemoryTokenStore spy = spy(tokenStore);
         setTestSubject(createTestSubject(b -> b.tokenStore(spy)

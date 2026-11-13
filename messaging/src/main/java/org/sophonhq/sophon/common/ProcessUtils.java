@@ -17,6 +17,9 @@
 
 package org.sophonhq.sophon.common;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BooleanSupplier;
@@ -29,6 +32,8 @@ import java.util.function.Predicate;
  * @since axon-4.2
  */
 public abstract class ProcessUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProcessUtils.class);
 
     private ProcessUtils() {
     }
@@ -81,7 +86,7 @@ public abstract class ProcessUtils {
         AtomicLong totalTriesCounter = new AtomicLong();
         boolean result = runnable.getAsBoolean();
         while (!result) {
-            if (totalTriesCounter.incrementAndGet() >= maxTries){
+            if (totalTriesCounter.incrementAndGet() >= maxTries) {
                 throw new ProcessRetriesExhaustedException(String.format(
                         "Tried invoking the action for %d times, without the result being true",
                         maxTries));
@@ -93,5 +98,27 @@ public abstract class ProcessUtils {
                 Thread.currentThread().interrupt();
             }
         }
+    }
+
+    /**
+     * Wraps the given {@code task} so that any {@link Throwable} escaping it is logged rather than silently lost.
+     * <p>
+     * When the {@code task} throws, the given {@code errorMessage} is logged on
+     * {@link Logger#error(String, Throwable) error level}.
+     *
+     * @param task         the task to guard against an escaping {@link Throwable}
+     * @param errorMessage the error message to log on {@link Logger#error(String, Throwable) error level} when the
+     *                     {@code task} throws a {@link Throwable}
+     * @return a {@link Runnable} that never throws
+     * @since sophon-1.2.0
+     */
+    public static Runnable safeguard(Runnable task, String errorMessage) {
+        return () -> {
+            try {
+                task.run();
+            } catch (Throwable e) {
+                logger.error(errorMessage, e);
+            }
+        };
     }
 }

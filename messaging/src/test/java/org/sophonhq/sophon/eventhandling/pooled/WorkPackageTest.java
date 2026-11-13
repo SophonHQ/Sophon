@@ -21,7 +21,6 @@ import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.eventhandling.EventMessage;
-import org.sophonhq.sophon.eventhandling.EventProcessingException;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericTrackedEventMessage;
 import org.sophonhq.sophon.eventhandling.GlobalSequenceTrackingToken;
@@ -165,9 +164,35 @@ class WorkPackageTest {
         assertTrue(trackerStatusUpdates.get(0).isErrorState());
         assertNull(trackerStatusUpdates.get(1));
 
-        CompletableFuture<Exception> abortResult = testSubject.abort(null);
+        CompletableFuture<Throwable> abortResult = testSubject.abort(null);
         assertTrue(abortResult.isDone());
         assertTrue(abortResult.get().getClass().isAssignableFrom(IllegalStateException.class));
+    }
+
+    @Test
+    void scheduleEventFailsOnEventValidatorThrowingError() throws ExecutionException, InterruptedException {
+        TrackingToken testToken = new GlobalSequenceTrackingToken(1L);
+        TrackedEventMessage<String> testEvent =
+                new GenericTrackedEventMessage<>(testToken, GenericEventMessage.asEventMessage("some-event"));
+        Error testError = new LinkageError("Some error");
+        eventFilterPredicate = event -> {
+            if (event.equals(testEvent)) {
+                throw testError;
+            }
+            return true;
+        };
+
+        assertFalse(testSubject.scheduleEvent(testEvent));
+
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertNull(trackerStatus));
+        assertEquals(2, trackerStatusUpdates.size());
+        assertTrue(trackerStatusUpdates.get(0).isErrorState());
+        assertSame(testError, trackerStatusUpdates.get(0).getError());
+        assertNull(trackerStatusUpdates.get(1));
+
+        CompletableFuture<Throwable> abortResult = testSubject.abort(null);
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(abortResult.isDone()));
+        assertSame(testError, abortResult.get());
     }
 
     @Test
@@ -189,7 +214,7 @@ class WorkPackageTest {
         assertTrue(trackerStatusUpdates.get(0).isErrorState());
         assertNull(trackerStatusUpdates.get(1));
 
-        CompletableFuture<Exception> abortResult = testSubject.abort(null);
+        CompletableFuture<Throwable> abortResult = testSubject.abort(null);
         assertTrue(abortResult.isDone());
         assertTrue(abortResult.get().getClass().isAssignableFrom(IllegalStateException.class));
     }
@@ -199,9 +224,10 @@ class WorkPackageTest {
         TrackingToken testToken = new GlobalSequenceTrackingToken(1L);
         TrackedEventMessage<String> testEvent =
                 new GenericTrackedEventMessage<>(testToken, GenericEventMessage.asEventMessage("some-event"));
+        Error testError = new LinkageError("Some error");
         batchProcessorPredicate = event -> {
             if (event.stream().anyMatch(e -> ((TrackedEventMessage<?>) e).trackingToken().equals(testToken))) {
-                throw new LinkageError("Some error");
+                throw testError;
             }
             return true;
         };
@@ -211,12 +237,12 @@ class WorkPackageTest {
         assertWithin(500, TimeUnit.MILLISECONDS, () -> assertNull(trackerStatus));
         assertEquals(2, trackerStatusUpdates.size());
         assertTrue(trackerStatusUpdates.get(0).isErrorState());
+        assertSame(testError, trackerStatusUpdates.get(0).getError());
         assertNull(trackerStatusUpdates.get(1));
 
-        CompletableFuture<Exception> abortResult = testSubject.abort(null);
+        CompletableFuture<Throwable> abortResult = testSubject.abort(null);
         assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(abortResult.isDone()));
-        assertInstanceOf(EventProcessingException.class, abortResult.get());
-        assertInstanceOf(LinkageError.class, abortResult.get().getCause());
+        assertSame(testError, abortResult.get());
     }
 
     /**
@@ -365,7 +391,7 @@ class WorkPackageTest {
 
     @Test
     void scheduleWorkerForAbortedPackage() throws ExecutionException, InterruptedException {
-        CompletableFuture<Exception> result = testSubject.abort(null);
+        CompletableFuture<Throwable> result = testSubject.abort(null);
 
         testSubject.scheduleWorker();
 
@@ -404,7 +430,7 @@ class WorkPackageTest {
     void abortReturnsAbortReason() throws ExecutionException, InterruptedException {
         Exception expectedResult = new IllegalStateException();
 
-        CompletableFuture<Exception> result = testSubject.abort(expectedResult);
+        CompletableFuture<Throwable> result = testSubject.abort(expectedResult);
 
         assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(result.isDone()));
         assertEquals(expectedResult, result.get());
@@ -416,7 +442,7 @@ class WorkPackageTest {
         Exception otherAbortReason = new IllegalArgumentException();
         testSubject.abort(originalAbortReason);
 
-        CompletableFuture<Exception> result = testSubject.abort(otherAbortReason);
+        CompletableFuture<Throwable> result = testSubject.abort(otherAbortReason);
 
         assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(result.isDone()));
         assertEquals(originalAbortReason, result.get());

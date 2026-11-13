@@ -19,6 +19,7 @@ package org.sophonhq.sophon.eventhandling.pooled;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sophonhq.sophon.common.ProcessUtils;
 import org.sophonhq.sophon.common.stream.BlockingStream;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -149,9 +150,9 @@ class Coordinator {
             try {
                 executeUntilTrue(Coordinator.this::initializeTokenStore, 100L, 30L);
                 CoordinationTask task = new CoordinationTask();
-                executorService.submit(task);
+                executorService.submit(safeguard(task));
                 this.coordinationTask.set(task);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 // A failure starting the processor. We need to stop immediately.
                 runState.updateAndGet(RunState::attemptStop)
                         .shutdownHandle()
@@ -781,7 +782,7 @@ class Coordinator {
                             .forEach(workPackage -> {
                                 try {
                                     workPackage.extendClaimIfThresholdIsMet();
-                                } catch (Exception e) {
+                                } catch (Throwable e) {
                                     logger.warn(
                                             "Processor [{}] (Coordination Task [{}]). Error while extending claim for Work Package [{}]. "
                                                     + "Aborting Work Package...",
@@ -857,7 +858,7 @@ class Coordinator {
                         }
                     }
                     ensureOpenStream(streamStartPosition);
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     logger.warn(
                             "Processor [{}] (Coordination Task [{}]). Exception occurred while starting work packages"
                                     + " and opening the event stream.",
@@ -947,7 +948,7 @@ class Coordinator {
                             generation);
                     scheduleCoordinationTask(100);
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 logger.warn(
                         "Processor [{}] (Coordination Task [{}]). Exception occurred while coordinating the work packages.",
                         name,
@@ -979,7 +980,7 @@ class Coordinator {
                          segmentId);
         }
 
-        private CompletableFuture<Void> abortWorkPackages(Exception cause) {
+        private CompletableFuture<Void> abortWorkPackages(Throwable cause) {
             return workPackages.values().stream()
                                .map(wp -> abortWorkPackage(wp, cause))
                                .reduce(CompletableFuture::allOf)
@@ -1215,10 +1216,10 @@ class Coordinator {
                         name,
                         generation,
                         delay);
-                executorService.schedule(() -> {
+                executorService.schedule(safeguard(() -> {
                     scheduledGate.set(false);
                     this.run();
-                }, delay, TimeUnit.MILLISECONDS);
+                }), delay, TimeUnit.MILLISECONDS);
             } else {
                 logger.trace(
                         "Processor [{}] (Coordination Task [{}]). Skipped scheduling coordination task (delay={}ms). "
@@ -1238,10 +1239,10 @@ class Coordinator {
                         name,
                         generation,
                         delay);
-                executorService.schedule(() -> {
+                executorService.schedule(safeguard(() -> {
                     interruptibleScheduledGate.set(false);
                     this.run();
-                }, delay, TimeUnit.MILLISECONDS);
+                }), delay, TimeUnit.MILLISECONDS);
             } else {
                 logger.trace(
                         "Processor [{}] (Coordination Task [{}]). Skipped scheduling delayed coordination task (delay={}ms). "
@@ -1254,7 +1255,7 @@ class Coordinator {
             }
         }
 
-        private void abortAndScheduleRetry(Exception cause) {
+        private void abortAndScheduleRetry(Throwable cause) {
             errorWaitBackOff = Math.min(errorWaitBackOff * 2, 60000);
             logger.info(
                     "Processor [{}] (Coordination Task [{}]) is releasing claims and scheduling a new coordination task in {}ms.",
@@ -1283,7 +1284,7 @@ class Coordinator {
                                 errorWaitBackOff);
                         // Construct a new CoordinationTask, thus abandoning the old task and it's progress entirely.
                         CoordinationTask task = new CoordinationTask();
-                        executorService.schedule(task, errorWaitBackOff, TimeUnit.MILLISECONDS);
+                        executorService.schedule(safeguard(task), errorWaitBackOff, TimeUnit.MILLISECONDS);
                         coordinationTask.set(task);
                         processingGate.set(false);
                     }
@@ -1291,7 +1292,7 @@ class Coordinator {
             closeQuietly(eventStream);
         }
 
-        private CompletableFuture<Void> abortWorkPackage(WorkPackage work, Exception cause) {
+        private CompletableFuture<Void> abortWorkPackage(WorkPackage work, Throwable cause) {
             int segmentId = work.segment().getSegmentId();
             return work.abort(cause)
                        .thenRun(() -> {
@@ -1342,5 +1343,23 @@ class Coordinator {
                     }
             );
         }
+    }
+
+    /**
+     * Wraps the given {@code task} so that any {@link Throwable} escaping it is logged rather than silently lost.
+     * Nothing reads the {@code Future} of a task submitted or scheduled on {@link #executorService}. Without this
+     * safety net, a {@code Throwable} that escapes every catch inside {@link CoordinationTask#run()} would vanish
+     * without a trace. The internal gates of the {@link CoordinationTask} would stay set, and this processor would
+     * silently stop.
+     *
+     * @param task the task to guard against an escaping {@link Throwable}
+     * @return a {@link Runnable} that never throws
+     */
+    private Runnable safeguard(Runnable task) {
+        return ProcessUtils.safeguard(
+                task,
+                "Processor [" + name + "]. Unexpected error escaped a coordination task. "
+                        + "This processor may no longer make progress."
+        );
     }
 }

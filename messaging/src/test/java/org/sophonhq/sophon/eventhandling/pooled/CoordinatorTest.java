@@ -117,6 +117,30 @@ class CoordinatorTest {
     }
 
     @Test
+    void ifCoordinationTaskAbortsWorkPackagesAndSchedulesRetryWhenOpeningTheStreamThrowsAnError() {
+        //arrange
+        final Error streamOpenError = new NoClassDefFoundError("Some error during event stream open");
+        final GlobalSequenceTrackingToken token = new GlobalSequenceTrackingToken(0);
+
+        doReturn(SEGMENT_IDS).when(tokenStore).fetchSegments(PROCESSOR_NAME);
+        doReturn(Collections.singletonList(SEGMENT_ONE)).when(tokenStore).fetchAvailableSegments(PROCESSOR_NAME);
+        doReturn(token).when(tokenStore).fetchToken(PROCESSOR_NAME, SEGMENT_ONE);
+        //noinspection resource
+        doThrow(streamOpenError).when(messageSource).openStream(token);
+        doReturn(completedFuture(streamOpenError)).when(workPackage).abort(any());
+        doReturn(SEGMENT_ZERO).when(workPackage).segment();
+        doAnswer(runTaskSync()).when(executorService).submit(any(Runnable.class));
+
+        //act
+        testSubject.start();
+
+        //asserts
+        verify(workPackage).abort(streamOpenError);
+        verify(tokenStore).releaseClaim(PROCESSOR_NAME, SEGMENT_ID);
+        verify(executorService, times(1)).schedule(any(Runnable.class), anyLong(), any(TimeUnit.class));
+    }
+
+    @Test
     void ifCoordinationTaskInitializesTokenStoreWhenNeeded() {
         //arrange
         final GlobalSequenceTrackingToken token = new GlobalSequenceTrackingToken(0);
@@ -202,7 +226,7 @@ class CoordinatorTest {
         Map<Integer, WorkPackage> workPackages =
                 ReflectionUtils.getFieldValue(Coordinator.class.getDeclaredField("workPackages"), testSubject);
         workPackages.put(SEGMENT_ID, workPackage);
-        CompletableFuture<Exception> abortFuture = new CompletableFuture<>();
+        CompletableFuture<Throwable> abortFuture = new CompletableFuture<>();
         doReturn(abortFuture).when(workPackage).abort(any());
 
         //act

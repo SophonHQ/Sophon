@@ -17,9 +17,17 @@
 
 package org.sophonhq.sophon.common;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.test.appender.ListAppender;
 import org.junit.jupiter.api.*;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,5 +99,99 @@ class ProcessUtilsTest {
                 ProcessUtils.executeUntilTrue(() -> retryCounter.getAndIncrement() >= 100, 1L, 10L)
         );
         assertEquals(10, retryCounter.get());
+    }
+
+    @Nested
+    class Safeguard {
+
+        private ListAppender appender;
+        private Logger logger;
+        private Level previousLevel;
+        private boolean previousAdditive;
+
+        @BeforeEach
+        void attachAppender() {
+            appender = new ListAppender("ProcessUtilsTestAppender");
+            appender.start();
+
+            logger = (Logger) LogManager.getLogger(ProcessUtils.class);
+            previousLevel = logger.getLevel();
+            previousAdditive = logger.isAdditive();
+            Configurator.setLevel(ProcessUtils.class.getName(), Level.DEBUG);
+            logger.setAdditive(false);
+            logger.addAppender(appender);
+        }
+
+        @AfterEach
+        void detachAppender() {
+            logger.removeAppender(appender);
+            logger.setAdditive(previousAdditive);
+            Configurator.setLevel(ProcessUtils.class.getName(), previousLevel);
+            appender.stop();
+        }
+
+        private List<LogEvent> events() {
+            return appender.getEvents();
+        }
+
+        @Test
+        void executesTheGivenTask() {
+            AtomicBoolean invoked = new AtomicBoolean(false);
+            Runnable safeguarded = ProcessUtils.safeguard(() -> invoked.set(true), "error");
+
+            safeguarded.run();
+
+            assertTrue(invoked.get());
+            assertTrue(events().isEmpty());
+        }
+
+        @Test
+        void doesNotThrowAndLogsAtErrorLevelWhenTaskThrowsAnException() {
+            RuntimeException exception = new RuntimeException("boom");
+            Runnable safeguarded = ProcessUtils.safeguard(() -> {
+                throw exception;
+            }, "task failed");
+
+            assertDoesNotThrow(safeguarded::run);
+
+            assertEquals(1, events().size());
+            LogEvent event = events().get(0);
+            assertEquals(Level.ERROR, event.getLevel());
+            assertEquals("task failed", event.getMessage().getFormattedMessage());
+            assertSame(exception, event.getThrown());
+        }
+
+        @Test
+        void doesNotThrowWhenTaskThrowsAnError() {
+            Error error = new StackOverflowError("simulated");
+            Runnable safeguarded = ProcessUtils.safeguard(() -> {
+                throw error;
+            }, "task failed with an error");
+
+            assertDoesNotThrow(safeguarded::run);
+
+            assertEquals(1, events().size());
+            assertSame(error, events().get(0).getThrown());
+        }
+
+        @Test
+        void canBeInvokedMultipleTimesIndependently() {
+            AtomicLong invocationCount = new AtomicLong();
+            Runnable safeguarded = ProcessUtils.safeguard(() -> {
+                if (invocationCount.incrementAndGet() <= 2) {
+                    throw new IllegalStateException("failure #" + invocationCount.get());
+                }
+            }, "repeated failure");
+
+            safeguarded.run();
+            safeguarded.run();
+            safeguarded.run();
+
+            // Two failures are logged, and the third invocation completes without logging.
+            assertEquals(3, invocationCount.get());
+            assertEquals(2, events().size());
+            assertEquals("repeated failure", events().get(0).getMessage().getFormattedMessage());
+            assertEquals("repeated failure", events().get(1).getMessage().getFormattedMessage());
+        }
     }
 }
