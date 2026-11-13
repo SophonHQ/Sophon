@@ -21,6 +21,7 @@ import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.eventhandling.EventMessage;
+import org.sophonhq.sophon.eventhandling.EventProcessingException;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericTrackedEventMessage;
 import org.sophonhq.sophon.eventhandling.GlobalSequenceTrackingToken;
@@ -191,6 +192,31 @@ class WorkPackageTest {
         CompletableFuture<Exception> abortResult = testSubject.abort(null);
         assertTrue(abortResult.isDone());
         assertTrue(abortResult.get().getClass().isAssignableFrom(IllegalStateException.class));
+    }
+
+    @Test
+    void scheduleEventFailsOnBatchProcessorThrowingError() throws ExecutionException, InterruptedException {
+        TrackingToken testToken = new GlobalSequenceTrackingToken(1L);
+        TrackedEventMessage<String> testEvent =
+                new GenericTrackedEventMessage<>(testToken, GenericEventMessage.asEventMessage("some-event"));
+        batchProcessorPredicate = event -> {
+            if (event.stream().anyMatch(e -> ((TrackedEventMessage<?>) e).trackingToken().equals(testToken))) {
+                throw new LinkageError("Some error");
+            }
+            return true;
+        };
+
+        testSubject.scheduleEvent(testEvent);
+
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertNull(trackerStatus));
+        assertEquals(2, trackerStatusUpdates.size());
+        assertTrue(trackerStatusUpdates.get(0).isErrorState());
+        assertNull(trackerStatusUpdates.get(1));
+
+        CompletableFuture<Exception> abortResult = testSubject.abort(null);
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(abortResult.isDone()));
+        assertInstanceOf(EventProcessingException.class, abortResult.get());
+        assertInstanceOf(LinkageError.class, abortResult.get().getCause());
     }
 
     /**
