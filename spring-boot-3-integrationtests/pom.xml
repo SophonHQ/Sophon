@@ -33,7 +33,7 @@
 
     <properties>
         <!-- Main -->
-        <spring-boot-3.version>3.5.6</spring-boot-3.version>
+        <spring-boot-3.version>3.5.16</spring-boot-3.version>
         <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
         <!-- Database -->
         <mysql-connector-java.version>26.10.0</mysql-connector-java.version>
