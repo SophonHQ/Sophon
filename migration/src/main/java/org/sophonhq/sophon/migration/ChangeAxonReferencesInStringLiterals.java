@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * {@code @EntityScan("org.axonframework.eventhandling.tokenstore.jpa")} or
  * {@code @Value("${axon.serializer.general}")}.
  *
- * @since 1.0.0
+ * @since sophon-1.0.0
  */
 public class ChangeAxonReferencesInStringLiterals extends Recipe {
 
@@ -55,10 +55,9 @@ public class ChangeAxonReferencesInStringLiterals extends Recipe {
             @Override
             public J.Literal visitLiteral(J.Literal literal, ExecutionContext ctx) {
                 J.Literal visited = super.visitLiteral(literal, ctx);
-                if (!(visited.getValue() instanceof String) || visited.getValueSource() == null) {
+                if (!(visited.getValue() instanceof String value) || visited.getValueSource() == null) {
                     return visited;
                 }
-                String value = (String) visited.getValue();
                 String migrated = migrate(value);
                 if (migrated.equals(value)) {
                     return visited;
