@@ -24,10 +24,10 @@ import java.util.regex.Pattern;
  * <p>
  * Sophon moved all classes from the {@code org.axonframework} package to {@code org.sophonhq.sophon} and replaced
  * "Axon" with "Sophon" in class names. Data stored by Axon Framework 4, such as tracking tokens, sagas and dead
- * letters, still refers to the original names. Serializers configured to translate legacy class names use this class
- * to map those names when reading.
+ * letters, still refers to the original names. Serializers configured to translate legacy class names use this class to
+ * map those names when reading.
  *
- * @since 1.0.0
+ * @since sophon-1.0.0
  */
 public final class LegacyClassNames {
 

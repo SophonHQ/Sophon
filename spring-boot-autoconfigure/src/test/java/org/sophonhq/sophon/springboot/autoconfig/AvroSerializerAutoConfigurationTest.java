@@ -19,6 +19,7 @@ package org.sophonhq.sophon.springboot.autoconfig;
 
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.message.SchemaStore;
+import org.apache.avro.util.ClassSecurityValidator;
 import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.serialization.SerializationException;
@@ -55,6 +56,21 @@ import static org.junit.jupiter.api.Assertions.*;
 class AvroSerializerAutoConfigurationTest {
 
     private ApplicationContextRunner testApplicationContext;
+
+    @BeforeAll
+    static void trustTestRecords() {
+        ClassSecurityValidator.setGlobal(
+                ClassSecurityValidator.composite(
+                        ClassSecurityValidator.DEFAULT,
+                        ClassSecurityValidator.builder().add(ComplexObject.class).build()
+                )
+        );
+    }
+
+    @AfterAll
+    static void resetAvroTrust() {
+        ClassSecurityValidator.setGlobal(ClassSecurityValidator.DEFAULT);
+    }
 
     @BeforeEach
     void setUp() {
@@ -106,7 +122,7 @@ class AvroSerializerAutoConfigurationTest {
                     ).isEqualTo(ComplexObject.getClassSchema());
                     assertThat(context).hasSingleBean(ClasspathAvroSchemaLoader.class);
                     assertThat(context).getBean("specificRecordBaseClasspathAvroSchemaLoader")
-                            .isInstanceOf(ClasspathAvroSchemaLoader.class);
+                                       .isInstanceOf(ClasspathAvroSchemaLoader.class);
                 });
     }
 
@@ -279,12 +295,14 @@ class AvroSerializerAutoConfigurationTest {
 
         }
     }
+
     @ContextConfiguration
     @EnableAutoConfiguration
     @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     private static class ContextWithCustomSchemaStore {
 
         public static SchemaStore.Cache store = new SchemaStore.Cache();
+
         static {
             store.addSchema(org.sophonhq.sophon.springboot.fixture.avro.test1.ComplexObject.SCHEMA$);
             store.addSchema(org.sophonhq.sophon.springboot.fixture.avro.test2.ComplexObject.SCHEMA$);
