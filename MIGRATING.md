@@ -65,7 +65,9 @@ Table and column names are unchanged, so existing databases can be used without 
 Framework stores the class names of some framework objects, like tracking tokens, saga state and dead letters. These
 names refer to `org.axonframework` classes that no longer exist.
 
-To read such data, let the serializers translate Axon Framework class names when deserializing:
+You are more than encouraged to migrate your data by replacing the `org.axonframework` substring with
+`org.sophonhq.sophon`. If you don't want or can't do the migration. You can let the serializers translate Axon Framework
+class names when deserializing:
 
 ```properties
 sophon.serializer.translate-legacy-class-names=true
@@ -158,16 +160,16 @@ recorded both as `axon.scope` and ignored `axon.tracing.repository.aggregate-id-
 
 ### Spring bean names
 
-| Axon Framework 4                                    | Sophon                                                        |
-|-----------------------------------------------------|---------------------------------------------------------------|
-| `defaultAxonObjectMapper`                           | `defaultSophonObjectMapper`                                   |
-| `defaultAxonCborMapper`                             | `defaultSophonCborMapper`                                     |
-| `defaultAxonXStream`                                | `defaultSophonXStream`                                        |
-| `defaultAxonSchemaStore`                            | `defaultSophonSchemaStore`                                    |
-| `springAxonConfiguration`                           | `springSophonConfiguration`                                   |
-| `springAxonConfigurer`                              | `springSophonConfigurer`                                      |
-| `axonTransactionManager`                            | `sophonTransactionManager`                                    |
-| `axonTimeoutConfigurerModule`                       | `sophonTimeoutConfigurerModule`                               |
+| Axon Framework 4                                    | Sophon                                                  |
+|-----------------------------------------------------|---------------------------------------------------------|
+| `defaultAxonObjectMapper`                           | `defaultSophonObjectMapper`                             |
+| `defaultAxonCborMapper`                             | `defaultSophonCborMapper`                               |
+| `defaultAxonXStream`                                | `defaultSophonXStream`                                  |
+| `defaultAxonSchemaStore`                            | `defaultSophonSchemaStore`                              |
+| `springAxonConfiguration`                           | `springSophonConfiguration`                             |
+| `springAxonConfigurer`                              | `springSophonConfigurer`                                |
+| `axonTransactionManager`                            | `sophonTransactionManager`                              |
+| `axonTimeoutConfigurerModule`                       | `sophonTimeoutConfigurerModule`                         |
 | `org.axonframework.spring.config.AxonConfiguration` | `org.sophonhq.sophon.spring.config.SophonConfiguration` |
 
 ### Runtime identifiers

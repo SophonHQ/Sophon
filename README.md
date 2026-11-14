@@ -16,7 +16,6 @@ describe the origin of this project. See [NOTICE](NOTICE) for attribution.
 Developers of Axon 5 made some questionable choices that created the need for a maintained fork of Axon 4.
 These decisions include:
 
-* Dropped support for Axon 4
 * No ability to opt-out from Event Sourcing
 * Futures and reactive streams as first-class citizens in a world where virtual threads are already generally available
 * General greedy corporate practices of moving open source features into proprietary AxonIQ Framework (Sagas to
@@ -31,6 +30,10 @@ modifications included:
 2. Removed code associated with proprietary products (Axon Server, AxonIQ Console, Update Checker)
 3. Migrated from jsr305 and JetBrains annotations to JSpecify
 4. `legacy` module deleted
+
+## Migrating from Axon 4
+
+Refer to [MIGRATING.md](MIGRATING.md) file on how to migrate your Axon 4 application to Sophon.
 
 ## Documentation
 
