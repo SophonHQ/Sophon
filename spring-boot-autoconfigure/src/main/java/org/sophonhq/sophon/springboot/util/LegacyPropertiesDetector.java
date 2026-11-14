@@ -32,7 +32,7 @@ import java.util.TreeSet;
  * Sophon reads its configuration from {@code sophon.*}, so these properties would otherwise be silently ignored after
  * migrating from Axon Framework 4.
  *
- * @since 1.0.0
+ * @since sophon-1.0.0
  */
 public class LegacyPropertiesDetector implements InitializingBean {
 

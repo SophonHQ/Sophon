@@ -26,7 +26,7 @@ import org.sophonhq.sophon.serialization.LegacyClassNames;
  * {@link DeserializationProblemHandler} resolving polymorphic type ids that refer to Axon Framework 4 class names, as
  * written for {@code @JsonTypeInfo(use = Id.CLASS)} properties, to their Sophon equivalents.
  *
- * @since 1.0.0
+ * @since sophon-1.0.0
  */
 final class LegacyTypeIdHandler extends DeserializationProblemHandler {
 

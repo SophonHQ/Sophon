@@ -20,18 +20,21 @@ package org.sophonhq.sophon.serialization.upcasting.avro;
 import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.message.SchemaStore;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.apache.avro.util.ClassSecurityValidator;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.eventhandling.AbstractSequencedDomainEventEntry;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.EventData;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.messaging.MetaData;
-import org.sophonhq.sophon.serialization.*;
+import org.sophonhq.sophon.serialization.AnnotationRevisionResolver;
+import org.sophonhq.sophon.serialization.SerializationException;
+import org.sophonhq.sophon.serialization.SerializedObject;
+import org.sophonhq.sophon.serialization.Serializer;
+import org.sophonhq.sophon.serialization.SimpleSerializedObject;
+import org.sophonhq.sophon.serialization.SimpleSerializedType;
 import org.sophonhq.sophon.serialization.avro.AvroSerializer;
-import org.sophonhq.sophon.serialization.avro.AvroSerializerStrategy;
 import org.sophonhq.sophon.serialization.avro.GenericRecordToByteArrayConverter;
-import org.sophonhq.sophon.serialization.avro.SpecificRecordBaseSerializerStrategy;
 import org.sophonhq.sophon.serialization.avro.test.ComplexObject;
 import org.sophonhq.sophon.serialization.avro.test.ComplexObjectSchemas;
 import org.sophonhq.sophon.serialization.json.JacksonSerializer;
@@ -45,8 +48,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -58,19 +60,34 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class AvroUpcasterTest {
 
+    @BeforeAll
+    static void trustTestRecords() {
+        ClassSecurityValidator.setGlobal(
+                ClassSecurityValidator.composite(
+                        ClassSecurityValidator.DEFAULT,
+                        ClassSecurityValidator.builder().add(ComplexObject.class).build()
+                )
+        );
+    }
+
+    @AfterAll
+    static void resetAvroTrust() {
+        ClassSecurityValidator.setGlobal(ClassSecurityValidator.DEFAULT);
+    }
+
     private final SchemaStore.Cache schemaStore = new SchemaStore.Cache();
 
     private final AvroSerializer serializer = AvroSerializer.builder()
-            .serializerDelegate(JacksonSerializer.defaultSerializer())
-            .revisionResolver(new AnnotationRevisionResolver())
-            .schemaStore(schemaStore)
-            .includeDefaultAvroSerializationStrategies(true)
-            .includeSchemasInStackTraces(true)
-            .build();
+                                                            .serializerDelegate(JacksonSerializer.defaultSerializer())
+                                                            .revisionResolver(new AnnotationRevisionResolver())
+                                                            .schemaStore(schemaStore)
+                                                            .includeDefaultAvroSerializationStrategies(true)
+                                                            .includeSchemasInStackTraces(true)
+                                                            .build();
 
     /**
-     * Purpose: Ensure that the complete wiring of serializer, initial-/intermediate representation
-     * and upcaster works as expected. No Schema incompatibilities, we just modify a property here.
+     * Purpose: Ensure that the complete wiring of serializer, initial-/intermediate representation and upcaster works
+     * as expected. No Schema incompatibilities, we just modify a property here.
      */
     @Test
     void modifyPropertyOfComplexObjectInUpcaster() {
@@ -78,10 +95,10 @@ public class AvroUpcasterTest {
 
         MetaData metaData = MetaData.with("key", "value");
         ComplexObject payload = ComplexObject.newBuilder()
-                .setValue1("foo")
-                .setValue2("bar")
-                .setValue3(42)
-                .build();
+                                             .setValue1("foo")
+                                             .setValue2("bar")
+                                             .setValue3(42)
+                                             .build();
 
         GenericDomainEventMessage<?> msg = new GenericDomainEventMessage<>(
                 ComplexObject.class.getCanonicalName(),
@@ -92,7 +109,7 @@ public class AvroUpcasterTest {
 
         EventData<?> eventData = new ByteArrayDomainEventEntry(msg, serializer);
 
-        SetValue2OnComplexObjectUpcaster setValue2OnComplexObjectUpcaster = new SetValue2OnComplexObjectUpcaster("helloWorld");
+        var setValue2OnComplexObjectUpcaster = new SetValue2OnComplexObjectUpcaster("helloWorld");
 
         List<IntermediateEventRepresentation> collect = setValue2OnComplexObjectUpcaster.upcast(Stream.of(
                 new InitialEventRepresentation(eventData, serializer)
@@ -106,9 +123,9 @@ public class AvroUpcasterTest {
     }
 
     /**
-     * Purpose: the  {@link org.sophonhq.sophon.serialization.avro.test.ComplexObjectSchemas#incompatibleSchema}
-     * does not define value1, so it is incompatible to the schema of {@link ComplexObject}. The Upcaster has
-     * to add the additional field.
+     * Purpose: the  {@link org.sophonhq.sophon.serialization.avro.test.ComplexObjectSchemas#incompatibleSchema} does
+     * not define value1, so it is incompatible to the schema of {@link ComplexObject}. The Upcaster has to add the
+     * additional field.
      */
     @Test
     void upcastIncompatibleSchema() {
@@ -132,7 +149,9 @@ public class AvroUpcasterTest {
             }
 
             @Override
-            protected IntermediateEventRepresentation doUpcast(IntermediateEventRepresentation intermediateRepresentation) {
+            protected IntermediateEventRepresentation doUpcast(
+                    IntermediateEventRepresentation intermediateRepresentation
+            ) {
                 return intermediateRepresentation.upcastPayload(
                         intermediateRepresentation.getType(),
                         GenericRecord.class,
@@ -216,10 +235,11 @@ public class AvroUpcasterTest {
                 return payload;
             }
         };
-
     }
 
-    private static SerializedObject<byte[]> createSingleObjectEncodedSerializedObject(GenericRecord record, String revision) {
+    private static SerializedObject<byte[]> createSingleObjectEncodedSerializedObject(GenericRecord record,
+                                                                                      String revision) {
+
         return new SimpleSerializedObject<>(
                 new GenericRecordToByteArrayConverter().convert(record),
                 byte[].class,
