@@ -150,7 +150,6 @@
         <felix.maven-bundle-plugin.version>5.1.9</felix.maven-bundle-plugin.version>
         <flatten-maven-plugin.version>1.9.0</flatten-maven-plugin.version>
         <jacoco-maven.version>0.8.16</jacoco-maven.version>
-        <maven-assembly.version>3.8.0</maven-assembly.version>
         <maven-clean.version>3.5.0</maven-clean.version>
         <maven-compiler.version>3.16.0</maven-compiler.version>
         <maven-enforcer.version>3.7.0</maven-enforcer.version>
@@ -653,16 +652,6 @@
                 </configuration>
             </plugin>
             <!-- package -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>${maven-assembly.version}</version>
-                <configuration>
-                    <descriptorSourceDirectory>assembly</descriptorSourceDirectory>
-                    <archiverConfig>
-                        <duplicateBehavior>skip</duplicateBehavior>
-                    </archiverConfig>
-                </configuration>
-            </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>${maven-jar.version}</version>
