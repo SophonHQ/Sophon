@@ -652,6 +652,27 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <argLine>-Djava.awt.headless=true</argLine>
+                    <includes>
+                        <include>**/*IntegrationTest.java</include>
+                        <include>**/*IntegrationTests.java</include>
+                        <include>**/*IntegrationTest_*.java</include>
+                        <include>**/*IntegrationTests_*.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>run-integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- package -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -776,8 +797,13 @@
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <!--suppress MavenModelInspection -->
-                            <argLine>-Djava.awt.headless=true ${surefireArgLine}</argLine>
+                            <argLine>-Djava.awt.headless=true @{argLine}</argLine>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <argLine>-Djava.awt.headless=true @{argLine}</argLine>
                         </configuration>
                     </plugin>
 
@@ -797,57 +823,6 @@
                                     <destFile>${project.build.directory}/jacoco-ut.exec</destFile>
                                 </configuration>
                             </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>integration-test</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-                <property>
-                    <name>coverage</name>
-                </property>
-            </activation>
-
-            <build>
-                <defaultGoal>verify</defaultGoal>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>run-integration-tests</id>
-                                <goals>
-                                    <goal>integration-test</goal>
-                                </goals>
-                                <configuration>
-                                    <!--suppress MavenModelInspection -->
-                                    <argLine>-Djava.awt.headless=true ${failsafeArgLine}</argLine>
-                                    <includes>
-                                        <include>**/*IntegrationTest.java</include>
-                                        <include>**/*IntegrationTests.java</include>
-                                        <include>**/*IntegrationTest_*.java</include>
-                                        <include>**/*IntegrationTests_*.java</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>**/*Test.java</exclude>
-                                        <exclude>**/*Tests.java</exclude>
-                                        <exclude>**/*Test_*.java</exclude>
-                                        <exclude>**/*Tests_*.java</exclude>
-                                    </excludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <executions>
                             <execution>
                                 <id>prepare-agent-for-integration-test</id>
                                 <phase>pre-integration-test</phase>
@@ -959,6 +934,7 @@
             <properties>
                 <!-- Test classes are shared between modules, so we should build these modules, but don't run them.-->
                 <skipTests>true</skipTests>
+                <skipITs>true</skipITs>
             </properties>
         </profile>
     </profiles>
