@@ -33,6 +33,7 @@ import org.springframework.context.annotation.Bean;
 @AutoConfiguration
 @AutoConfigureAfter(name = {
         "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration",
+        "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration",
         "org.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration",
         "org.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration",
         "org.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration",

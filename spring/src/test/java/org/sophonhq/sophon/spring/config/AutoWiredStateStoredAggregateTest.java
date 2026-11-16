@@ -30,7 +30,6 @@ import org.sophonhq.sophon.modelling.command.legacyjpa.GenericJpaRepository;
 import org.sophonhq.sophon.spring.stereotype.Aggregate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -43,7 +42,6 @@ import static org.mockito.Mockito.mock;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 @ExtendWith(SpringExtension.class)
-@EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 @ContextConfiguration
 class AutoWiredStateStoredAggregateTest {
 

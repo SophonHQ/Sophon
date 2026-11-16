@@ -36,16 +36,12 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
-import org.springframework.jmx.support.RegistrationPolicy;
 
 import java.time.Duration;
 import java.util.HashSet;
@@ -67,11 +63,7 @@ import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessa
         "spring.main.banner-mode=off"
 })
 @SpringBootConfiguration
-@EnableAutoConfiguration(exclude = {
-        JmxAutoConfiguration.class,
-        WebClientAutoConfiguration.class
-})
-@EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
+@EnableAutoConfiguration
 class SagaCustomizeIntegrationTest {
 
     @Autowired

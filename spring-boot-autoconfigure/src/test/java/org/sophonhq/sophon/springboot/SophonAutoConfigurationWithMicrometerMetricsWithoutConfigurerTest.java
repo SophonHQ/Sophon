@@ -25,9 +25,7 @@ import org.sophonhq.sophon.micrometer.GlobalMetricRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -38,9 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ContextConfiguration
 @EnableAutoConfiguration(exclude = {
         DataSourceAutoConfiguration.class,
-        HibernateJpaAutoConfiguration.class,
-        JmxAutoConfiguration.class,
-        WebClientAutoConfiguration.class
+        HibernateJpaAutoConfiguration.class
 })
 @TestPropertySource("classpath:test.metrics.application.properties")
 @ExtendWith(SpringExtension.class)

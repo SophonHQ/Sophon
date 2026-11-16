@@ -26,8 +26,6 @@ import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -75,7 +73,6 @@ class HandlerEnhancerDefinitionConfigurationTest {
 
     @ContextConfiguration
     @EnableAutoConfiguration
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     private static class ContextWithHandlers {
 
         @Bean
@@ -91,7 +88,6 @@ class HandlerEnhancerDefinitionConfigurationTest {
 
     @ContextConfiguration
     @EnableAutoConfiguration
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     private static class ContextWithoutHandlers {
 
         @Bean

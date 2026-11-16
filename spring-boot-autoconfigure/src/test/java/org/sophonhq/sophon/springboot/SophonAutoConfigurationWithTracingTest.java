@@ -56,13 +56,9 @@ import org.sophonhq.sophon.tracing.attributes.PayloadTypeSpanAttributesProvider;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.support.RegistrationPolicy;
 
 import java.util.Map;
 
@@ -565,13 +561,10 @@ class SophonAutoConfigurationWithTracingTest {
     @EnableAutoConfiguration(exclude = {
             DataSourceAutoConfiguration.class,
             HibernateJpaAutoConfiguration.class,
-            JmxAutoConfiguration.class,
             OpenTelemetryAutoConfiguration.class,
-            WebClientAutoConfiguration.class,
             SecurityAutoConfiguration.class,
             SophonTimeoutAutoConfiguration.class,
     })
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     @Configuration
     public static class Context {
 

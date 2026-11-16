@@ -36,13 +36,9 @@ import org.sophonhq.sophon.tracing.SpanFactory;
 import org.sophonhq.sophon.tracing.opentelemetry.OpenTelemetrySpanFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.support.RegistrationPolicy;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -136,24 +132,18 @@ class SophonAutoConfigurationWithOpenTelemetryTest {
     }
 
     @EnableAutoConfiguration(exclude = {
-            JmxAutoConfiguration.class,
-            WebClientAutoConfiguration.class,
             HibernateJpaAutoConfiguration.class,
             DataSourceAutoConfiguration.class,
     })
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     @Configuration
     public static class Context {
 
     }
 
     @EnableAutoConfiguration(exclude = {
-            JmxAutoConfiguration.class,
-            WebClientAutoConfiguration.class,
             HibernateJpaAutoConfiguration.class,
             DataSourceAutoConfiguration.class,
     })
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     @Configuration
     public static class ContextWithOpenTelemetry {
 
