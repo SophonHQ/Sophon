@@ -37,8 +37,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.ArrayList;
@@ -85,7 +83,6 @@ class DbSchedulerAutoConfigurationTest {
 
     @ContextConfiguration
     @EnableAutoConfiguration
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     private static class DefaultContext {
 
         private final DataSource existingDataSource;
@@ -106,7 +103,6 @@ class DbSchedulerAutoConfigurationTest {
 
     @ContextConfiguration
     @EnableAutoConfiguration
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     private static class HumanReadableContext {
         private final DataSource existingDataSource;
         private final List<Task<?>> configuredTasks;

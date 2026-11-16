@@ -28,11 +28,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-// Ordered before CBORMapperAutoConfiguration: a CBORMapper is an ObjectMapper and would otherwise satisfy the
-// @ConditionalOnMissingBean of the default ObjectMapper below.
 @AutoConfiguration
 @AutoConfigureBefore({SophonAutoConfiguration.class, CBORMapperAutoConfiguration.class})
-@AutoConfigureAfter(name = "org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration")
+@AutoConfigureAfter(name = {
+        "org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration",
+        "org.springframework.boot.jackson2.autoconfigure.Jackson2AutoConfiguration"
+})
 @ConditionalOnClass(name = "com.fasterxml.jackson.databind.ObjectMapper")
 @EnableConfigurationProperties(value = SerializerProperties.class)
 public class ObjectMapperAutoConfiguration {

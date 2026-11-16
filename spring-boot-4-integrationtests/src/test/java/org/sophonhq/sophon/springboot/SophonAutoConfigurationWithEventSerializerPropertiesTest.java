@@ -37,14 +37,10 @@ import org.sophonhq.sophon.serialization.jackson3.Jackson3Serializer;
 import org.sophonhq.sophon.serialization.jackson3.Jackson3SerializerCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webclient.autoconfigure.WebClientAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -56,11 +52,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = SophonAutoConfigurationWithEventSerializerPropertiesTest.TestContext.class)
-@EnableAutoConfiguration(exclude = {
-        JmxAutoConfiguration.class,
-        WebClientAutoConfiguration.class
-})
-@EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
+@EnableAutoConfiguration
 @TestPropertySource("classpath:application.serializertest.properties")
 class SophonAutoConfigurationWithEventSerializerPropertiesTest {
 

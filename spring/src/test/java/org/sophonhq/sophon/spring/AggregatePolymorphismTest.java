@@ -33,9 +33,7 @@ import org.sophonhq.sophon.spring.stereotype.Aggregate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Import;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -50,7 +48,6 @@ import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
  * @author Milan Savic
  */
 @ExtendWith(SpringExtension.class)
-@EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 public class AggregatePolymorphismTest {
 
     @Autowired

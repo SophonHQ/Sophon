@@ -45,14 +45,10 @@ import org.sophonhq.sophon.serialization.Serializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Primary;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.stereotype.Component;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
@@ -83,12 +79,8 @@ import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessa
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @SpringBootConfiguration
-@EnableAutoConfiguration(exclude = {
-        JmxAutoConfiguration.class,
-        WebClientAutoConfiguration.class
-})
+@EnableAutoConfiguration
 @TestPropertySource(properties = "spring.main.banner-mode=off")
-@EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 public class TrackingEventProcessorIntegrationTest {
 
     @Autowired
