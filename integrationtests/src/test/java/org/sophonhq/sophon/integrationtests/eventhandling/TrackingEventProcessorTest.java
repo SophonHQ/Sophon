@@ -74,6 +74,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -374,6 +375,35 @@ class TrackingEventProcessorTest {
             assertEquals(1, skipped.size());
             assertTrue(skipped.contains(String.class));
         });
+    }
+
+    @Test
+    void unhandledPayloadTypesAreSkippedDuringReplay() {
+        when(mockHandler.canHandle(any())).thenReturn(false);
+        when(mockHandler.canHandleType(String.class)).thenReturn(false);
+        Set<Class<?>> skipped = ConcurrentHashMap.newKeySet();
+
+        EmbeddedEventStore mockEventBus = mock(EmbeddedEventStore.class);
+        TrackingToken trackingToken = new GlobalSequenceTrackingToken(0);
+        List<TrackedEventMessage<?>> events = createEvents(2)
+                .stream()
+                .map(event -> asTrackedEventMessage(event, trackingToken))
+                .collect(toList());
+        when(mockEventBus.openStream(null)).thenReturn(trackingEventStreamOf(events.iterator(), skipped::add));
+        tokenStore.initializeTokenSegments(
+                "test", 1, ReplayToken.createReplayToken(new GlobalSequenceTrackingToken(1))
+        );
+        testSubject = TrackingEventProcessor.builder()
+                                            .name("test")
+                                            .eventHandlerInvoker(eventHandlerInvoker)
+                                            .messageSource(mockEventBus)
+                                            .tokenStore(tokenStore)
+                                            .transactionManager(NoTransactionManager.INSTANCE)
+                                            .build();
+
+        testSubject.start();
+
+        assertWithin(8, TimeUnit.SECONDS, () -> assertTrue(skipped.contains(String.class)));
     }
 
     @Test
