@@ -45,12 +45,12 @@ jobs:
 
       - name: Build
         run: |
-          ./mvnw -B -U -Dstyle.color=always -Pintegration-test -Djacoco.skip=true -Dsurefire.rerunFailingTestsCount=5 clean verify
+          ./mvnw -B -U -Dstyle.color=always -Djacoco.skip=true clean verify
 
       - name: Deploy to Maven Central
         if: success() && matrix.deploy-enabled
         run: |
-          ./mvnw -B -U -Dstyle.color=always -Psources,javadoc,sign deploy -DskipTests=true
+          ./mvnw -B -U -Dstyle.color=always -Psources,javadoc,sign deploy -DskipTests=true -DskipITs=true
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_TOKEN_ID }}
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_TOKEN_PASS }}

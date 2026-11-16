@@ -39,11 +39,13 @@ jobs:
 
       - name: Build
         run: |
-          ./mvnw -B -U -Dstyle.color=always -Pintegration-test -Djacoco.skip=true -Dsurefire.rerunFailingTestsCount=5 clean verify
+          ./mvnw -B -U -Dstyle.color=always -Djacoco.skip=true clean verify
 
       - name: Create test summary
         uses: test-summary/action@v2.6
         with:
-          paths: "**/target/surefire-reports/TEST-*.xml"
+          paths: |
+            **/target/surefire-reports/TEST-*.xml
+            **/target/failsafe-reports/TEST-*.xml
           show: "fail, skip"
         if: always() # This allows the build step to fail -- due to failing tests -- but still produce a test summary.
