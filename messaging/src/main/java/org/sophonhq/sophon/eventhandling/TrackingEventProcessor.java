@@ -80,10 +80,10 @@ import static org.sophonhq.sophon.common.io.IOUtils.closeQuietly;
  * processing an event batch the EventProcessor updates its tracking token in the TokenStore.
  * <p>
  * A TrackingEventProcessor is able to continue processing from the last stored token when it is restarted. It is also
- * capable of replaying events from any starting token. To replay the entire event log, simply invoke {@link
- * #resetTokens()} on this processor to adjust the positions of the {@link TrackingToken}(s) within the {@link
- * TokenStore}. To replay from a specific point, {@link #resetTokens(Function)} can be utilized to define the new point
- * to start at.
+ * capable of replaying events from any starting token. To replay the entire event log, simply invoke
+ * {@link #resetTokens()} on this processor to adjust the positions of the {@link TrackingToken}(s) within the
+ * {@link TokenStore}. To replay from a specific point, {@link #resetTokens(Function)} can be utilized to define the new
+ * point to start at.
  * <p>
  * Note, the {@link #getName()} of this {@link StreamingEventProcessor} is used to obtain the tracking token from the
  * {@code TokenStore}, so take care when renaming a {@link TrackingEventProcessor}.
@@ -129,8 +129,8 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
      * Instantiate a {@link TrackingEventProcessor} based on the fields contained in the {@link Builder}.
      * <p>
      * Will assert that the Event Processor {@code name}, {@link EventHandlerInvoker}, {@link StreamableMessageSource},
-     * {@link TokenStore} and {@link TransactionManager} are not {@code null}, and will throw an {@link
-     * SophonConfigurationException} if any of them is {@code null}.
+     * {@link TokenStore} and {@link TransactionManager} are not {@code null}, and will throw an
+     * {@link SophonConfigurationException} if any of them is {@code null}.
      *
      * @param builder the {@link Builder} used to instantiate a {@link TrackingEventProcessor} instance
      */
@@ -191,8 +191,9 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
      * {@link NoOpMessageMonitor}, the {@link TrackingEventProcessorConfiguration} to a
      * {@link TrackingEventProcessorConfiguration#forSingleThreadedProcessing()} call, and the
      * {@link EventProcessorSpanFactory} to a {@link DefaultEventProcessorSpanFactory} backed by a
-     * {@link org.sophonhq.sophon.tracing.NoOpSpanFactory}. The Event Processor {@code name}, {@link EventHandlerInvoker},
-     * {@link StreamableMessageSource}, {@link TokenStore} and {@link TransactionManager} are
+     * {@link org.sophonhq.sophon.tracing.NoOpSpanFactory}. The Event Processor {@code name},
+     * {@link EventHandlerInvoker}, {@link StreamableMessageSource}, {@link TokenStore} and {@link TransactionManager}
+     * are
      * <b>hard requirements</b> and as such should be provided.
      *
      * @return a Builder to be able to create a {@link TrackingEventProcessor}
@@ -214,9 +215,9 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
     }
 
     /**
-     * Start this processor. The processor will open an event stream on its message source in a new thread using {@link
-     * StreamableMessageSource#openStream(TrackingToken)}. The {@link TrackingToken} used to open the stream will be
-     * fetched from the {@link TokenStore}.
+     * Start this processor. The processor will open an event stream on its message source in a new thread using
+     * {@link StreamableMessageSource#openStream(TrackingToken)}. The {@link TrackingToken} used to open the stream will
+     * be fetched from the {@link TokenStore}.
      * <p>
      * Upon start up of an application, this method will be invoked in the {@link Phase#INBOUND_EVENT_CONNECTORS}
      * phase.
@@ -332,7 +333,10 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
                     if (errorWaitTime == 1) {
                         logger.warn("Error occurred. Starting retry mode.", e);
                     }
-                    logger.warn("Releasing claim on token and preparing for retry in {}s, error message: {}", errorWaitTime, e.getMessage());
+                    logger.warn(
+                            "Releasing claim on token and preparing for retry in {}s, error message: {}",
+                            errorWaitTime, e.getMessage()
+                    );
                     TrackerStatus trackerStatus = activeSegments.get(segment.getSegmentId());
                     if (!trackerStatus.isErrorState()) {
                         TrackerStatus errorStatus =
@@ -417,7 +421,10 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
 
             long processingDeadline = now().toEpochMilli() + eventAvailabilityTimeout;
             long processingTime = eventAvailabilityTimeout;
-            while (batch.isEmpty() && processingTime > 0 && eventStream.hasNextAvailable((int) processingTime, MILLISECONDS)) {
+            while (batch.isEmpty()
+                    && processingTime > 0
+                    && eventStream.hasNextAvailable((int) processingTime, MILLISECONDS)) {
+
                 processingTime = processingDeadline - now().toEpochMilli();
 
                 final TrackedEventMessage<?> firstMessage = eventStream.nextAvailable();
@@ -533,8 +540,8 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
     }
 
     /**
-     * Indicates whether any of the components handling events for this Processor are able to handle the given {@code
-     * eventMessage} for any of the given {@code segments}.
+     * Indicates whether any of the components handling events for this Processor are able to handle the given
+     * {@code eventMessage} for any of the given {@code segments}.
      *
      * @param eventMessage The message to handle
      * @param segments     The segments to handle the message in
@@ -556,8 +563,8 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
     }
 
     /**
-     * Indicates if the given {@code processingSegments} should be considered normal processing for the given {@code
-     * segment}. This is the case if only given {@code segment} is included in the {@code processingSegments}.
+     * Indicates if the given {@code processingSegments} should be considered normal processing for the given
+     * {@code segment}. This is the case if only given {@code segment} is included in the {@code processingSegments}.
      *
      * @param segment            The segment assigned to this thread for processing
      * @param processingSegments The segments for which a received event should be processed
@@ -574,7 +581,9 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
             if (!previousStatus.isCaughtUp()) {
                 TrackerStatus updatedStates =
                         activeSegments.computeIfPresent(segment.getSegmentId(), (k, v) -> v.caughtUp());
-                trackerStatusChangeListener.onEventTrackerStatusChange(singletonMap(segment.getSegmentId(), updatedStates));
+                trackerStatusChangeListener.onEventTrackerStatusChange(
+                        singletonMap(segment.getSegmentId(), updatedStates)
+                );
             }
         }
     }
@@ -606,8 +615,8 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
     /**
      * {@inheritDoc}
      * <p>
-     * This will also ignore the specified this segment for "re-claiming" for twice the {@link
-     * TrackingEventProcessorConfiguration#getTokenClaimInterval()} token claim interval.
+     * This will also ignore the specified this segment for "re-claiming" for twice the
+     * {@link TrackingEventProcessorConfiguration#getTokenClaimInterval()} token claim interval.
      */
     @Override
     public void releaseSegment(int segmentId) {
@@ -617,10 +626,10 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
     /**
      * {@inheritDoc}
      * <p>
-     * This method will put the segment on a non-claim map. During the next iteration of the {@link #processingLoop(Segment)}
-     * the segments will be unclaimed and the worker stopped if it is found to be in this map. This means it can take
-     * up to the batch processing time, or up to the {@link #eventAvailabilityTimeout} if there are no events in the stream
-     * for the segment to be unclaimed.
+     * This method will put the segment on a non-claim map. During the next iteration of the
+     * {@link #processingLoop(Segment)} the segments will be unclaimed and the worker stopped if it is found to be in
+     * this map. This means it can take up to the batch processing time, or up to the {@link #eventAvailabilityTimeout}
+     * if there are no events in the stream for the segment to be unclaimed.
      */
     @Override
     public void releaseSegment(int segmentId, long releaseDuration, TimeUnit unit) {
@@ -630,9 +639,9 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
     /**
      * {@inheritDoc}
      * <p>
-     * This method will add an instruction for the {@link WorkerLauncher} and set a flag that interrupts its sleep
-     * to reduce the time it takes for the processor to claim the segment. Note that a thread has to be available for
-     * a segment to start processing. The result will be {@code false} if there is none available.
+     * This method will add an instruction for the {@link WorkerLauncher} and set a flag that interrupts its sleep to
+     * reduce the time it takes for the processor to claim the segment. Note that a thread has to be available for a
+     * segment to start processing. The result will be {@code false} if there is none available.
      */
     @Override
     public CompletableFuture<Boolean> claimSegment(int segmentId) {
@@ -768,7 +777,9 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
                                         workerThread.interrupt();
                                         workerThread.join(workerTerminationTimeout);
                                         if (workerThread.isAlive()) {
-                                            logger.warn("Forced shutdown of Tracking Processor Worker '{}' was unsuccessful. Consider increasing workerTerminationTimeout.", worker.getKey()
+                                            logger.warn(
+                                                    "Forced shutdown of Tracking Processor Worker '{}' was unsuccessful. Consider increasing workerTerminationTimeout.",
+                                                    worker.getKey()
                                             );
                                         }
                                     }
@@ -824,15 +835,15 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
     }
 
     /**
-     * Starts workers for a number of segments. When only the {@link Segment#ROOT_SEGMENT root } segment {@link
-     * TokenStore#fetchSegments(String) exists} in the  TokenStore, it will be split in multiple segments as configured
-     * by the {@link TrackingEventProcessorConfiguration#andInitialSegmentsCount(int)}, otherwise the existing segments
-     * in the TokenStore will be used.
+     * Starts workers for a number of segments. When only the {@link Segment#ROOT_SEGMENT root } segment
+     * {@link TokenStore#fetchSegments(String) exists} in the  TokenStore, it will be split in multiple segments as
+     * configured by the {@link TrackingEventProcessorConfiguration#andInitialSegmentsCount(int)}, otherwise the
+     * existing segments in the TokenStore will be used.
      * <p/>
      * An attempt will be made to instantiate a worker for each segment. This will succeed when the number of threads
-     * matches the requested segments. The number of active threads can be configured with {@link
-     * TrackingEventProcessorConfiguration#forParallelProcessing(int)}. When insufficient threads are available to serve
-     * the number of segments, it will result in some segments not being processed.
+     * matches the requested segments. The number of active threads can be configured with
+     * {@link TrackingEventProcessorConfiguration#forParallelProcessing(int)}. When insufficient threads are available
+     * to serve the number of segments, it will result in some segments not being processed.
      */
     protected void startSegmentWorkers() {
         spawnWorkerThread(new WorkerLauncher()).start();
@@ -1016,8 +1027,8 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
          * Sets the {@link TokenStore} used to store and fetch event tokens that enable this {@link EventProcessor} to
          * track its progress.
          *
-         * @param tokenStore the {@link TokenStore} used to store and fetch event tokens that enable this {@link
-         *                   EventProcessor} to track its progress
+         * @param tokenStore the {@link TokenStore} used to store and fetch event tokens that enable this
+         *                   {@link EventProcessor} to track its progress
          * @return the current Builder instance, for fluent interfacing
          */
         public Builder tokenStore(TokenStore tokenStore) {
@@ -1034,8 +1045,9 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
          * behavior is to store the last token of the Batch to the Token Store before processing of events begins. If
          * the {@link NoTransactionManager} is provided, the default is to extend the claim at the start of the unit of
          * work, and update the token after processing Events. When tokens are stored at the start of a batch, a claim
-         * extension will be sent at the end of the batch if processing that batch took longer than the {@link
-         * TrackingEventProcessorConfiguration#andEventAvailabilityTimeout(long, TimeUnit) tokenClaimUpdateInterval}.
+         * extension will be sent at the end of the batch if processing that batch took longer than the
+         * {@link TrackingEventProcessorConfiguration#andEventAvailabilityTimeout(long, TimeUnit)
+         * tokenClaimUpdateInterval}.
          * <p>
          * Use {@link #storingTokensAfterProcessing()} to force storage of tokens at the end of a batch.
          *
@@ -1054,12 +1066,12 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
 
         /**
          * Sets the {@link TrackingEventProcessorConfiguration} containing the fine grained configuration options for a
-         * {@link TrackingEventProcessor}. Defaults to a {@link TrackingEventProcessorConfiguration#forSingleThreadedProcessing()}
-         * call.
+         * {@link TrackingEventProcessor}. Defaults to a
+         * {@link TrackingEventProcessorConfiguration#forSingleThreadedProcessing()} call.
          *
          * @param trackingEventProcessorConfiguration the {@link TrackingEventProcessorConfiguration} containing the
-         *                                            fine grained configuration options for a {@link
-         *                                            TrackingEventProcessor}
+         *                                            fine grained configuration options for a
+         *                                            {@link TrackingEventProcessor}
          * @return the current Builder instance, for fluent interfacing
          */
         public Builder trackingEventProcessorConfiguration(
@@ -1081,8 +1093,9 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
          * begins, if a TransactionManager is configured. If the {@link NoTransactionManager} is provided, the default
          * is to extend the claim at the start of the unit of work, and update the token after processing Events. When
          * tokens are stored at the start of a batch, a claim extension will be sent at the end of the batch if
-         * processing that batch took longer than the {@link TrackingEventProcessorConfiguration#andEventAvailabilityTimeout(long,
-         * TimeUnit) tokenClaimUpdateInterval}.
+         * processing that batch took longer than the
+         * {@link TrackingEventProcessorConfiguration#andEventAvailabilityTimeout(long, TimeUnit)
+         * tokenClaimUpdateInterval}.
          *
          * @return the current Builder instance, for fluent interfacing
          */
@@ -1104,7 +1117,7 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
          * Validates whether the fields contained in this Builder are set accordingly.
          *
          * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
-         *                                    specifications
+         *                                      specifications
          */
         @Override
         protected void validate() throws SophonConfigurationException {
@@ -1142,8 +1155,8 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
         public TrackedEventMessage<?> nextAvailable() throws InterruptedException {
             TrackedEventMessage<?> trackedEventMessage = alterToken(delegate.nextAvailable());
             this.lastToken = trackedEventMessage.trackingToken() instanceof WrappedToken
-                             ? (WrappedToken) trackedEventMessage.trackingToken()
-                             : null;
+                    ? (WrappedToken) trackedEventMessage.trackingToken()
+                    : null;
             return trackedEventMessage;
         }
 
@@ -1329,7 +1342,9 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
                                 });
                             } catch (UnableToClaimTokenException ucte) {
                                 // When not able to claim a token for a given segment, we skip the
-                                logger.debug("Unable to claim the token for segment: {}. It is owned by another process or has been split/merged concurrently", segmentId
+                                logger.debug(
+                                        "Unable to claim the token for segment: {}. It is owned by another process or has been split/merged concurrently",
+                                        segmentId
                                 );
 
                                 TrackerStatus removedStatus = activeSegments.remove(segmentId);
@@ -1406,13 +1421,14 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
                     logger.info("freeing segment since segment worker will not be started for worker: {}",
                                 workingInCurrentThread);
                     workingInCurrentThread.freeSegment();
+                    releaseToken(workingInCurrentThread.segment);
+                    availableThreads.incrementAndGet();
                     workLauncherRunning.set(false);
                 }
             } else {
                 workLauncherRunning.set(false);
             }
         }
-
     }
 
 
@@ -1429,7 +1445,10 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
         protected boolean runSafe() {
             logger.info("Processing claim instruction for segment [{}] in processor [{}]", segmentId, getName());
             if (availableThreads.get() == 0) {
-                logger.info("Cannot claim segment [{}] in processor [{}] due to not enough threads being available", segmentId, getName());
+                logger.info(
+                        "Cannot claim segment [{}] in processor [{}] due to not enough threads being available",
+                        segmentId, getName()
+                );
                 return false;
             }
             segmentReleaseDeadlines.remove(segmentId);
@@ -1494,8 +1513,8 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
             tokenStore.deleteToken(getName(), tokenToDelete);
 
             TrackingToken mergedToken = otherSegment < segmentId
-                                        ? new MergedTrackingToken(otherToken, status.getInternalTrackingToken())
-                                        : new MergedTrackingToken(status.getInternalTrackingToken(), otherToken);
+                    ? new MergedTrackingToken(otherToken, status.getInternalTrackingToken())
+                    : new MergedTrackingToken(status.getInternalTrackingToken(), otherToken);
 
             tokenStore.storeToken(mergedToken, getName(), newSegment.getSegmentId());
             shouldRunLauncherImmediately.set(true);

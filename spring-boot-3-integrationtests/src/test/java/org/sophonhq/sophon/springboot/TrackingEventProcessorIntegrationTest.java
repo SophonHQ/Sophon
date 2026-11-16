@@ -126,6 +126,7 @@ public class TrackingEventProcessorIntegrationTest {
     @DirtiesContext
     @Test
     public void publishSomeEvents() throws InterruptedException {
+        eventProcessingModule.eventProcessors().values().forEach(EventProcessor::shutDown);
         publishEvent(UsedEvent.INSTANCE, UsedEvent.INSTANCE);
         transactionManager.executeInTransaction(() -> {
             entityManager.createQuery("DELETE FROM TokenEntry t").executeUpdate();
@@ -136,6 +137,7 @@ public class TrackingEventProcessorIntegrationTest {
             );
             tokenStore.storeToken(GapAwareTrackingToken.newInstance(0, new TreeSet<>()), "second", 0);
         });
+        eventProcessingModule.eventProcessors().values().forEach(EventProcessor::start);
 
         assertFalse(countDownLatch1.await(1, TimeUnit.SECONDS));
         publishEvent(UsedEvent.INSTANCE);
@@ -222,80 +224,68 @@ public class TrackingEventProcessorIntegrationTest {
     }
 
     /**
-     * A {@link StreamableMessageSource} implementation that constructs a {@link FilteringBlockingStream} upon
-     * {@link StreamableMessageSource#openStream(TrackingToken)} invocations. All other operations are delegated to a
-     * given {@code StreamableMessageSource}.
-     */
-    private static class FilteringStreamableMessageSource implements StreamableMessageSource<TrackedEventMessage<?>> {
-
-        private final StreamableMessageSource<TrackedEventMessage<?>> delegate;
-
-        private FilteringStreamableMessageSource(StreamableMessageSource<TrackedEventMessage<?>> delegate) {
-            this.delegate = delegate;
-        }
+         * A {@link StreamableMessageSource} implementation that constructs a {@link FilteringBlockingStream} upon
+         * {@link StreamableMessageSource#openStream(TrackingToken)} invocations. All other operations are delegated to a
+         * given {@code StreamableMessageSource}.
+         */
+        private record FilteringStreamableMessageSource(StreamableMessageSource<TrackedEventMessage<?>> delegate)
+            implements StreamableMessageSource<TrackedEventMessage<?>> {
 
         @Override
-        public BlockingStream<TrackedEventMessage<?>> openStream(@Nullable TrackingToken trackingToken) {
-            return new FilteringBlockingStream(delegate.openStream(trackingToken), ignoredMessages);
+            public BlockingStream<TrackedEventMessage<?>> openStream(@Nullable TrackingToken trackingToken) {
+                return new FilteringBlockingStream(delegate.openStream(trackingToken), ignoredMessages);
+            }
+
+            @Override
+            public TrackingToken createTailToken() {
+                return delegate.createTailToken();
+            }
+
+            @Override
+            public TrackingToken createHeadToken() {
+                return delegate.createHeadToken();
+            }
+
+            @Override
+            public TrackingToken createTokenAt(Instant dateTime) {
+                return delegate.createTokenAt(dateTime);
+            }
+
+            @Override
+            public TrackingToken createTokenSince(Duration duration) {
+                return delegate.createTokenSince(duration);
+            }
         }
+
+    private record FilteringBlockingStream(BlockingStream<TrackedEventMessage<?>> delegate,
+                                           Set<TrackedEventMessage<?>> ignoredMessages)
+            implements BlockingStream<TrackedEventMessage<?>> {
 
         @Override
-        public TrackingToken createTailToken() {
-            return delegate.createTailToken();
+            public Optional<TrackedEventMessage<?>> peek() {
+                return delegate.peek();
+            }
+
+            @Override
+            public boolean hasNextAvailable(int timeout, TimeUnit unit) throws InterruptedException {
+                return delegate.hasNextAvailable(timeout, unit);
+            }
+
+            @Override
+            public TrackedEventMessage<?> nextAvailable() throws InterruptedException {
+                return delegate.nextAvailable();
+            }
+
+            @Override
+            public void close() {
+                delegate.close();
+            }
+
+            @Override
+            public void skipMessagesWithPayloadTypeOf(TrackedEventMessage<?> ignoredMessage) {
+                ignoredMessages.add(ignoredMessage);
+            }
         }
-
-        @Override
-        public TrackingToken createHeadToken() {
-            return delegate.createHeadToken();
-        }
-
-        @Override
-        public TrackingToken createTokenAt(Instant dateTime) {
-            return delegate.createTokenAt(dateTime);
-        }
-
-        @Override
-        public TrackingToken createTokenSince(Duration duration) {
-            return delegate.createTokenSince(duration);
-        }
-    }
-
-    private static class FilteringBlockingStream implements BlockingStream<TrackedEventMessage<?>> {
-
-        private final BlockingStream<TrackedEventMessage<?>> delegate;
-        private final Set<TrackedEventMessage<?>> ignoredMessages;
-
-        private FilteringBlockingStream(BlockingStream<TrackedEventMessage<?>> delegate,
-                                        Set<TrackedEventMessage<?>> ignoredMessages) {
-            this.delegate = delegate;
-            this.ignoredMessages = ignoredMessages;
-        }
-
-        @Override
-        public Optional<TrackedEventMessage<?>> peek() {
-            return delegate.peek();
-        }
-
-        @Override
-        public boolean hasNextAvailable(int timeout, TimeUnit unit) throws InterruptedException {
-            return delegate.hasNextAvailable(timeout, unit);
-        }
-
-        @Override
-        public TrackedEventMessage<?> nextAvailable() throws InterruptedException {
-            return delegate.nextAvailable();
-        }
-
-        @Override
-        public void close() {
-            delegate.close();
-        }
-
-        @Override
-        public void skipMessagesWithPayloadTypeOf(TrackedEventMessage<?> ignoredMessage) {
-            ignoredMessages.add(ignoredMessage);
-        }
-    }
 
     @SuppressWarnings("unused")
     @Component
