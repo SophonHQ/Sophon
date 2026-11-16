@@ -39,8 +39,6 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 import org.sophonhq.sophon.spring.messaging.unitofwork.SpringTransactionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
@@ -67,7 +65,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Rene de Waele
  */
 @ExtendWith(SpringExtension.class)
-@EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 @ContextConfiguration(classes = JpaStorageEngineInsertionReadOrderTest.TestContext.class)
 class JpaStorageEngineInsertionReadOrderTest {
 

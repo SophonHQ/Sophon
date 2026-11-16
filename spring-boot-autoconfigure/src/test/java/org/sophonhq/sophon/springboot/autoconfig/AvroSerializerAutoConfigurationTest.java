@@ -37,8 +37,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.EnableMBeanExport;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Map;
@@ -278,7 +276,6 @@ class AvroSerializerAutoConfigurationTest {
 
     @ContextConfiguration
     @EnableAutoConfiguration
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     @AvroSchemaScan(
             basePackages = "org.sophonhq.sophon.springboot.fixture.avro.test1",
             basePackageClasses = ComplexObject.class
@@ -298,7 +295,6 @@ class AvroSerializerAutoConfigurationTest {
 
     @ContextConfiguration
     @EnableAutoConfiguration
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     private static class ContextWithCustomSchemaStore {
 
         public static SchemaStore.Cache store = new SchemaStore.Cache();
@@ -326,7 +322,6 @@ class AvroSerializerAutoConfigurationTest {
 
     @ContextConfiguration
     @EnableAutoConfiguration
-    @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
     private static class ContextWithoutSchemaScan {
 
         @Bean

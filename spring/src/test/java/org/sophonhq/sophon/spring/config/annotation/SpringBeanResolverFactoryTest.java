@@ -35,11 +35,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Scope;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -61,7 +59,6 @@ import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessa
  */
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {SpringBeanResolverFactoryTest.AppContext.class})
-@EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 public class SpringBeanResolverFactoryTest {
 
     @Autowired

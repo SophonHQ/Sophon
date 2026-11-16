@@ -32,9 +32,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jmx.support.RegistrationPolicy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -59,7 +57,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ContextConfiguration
 @ExtendWith(SpringExtension.class)
-@EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
 class JdbcTokenStoreTest {
 
     @Autowired
