@@ -1157,6 +1157,11 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
             return delegate.hasNextAvailable();
         }
 
+        @Override
+        public void skipMessagesWithPayloadTypeOf(TrackedEventMessage<?> ignoredMessage) {
+            delegate.skipMessagesWithPayloadTypeOf(ignoredMessage);
+        }
+
         public <T> TrackedEventMessage<T> alterToken(TrackedEventMessage<T> message) {
             if (lastToken == null) {
                 return message;
