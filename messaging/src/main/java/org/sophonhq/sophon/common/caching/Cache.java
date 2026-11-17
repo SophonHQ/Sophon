@@ -23,8 +23,8 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 /**
- * Abstraction for a Caching mechanism. All Sophon component rely on this abstraction, so that different providers can be
- * plugged in. In future versions, this abstraction may be replaced with the {@code javax.cache} api, as soon as that
+ * Abstraction for a Caching mechanism. All Sophon component rely on this abstraction, so that different providers can
+ * be plugged in. In future versions, this abstraction may be replaced with the {@code javax.cache} api, as soon as that
  * api is final.
  *
  * @author Allard Buijze
@@ -64,6 +64,9 @@ public interface Cache {
     /**
      * Returns the value under the given {@code key} in the cache. If there is no value present, will invoke the given
      * {@code valueSupplier}, put the value in the cache and return the produced value.
+     * <p>
+     * If another thread stores a value under the given {@code key} while the {@code valueSupplier} runs, that value is
+     * kept and returned. The supplied value does not overwrite it.
      *
      * @param key           The key under which the item was cached. If not present, this key is used to cache the
      *                      outcome of the {@code valueSupplier}.
@@ -81,8 +84,12 @@ public interface Cache {
         if (newValue == null) {
             throw new IllegalArgumentException("Value Supplier of Cache produced a null value for key [" + key + "]!");
         }
-        put(key, newValue);
-        return newValue;
+        if (putIfAbsent(key, newValue)) {
+            return newValue;
+        }
+        // Another thread stored a value: return it instead of overwriting it.
+        T storedValue = get(key);
+        return storedValue != null ? storedValue : newValue;
     }
 
     /**
@@ -141,8 +148,8 @@ public interface Cache {
         void onEntryExpired(Object key);
 
         /**
-         * Invoked when an item was removed from the cache, either following an expiry, or by explicitly calling {@link
-         * org.sophonhq.sophon.common.caching.Cache#remove(Object)}.
+         * Invoked when an item was removed from the cache, either following an expiry, or by explicitly calling
+         * {@link org.sophonhq.sophon.common.caching.Cache#remove(Object)}.
          *
          * @param key The key of the entry that was removed
          */
@@ -173,8 +180,8 @@ public interface Cache {
         void onEntryRead(Object key, Object value);
 
         /**
-         * Clone operation used by some Cache implementations. An implementation must implement {@link
-         * java.lang.Cloneable} to indicate it supports cloning.
+         * Clone operation used by some Cache implementations. An implementation must implement
+         * {@link java.lang.Cloneable} to indicate it supports cloning.
          *
          * @return a copy of this instance
          * @throws CloneNotSupportedException if cloning is not supported
