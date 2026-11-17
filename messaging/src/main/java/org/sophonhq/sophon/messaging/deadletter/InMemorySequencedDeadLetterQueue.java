@@ -18,6 +18,7 @@
 package org.sophonhq.sophon.messaging.deadletter;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sophonhq.sophon.messaging.Message;
@@ -34,6 +35,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -58,7 +60,7 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final Map<String, Deque<DeadLetter<? extends M>>> deadLetters = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Deque<DeadLetter<? extends M>>> deadLetters;
     private final Set<String> takenSequences = new ConcurrentSkipListSet<>();
 
     private final int maxSequences;
@@ -70,9 +72,16 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
      * @param builder The {@link Builder} used to instantiate a {@link InMemorySequencedDeadLetterQueue} instance.
      */
     protected InMemorySequencedDeadLetterQueue(Builder<M> builder) {
+        this(builder, new ConcurrentHashMap<>());
+    }
+
+    InMemorySequencedDeadLetterQueue(Builder<M> builder,
+                                     ConcurrentMap<String, Deque<DeadLetter<? extends M>>> deadLetters) {
+
         builder.validate();
         this.maxSequences = builder.maxSequences;
         this.maxSequenceSize = builder.maxSequenceSize;
+        this.deadLetters = deadLetters;
     }
 
     /**
@@ -141,7 +150,8 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
         if (optionalSequence.isPresent()) {
             synchronized (deadLetters) {
                 String sequenceId = optionalSequence.get().getKey();
-                if (deadLetters.get(sequenceId).isEmpty()) {
+                Deque<DeadLetter<? extends M>> sequence = deadLetters.get(sequenceId);
+                if (sequence != null && sequence.isEmpty()) {
                     logger.trace("Sequence with id [{}] is empty and will be removed.", sequenceId);
                     deadLetters.remove(sequenceId);
                 }
@@ -162,10 +172,10 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
     }
 
     @Override
-    public void requeue(
-            @NonNull DeadLetter<? extends M> letter,
-            @NonNull UnaryOperator<DeadLetter<? extends M>> letterUpdater
-    ) throws NoSuchDeadLetterException {
+    public void requeue(@NonNull DeadLetter<? extends M> letter,
+                        @NonNull UnaryOperator<DeadLetter<? extends M>> letterUpdater)
+            throws NoSuchDeadLetterException {
+
         Optional<Map.Entry<String, Deque<DeadLetter<? extends M>>>> optionalSequence =
                 deadLetters.entrySet()
                            .stream()
@@ -175,7 +185,7 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
         if (optionalSequence.isPresent()) {
             synchronized (deadLetters) {
                 String sequenceId = optionalSequence.get().getKey();
-                deadLetters.get(sequenceId)
+                deadLetters.computeIfAbsent(sequenceId, id -> new ConcurrentLinkedDeque<>())
                            .addFirst(letterUpdater.apply(letter.markTouched()));
                 if (logger.isTraceEnabled()) {
                     logger.trace(
@@ -204,8 +214,8 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
 
     @Override
     public Iterable<DeadLetter<? extends M>> deadLetterSequence(@NonNull Object sequenceIdentifier) {
-        String identifier = toIdentifier(sequenceIdentifier);
-        return contains(identifier) ? new ArrayList<>(deadLetters.get(identifier)) : Collections.emptyList();
+        Deque<DeadLetter<? extends M>> sequence = deadLetters.get(toIdentifier(sequenceIdentifier));
+        return sequence != null ? new ArrayList<>(sequence) : Collections.emptyList();
     }
 
     private boolean contains(String identifier) {
@@ -244,8 +254,8 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
 
     @Override
     public long sequenceSize(@NonNull Object sequenceIdentifier) {
-        String identifier = toIdentifier(sequenceIdentifier);
-        return contains(identifier) ? deadLetters.get(identifier).size() : 0L;
+        Deque<DeadLetter<? extends M>> sequence = deadLetters.get(toIdentifier(sequenceIdentifier));
+        return sequence != null ? sequence.size() : 0L;
     }
 
     private static String toIdentifier(Object sequenceIdentifier) {
@@ -293,10 +303,9 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
         }
 
         try {
-            while (deadLetters.get(sequenceId) != null && !deadLetters.get(sequenceId).isEmpty()) {
-                DeadLetter<? extends M> letter = deadLetters.get(sequenceId).getFirst();
+            DeadLetter<? extends M> letter;
+            while ((letter = peekFirst(sequenceId)) != null) {
                 EnqueueDecision<M> decision = processingTask.apply(letter);
-
                 if (decision.shouldEnqueue()) {
                     requeue(letter, l -> decision.withDiagnostics(l).withCause(decision.enqueueCause().orElse(null)));
                     return false;
@@ -308,6 +317,11 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
         } finally {
             takenSequences.remove(sequenceId);
         }
+    }
+
+    private @Nullable DeadLetter<? extends M> peekFirst(String sequenceId) {
+        Deque<DeadLetter<? extends M>> sequence = deadLetters.get(sequenceId);
+        return sequence != null ? sequence.peekFirst() : null;
     }
 
     private String getLastTouchedSequence(Map<String, DeadLetter<? extends M>> sequenceIdsToLetter) {
@@ -332,9 +346,11 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
         List<String> sequencesToClear = new ArrayList<>(deadLetters.keySet());
 
         sequencesToClear.forEach(sequenceId -> {
-            deadLetters.get(sequenceId).clear();
-            deadLetters.remove(sequenceId);
-            logger.info("Cleared out all dead letters for sequence [{}].", sequenceId);
+            Deque<DeadLetter<? extends M>> sequence = deadLetters.remove(sequenceId);
+            if (sequence != null) {
+                sequence.clear();
+                logger.info("Cleared out all dead letters for sequence [{}].", sequenceId);
+            }
         });
     }
 
