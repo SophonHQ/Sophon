@@ -98,6 +98,19 @@ public abstract class AbstractCacheAdapterTest {
         assertEquals(value, testSubject.get("test1"));
     }
 
+    @Test
+    void computeIfAbsentDoesNotOverwriteValueStoredWhileSupplierRuns() {
+        Object concurrentValue = new Object();
+
+        Object result = testSubject.computeIfAbsent("test1", () -> {
+            testSubject.put("test1", concurrentValue);
+            return new Object();
+        });
+
+        assertEquals(concurrentValue, result);
+        assertEquals(concurrentValue, testSubject.get("test1"));
+    }
+
 
     @Test
     void entryListenerNotifiedOfCreationUpdateAndDeletion() {
