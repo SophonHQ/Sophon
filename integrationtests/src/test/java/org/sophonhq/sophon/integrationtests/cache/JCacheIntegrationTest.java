@@ -47,8 +47,10 @@ class JCacheIntegrationTest extends CachingIntegrationTestSuite {
         super.setUp();
     }
 
+    @Override
     @AfterEach
     void tearDown() {
+        super.tearDown();
         cacheManager.close();
     }
 
