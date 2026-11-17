@@ -28,6 +28,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -38,7 +39,6 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 import static org.sophonhq.sophon.common.BuilderUtils.assertStrictPositive;
 
@@ -147,11 +147,18 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
                     deadLetters.remove(sequenceId);
                 }
                 if (logger.isTraceEnabled()) {
-                    logger.trace("Evicted letter with message id [{}] for sequence id [{}].", letter.message().getIdentifier(), sequenceId);
+                    logger.trace(
+                            "Evicted letter with message id [{}] for sequence id [{}].",
+                            letter.message().getIdentifier(),
+                            sequenceId
+                    );
                 }
             }
         } else if (logger.isDebugEnabled()) {
-            logger.debug("Cannot evict letter with message id [{}] as it could not be found in this queue.", letter.message().getIdentifier());
+            logger.debug(
+                    "Cannot evict letter with message id [{}] as it could not be found in this queue.",
+                    letter.message().getIdentifier()
+            );
         }
     }
 
@@ -172,12 +179,18 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
                 deadLetters.get(sequenceId)
                            .addFirst(letterUpdater.apply(letter.markTouched()));
                 if (logger.isTraceEnabled()) {
-                    logger.trace("Requeued letter [{}] for sequence [{}].", letter.message().getIdentifier(), sequenceId);
+                    logger.trace(
+                            "Requeued letter [{}] for sequence [{}].",
+                            letter.message().getIdentifier(),
+                            sequenceId
+                    );
                 }
             }
         } else {
             throw new NoSuchDeadLetterException(
-                    "Cannot requeue [" + letter.message().getIdentifier() + "] since there is not matching entry in this queue."
+                    "Cannot requeue ["
+                            + letter.message().getIdentifier()
+                            + "] since there is not matching entry in this queue."
             );
         }
     }
@@ -214,11 +227,12 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
     }
 
     private boolean maximumNumberOfSequencesReached(String identifier) {
-        return !deadLetters.containsKey(identifier) && deadLetters.keySet().size() >= maxSequences;
+        return !deadLetters.containsKey(identifier) && deadLetters.size() >= maxSequences;
     }
 
     private boolean maximumSequenceSizeReached(String identifier) {
-        return deadLetters.containsKey(identifier) && deadLetters.get(identifier).size() >= maxSequenceSize;
+        Deque<DeadLetter<? extends M>> sequence = deadLetters.get(identifier);
+        return sequence != null && sequence.size() >= maxSequenceSize;
     }
 
     @Override
@@ -255,12 +269,13 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
         }
         logger.debug("Received a request to process matching dead letters.");
 
-        Map<String, DeadLetter<? extends M>> sequenceIdsToLetter =
-                deadLetters.entrySet()
-                           .stream()
-                           .filter(entry -> !takenSequences.contains(entry.getKey()))
-                           .filter(sequence -> sequenceFilter.test(sequence.getValue().getFirst()))
-                           .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getFirst()));
+        Map<String, DeadLetter<? extends M>> sequenceIdsToLetter = new HashMap<>();
+        deadLetters.forEach((sequenceId, sequence) -> {
+            DeadLetter<? extends M> first = sequence.peekFirst();
+            if (first != null && !takenSequences.contains(sequenceId) && sequenceFilter.test(first)) {
+                sequenceIdsToLetter.put(sequenceId, first);
+            }
+        });
 
         if (sequenceIdsToLetter.isEmpty()) {
             logger.debug("Received a request to process dead letters but there are no sequences matching the filter.");

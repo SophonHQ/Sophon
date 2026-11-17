@@ -17,8 +17,6 @@
 
 package org.sophonhq.sophon.eventhandling.deadletter;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.common.SophonException;
 import org.sophonhq.sophon.common.transaction.NoOpTransactionManager;
@@ -40,11 +38,11 @@ import org.sophonhq.sophon.messaging.deadletter.ThrowableCause;
 import org.sophonhq.sophon.messaging.unitofwork.RollbackConfigurationType;
 import org.sophonhq.sophon.utils.InMemoryStreamableEventSource;
 
+import java.io.Serial;
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.Set;
@@ -95,30 +93,33 @@ public abstract class DeadLetteringEventIntegrationTest {
     private static final boolean FAIL = false;
     private static final boolean FAIL_RETRY = false;
     private static final int DEFAULT_RETRIES = 1;
-    private static final String BLOB_OF_TEXT = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-            + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-            + "Gravida quis blandit turpis cursus in. "
-            + "Nulla facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum. "
-            + "Egestas maecenas pharetra convallis posuere morbi leo urna. "
-            + "Dictumst quisque sagittis purus sit amet volutpat consequat. "
-            + "At volutpat diam ut venenatis tellus in metus vulputate eu. "
-            + "Imperdiet dui accumsan sit amet nulla facilisi. Eget est lorem ipsum dolor sit amet. "
-            + "Vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet. "
-            + "Sed tempus urna et pharetra pharetra massa massa. Dolor magna eget est lorem. "
-            + "Purus semper eget duis at tellus. "
-            + "Tincidunt augue interdum velit euismod in pellentesque massa placerat duis."
-            + "\n\n"
-            + "Quis ipsum suspendisse ultrices gravida dictum fusce ut. "
-            + "Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. "
-            + "Sit amet purus gravida quis blandit turpis cursus in. "
-            + "Gravida rutrum quisque non tellus. "
-            + "Eros donec ac odio tempor orci dapibus. "
-            + "Dictum varius duis at consectetur lorem donec massa sapien."
-            + "Tincidunt arcu non sodales neque sodales ut etiam sit amet. "
-            + "Sagittis aliquam malesuada bibendum arcu vitae. "
-            + "Vel turpis nunc eget lorem dolor sed viverra. "
-            + "In egestas erat imperdiet sed euismod nisi. "
-            + "Lorem ipsum dolor sit amet consectetur.";
+    private static final String BLOB_OF_TEXT =
+            """
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, \
+            sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \
+            Gravida quis blandit turpis cursus in. \
+            Nulla facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum. \
+            Egestas maecenas pharetra convallis posuere morbi leo urna. \
+            Dictumst quisque sagittis purus sit amet volutpat consequat. \
+            At volutpat diam ut venenatis tellus in metus vulputate eu. \
+            Imperdiet dui accumsan sit amet nulla facilisi. Eget est lorem ipsum dolor sit amet. \
+            Vestibulum morbi blandit cursus risus at ultrices mi tempus imperdiet. \
+            Sed tempus urna et pharetra pharetra massa massa. Dolor magna eget est lorem. \
+            Purus semper eget duis at tellus. \
+            Tincidunt augue interdum velit euismod in pellentesque massa placerat duis.
+            
+            Quis ipsum suspendisse ultrices gravida dictum fusce ut. \
+            Nascetur ridiculus mus mauris vitae ultricies leo integer malesuada. \
+            Sit amet purus gravida quis blandit turpis cursus in. \
+            Gravida rutrum quisque non tellus. \
+            Eros donec ac odio tempor orci dapibus. \
+            Dictum varius duis at consectetur lorem donec massa sapien.\
+            Tincidunt arcu non sodales neque sodales ut etiam sit amet. \
+            Sagittis aliquam malesuada bibendum arcu vitae. \
+            Vel turpis nunc eget lorem dolor sed viverra. \
+            In egestas erat imperdiet sed euismod nisi. \
+            Lorem ipsum dolor sit amet consectetur.\
+            """;
 
     private ProblematicEventHandlingComponent eventHandlingComponent;
     private SequencedDeadLetterQueue<EventMessage<?>> deadLetterQueue;
@@ -172,7 +173,7 @@ public abstract class DeadLetteringEventIntegrationTest {
         DeadLetteringEventHandlerInvoker.Builder invokerBuilder = DeadLetteringEventHandlerInvoker
                 .builder()
                 .eventHandlers(eventHandlingComponent)
-                .sequencingPolicy(event -> ((DeadLetterableEvent) event.getPayload()).getAggregateIdentifier())
+                .sequencingPolicy(event -> ((DeadLetterableEvent) event.getPayload()).aggregateIdentifier())
                 .enqueuePolicy(enqueuePolicy)
                 .queue(deadLetterQueue)
                 .transactionManager(transactionManager);
@@ -527,6 +528,8 @@ public abstract class DeadLetteringEventIntegrationTest {
             assertEquals(totalNumberOfEvents, optionalPosition.getAsLong());
         });
 
+        publishingThread.join();
+
         for (String aggregateId : aggregateIds) {
             if (validatedAggregateIds.contains(aggregateId)) {
                 continue;
@@ -568,8 +571,6 @@ public abstract class DeadLetteringEventIntegrationTest {
 
             validatedAggregateIds.add(aggregateId);
         }
-
-        publishingThread.join();
     }
 
     @Test
@@ -703,7 +704,7 @@ public abstract class DeadLetteringEventIntegrationTest {
                        @MessageIdentifier String eventIdentifier,
                        DeadLetter<EventMessage<DeadLetterableEvent>> deadLetter) {
             // The aggregate identifier effectively references the sequence because of the configured SequencingPolicy.
-            String sequenceId = event.getAggregateIdentifier();
+            String sequenceId = event.aggregateIdentifier();
 
             if (!handledEvent.contains(eventIdentifier)) {
                 // This is the first time we get this event.
@@ -726,24 +727,24 @@ public abstract class DeadLetteringEventIntegrationTest {
         }
 
         private void processInitialHandlingOf(DeadLetterableEvent event, String sequenceId) {
-            if (event.isShouldSucceed()) {
+            if (event.shouldSucceed()) {
                 firstTrySuccesses.compute(sequenceId, (id, count) -> count == null ? 1 : ++count);
             } else {
                 firstTryFailures.compute(sequenceId, (id, count) -> count == null ? 1 : ++count);
                 throw new RuntimeException(
                         "Initial handling failed. Let's dead letter event [" + sequenceId + "].\n"
-                                + event.getCauseMessage()
+                                + event.causeMessage()
                 );
             }
         }
 
         private void processEvaluationOf(DeadLetterableEvent event, String sequenceId) {
-            if (event.isShouldSucceedOnEvaluation()) {
+            if (event.shouldSucceedOnEvaluation()) {
                 evaluationSuccesses.compute(sequenceId, (id, count) -> count == null ? 1 : ++count);
             } else {
                 evaluationFailures.compute(sequenceId, (id, count) -> count == null ? 1 : ++count);
                 throw new RuntimeException(
-                        "Evaluation failed. Let's dead letter event [" + sequenceId + "].\n" + event.getCauseMessage()
+                        "Evaluation failed. Let's dead letter event [" + sequenceId + "].\n" + event.causeMessage()
                 );
             }
         }
@@ -789,79 +790,20 @@ public abstract class DeadLetteringEventIntegrationTest {
         }
     }
 
-    private static class DeadLetterableEvent {
+    private record DeadLetterableEvent(String aggregateIdentifier,
+                                       boolean shouldSucceed,
+                                       boolean shouldSucceedOnEvaluation,
+                                       String causeMessage) {
 
-        private final String aggregateIdentifier;
-        private final boolean shouldSucceed;
-        private final boolean shouldSucceedOnEvaluation;
-        private final String causeMessage;
-
-        private DeadLetterableEvent(String aggregateIdentifier,
-                                    boolean shouldSucceed) {
+        private DeadLetterableEvent(String aggregateIdentifier, boolean shouldSucceed) {
             this(aggregateIdentifier, shouldSucceed, true);
         }
 
         private DeadLetterableEvent(String aggregateIdentifier,
                                     boolean shouldSucceed,
                                     boolean shouldSucceedOnEvaluation) {
+
             this(aggregateIdentifier, shouldSucceed, shouldSucceedOnEvaluation, "");
-        }
-
-        @JsonCreator
-        public DeadLetterableEvent(@JsonProperty("aggregateIdentifier") String aggregateIdentifier,
-                                   @JsonProperty("shouldSucceed") boolean shouldSucceed,
-                                   @JsonProperty("shouldSucceedOnEvaluation") boolean shouldSucceedOnEvaluation,
-                                   @JsonProperty("causeMessage") String causeMessage) {
-            this.aggregateIdentifier = aggregateIdentifier;
-            this.shouldSucceed = shouldSucceed;
-            this.shouldSucceedOnEvaluation = shouldSucceedOnEvaluation;
-            this.causeMessage = causeMessage;
-        }
-
-        public String getAggregateIdentifier() {
-            return aggregateIdentifier;
-        }
-
-        public boolean isShouldSucceed() {
-            return shouldSucceed;
-        }
-
-        public boolean isShouldSucceedOnEvaluation() {
-            return shouldSucceedOnEvaluation;
-        }
-
-        public String getCauseMessage() {
-            return causeMessage;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            DeadLetterableEvent that = (DeadLetterableEvent) o;
-            return shouldSucceed == that.shouldSucceed && shouldSucceedOnEvaluation == that.shouldSucceedOnEvaluation
-                    && Objects.equals(aggregateIdentifier, that.aggregateIdentifier) && Objects.equals(
-                    causeMessage,
-                    that.causeMessage);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(aggregateIdentifier, shouldSucceed, shouldSucceedOnEvaluation, causeMessage);
-        }
-
-        @Override
-        public String toString() {
-            return "DeadLetterableEvent{" +
-                    "aggregateIdentifier='" + aggregateIdentifier + '\'' +
-                    ", shouldSucceed=" + shouldSucceed +
-                    ", shouldSucceedOnEvaluation=" + shouldSucceedOnEvaluation +
-                    ", causeMessage='" + causeMessage + '\'' +
-                    '}';
         }
     }
 
@@ -879,6 +821,7 @@ public abstract class DeadLetteringEventIntegrationTest {
 
     private static class ReferenceException extends SophonException {
 
+        @Serial
         private static final long serialVersionUID = 1380362964599517107L;
 
         ReferenceException(UUID reference) {
