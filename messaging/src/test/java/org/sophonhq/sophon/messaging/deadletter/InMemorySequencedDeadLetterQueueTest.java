@@ -24,8 +24,12 @@ import org.sophonhq.sophon.messaging.MetaData;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Deque;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -160,5 +164,95 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
         }
 
         assertFalse(result);
+    }
+
+    @Test
+    void sequenceSizeDoesNotFailWhenAnotherThreadRemovesTheSequence() {
+        assertDoesNotFailWhenTheSequenceIsRemovedBeforeAnyRead((queue, letter) -> queue.sequenceSize("sequence"));
+    }
+
+    @Test
+    void deadLetterSequenceDoesNotFailWhenAnotherThreadRemovesTheSequence() {
+        assertDoesNotFailWhenTheSequenceIsRemovedBeforeAnyRead((queue, letter) -> queue.deadLetterSequence("sequence"));
+    }
+
+    @Test
+    void clearDoesNotFailWhenAnotherThreadRemovesTheSequence() {
+        assertDoesNotFailWhenTheSequenceIsRemovedBeforeAnyRead((queue, letter) -> queue.clear());
+    }
+
+    @Test
+    void evictDoesNotFailWhenAnotherThreadRemovesTheSequence() {
+        assertDoesNotFailWhenTheSequenceIsRemovedBeforeAnyRead(InMemorySequencedDeadLetterQueue::evict);
+    }
+
+    @Test
+    void requeueKeepsTheLetterWhenAnotherThreadRemovesTheSequence() {
+        assertDoesNotFailWhenTheSequenceIsRemovedBeforeAnyRead((queue, letter) -> {
+            queue.requeue(letter, l -> l);
+            assertEquals(1, queue.size());
+        });
+    }
+
+    @Test
+    void processDoesNotFailWhenAnotherThreadRemovesTheSequence() {
+        assertDoesNotFailWhenTheSequenceIsRemovedBeforeAnyRead(
+                (queue, letter) -> queue.process(l -> true, l -> Decisions.evict())
+        );
+    }
+    
+    private void assertDoesNotFailWhenTheSequenceIsRemovedBeforeAnyRead(
+            BiConsumer<InMemorySequencedDeadLetterQueue<EventMessage<?>>, DeadLetter<EventMessage<?>>> action
+    ) {
+        for (int read = 1; ; read++) {
+            var deadLetters = new RemovingMap<Deque<DeadLetter<? extends EventMessage<?>>>>();
+            var queue = new InMemorySequencedDeadLetterQueue<>(InMemorySequencedDeadLetterQueue.builder(), deadLetters);
+            DeadLetter<EventMessage<?>> letter = new GenericDeadLetter<>("sequence", generateEvent());
+            queue.enqueue("sequence", letter);
+            deadLetters.removeBeforeRead(read);
+
+            int removedBeforeRead = read;
+            assertDoesNotThrow(() -> action.accept(queue, letter),
+                               () -> "The sequence was removed before read " + removedBeforeRead);
+            if (!deadLetters.removed) {
+                assertTrue(read > 1, "The action does not read the sequence");
+                return;
+            }
+        }
+    }
+
+    private static class RemovingMap<V> extends ConcurrentHashMap<String, V> {
+
+        private int readsLeft;
+        private boolean removed;
+
+        void removeBeforeRead(int read) {
+            readsLeft = read;
+        }
+
+        private void beforeRead(Object key) {
+            if (--readsLeft == 0) {
+                super.remove(key);
+                removed = true;
+            }
+        }
+
+        @Override
+        public V get(Object key) {
+            beforeRead(key);
+            return super.get(key);
+        }
+
+        @Override
+        public V remove(Object key) {
+            beforeRead(key);
+            return super.remove(key);
+        }
+
+        @Override
+        public V computeIfAbsent(String key, Function<? super String, ? extends V> mappingFunction) {
+            beforeRead(key);
+            return super.computeIfAbsent(key, mappingFunction);
+        }
     }
 }
