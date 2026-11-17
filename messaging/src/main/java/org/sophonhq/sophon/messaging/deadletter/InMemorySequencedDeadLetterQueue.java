@@ -20,7 +20,6 @@ package org.sophonhq.sophon.messaging.deadletter;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sophonhq.sophon.common.StringUtils;
 import org.sophonhq.sophon.messaging.Message;
 
 import java.lang.invoke.MethodHandles;
@@ -283,14 +282,12 @@ public class InMemorySequencedDeadLetterQueue<M extends Message<?>> implements S
         }
 
         String sequenceId = getLastTouchedSequence(sequenceIdsToLetter);
-        boolean freshlyTaken = takenSequences.add(sequenceId);
-        while (sequenceId != null && !freshlyTaken) {
+        while (sequenceId != null && !takenSequences.add(sequenceId)) {
             sequenceIdsToLetter.remove(sequenceId);
             sequenceId = getLastTouchedSequence(sequenceIdsToLetter);
-            freshlyTaken = takenSequences.add(sequenceId);
         }
 
-        if (StringUtils.emptyOrNull(sequenceId)) {
+        if (sequenceId == null) {
             logger.debug("Received a request to process dead letters but there are none left to process.");
             return false;
         }
