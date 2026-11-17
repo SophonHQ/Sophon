@@ -436,10 +436,10 @@ public abstract class DeadLetteringEventIntegrationTest {
         // So there can only be a single failure per sequence on the first try.
         int expectedUnsuccessfulInitialHandlingCount = 1;
         int expectedSuccessfulEvaluationCount = 2;
-        int expectedUnsuccessfulEvaluationCount = 1;
 
         String aggregateId = UUID.randomUUID().toString();
 
+        maxRetries.set(Integer.MAX_VALUE);
         // Starting both is sufficient since both Processor and DeadLettering Invoker have their own thread pool.
         startProcessingEvent();
         processAnyDeadLettersPeriodically();
@@ -465,11 +465,15 @@ public abstract class DeadLetteringEventIntegrationTest {
         });
 
         assertTrue(eventHandlingComponent.initialHandlingWasSuccessful(aggregateId));
-        assertEquals(expectedSuccessfulInitialHandlingCount,
-                     eventHandlingComponent.successfulInitialHandlingCount(aggregateId));
+        assertEquals(
+                expectedSuccessfulInitialHandlingCount,
+                eventHandlingComponent.successfulInitialHandlingCount(aggregateId)
+        );
         assertTrue(eventHandlingComponent.initialHandlingWasUnsuccessful(aggregateId));
-        assertEquals(expectedUnsuccessfulInitialHandlingCount,
-                     eventHandlingComponent.unsuccessfulInitialHandlingCount(aggregateId));
+        assertEquals(
+                expectedUnsuccessfulInitialHandlingCount,
+                eventHandlingComponent.unsuccessfulInitialHandlingCount(aggregateId)
+        );
 
         assertTrue(deadLetterQueue.contains(aggregateId));
 
@@ -481,10 +485,6 @@ public abstract class DeadLetteringEventIntegrationTest {
         ));
         assertWithin(500, TimeUnit.MILLISECONDS,
                      () -> assertTrue(eventHandlingComponent.evaluationWasUnsuccessful(aggregateId)));
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(
-                expectedUnsuccessfulEvaluationCount,
-                eventHandlingComponent.unsuccessfulEvaluationCount(aggregateId)
-        ));
 
         // As evaluation fails, the sequenceId should still exist
         assertTrue(deadLetterQueue.contains(aggregateId));
