@@ -24,6 +24,7 @@ import org.sophonhq.sophon.messaging.MetaData;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -115,5 +116,23 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
                 InMemorySequencedDeadLetterQueue.builder();
 
         assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(0));
+    }
+
+    @Test
+    void processDoesNotFailWhileAnotherThreadEnqueuesNewSequences() {
+        int sequences = 10_000;
+        var queue = InMemorySequencedDeadLetterQueue.<EventMessage<?>>builder().maxSequences(sequences).build();
+
+        CompletableFuture<Void> enqueuing = CompletableFuture.runAsync(() -> {
+            for (int i = 0; i < sequences; i++) {
+                String sequenceId = "sequence-" + i;
+                queue.enqueue(sequenceId, new GenericDeadLetter<>(sequenceId, generateEvent()));
+            }
+        });
+
+        while (!enqueuing.isDone()) {
+            assertDoesNotThrow(() -> queue.process(letter -> false, letter -> Decisions.evict()));
+        }
+        assertDoesNotThrow(enqueuing::join);
     }
 }
