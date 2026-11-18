@@ -108,6 +108,19 @@ class WeakReferenceCacheTest {
     }
 
     @Test
+    void computeIfAbsentDoesNotOverwriteValueStoredWhileSupplierRuns() {
+        Object concurrentValue = new Object();
+
+        Object result = testSubject.computeIfAbsent("test1", () -> {
+            testSubject.put("test1", concurrentValue);
+            return new Object();
+        });
+
+        assertSame(concurrentValue, result);
+        assertSame(concurrentValue, testSubject.get("test1"));
+    }
+
+    @Test
     void shouldThrowIllegalArgumentExceptionWhenKeyIsNullOnGet() {
         assertThrows(IllegalArgumentException.class, () -> testSubject.get(null));
     }

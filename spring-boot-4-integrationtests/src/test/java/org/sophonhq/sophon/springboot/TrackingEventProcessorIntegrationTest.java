@@ -126,6 +126,7 @@ public class TrackingEventProcessorIntegrationTest {
     @DirtiesContext
     @Test
     public void publishSomeEvents() throws InterruptedException {
+        eventProcessingModule.eventProcessors().values().forEach(EventProcessor::shutDown);
         publishEvent(UsedEvent.INSTANCE, UsedEvent.INSTANCE);
         transactionManager.executeInTransaction(() -> {
             entityManager.createQuery("DELETE FROM TokenEntry t").executeUpdate();
@@ -136,6 +137,7 @@ public class TrackingEventProcessorIntegrationTest {
             );
             tokenStore.storeToken(GapAwareTrackingToken.newInstance(0, new TreeSet<>()), "second", 0);
         });
+        eventProcessingModule.eventProcessors().values().forEach(EventProcessor::start);
 
         assertFalse(countDownLatch1.await(1, TimeUnit.SECONDS));
         publishEvent(UsedEvent.INSTANCE);
@@ -226,13 +228,8 @@ public class TrackingEventProcessorIntegrationTest {
      * {@link StreamableMessageSource#openStream(TrackingToken)} invocations. All other operations are delegated to a
      * given {@code StreamableMessageSource}.
      */
-    private static class FilteringStreamableMessageSource implements StreamableMessageSource<TrackedEventMessage<?>> {
-
-        private final StreamableMessageSource<TrackedEventMessage<?>> delegate;
-
-        private FilteringStreamableMessageSource(StreamableMessageSource<TrackedEventMessage<?>> delegate) {
-            this.delegate = delegate;
-        }
+    private record FilteringStreamableMessageSource(StreamableMessageSource<TrackedEventMessage<?>> delegate)
+            implements StreamableMessageSource<TrackedEventMessage<?>> {
 
         @Override
         public BlockingStream<TrackedEventMessage<?>> openStream(@Nullable TrackingToken trackingToken) {
@@ -260,16 +257,9 @@ public class TrackingEventProcessorIntegrationTest {
         }
     }
 
-    private static class FilteringBlockingStream implements BlockingStream<TrackedEventMessage<?>> {
-
-        private final BlockingStream<TrackedEventMessage<?>> delegate;
-        private final Set<TrackedEventMessage<?>> ignoredMessages;
-
-        private FilteringBlockingStream(BlockingStream<TrackedEventMessage<?>> delegate,
-                                        Set<TrackedEventMessage<?>> ignoredMessages) {
-            this.delegate = delegate;
-            this.ignoredMessages = ignoredMessages;
-        }
+    private record FilteringBlockingStream(BlockingStream<TrackedEventMessage<?>> delegate,
+                                           Set<TrackedEventMessage<?>> ignoredMessages)
+            implements BlockingStream<TrackedEventMessage<?>> {
 
         @Override
         public Optional<TrackedEventMessage<?>> peek() {

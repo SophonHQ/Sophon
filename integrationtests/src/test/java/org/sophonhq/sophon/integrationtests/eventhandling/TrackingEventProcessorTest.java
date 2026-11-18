@@ -53,8 +53,8 @@ import org.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorag
 import org.sophonhq.sophon.integrationtests.utils.MockException;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.StreamableMessageSource;
-import org.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import org.sophonhq.sophon.messaging.timeout.UnitOfWorkTimeoutInterceptor;
+import org.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import org.sophonhq.sophon.serialization.SerializationException;
 import org.sophonhq.sophon.tracing.TestSpanFactory;
 import org.springframework.test.annotation.DirtiesContext;
@@ -74,6 +74,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -106,9 +107,10 @@ import static org.sophonhq.sophon.integrationtests.utils.EventTestUtils.*;
  * <p>
  * This test class suppresses the "BusyWait" warning that occurs through the {@link Thread#sleep(long)} operations used
  * throughout this test class. Although not ideal, the effort to solve this needs to wait a little for future effort.
- * What would be ideal, is if there's a form of abstract {@link org.sophonhq.sophon.eventhandling.StreamingEventProcessor}
- * test suite, that's used by all implementations. Using the current
- * {@link org.sophonhq.sophon.eventhandling.pooled.PooledStreamingEventProcessor} test for this as a base is suggested.
+ * What would be ideal, is if there's a form of abstract
+ * {@link org.sophonhq.sophon.eventhandling.StreamingEventProcessor} test suite, that's used by all implementations.
+ * Using the current {@link org.sophonhq.sophon.eventhandling.pooled.PooledStreamingEventProcessor} test for this as a
+ * base is suggested.
  *
  * @author Rene de Waele
  */
@@ -374,6 +376,35 @@ class TrackingEventProcessorTest {
             assertEquals(1, skipped.size());
             assertTrue(skipped.contains(String.class));
         });
+    }
+
+    @Test
+    void unhandledPayloadTypesAreSkippedDuringReplay() {
+        when(mockHandler.canHandle(any())).thenReturn(false);
+        when(mockHandler.canHandleType(String.class)).thenReturn(false);
+        Set<Class<?>> skipped = ConcurrentHashMap.newKeySet();
+
+        EmbeddedEventStore mockEventBus = mock(EmbeddedEventStore.class);
+        TrackingToken trackingToken = new GlobalSequenceTrackingToken(0);
+        List<TrackedEventMessage<?>> events = createEvents(2)
+                .stream()
+                .map(event -> asTrackedEventMessage(event, trackingToken))
+                .collect(toList());
+        when(mockEventBus.openStream(null)).thenReturn(trackingEventStreamOf(events.iterator(), skipped::add));
+        tokenStore.initializeTokenSegments(
+                "test", 1, ReplayToken.createReplayToken(new GlobalSequenceTrackingToken(1))
+        );
+        testSubject = TrackingEventProcessor.builder()
+                                            .name("test")
+                                            .eventHandlerInvoker(eventHandlerInvoker)
+                                            .messageSource(mockEventBus)
+                                            .tokenStore(tokenStore)
+                                            .transactionManager(NoTransactionManager.INSTANCE)
+                                            .build();
+
+        testSubject.start();
+
+        assertWithin(8, TimeUnit.SECONDS, () -> assertTrue(skipped.contains(String.class)));
     }
 
     @Test
@@ -1225,8 +1256,8 @@ class TrackingEventProcessorTest {
         assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(8, replayRun.size()));
 
         assertEquals(GapAwareTrackingToken.newInstance(5, asList(3L, 4L)), firstRun.get(3));
-        assertTrue(replayRun.get(0) instanceof ReplayToken);
-        assertTrue(replayRun.get(5) instanceof ReplayToken);
+        assertInstanceOf(ReplayToken.class, replayRun.get(0));
+        assertInstanceOf(ReplayToken.class, replayRun.get(5));
         assertEquals(GapAwareTrackingToken.newInstance(6, emptySortedSet()), replayRun.get(6));
 
         verify(eventHandlerInvoker).performReset(NO_RESET_PAYLOAD);
@@ -1358,6 +1389,27 @@ class TrackingEventProcessorTest {
         assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(0, testSubject.availableProcessorThreads()));
         testSubject.releaseSegment(0);
         assertWithin(2, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.availableProcessorThreads()));
+    }
+
+    @Test
+    void processorRestartsAfterShutdownWhileClaimingSegment() throws Exception {
+        AtomicReference<Thread> shutdownThread = new AtomicReference<>();
+        // Shut down while the worker launcher claims the segment, so the launcher never starts the segment worker
+        doAnswer(invocation -> {
+            shutdownThread.set(new Thread(testSubject::shutDown));
+            shutdownThread.get().start();
+            assertWithin(1, TimeUnit.SECONDS, () -> assertFalse(testSubject.isRunning()));
+            return invocation.callRealMethod();
+        }).doCallRealMethod().when(tokenStore).fetchToken(eq("test"), any(Segment.class));
+
+        testSubject.start();
+        assertWithin(1, TimeUnit.SECONDS, () -> assertNotNull(shutdownThread.get()));
+        shutdownThread.get().join(5000);
+        verify(tokenStore).releaseClaim("test", 0);
+        assertEquals(1, testSubject.availableProcessorThreads());
+
+        testSubject.start();
+        assertWithin(2, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.activeProcessorThreads()));
     }
 
     @Test
@@ -1790,7 +1842,7 @@ class TrackingEventProcessorTest {
         assertWithin(2, TimeUnit.SECONDS, () -> assertTrue(testSubject.isError()));
         assertWithin(
                 15, TimeUnit.SECONDS,
-                () -> assertTrue(thrownException.get() instanceof TestError)
+                () -> assertInstanceOf(TestError.class, thrownException.get())
         );
     }
 

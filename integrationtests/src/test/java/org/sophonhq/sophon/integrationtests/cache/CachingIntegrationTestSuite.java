@@ -70,6 +70,7 @@ public abstract class CachingIntegrationTestSuite {
     private static final int NUMBER_OF_CONCURRENT_PUBLISHERS = 8;
     private static final String[] SAGA_NAMES = new String[]{"foo", "bar", "baz", "and", "some", "more"};
     private static final int NUMBER_OF_ASSOCIATIONS = 42;
+    private static final int NUMBER_OF_SEGMENTS = 4;
 
     private static final Duration DEFAULT_DELAY = Duration.ofMillis(25);
     private static final Duration ONE_SECOND = Duration.ofSeconds(1);
@@ -105,7 +106,7 @@ public abstract class CachingIntegrationTestSuite {
                                                                          .build());
 
         TrackingEventProcessorConfiguration tepConfig =
-                TrackingEventProcessorConfiguration.forParallelProcessing(4)
+                TrackingEventProcessorConfiguration.forParallelProcessing(NUMBER_OF_SEGMENTS)
                                                    .andEventAvailabilityTimeout(10, TimeUnit.MILLISECONDS);
         config = DefaultConfigurer.defaultConfiguration(DO_NOT_AUTO_LOCATE_CONFIGURER_MODULES)
                                   .configureEmbeddedEventStore(c -> new InMemoryEventStorageEngine())
@@ -121,6 +122,14 @@ public abstract class CachingIntegrationTestSuite {
         sagaProcessor = config.eventProcessingConfiguration()
                               .eventProcessor("CachedSagaProcessor", StreamingEventProcessor.class)
                               .orElseThrow(() -> new IllegalStateException("CachedSagaProcessor is not present"));
+
+        await().atMost(EIGHT_SECONDS)
+               .until(() -> sagaProcessor.processingStatus().size() == NUMBER_OF_SEGMENTS);
+    }
+
+    @AfterEach
+    void tearDown() {
+        config.shutdown();
     }
 
     /**
@@ -394,9 +403,11 @@ public abstract class CachingIntegrationTestSuite {
             publish(new CachedSaga.SagaEndsEvent(sagaName + "-id", true));
         }
         await().pollDelay(DEFAULT_DELAY)
-               .atMost(FOUR_SECONDS)
+               .atMost(EIGHT_SECONDS)
                .until(() -> handledEventsUpTo(
-                       createEvents + (NUMBER_OF_UPDATES * SAGA_NAMES.length) + deleteEvents
+                       createEvents
+                               + (NUMBER_OF_UPDATES * (SAGA_NAMES.length * NUMBER_OF_CONCURRENT_PUBLISHERS))
+                               + deleteEvents
                ));
 
         // Validate association cache is empty
@@ -443,8 +454,8 @@ public abstract class CachingIntegrationTestSuite {
 
     /**
      * {@link org.sophonhq.sophon.common.caching.Cache.EntryListener} implementation used for validating the correct
-     * workings of caching within Sophon. Used instead of validating the {@link Cache} directly, as it may have
-     * changed while the given and/or when phase of a test is processing.
+     * workings of caching within Sophon. Used instead of validating the {@link Cache} directly, as it may have changed
+     * while the given and/or when phase of a test is processing.
      *
      * @param <V> The type of value listened to through the {@link Cache}.
      */

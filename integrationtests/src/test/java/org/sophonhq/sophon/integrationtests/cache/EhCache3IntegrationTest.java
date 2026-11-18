@@ -50,8 +50,10 @@ class EhCache3IntegrationTest extends CachingIntegrationTestSuite {
         super.setUp();
     }
 
+    @Override
     @AfterEach
     void tearDown() {
+        super.tearDown();
         cacheManager.close();
     }
 
