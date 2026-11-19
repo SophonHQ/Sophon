@@ -26,7 +26,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -57,6 +57,6 @@ class UpcastedEventRepresentationTest {
                 o -> o, m -> m, expectedContentType, serializer.getConverter()
         );
 
-        assertEquals(expectedContentType, testSubject.getContentType());
+        assertThat(testSubject.getContentType()).isEqualTo(expectedContentType);
     }
 }

@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventhandling.gateway;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.eventhandling.EventBus;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -26,7 +27,7 @@ import org.sophonhq.sophon.messaging.MessageDispatchInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -68,11 +69,11 @@ class DefaultEventGatewayTest {
         // Then
         verify(mockEventBus).publish(eventCaptor.capture());
         EventMessage<?> result = eventCaptor.getValue();
-        assertEquals("Event1", result.getPayload());
+        assertThat(result.getPayload()).isEqualTo("Event1");
 
         verify(mockEventMessageTransformer).handle(eventCaptor.capture());
         EventMessage<?> interceptedResult = eventCaptor.getValue();
-        assertEquals("Event1", interceptedResult.getPayload());
+        assertThat(interceptedResult.getPayload()).isEqualTo("Event1");
     }
 
     @Test
@@ -89,15 +90,15 @@ class DefaultEventGatewayTest {
         //Then
         verify(mockEventBus).publish(eventsCaptor.capture());
         List<EventMessage<?>> result = eventsCaptor.getValue();
-        assertEquals(2, result.size());
-        assertEquals("Event2", result.get(0).getPayload());
-        assertEquals("Event3", result.get(1).getPayload());
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getPayload()).isEqualTo("Event2");
+        assertThat(result.get(1).getPayload()).isEqualTo("Event3");
 
         verify(mockEventMessageTransformer, times(2)).handle(interceptedCaptor.capture());
         List<EventMessage<?>> interceptedResult = interceptedCaptor.getAllValues();
-        assertEquals(2, interceptedResult.size());
-        assertEquals("Event2", interceptedResult.get(0).getPayload());
-        assertEquals("Event3", interceptedResult.get(1).getPayload());
+        assertThat(interceptedResult).hasSize(2);
+        assertThat(interceptedResult.get(0).getPayload()).isEqualTo("Event2");
+        assertThat(interceptedResult.get(1).getPayload()).isEqualTo("Event3");
     }
 
     @Test

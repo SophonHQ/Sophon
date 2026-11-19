@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.eventhandling.tokenstore;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.Segment;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class TokenStoreTest {
@@ -34,22 +34,22 @@ class TokenStoreTest {
         when(tokenStore.fetchSegments("")).thenReturn(new int[]{0, 1, 2, 3});
         List<Segment> availableSegments = tokenStore.fetchAvailableSegments("");
 
-        assertEquals(4, availableSegments.size());
+        assertThat(availableSegments).hasSize(4);
 
         Segment segment0 = availableSegments.get(0);
-        assertEquals(0, segment0.getSegmentId());
-        assertEquals(3, segment0.getMask());
+        assertThat(segment0.getSegmentId()).isZero();
+        assertThat(segment0.getMask()).isEqualTo(3);
 
         Segment segment1 = availableSegments.get(1);
-        assertEquals(1, segment1.getSegmentId());
-        assertEquals(3, segment1.getMask());
+        assertThat(segment1.getSegmentId()).isOne();
+        assertThat(segment1.getMask()).isEqualTo(3);
 
         Segment segment2 = availableSegments.get(2);
-        assertEquals(2, segment2.getSegmentId());
-        assertEquals(3, segment2.getMask());
+        assertThat(segment2.getSegmentId()).isEqualTo(2);
+        assertThat(segment2.getMask()).isEqualTo(3);
 
         Segment segment3 = availableSegments.get(3);
-        assertEquals(3, segment3.getSegmentId());
-        assertEquals(3, segment3.getMask());
+        assertThat(segment3.getSegmentId()).isEqualTo(3);
+        assertThat(segment3.getMask()).isEqualTo(3);
     }
 }

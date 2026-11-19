@@ -26,7 +26,7 @@ import org.sophonhq.sophon.serialization.avro.test.ComplexObject;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Verifies correct behavior of {@link GenericRecord} {@link org.sophonhq.sophon.serialization.ContentTypeConverter}s
@@ -57,6 +57,6 @@ public class GenericRecordConverterTest {
         byte[] singleObjectEncodedBytes = toByteArrayConverter.convert(record);
 
         final GenericRecord convertedRecord = toGenericRecordConverter.convert(singleObjectEncodedBytes);
-        assertEquals(record, convertedRecord);
+        assertThat(convertedRecord).isEqualTo(record);
     }
 }

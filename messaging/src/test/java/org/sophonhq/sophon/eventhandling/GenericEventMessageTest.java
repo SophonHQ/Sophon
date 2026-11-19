@@ -26,7 +26,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -42,22 +42,22 @@ class GenericEventMessageTest {
         GenericEventMessage<Object> message2 = new GenericEventMessage<>(payload, metaData);
         GenericEventMessage<Object> message3 = new GenericEventMessage<>(payload, metaDataMap);
 
-        assertSame(MetaData.emptyInstance(), message1.getMetaData());
-        assertEquals(Object.class, message1.getPayload().getClass());
-        assertEquals(Object.class, message1.getPayloadType());
+        assertThat(message1.getMetaData()).isSameAs(MetaData.emptyInstance());
+        assertThat(message1.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(message1.getPayloadType()).isEqualTo(Object.class);
 
-        assertEquals(metaData, message2.getMetaData());
-        assertEquals(Object.class, message2.getPayload().getClass());
-        assertEquals(Object.class, message2.getPayloadType());
+        assertThat(message2.getMetaData()).isEqualTo(metaData);
+        assertThat(message2.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(message2.getPayloadType()).isEqualTo(Object.class);
 
-        assertNotSame(metaDataMap, message3.getMetaData());
-        assertEquals(metaDataMap, message3.getMetaData());
-        assertEquals(Object.class, message3.getPayload().getClass());
-        assertEquals(Object.class, message3.getPayloadType());
+        assertThat(message3.getMetaData()).isNotSameAs(metaDataMap);
+        assertThat(message3.getMetaData()).isEqualTo(metaDataMap);
+        assertThat(message3.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(message3.getPayloadType()).isEqualTo(Object.class);
 
-        assertFalse(message1.getIdentifier().equals(message2.getIdentifier()));
-        assertFalse(message1.getIdentifier().equals(message3.getIdentifier()));
-        assertFalse(message2.getIdentifier().equals(message3.getIdentifier()));
+        assertThat(message1.getIdentifier()).isNotEqualTo(message2.getIdentifier());
+        assertThat(message1.getIdentifier()).isNotEqualTo(message3.getIdentifier());
+        assertThat(message2.getIdentifier()).isNotEqualTo(message3.getIdentifier());
     }
 
     @Test
@@ -70,8 +70,8 @@ class GenericEventMessageTest {
         GenericEventMessage<Object> message2 = message.withMetaData(
                 MetaData.from(Collections.singletonMap("key", "otherValue")));
 
-        assertEquals(0, message1.getMetaData().size());
-        assertEquals(1, message2.getMetaData().size());
+        assertThat(message1.getMetaData().size()).isZero();
+        assertThat(message2.getMetaData().size()).isOne();
     }
 
     @Test
@@ -84,10 +84,10 @@ class GenericEventMessageTest {
         GenericEventMessage<Object> message2 = message.andMetaData(
                 MetaData.from(Collections.singletonMap("key", "otherValue")));
 
-        assertEquals(1, message1.getMetaData().size());
-        assertEquals("value", message1.getMetaData().get("key"));
-        assertEquals(1, message2.getMetaData().size());
-        assertEquals("otherValue", message2.getMetaData().get("key"));
+        assertThat(message1.getMetaData().size()).isOne();
+        assertThat(message1.getMetaData()).containsEntry("key", "value");
+        assertThat(message2.getMetaData().size()).isOne();
+        assertThat(message2.getMetaData()).containsEntry("key", "otherValue");
     }
 
     @Test
@@ -101,17 +101,19 @@ class GenericEventMessageTest {
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
         Object read = ois.readObject();
 
-        assertEquals(GenericEventMessage.class, read.getClass());
-        assertNotNull(((GenericEventMessage<?>) read).getTimestamp());
+        assertThat(read.getClass()).isEqualTo(GenericEventMessage.class);
+        assertThat(((GenericEventMessage<?>) read).getTimestamp()).isNotNull();
     }
 
     @Test
     void testToString() {
         String actual = GenericEventMessage.asEventMessage("MyPayload").andMetaData(MetaData.with("key", "value").and("key2", 13)).toString();
-        assertTrue(actual.startsWith("GenericEventMessage{payload={MyPayload}, metadata={"), "Wrong output: " + actual);
-        assertTrue(actual.contains("'key'->'value'"), "Wrong output: " + actual);
-        assertTrue(actual.contains("'key2'->'13'"), "Wrong output: " + actual);
-        assertTrue(actual.contains("', timestamp='"), "Wrong output: " + actual);
-        assertTrue(actual.endsWith("}"), "Wrong output: " + actual);
+        assertThat(actual)
+                .as("Wrong output: " + actual)
+                .startsWith("GenericEventMessage{payload={MyPayload}, metadata={");
+        assertThat(actual).as("Wrong output: " + actual).contains("'key'->'value'");
+        assertThat(actual).as("Wrong output: " + actual).contains("'key2'->'13'");
+        assertThat(actual).as("Wrong output: " + actual).contains("', timestamp='");
+        assertThat(actual).as("Wrong output: " + actual).endsWith("}");
     }
 }

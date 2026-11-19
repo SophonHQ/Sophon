@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventhandling.pooled;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.mockito.stubbing.*;
 import org.sophonhq.sophon.common.ReflectionUtils;
@@ -44,7 +45,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyLong;
@@ -206,9 +207,9 @@ class CoordinatorTest {
         assertWithin(500, TimeUnit.MILLISECONDS, () -> verify(workPackage).scheduleEvents(eventsCaptor.capture()));
 
         List<TrackedEventMessage<?>> resultEvents = eventsCaptor.getValue();
-        assertEquals(2, resultEvents.size());
-        assertTrue(resultEvents.contains(testEventOne));
-        assertTrue(resultEvents.contains(testEventTwo));
+        assertThat(resultEvents).hasSize(2);
+        assertThat(resultEvents).contains(testEventOne);
+        assertThat(resultEvents).contains(testEventTwo);
 
         verify(workPackage, times(0)).scheduleEvent(any());
     }

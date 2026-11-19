@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.GenericMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.MetaData;
@@ -25,7 +25,7 @@ import org.sophonhq.sophon.messaging.MetaData;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 
 /**
@@ -44,22 +44,22 @@ class GenericCommandMessageTest {
         GenericCommandMessage<Object> message2 = new GenericCommandMessage<>(payload, metaData);
         GenericCommandMessage<Object> message3 = new GenericCommandMessage<>(payload, metaDataMap);
 
-        assertSame(MetaData.emptyInstance(), message1.getMetaData());
-        assertEquals(Object.class, message1.getPayload().getClass());
-        assertEquals(Object.class, message1.getPayloadType());
+        assertThat(message1.getMetaData()).isSameAs(MetaData.emptyInstance());
+        assertThat(message1.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(message1.getPayloadType()).isEqualTo(Object.class);
 
-        assertSame(metaData, message2.getMetaData());
-        assertEquals(Object.class, message2.getPayload().getClass());
-        assertEquals(Object.class, message2.getPayloadType());
+        assertThat(message2.getMetaData()).isSameAs(metaData);
+        assertThat(message2.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(message2.getPayloadType()).isEqualTo(Object.class);
 
-        assertNotSame(metaDataMap, message3.getMetaData());
-        assertEquals(metaDataMap, message3.getMetaData());
-        assertEquals(Object.class, message3.getPayload().getClass());
-        assertEquals(Object.class, message3.getPayloadType());
+        assertThat(message3.getMetaData()).isNotSameAs(metaDataMap);
+        assertThat(message3.getMetaData()).isEqualTo(metaDataMap);
+        assertThat(message3.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(message3.getPayloadType()).isEqualTo(Object.class);
 
-        assertNotEquals(message1.getIdentifier(), message2.getIdentifier());
-        assertNotEquals(message1.getIdentifier(), message3.getIdentifier());
-        assertNotEquals(message2.getIdentifier(), message3.getIdentifier());
+        assertThat(message2.getIdentifier()).isNotEqualTo(message1.getIdentifier());
+        assertThat(message3.getIdentifier()).isNotEqualTo(message1.getIdentifier());
+        assertThat(message3.getIdentifier()).isNotEqualTo(message2.getIdentifier());
     }
 
     @Test
@@ -72,8 +72,8 @@ class GenericCommandMessageTest {
         GenericCommandMessage<Object> message2 = message.withMetaData(
                 MetaData.from(Collections.singletonMap("key", (Object) "otherValue")));
 
-        assertEquals(0, message1.getMetaData().size());
-        assertEquals(1, message2.getMetaData().size());
+        assertThat(message1.getMetaData().size()).isZero();
+        assertThat(message2.getMetaData().size()).isOne();
     }
 
     @Test
@@ -86,20 +86,22 @@ class GenericCommandMessageTest {
         GenericCommandMessage<Object> message2 = message.andMetaData(
                 MetaData.from(Collections.singletonMap("key", (Object) "otherValue")));
 
-        assertEquals(1, message1.getMetaData().size());
-        assertEquals("value", message1.getMetaData().get("key"));
-        assertEquals(1, message2.getMetaData().size());
-        assertEquals("otherValue", message2.getMetaData().get("key"));
+        assertThat(message1.getMetaData().size()).isOne();
+        assertThat(message1.getMetaData()).containsEntry("key", "value");
+        assertThat(message2.getMetaData().size()).isOne();
+        assertThat(message2.getMetaData()).containsEntry("key", "otherValue");
     }
 
     @Test
     void testToString() {
         String actual = GenericCommandMessage.asCommandMessage("MyPayload").andMetaData(MetaData.with("key", "value").and("key2", 13)).toString();
-        assertTrue(actual.startsWith("GenericCommandMessage{payload={MyPayload}, metadata={"), "Wrong output: " + actual);
-        assertTrue(actual.contains("'key'->'value'"), "Wrong output: " + actual);
-        assertTrue(actual.contains("'key2'->'13'"), "Wrong output: " + actual);
-        assertTrue(actual.endsWith("', commandName='java.lang.String'}"), "Wrong output: " + actual);
-        assertEquals(173, actual.length(), "Wrong output: " + actual);
+        assertThat(actual)
+                .as("Wrong output: " + actual)
+                .startsWith("GenericCommandMessage{payload={MyPayload}, metadata={");
+        assertThat(actual).as("Wrong output: " + actual).contains("'key'->'value'");
+        assertThat(actual).as("Wrong output: " + actual).contains("'key2'->'13'");
+        assertThat(actual).as("Wrong output: " + actual).endsWith("', commandName='java.lang.String'}");
+        assertThat(actual).as("Wrong output: " + actual).hasSize(173);
     }
 
     @Test
@@ -108,11 +110,11 @@ class GenericCommandMessageTest {
 
         CommandMessage<Object> result = asCommandMessage(expectedPayload);
 
-        assertEquals(expectedPayload, result.getPayload());
-        assertTrue(result.getMetaData().isEmpty());
-        assertNotNull(result.getIdentifier());
-        assertEquals(String.class, result.getPayloadType());
-        assertEquals(String.class.getName(), result.getCommandName());
+        assertThat(result.getPayload()).isEqualTo(expectedPayload);
+        assertThat(result.getMetaData()).isEmpty();
+        assertThat(result.getIdentifier()).isNotNull();
+        assertThat(result.getPayloadType()).isEqualTo(String.class);
+        assertThat(result.getCommandName()).isEqualTo(String.class.getName());
     }
 
     @Test
@@ -121,7 +123,7 @@ class GenericCommandMessageTest {
 
         CommandMessage<Object> result = asCommandMessage(expected);
 
-        assertEquals(expected, result);
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
@@ -135,10 +137,10 @@ class GenericCommandMessageTest {
 
         CommandMessage<Object> result = asCommandMessage(testMessage);
 
-        assertEquals(expectedPayload, result.getPayload());
-        assertEquals(expectedMetaData, result.getMetaData());
-        assertNotEquals(testIdentifier, result.getIdentifier());
-        assertEquals(String.class, result.getPayloadType());
-        assertEquals(String.class.getName(), result.getCommandName());
+        assertThat(result.getPayload()).isEqualTo(expectedPayload);
+        assertThat(result.getMetaData()).isEqualTo(expectedMetaData);
+        assertThat(result.getIdentifier()).isNotEqualTo(testIdentifier);
+        assertThat(result.getPayloadType()).isEqualTo(String.class);
+        assertThat(result.getCommandName()).isEqualTo(String.class.getName());
     }
 }

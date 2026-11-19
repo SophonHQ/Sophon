@@ -17,14 +17,15 @@
 
 package org.sophonhq.sophon.messaging.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.NoScopeDescriptor;
 import org.sophonhq.sophon.messaging.ScopeDescriptor;
 
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -49,7 +50,8 @@ class ScopeDescriptorParameterResolverFactoryTest {
 
     @Test
     void parameterResolverIsNullForScopeDescriptorLessMethod() {
-        assertNull(testSubject.createInstance(scopeDescriptorLessMethod, scopeDescriptorLessMethod.getParameters(), 0));
+        assertThat(testSubject.createInstance(scopeDescriptorLessMethod, scopeDescriptorLessMethod.getParameters(), 0))
+                .isNull();
     }
 
     @Test
@@ -57,8 +59,8 @@ class ScopeDescriptorParameterResolverFactoryTest {
         ParameterResolver<ScopeDescriptor> resolver =
                 testSubject.createInstance(scopeDescriptorUsingMethod, scopeDescriptorUsingMethod.getParameters(), 0);
 
-        assertTrue(resolver.matches(testMessage));
-        assertEquals(NoScopeDescriptor.INSTANCE, resolver.resolveParameterValue(testMessage));
+        assertThat(resolver.matches(testMessage)).isTrue();
+        assertThat(resolver.resolveParameterValue(testMessage)).isEqualTo(NoScopeDescriptor.INSTANCE);
     }
 
     @SuppressWarnings("unused")

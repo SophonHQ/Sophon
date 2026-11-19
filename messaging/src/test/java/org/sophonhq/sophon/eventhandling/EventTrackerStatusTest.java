@@ -17,9 +17,10 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@code default} methods on the {@link EventTrackerStatus}.
@@ -42,43 +43,43 @@ class EventTrackerStatusTest {
 
     @Test
     void isDifferentReturnsFalseForIdenticalObjects() {
-        assertFalse(thisStatus.isDifferent(thisStatus, DO_NOT_VALIDATE_POSITIONS));
-        assertFalse(thisStatus.isDifferent(thisStatus));
+        assertThat(thisStatus.isDifferent(thisStatus, DO_NOT_VALIDATE_POSITIONS)).isFalse();
+        assertThat(thisStatus.isDifferent(thisStatus)).isFalse();
     }
 
     @Test
     void isDifferentReturnsTrueForDifferentEventTrackerStatusImplementations() {
         AddedTrackerStatus otherStatus = new AddedTrackerStatus(thatStatus);
-        assertTrue(thisStatus.isDifferent(otherStatus, DO_NOT_VALIDATE_POSITIONS));
-        assertTrue(thisStatus.isDifferent(otherStatus));
+        assertThat(thisStatus.isDifferent(otherStatus, DO_NOT_VALIDATE_POSITIONS)).isTrue();
+        assertThat(thisStatus.isDifferent(otherStatus)).isTrue();
     }
 
     @Test
     void isDifferentReturnsFalseForSimilarStatusObjects() {
-        assertFalse(thisStatus.isDifferent(thatStatus, DO_NOT_VALIDATE_POSITIONS));
-        assertFalse(thisStatus.isDifferent(thatStatus, VALIDATE_POSITIONS));
+        assertThat(thisStatus.isDifferent(thatStatus, DO_NOT_VALIDATE_POSITIONS)).isFalse();
+        assertThat(thisStatus.isDifferent(thatStatus, VALIDATE_POSITIONS)).isFalse();
     }
 
     @Test
     void isDifferentReturnsFalseForSimilarStatusObjectsWhenDisregardingPositions() {
-        assertFalse(thisStatus.isDifferent(thatStatus, DO_NOT_VALIDATE_POSITIONS));
-        assertFalse(thisStatus.isDifferent(thatStatus, VALIDATE_POSITIONS));
+        assertThat(thisStatus.isDifferent(thatStatus, DO_NOT_VALIDATE_POSITIONS)).isFalse();
+        assertThat(thisStatus.isDifferent(thatStatus, VALIDATE_POSITIONS)).isFalse();
 
         thisStatus.setMerging(true);
         thatStatus.setMerging(false);
-        assertTrue(thisStatus.isDifferent(thatStatus, DO_NOT_VALIDATE_POSITIONS));
-        assertTrue(thisStatus.isDifferent(thatStatus, VALIDATE_POSITIONS));
+        assertThat(thisStatus.isDifferent(thatStatus, DO_NOT_VALIDATE_POSITIONS)).isTrue();
+        assertThat(thisStatus.isDifferent(thatStatus, VALIDATE_POSITIONS)).isTrue();
 
         thisStatus.setMerging(false);
         thisStatus.setCurrentPosition(10L);
         thatStatus.setCurrentPosition(42L);
-        assertFalse(thisStatus.isDifferent(thatStatus, DO_NOT_VALIDATE_POSITIONS));
-        assertTrue(thisStatus.isDifferent(thatStatus, VALIDATE_POSITIONS));
+        assertThat(thisStatus.isDifferent(thatStatus, DO_NOT_VALIDATE_POSITIONS)).isFalse();
+        assertThat(thisStatus.isDifferent(thatStatus, VALIDATE_POSITIONS)).isTrue();
     }
 
     @Test
     void matchStates() {
-        assertTrue(thisStatus.matchStates(thatStatus));
+        assertThat(thisStatus.matchStates(thatStatus)).isTrue();
 
         thisStatus.setSegment(Segment.ROOT_SEGMENT);
         thisStatus.setTrackingToken(new GlobalSequenceTrackingToken(0L));
@@ -87,7 +88,7 @@ class EventTrackerStatusTest {
         thisStatus.setMerging(true);
         thisStatus.setErrorState(true);
         thisStatus.setError(new IllegalArgumentException("some-exception"));
-        assertFalse(thisStatus.matchStates(thatStatus));
+        assertThat(thisStatus.matchStates(thatStatus)).isFalse();
 
         thatStatus.setSegment(Segment.ROOT_SEGMENT);
         thatStatus.setTrackingToken(new GlobalSequenceTrackingToken(0L));
@@ -96,31 +97,31 @@ class EventTrackerStatusTest {
         thatStatus.setMerging(true);
         thatStatus.setErrorState(true);
         thatStatus.setError(new IllegalArgumentException("some-exception"));
-        assertTrue(thisStatus.matchStates(thatStatus));
+        assertThat(thisStatus.matchStates(thatStatus)).isTrue();
     }
 
     @Test
     void matchPositions() {
-        assertTrue(thisStatus.matchPositions(thatStatus));
+        assertThat(thisStatus.matchPositions(thatStatus)).isTrue();
 
         thisStatus.setCurrentPosition(10L);
         thisStatus.setResetPosition(42L);
         thisStatus.setMergeCompletedPosition(1337L);
-        assertFalse(thisStatus.matchPositions(thatStatus));
+        assertThat(thisStatus.matchPositions(thatStatus)).isFalse();
 
         thatStatus.setCurrentPosition(10L);
         thatStatus.setResetPosition(42L);
         thatStatus.setMergeCompletedPosition(1337L);
-        assertTrue(thisStatus.matchPositions(thatStatus));
+        assertThat(thisStatus.matchPositions(thatStatus)).isTrue();
     }
 
     @Test
     void trackerAdded() {
-        assertFalse(thisStatus.trackerAdded());
+        assertThat(thisStatus.trackerAdded()).isFalse();
     }
 
     @Test
     void trackerRemoved() {
-        assertFalse(thisStatus.trackerRemoved());
+        assertThat(thisStatus.trackerRemoved()).isFalse();
     }
 }

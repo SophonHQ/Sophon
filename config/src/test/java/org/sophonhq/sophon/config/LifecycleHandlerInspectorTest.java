@@ -18,10 +18,11 @@
 package org.sophonhq.sophon.config;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.*;
-import org.mockito.*;
-import org.mockito.junit.jupiter.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.lifecycle.Lifecycle;
 import org.sophonhq.sophon.lifecycle.LifecycleHandlerInvocationException;
@@ -33,7 +34,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -56,12 +59,9 @@ class LifecycleHandlerInspectorTest {
     @Test
     void sophonConfigurationExceptionIsThrownForLifecycleHandlerMethodWithParameters(
             @Mock Configuration configuration) {
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> LifecycleHandlerInspector.registerLifecycleHandlers(
-                        configuration, new ComponentWithFaultyLifecycleHandler()
-                )
-        );
+        assertThatThrownBy(() -> LifecycleHandlerInspector.registerLifecycleHandlers(
+                configuration, new ComponentWithFaultyLifecycleHandler()
+        )).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -76,7 +76,7 @@ class LifecycleHandlerInspectorTest {
         verify(config).onShutdown(eq(TEST_PHASE), lifecycleHandlerCaptor.capture());
 
         CompletableFuture<?> resultFuture = lifecycleHandlerCaptor.getValue().run();
-        assertEquals(asyncShutdownResult, resultFuture.get());
+        assertThat(resultFuture.get()).isEqualTo(asyncShutdownResult);
     }
 
     @Test
@@ -104,7 +104,7 @@ class LifecycleHandlerInspectorTest {
         verify(config).onStart(eq(TEST_PHASE), lifecycleHandlerCaptor.capture());
 
         lifecycleHandlerCaptor.getValue().run();
-        assertTrue(started.get());
+        assertThat(started.get()).isTrue();
     }
 
     @Test
@@ -118,13 +118,13 @@ class LifecycleHandlerInspectorTest {
         verify(config).onShutdown(eq(TEST_PHASE), lifecycleHandlerCaptor.capture());
 
         CompletableFuture<?> result = lifecycleHandlerCaptor.getValue().run();
-        assertTrue(result.isCompletedExceptionally());
+        assertThat(result.isCompletedExceptionally()).isTrue();
 
         try {
             result.get();
             fail("Expected an ExecutionException");
         } catch (ExecutionException e) {
-            assertTrue(LifecycleHandlerInvocationException.class.isAssignableFrom(e.getCause().getClass()));
+            assertThat(LifecycleHandlerInvocationException.class.isAssignableFrom(e.getCause().getClass())).isTrue();
         }
     }
 

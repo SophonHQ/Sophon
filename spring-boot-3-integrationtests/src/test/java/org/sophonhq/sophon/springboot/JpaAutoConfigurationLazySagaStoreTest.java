@@ -19,7 +19,7 @@ package org.sophonhq.sophon.springboot;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.junit.jupiter.*;
 import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -61,7 +61,7 @@ class JpaAutoConfigurationLazySagaStoreTest {
         verifyNoInteractions(entityManager);
 
         SagaStore<?> sagaStore = applicationContext.getBean(SagaStore.class);
-        assertTrue(sagaStore instanceof JpaSagaStore);
+        assertThat(sagaStore).isInstanceOf(JpaSagaStore.class);
 
         verify(entityManager).getEntityManagerFactory();
     }

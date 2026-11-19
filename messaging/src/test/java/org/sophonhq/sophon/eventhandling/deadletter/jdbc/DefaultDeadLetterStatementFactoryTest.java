@@ -26,7 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -45,21 +45,23 @@ class DefaultDeadLetterStatementFactoryTest {
     void buildWithNullSchemaThrowsSophonConfigurationException() {
         DefaultDeadLetterStatementFactory.Builder<?> testBuilder = DefaultDeadLetterStatementFactory.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.schema(null));
+        assertThatThrownBy(() -> testBuilder.schema(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullGenericSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterStatementFactory.Builder<?> testBuilder = DefaultDeadLetterStatementFactory.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.genericSerializer(null));
+        assertThatThrownBy(() -> testBuilder.genericSerializer(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullEventSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterStatementFactory.Builder<?> testBuilder = DefaultDeadLetterStatementFactory.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventSerializer(null));
+        assertThatThrownBy(() -> testBuilder.eventSerializer(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -68,7 +70,7 @@ class DefaultDeadLetterStatementFactoryTest {
                 DefaultDeadLetterStatementFactory.builder()
                                                  .eventSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -77,7 +79,7 @@ class DefaultDeadLetterStatementFactoryTest {
                 DefaultDeadLetterStatementFactory.builder()
                                                  .genericSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test

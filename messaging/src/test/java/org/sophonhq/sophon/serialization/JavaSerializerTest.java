@@ -17,11 +17,13 @@
 
 package org.sophonhq.sophon.serialization;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 /**
  * @author Allard Buijze
@@ -39,19 +41,19 @@ class JavaSerializerTest {
     void serializeAndDeserialize() {
         SerializedObject<byte[]> serializedObject = testSubject.serialize(new MySerializableObject("hello"),
                                                                           byte[].class);
-        assertEquals(MySerializableObject.class.getName(), serializedObject.getType().getName());
-        assertEquals("2166108932776672373", serializedObject.getType().getRevision());
+        assertThat(serializedObject.getType().getName()).isEqualTo(MySerializableObject.class.getName());
+        assertThat(serializedObject.getType().getRevision()).isEqualTo("2166108932776672373");
 
         Object actualResult = testSubject.deserialize(serializedObject);
-        assertTrue(actualResult instanceof MySerializableObject);
-        assertEquals("hello", ((MySerializableObject) actualResult).getSomeProperty());
+        assertThat(actualResult).isInstanceOf(MySerializableObject.class);
+        assertThat(((MySerializableObject) actualResult).getSomeProperty()).isEqualTo("hello");
     }
 
     @Test
     void classForType() {
         Class actual = testSubject.classForType(new SimpleSerializedType(MySerializableObject.class.getName(),
                                                                          "2166108932776672373"));
-        assertEquals(MySerializableObject.class, actual);
+        assertThat(actual).isEqualTo(MySerializableObject.class);
     }
 
     @Test
@@ -61,12 +63,13 @@ class JavaSerializerTest {
                                     .build();
         Class actual = testSubject.classForType(new SimpleSerializedType(MySerializableObject.class.getName(),
                                                                          "fixed"));
-        assertEquals(MySerializableObject.class, actual);
+        assertThat(actual).isEqualTo(MySerializableObject.class);
     }
 
     @Test
     void classForType_UnknownClass() {
-        assertEquals(UnknownSerializedType.class, testSubject.classForType(new SimpleSerializedType("unknown", "0")));
+        assertThat(testSubject.classForType(new SimpleSerializedType("unknown", "0")))
+                .isEqualTo(UnknownSerializedType.class);
     }
 
     @Test
@@ -75,14 +78,17 @@ class JavaSerializerTest {
         SimpleSerializedObject<byte[]> serializedNullString = new SimpleSerializedObject<>(
                 serializedNull.getData(), byte[].class, testSubject.typeForClass(String.class)
         );
-        assertNull(testSubject.deserialize(serializedNull));
-        assertNull(testSubject.deserialize(serializedNullString));
+        assertThatObject(testSubject.deserialize(serializedNull)).isNull();
+        assertThatObject(testSubject.deserialize(serializedNullString)).isNull();
     }
 
     @Test
     void deserializeEmptyBytes() {
-        assertEquals(Void.class, testSubject.classForType(SerializedType.emptyType()));
-        assertNull(testSubject.deserialize(new SimpleSerializedObject<>(new byte[0], byte[].class, SerializedType.emptyType())));
+        assertThat(testSubject.classForType(SerializedType.emptyType())).isEqualTo(Void.class);
+        assertThatObject(testSubject.deserialize(new SimpleSerializedObject<>(new byte[0],
+                                                                              byte[].class,
+                                                                              SerializedType.emptyType())))
+                .isNull();
     }
 
     private static class MySerializableObject implements Serializable {

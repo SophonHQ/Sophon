@@ -19,8 +19,7 @@ package org.sophonhq.sophon.serialization;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -31,13 +30,13 @@ class MavenArtifactRevisionResolverTest {
     void findVersionOfExistingPomProperties() throws Exception {
         MavenArtifactRevisionResolver testSubject = new MavenArtifactRevisionResolver("org.sophonhq.sophon", "sophon-modelling");
 
-        assertEquals("2.1-SNAPSHOT", testSubject.revisionOf(Object.class));
+        assertThat(testSubject.revisionOf(Object.class)).isEqualTo("2.1-SNAPSHOT");
     }
 
     @Test
     void findVersionOfNonExistingProperties() throws Exception {
         MavenArtifactRevisionResolver testSubject = new MavenArtifactRevisionResolver("does.not.exist", "sophon-modelling");
 
-        assertNull(testSubject.revisionOf(Object.class));
+        assertThat(testSubject.revisionOf(Object.class)).isNull();
     }
 }

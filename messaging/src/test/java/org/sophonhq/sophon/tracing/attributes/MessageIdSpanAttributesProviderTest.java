@@ -17,14 +17,14 @@
 
 package org.sophonhq.sophon.tracing.attributes;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.tracing.SpanAttributesProvider;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MessageIdSpanAttributesProviderTest {
 
@@ -34,7 +34,8 @@ class MessageIdSpanAttributesProviderTest {
     void extractsMessageIdentifier() {
         Message<?> event = GenericEventMessage.asEventMessage("Some event");
         Map<String, String> map = provider.provideForMessage(event);
-        assertEquals(1, map.size());
-        assertEquals(event.getIdentifier(), map.get("sophon_message_id"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_message_id", event.getIdentifier());
     }
 }

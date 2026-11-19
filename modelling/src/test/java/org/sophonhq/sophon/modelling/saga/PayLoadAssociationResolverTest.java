@@ -19,7 +19,8 @@ package org.sophonhq.sophon.modelling.saga;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
@@ -27,7 +28,7 @@ import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 import static org.sophonhq.sophon.modelling.utils.ConcurrencyUtils.testConcurrent;
 
@@ -57,7 +58,7 @@ class PayloadAssociationResolverTest {
     private void testResolveOnce() {
         EventMessage<?> eventMessage = asEventMessage(new TestEvent(TEST_PROPERTY_VALUE));
         Object result = testSubject.resolve(TEST_PROPERTY_NAME, eventMessage, handlingMember);
-        assertEquals(TEST_PROPERTY_VALUE, result);
+        assertThat(result).isEqualTo(TEST_PROPERTY_VALUE);
     }
 
     private class TestEvent {

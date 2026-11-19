@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.queryhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.responsetypes.ResponseTypes;
 import org.sophonhq.sophon.queryhandling.annotation.AnnotationQueryHandlerAdapter;
@@ -35,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for different types of queries hitting query handlers with {@link Future} or {@link CompletableFuture} as the
@@ -66,7 +67,7 @@ class FutureAsResponseTypeToQueryHandlersTest {
 
         List<String> response = queryBus.query(queryMessage).get().getPayload();
 
-        assertEquals(asList("Response1", "Response2"), response);
+        assertThat(response).containsExactlyElementsOf(asList("Response1", "Response2"));
     }
 
     @Test
@@ -77,7 +78,7 @@ class FutureAsResponseTypeToQueryHandlersTest {
 
         String response = queryBus.query(queryMessage).get().getPayload();
 
-        assertEquals("Response", response);
+        assertThat(response).isEqualTo("Response");
     }
 
     @Test
@@ -92,7 +93,7 @@ class FutureAsResponseTypeToQueryHandlersTest {
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList());
 
-        assertEquals(asList("Response1", "Response2"), response);
+        assertThat(response).containsExactlyElementsOf(asList("Response1", "Response2"));
     }
 
     @Test
@@ -107,7 +108,7 @@ class FutureAsResponseTypeToQueryHandlersTest {
                         .findFirst()
                         .orElse(null);
 
-        assertEquals("Response", response);
+        assertThat(response).isEqualTo("Response");
     }
 
     @Test
@@ -152,7 +153,7 @@ class FutureAsResponseTypeToQueryHandlersTest {
                                       .get()
                                       .getPayload();
 
-        assertEquals(asList("Response1", "Response2"), result);
+        assertThat(result).containsExactlyElementsOf(asList("Response1", "Response2"));
     }
 
     @Test
@@ -167,7 +168,7 @@ class FutureAsResponseTypeToQueryHandlersTest {
                         .findFirst()
                         .orElse(null);
 
-        assertEquals(asList("Response1", "Response2"), result);
+        assertThat(result).containsExactlyElementsOf(asList("Response1", "Response2"));
     }
 
     @Test

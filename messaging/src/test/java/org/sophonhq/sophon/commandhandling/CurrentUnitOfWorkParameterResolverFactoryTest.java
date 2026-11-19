@@ -28,7 +28,7 @@ import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -53,15 +53,16 @@ class CurrentUnitOfWorkParameterResolverFactoryTest {
     void createInstance() throws Exception {
         Method someMethod = getClass().getMethod("someMethod", UnitOfWork.class);
 
-        assertNull(testSubject.createInstance(method, method.getParameters(), 0));
-        assertSame(testSubject, testSubject.createInstance(someMethod, someMethod.getParameters(), 0));
+        assertThat(testSubject.createInstance(method, method.getParameters(), 0)).isNull();
+        assertThat(testSubject.createInstance(someMethod, someMethod.getParameters(), 0)).isSameAs(testSubject);
     }
 
     @Test
     void resolveParameterValue() {
         DefaultUnitOfWork.startAndGet(null);
         try {
-            assertSame(CurrentUnitOfWork.get(), testSubject.resolveParameterValue(mock(GenericCommandMessage.class)));
+            assertThat(testSubject.resolveParameterValue(mock(GenericCommandMessage.class)))
+                    .isSameAs(CurrentUnitOfWork.get());
         } finally {
             CurrentUnitOfWork.get().rollback();
         }
@@ -69,18 +70,18 @@ class CurrentUnitOfWorkParameterResolverFactoryTest {
 
     @Test
     void resolveParameterValueWithoutActiveUnitOfWork() {
-        assertNull(testSubject.resolveParameterValue(mock(GenericCommandMessage.class)));
+        assertThat(testSubject.resolveParameterValue(mock(GenericCommandMessage.class))).isNull();
     }
 
     @Test
     void matches() {
-        assertTrue(testSubject.matches(mock(GenericCommandMessage.class)));
+        assertThat(testSubject.matches(mock(GenericCommandMessage.class))).isTrue();
         DefaultUnitOfWork.startAndGet(null);
         try {
-            assertTrue(testSubject.matches(mock(Message.class)));
-            assertTrue(testSubject.matches(mock(EventMessage.class)));
-            assertTrue(testSubject.matches(mock(GenericEventMessage.class)));
-            assertTrue(testSubject.matches(mock(GenericCommandMessage.class)));
+            assertThat(testSubject.matches(mock(Message.class))).isTrue();
+            assertThat(testSubject.matches(mock(EventMessage.class))).isTrue();
+            assertThat(testSubject.matches(mock(GenericEventMessage.class))).isTrue();
+            assertThat(testSubject.matches(mock(GenericCommandMessage.class))).isTrue();
         } finally {
             CurrentUnitOfWork.get().rollback();
         }

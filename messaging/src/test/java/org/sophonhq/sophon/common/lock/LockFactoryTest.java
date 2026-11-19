@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.common.lock;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -26,7 +27,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Test that discovers <a href="https://github.com/AxonFramework/AxonFramework/issues/32">issue #32</a>.
@@ -72,7 +74,7 @@ class LockFactoryTest {
                 failedAttempts++;
             }
         }
-        assertEquals(0, failedAttempts, "Failed LockUnlock count");
+        assertThat(failedAttempts).as("Failed LockUnlock count").isZero();
     }
 
 

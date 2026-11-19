@@ -18,7 +18,9 @@
 package org.sophonhq.sophon.modelling.saga.repository;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.common.IdentifierFactory;
 import org.sophonhq.sophon.eventhandling.EventHandler;
@@ -38,7 +40,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Collections.singleton;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.messaging.unitofwork.DefaultUnitOfWork.startAndGet;
 
@@ -73,7 +75,7 @@ class AnnotatedSagaRepositoryTest {
 
         Saga<Object> saga2 = testSubject.load(saga.getSagaIdentifier());
 
-        assertSame(saga, saga2);
+        assertThat(saga2).isSameAs(saga);
         currentUnitOfWork.commit();
         verify(store, never()).loadSaga(any(), any());
         verify(store, never()).updateSaga(any(), any(), any(), any());
@@ -89,7 +91,7 @@ class AnnotatedSagaRepositoryTest {
                 startAndGet(null).executeWithResult(() -> testSubject.load(saga.getSagaIdentifier()))
                                  .getPayload();
 
-        assertSame(saga, saga2);
+        assertThat(saga2).isSameAs(saga);
         currentUnitOfWork.commit();
         verify(store, never()).loadSaga(any(), any());
         verify(store, never()).updateSaga(any(), any(), any(), any());
@@ -129,7 +131,7 @@ class AnnotatedSagaRepositoryTest {
 
         Saga<Object> saga2 = testSubject.load(preparedSaga.getSagaIdentifier());
 
-        assertSame(saga, saga2);
+        assertThat(saga2).isSameAs(saga);
         verify(store).loadSaga(eq(Object.class), any());
         verify(store, never()).updateSaga(eq(Object.class), any(), any(), any());
 
@@ -152,7 +154,7 @@ class AnnotatedSagaRepositoryTest {
         otherProcess.start();
         otherProcess.join();
 
-        assertEquals(singleton(sagaId), testSubject.find(associationValue));
+        assertThat(testSubject.find(associationValue)).isEqualTo(singleton(sagaId));
     }
 
     @Test
@@ -167,7 +169,7 @@ class AnnotatedSagaRepositoryTest {
                 sagaRepository.createInstance(IdentifierFactory.getInstance().generateIdentifier(), TestSaga::new);
         saga.handle(GenericEventMessage.asEventMessage(new Object()));
 
-        assertEquals(1, CountingInterceptors.counter.get());
+        assertThat(CountingInterceptors.counter.get()).isOne();
     }
 
     private static class CountingInterceptors implements MessageHandlerInterceptorMemberChain<TestSaga> {

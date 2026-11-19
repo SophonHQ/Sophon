@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.integrationtests.polymorphic;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.NoHandlerForCommandException;
@@ -46,7 +48,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests aggregate polymorphism.
@@ -119,25 +122,25 @@ public abstract class AbstractPolymorphicAggregateAnnotationCommandHandlerTestSu
     void createChild1() {
         String id = commandGateway.sendAndWait(new CreateChild1Command("123"));
         String result = commandGateway.sendAndWait(new CommonCommand(id));
-        assertEquals("Child1Aggregate123", result);
+        assertThat(result).isEqualTo("Child1Aggregate123");
     }
 
     @Test
     void createChild2() {
         String id = commandGateway.sendAndWait(new CreateChild2Command("123"));
         String result = commandGateway.sendAndWait(new CommonCommand(id));
-        assertEquals("Child2Aggregate123", result);
+        assertThat(result).isEqualTo("Child2Aggregate123");
     }
 
     @Test
     void factoryCreate() {
         String id = commandGateway.sendAndWait(new CreateChildFactoryCommand("123", 1));
         String result = commandGateway.sendAndWait(new CommonCommand(id));
-        assertEquals("Child1Aggregate123", result);
+        assertThat(result).isEqualTo("Child1Aggregate123");
 
         id = commandGateway.sendAndWait(new CreateChildFactoryCommand("456", 2));
         result = commandGateway.sendAndWait(new CommonCommand(id));
-        assertEquals("Child2Aggregate456", result);
+        assertThat(result).isEqualTo("Child2Aggregate456");
     }
 
     @Test
@@ -145,8 +148,9 @@ public abstract class AbstractPolymorphicAggregateAnnotationCommandHandlerTestSu
         String c1Id = commandGateway.sendAndWait(new CreateChild1Command("123"));
         String c2Id = commandGateway.sendAndWait(new CreateChild2Command("456"));
         String result = commandGateway.sendAndWait(new Child1OnlyCommand(c1Id));
-        assertEquals("Child1Aggregate123", result);
-        assertThrows(NoHandlerForCommandException.class, () -> commandGateway.sendAndWait(new Child1OnlyCommand(c2Id)));
+        assertThat(result).isEqualTo("Child1Aggregate123");
+        assertThatThrownBy(() -> commandGateway.sendAndWait(new Child1OnlyCommand(c2Id)))
+                .isInstanceOf(NoHandlerForCommandException.class);
     }
 
     @Test
@@ -172,8 +176,8 @@ public abstract class AbstractPolymorphicAggregateAnnotationCommandHandlerTestSu
         String c2Id = commandGateway.sendAndWait(new CreateChild2Command("456"));
         String child1Result = commandGateway.sendAndWait(new InterceptedByParentCommand(c1Id, "state"));
         String child2Result = commandGateway.sendAndWait(new InterceptedByParentCommand(c2Id, "state"));
-        assertEquals("stateInterceptedByParentHandledByChild1", child1Result);
-        assertEquals("stateInterceptedByParentHandledByChild2", child2Result);
+        assertThat(child1Result).isEqualTo("stateInterceptedByParentHandledByChild1");
+        assertThat(child2Result).isEqualTo("stateInterceptedByParentHandledByChild2");
     }
 
     @Test
@@ -182,8 +186,8 @@ public abstract class AbstractPolymorphicAggregateAnnotationCommandHandlerTestSu
         String c2Id = commandGateway.sendAndWait(new CreateChild2Command("456"));
         String child1Result = commandGateway.sendAndWait(new InterceptedByChildCommand(c1Id, "state"));
         String child2Result = commandGateway.sendAndWait(new InterceptedByChildCommand(c2Id, "state"));
-        assertEquals("stateInterceptedByChild1HandledByParent", child1Result);
-        assertEquals("stateInterceptedByChild2HandledByParent", child2Result);
+        assertThat(child1Result).isEqualTo("stateInterceptedByChild1HandledByParent");
+        assertThat(child2Result).isEqualTo("stateInterceptedByChild2HandledByParent");
     }
 
     @Test
@@ -192,22 +196,22 @@ public abstract class AbstractPolymorphicAggregateAnnotationCommandHandlerTestSu
         String c2Id = commandGateway.sendAndWait(new CreateChild2Command("456"));
         String child1Result = commandGateway.sendAndWait(new AbstractCommandHandlerCommand(c1Id));
         String child2Result = commandGateway.sendAndWait(new AbstractCommandHandlerCommand(c2Id));
-        assertEquals("handledByChild1", child1Result);
-        assertEquals("handledByChild2", child2Result);
+        assertThat(child1Result).isEqualTo("handledByChild1");
+        assertThat(child2Result).isEqualTo("handledByChild2");
     }
 
     @Test
     void inspectionOfAbstractAggregateWithCommandHandlerOnConstructor() {
-        assertThrows(AggregateModellingException.class,
-                     () -> new AnnotatedAggregateMetaModelFactory()
-                             .createModel(AbstractAggregateWithCommandHandlerConstructor.class));
+        assertThatThrownBy(() -> new AnnotatedAggregateMetaModelFactory()
+                .createModel(AbstractAggregateWithCommandHandlerConstructor.class))
+                .isInstanceOf(AggregateModellingException.class);
     }
 
     @Test
     void inspectionOfPolymorphicAggregateWithSameCreationalCommandHandlers() {
-        assertThrows(AggregateModellingException.class,
-                     () -> new AnnotatedAggregateMetaModelFactory()
-                             .createModel(A.class, new HashSet<>(asList(B.class, C.class))));
+        assertThatThrownBy(() -> new AnnotatedAggregateMetaModelFactory()
+                .createModel(A.class, new HashSet<>(asList(B.class, C.class))))
+                .isInstanceOf(AggregateModellingException.class);
     }
 
     @Test
@@ -231,7 +235,7 @@ public abstract class AbstractPolymorphicAggregateAnnotationCommandHandlerTestSu
         String child1AggregateId = "child1" + simpleAggregateId;
         commandGateway.sendAndWait(new CreateSimpleAggregateCommand(simpleAggregateId));
         String result = commandGateway.sendAndWait(new CommonCommand(child1AggregateId));
-        assertEquals("Child1Aggregate" + child1AggregateId, result);
+        assertThat(result).isEqualTo("Child1Aggregate" + child1AggregateId);
     }
 
     private void assertAggregateState(String aggregateId, String expectedState) {
@@ -242,7 +246,7 @@ public abstract class AbstractPolymorphicAggregateAnnotationCommandHandlerTestSu
             repository.load(aggregateId).execute(a -> rv.set(a.getState()));
             return rv.get();
         }).getPayload();
-        assertEquals(expectedState, state);
+        assertThat(state).isEqualTo(expectedState);
     }
 
     private static abstract class AbstractAggregateWithCommandHandlerConstructor {

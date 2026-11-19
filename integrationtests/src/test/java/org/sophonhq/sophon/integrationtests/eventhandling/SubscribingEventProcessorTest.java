@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.integrationtests.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.common.transaction.Transaction;
@@ -48,7 +50,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -103,7 +106,9 @@ class SubscribingEventProcessorTest {
         testSubject.start();
 
         eventBus.publish(EventTestUtils.createEvents(2));
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Handler to have received 2 published events");
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Handler to have received 2 published events")
+                .isTrue();
     }
 
     @Test
@@ -126,14 +131,15 @@ class SubscribingEventProcessorTest {
         testSubject.start();
         eventBus.publish(EventTestUtils.createEvents(1));
 
-        assertTrue(transactionManager.started, "Expected Transaction to be started");
+        assertThat(transactionManager.started).as("Expected Transaction to be started").isTrue();
     }
 
     @Test
     void buildWithNullTransactionManagerThrowsSophonConfigurationException() {
         SubscribingEventProcessor.Builder builder = SubscribingEventProcessor.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builder.transactionManager(null));
+        assertThatThrownBy(() -> builder.transactionManager(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -174,9 +180,10 @@ class SubscribingEventProcessorTest {
         testSubject.start();
 
         eventBus.publish(EventTestUtils.createEvents(2));
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS),
-                   "Expected MessageMonitor.reportIgnored to have been called for 2 events");
-        assertEquals(2, ignoredCount.get(), "Expected ignored count to be 2");
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected MessageMonitor.reportIgnored to have been called for 2 events")
+                .isTrue();
+        assertThat(ignoredCount.get()).as("Expected ignored count to be 2").isEqualTo(2);
     }
 
     @Test
@@ -199,14 +206,14 @@ class SubscribingEventProcessorTest {
         // when publishing an event without a handler...
         testBus.publish(new GenericEventMessage<>(new SomeNotHandledEvent()));
         // then the annotated handler and annotated interceptor are not invoked...
-        assertTrue(interceptedEvents.isEmpty());
-        assertTrue(handledEvents.isEmpty());
+        assertThat(interceptedEvents).isEmpty();
+        assertThat(handledEvents).isEmpty();
         // when publishing an event WITH a handler...
         testBus.publish(new GenericEventMessage<>(new SomeHandledEvent()));
         // then the annotated handler and annotated interceptor are invoked...
-        assertFalse(interceptedEvents.isEmpty());
-        assertFalse(handledEvents.isEmpty());
-        assertTrue((interceptedEvents.containsAll(handledEvents)));
+        assertThat(interceptedEvents).isNotEmpty();
+        assertThat(handledEvents).isNotEmpty();
+        assertThat(interceptedEvents).containsAll(handledEvents);
     }
 
     static class TestingTransactionManager implements TransactionManager {

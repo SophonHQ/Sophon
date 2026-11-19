@@ -41,8 +41,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 
@@ -66,8 +66,8 @@ public class EventSourcingRepositoryIntegrationTest implements Thread.UncaughtEx
 
         // with pessimistic locking, all modifications are guaranteed successful
         // note: sequence number 20 means there are 21 events. This includes the one from the setup
-        assertEquals(2 * CONCURRENT_MODIFIERS, lastSequenceNumber);
-        assertEquals(CONCURRENT_MODIFIERS, getSuccessfulModifications());
+        assertThat(lastSequenceNumber).isEqualTo(2 * CONCURRENT_MODIFIERS);
+        assertThat(getSuccessfulModifications()).isEqualTo(CONCURRENT_MODIFIERS);
     }
 
     private int getSuccessfulModifications() {
@@ -111,9 +111,9 @@ public class EventSourcingRepositoryIntegrationTest implements Thread.UncaughtEx
         long lastSequenceNumber = -1;
         while (committedEvents.hasNext()) {
             DomainEventMessage nextEvent = committedEvents.next();
-            assertEquals(++lastSequenceNumber,
-                         nextEvent.getSequenceNumber(),
-                    "Events are not stored sequentially. Most likely due to unlocked concurrent access.");
+            assertThat(nextEvent.getSequenceNumber())
+                    .as("Events are not stored sequentially. Most likely due to unlocked concurrent access.")
+                    .isEqualTo(++lastSequenceNumber);
         }
         return lastSequenceNumber;
     }

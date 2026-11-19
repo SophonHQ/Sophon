@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventsourcing.conflictresolution;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.modelling.command.ConflictingModificationException;
 import org.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStore;
 import org.sophonhq.sophon.eventsourcing.eventstore.EventStore;
@@ -26,7 +27,7 @@ import org.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorag
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.spy;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.*;
 
@@ -45,9 +46,8 @@ class DefaultConflictResolverTest {
     @Test
     void detectConflicts() {
         subject = new DefaultConflictResolver(eventStore, AGGREGATE, 5, 9);
-        assertThrows(
-                ConflictingModificationException.class,
-                () -> subject.detectConflicts(Conflicts.payloadTypeOf(String.class)));
+        assertThatThrownBy(() -> subject.detectConflicts(Conflicts.payloadTypeOf(String.class)))
+                .isInstanceOf(ConflictingModificationException.class);
     }
 
     @Test
@@ -65,7 +65,7 @@ class DefaultConflictResolverTest {
     @Test
     void ensureConflictsResolvedThrowsExceptionWithoutRegisteredConflicts() {
         subject = new DefaultConflictResolver(eventStore, AGGREGATE, 5, 9);
-        assertThrows(ConflictingModificationException.class, subject::ensureConflictsResolved);
+        assertThatThrownBy(subject::ensureConflictsResolved).isInstanceOf(ConflictingModificationException.class);
     }
 
     @Test
@@ -83,7 +83,7 @@ class DefaultConflictResolverTest {
                                     c -> new ConflictingModificationException("" + c.unexpectedEvents().size()));
             fail("Expected exception");
         } catch (ConflictingModificationException e) {
-            assertEquals("4", e.getMessage());
+            assertThat(e.getMessage()).isEqualTo("4");
         }
     }
 

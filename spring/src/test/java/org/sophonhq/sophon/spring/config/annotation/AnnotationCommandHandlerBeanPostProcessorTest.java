@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.spring.config.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
@@ -30,7 +31,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -54,15 +55,16 @@ class AnnotationCommandHandlerBeanPostProcessorTest {
         Object result1 = testSubject.postProcessBeforeInitialization(new AnnotatedCommandHandler(), "beanName");
         Object postProcessedBean = testSubject.postProcessAfterInitialization(result1, "beanName");
 
-        assertTrue(postProcessedBean instanceof MessageHandler<?>);
-        assertTrue(postProcessedBean instanceof AnnotatedCommandHandler);
+        assertThat(postProcessedBean)
+                .isInstanceOf(MessageHandler.class)
+                .isInstanceOf(AnnotatedCommandHandler.class);
 
         MessageHandler<CommandMessage<?>> commandHandler = (MessageHandler<CommandMessage<?>>) postProcessedBean;
         AnnotatedCommandHandler annotatedCommandHandler = (AnnotatedCommandHandler) postProcessedBean;
         CommandMessage<MyCommand> myCommand = GenericCommandMessage.asCommandMessage(new MyCommand());
         commandHandler.handle(myCommand);
 
-        assertEquals(1, annotatedCommandHandler.getInvocationCount());
+        assertThat(annotatedCommandHandler.getInvocationCount()).isOne();
     }
 
     @Test
@@ -72,15 +74,16 @@ class AnnotationCommandHandlerBeanPostProcessorTest {
         Object result1 = testSubject.postProcessBeforeInitialization(new CustomAnnotatedCommandHandler(), "beanName");
         Object postProcessedBean = testSubject.postProcessAfterInitialization(result1, "beanName");
 
-        assertTrue(postProcessedBean instanceof MessageHandler<?>);
-        assertTrue(postProcessedBean instanceof CustomAnnotatedCommandHandler);
+        assertThat(postProcessedBean)
+                .isInstanceOf(MessageHandler.class)
+                .isInstanceOf(CustomAnnotatedCommandHandler.class);
 
         MessageHandler<CommandMessage<?>> commandHandler = (MessageHandler<CommandMessage<?>>) postProcessedBean;
         CustomAnnotatedCommandHandler annotatedCommandHandler = (CustomAnnotatedCommandHandler) postProcessedBean;
         CommandMessage<MyCommand> myCommand = GenericCommandMessage.asCommandMessage(new MyCommand());
         commandHandler.handle(myCommand);
 
-        assertEquals(1, annotatedCommandHandler.getInvocationCount());
+        assertThat(annotatedCommandHandler.getInvocationCount()).isOne();
     }
 
     @Test
@@ -92,8 +95,8 @@ class AnnotationCommandHandlerBeanPostProcessorTest {
         Object result1 = testSubject.postProcessBeforeInitialization(mockFactoryBean, "beanName");
         Object postProcessedBean = testSubject.postProcessAfterInitialization(mockFactoryBean, "beanName");
 
-        assertSame(mockFactoryBean, result1);
-        assertSame(mockFactoryBean, postProcessedBean);
+        assertThat(result1).isSameAs(mockFactoryBean);
+        assertThat(postProcessedBean).isSameAs(mockFactoryBean);
         // this call leads to problems in Spring Boot 2.6 when post-processing factory beans, so it needs to be avoided
         verify(mockBeanFactory, never()).isSingleton(anyString());
     }

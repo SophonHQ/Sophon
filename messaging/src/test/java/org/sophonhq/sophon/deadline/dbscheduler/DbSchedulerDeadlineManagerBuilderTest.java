@@ -18,13 +18,15 @@
 package org.sophonhq.sophon.deadline.dbscheduler;
 
 import com.github.kagkarlsson.scheduler.Scheduler;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
 import org.sophonhq.sophon.messaging.ScopeAwareProvider;
 import org.sophonhq.sophon.serialization.TestSerializer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class DbSchedulerDeadlineManagerBuilderTest {
@@ -47,28 +49,30 @@ class DbSchedulerDeadlineManagerBuilderTest {
                                                     .serializer(TestSerializer.JACKSON.getSerializer())
                                                     .build();
 
-        assertNotNull(manager);
+        assertThat(manager).isNotNull();
     }
 
     @Test
     void validateNeedsAllPropertiesSet() {
         builder.scheduler(scheduler)
                .transactionManager(transactionManager);
-        assertThrows(SophonConfigurationException.class, () -> builder.build());
+        assertThatThrownBy(() -> builder.build()).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void whenSettingSchedulerWithNullThrowError() {
-        assertThrows(SophonConfigurationException.class, () -> builder.scheduler(null));
+        assertThatThrownBy(() -> builder.scheduler(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void whenSettingTransactionManagerWithNullThrowError() {
-        assertThrows(SophonConfigurationException.class, () -> builder.transactionManager(null));
+        assertThatThrownBy(() -> builder.transactionManager(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void whenSettingScopeAwareProviderWithNullThrowError() {
-        assertThrows(SophonConfigurationException.class, () -> builder.scopeAwareProvider(null));
+        assertThatThrownBy(() -> builder.scopeAwareProvider(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 }

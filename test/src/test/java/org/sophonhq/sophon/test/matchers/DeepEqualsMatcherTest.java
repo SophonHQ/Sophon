@@ -19,13 +19,14 @@ package org.sophonhq.sophon.test.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.StringDescription;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 
 import java.util.Collections;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link DeepEqualsMatcher}.
@@ -42,9 +43,9 @@ class DeepEqualsMatcherTest {
 
         boolean result = testSubject.matches(42);
 
-        assertFalse(result);
+        assertThat(result).isFalse();
         testSubject.describeTo(description);
-        assertTrue(description.toString().contains(" does not match with the actual type."));
+        assertThat(description.toString()).contains(" does not match with the actual type.");
     }
 
     @Test
@@ -55,9 +56,9 @@ class DeepEqualsMatcherTest {
 
         boolean result = testSubject.matches("bar");
 
-        assertFalse(result);
+        assertThat(result).isFalse();
         testSubject.describeTo(description);
-        assertTrue(description.toString().contains(" does not equal with the actual instance."));
+        assertThat(description.toString()).contains(" does not equal with the actual instance.");
     }
 
     @Test
@@ -69,20 +70,21 @@ class DeepEqualsMatcherTest {
 
         boolean result = testSubject.matches(new ObjectNotOverridingEquals("bar"));
 
-        assertFalse(result);
+        assertThat(result).isFalse();
         testSubject.describeTo(description);
-        assertTrue(description.toString().contains(" (failed on field '"));
+        assertThat(description.toString()).contains(" (failed on field '");
     }
 
     @Test
     void matchesReturnsTrue() {
-        assertTrue(new DeepEqualsMatcher<>("foo").matches("foo"));
+        assertThat(new DeepEqualsMatcher<>("foo").matches("foo")).isTrue();
     }
 
     @Test
     void matchesIsNullSafe() {
-        assertFalse(new DeepEqualsMatcher<>("foo").matches(null));
-        assertThrows(SophonConfigurationException.class, () -> new DeepEqualsMatcher<>(null).matches("foo"));
+        assertThat(new DeepEqualsMatcher<>("foo").matches(null)).isFalse();
+        assertThatThrownBy(() -> new DeepEqualsMatcher<>(null).matches("foo"))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -92,7 +94,7 @@ class DeepEqualsMatcherTest {
                 new MatchAllFieldFilter(Collections.singletonList((new IgnoreField(SomeEvent.class, "someField"))))
         );
         boolean result = testSubject.matches(new SomeEvent("otherField"));
-        assertTrue(result);
+        assertThat(result).isTrue();
     }
 
     private static class ObjectNotOverridingEquals {

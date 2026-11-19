@@ -28,7 +28,7 @@ import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.ReflectionUtils;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -40,7 +40,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SophonAutoConfigurationWithOpenTelemetryTest {
 
@@ -49,11 +49,11 @@ class SophonAutoConfigurationWithOpenTelemetryTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("spanFactory"));
-                    assertNotNull(context.getBean(SpanFactory.class));
-                    assertEquals(OpenTelemetrySpanFactory.class, context.getBean(SpanFactory.class).getClass());
+                    assertThat(context.containsBean("spanFactory")).isTrue();
+                    assertThat(context.getBean(SpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(SpanFactory.class).getClass()).isEqualTo(OpenTelemetrySpanFactory.class);
                 });
     }
 
@@ -77,7 +77,7 @@ class SophonAutoConfigurationWithOpenTelemetryTest {
                 .withBean(OpenTelemetry.class, () -> openTelemetry)
                 .run(context -> {
                     SpanFactory spanFactory = context.getBean(SpanFactory.class);
-                    assertEquals(OpenTelemetrySpanFactory.class, spanFactory.getClass());
+                    assertThat(spanFactory.getClass()).isEqualTo(OpenTelemetrySpanFactory.class);
 
                     // The Spring-managed OpenTelemetry's tracer must be wired into the factory,
                     // not the no-op GlobalOpenTelemetry fallback.
@@ -85,8 +85,9 @@ class SophonAutoConfigurationWithOpenTelemetryTest {
                             OpenTelemetrySpanFactory.class.getDeclaredField("tracer"),
                             spanFactory
                     );
-                    assertSame(expectedTracer, wiredTracer,
-                               "Factory must use the tracer from the Spring-managed OpenTelemetry bean");
+                    assertThat(wiredTracer)
+                            .as("Factory must use the tracer from the Spring-managed OpenTelemetry bean")
+                            .isSameAs(expectedTracer);
 
                     // The Spring-managed OpenTelemetry's propagator must be wired into the factory,
                     // not the no-op GlobalOpenTelemetry fallback.
@@ -95,8 +96,9 @@ class SophonAutoConfigurationWithOpenTelemetryTest {
                             spanFactory
                     );
 
-                    assertSame(expectedPropagator, wired,
-                               "Factory must use the propagator from the Spring-managed OpenTelemetry bean");
+                    assertThat(wired)
+                            .as("Factory must use the propagator from the Spring-managed OpenTelemetry bean")
+                            .isSameAs(expectedPropagator);
 
                     // Behavioral confirmation: propagateContext injects the W3C "traceparent" header.
                     Tracer tracer = openTelemetry.getTracer("test");
@@ -107,8 +109,9 @@ class SophonAutoConfigurationWithOpenTelemetryTest {
                     } finally {
                         span.end();
                     }
-                    assertTrue(propagated.getMetaData().containsKey("traceparent"),
-                               "W3C trace context must be injected into message metadata for async handlers to extract it");
+                    assertThat(propagated.getMetaData().containsKey("traceparent"))
+                            .as("W3C trace context must be injected into message metadata for async handlers to extract it")
+                            .isTrue();
                 });
     }
 
@@ -118,7 +121,7 @@ class SophonAutoConfigurationWithOpenTelemetryTest {
                 .withUserConfiguration(Context.class)
                 .run(context -> {
                     SpanFactory spanFactory = context.getBean(SpanFactory.class);
-                    assertEquals(OpenTelemetrySpanFactory.class, spanFactory.getClass());
+                    assertThat(spanFactory.getClass()).isEqualTo(OpenTelemetrySpanFactory.class);
 
                     // Without a Spring-managed OpenTelemetry bean, the builder defaults apply —
                     // tracer and propagator come from GlobalOpenTelemetry (Java agent / manual SDK
@@ -127,7 +130,7 @@ class SophonAutoConfigurationWithOpenTelemetryTest {
                             OpenTelemetrySpanFactory.class.getDeclaredField("textMapPropagator"),
                             spanFactory
                     );
-                    assertNotNull(wired, "Propagator must be set (default from GlobalOpenTelemetry)");
+                    assertThat(wired).as("Propagator must be set (default from GlobalOpenTelemetry)").isNotNull();
                 });
     }
 

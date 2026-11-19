@@ -27,7 +27,9 @@ import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.Context;
 import io.opentelemetry.context.ContextKey;
 import io.opentelemetry.context.propagation.TextMapPropagator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -37,7 +39,8 @@ import org.sophonhq.sophon.tracing.SpanAttributesProvider;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class OpenTelemetrySpanFactoryTest {
@@ -96,7 +99,7 @@ class OpenTelemetrySpanFactoryTest {
         EventMessage<Object> originalMessage = GenericEventMessage.asEventMessage("MyEvent");
         EventMessage<Object> modifiedMessage = factory.propagateContext(originalMessage);
 
-        assertNotNull(modifiedMessage.getMetaData().get("traceparent"));
+        assertThat(modifiedMessage.getMetaData().get("traceparent")).isNotNull();
     }
 
     @Test
@@ -117,7 +120,7 @@ class OpenTelemetrySpanFactoryTest {
         ArgumentCaptor<Context> parentCaptor = ArgumentCaptor.forClass(Context.class);
         verify(spanBuilder).setParent(parentCaptor.capture());
         verify(spanBuilder).setSpanKind(SpanKind.CONSUMER);
-        assertEquals("1", parentCaptor.getValue().get(parentKey));
+        assertThat(parentCaptor.getValue().get(parentKey)).isEqualTo("1");
     }
 
     @Test
@@ -216,24 +219,25 @@ class OpenTelemetrySpanFactoryTest {
     @Test
     void builderRejectsNullTracer() {
         OpenTelemetrySpanFactory.Builder builder = OpenTelemetrySpanFactory.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.tracer(null));
+        assertThatThrownBy(() -> builder.tracer(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void builderRejectsNullSpanAttributeProviders() {
         OpenTelemetrySpanFactory.Builder builder = OpenTelemetrySpanFactory.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.addSpanAttributeProviders(null));
+        assertThatThrownBy(() -> builder.addSpanAttributeProviders(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void builderRejectsNullTextMapGetter() {
         OpenTelemetrySpanFactory.Builder builder = OpenTelemetrySpanFactory.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.textMapGetter(null));
+        assertThatThrownBy(() -> builder.textMapGetter(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void builderRejectsNullTextMapSetter() {
         OpenTelemetrySpanFactory.Builder builder = OpenTelemetrySpanFactory.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.textMapSetter(null));
+        assertThatThrownBy(() -> builder.textMapSetter(null)).isInstanceOf(SophonConfigurationException.class);
     }
 }

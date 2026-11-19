@@ -17,13 +17,14 @@
 
 package org.sophonhq.sophon.tracing;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class SpanTest {
 
@@ -32,163 +33,163 @@ class SpanTest {
     @Test
     void runRunnableWorks() {
         span.run(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
         });
-        assertTrue(span.ended);
+        assertThat(span.ended).isTrue();
     }
 
     @Test
     void runRunnableRegistersException() {
         RuntimeException exception = new RuntimeException("My custom exception");
-        assertThrows(RuntimeException.class, () -> span.run(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+        assertThatThrownBy(() -> span.run(() -> {
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             throw exception;
-        }));
-        assertTrue(span.ended);
-        assertEquals(exception, span.exception);
+        })).isInstanceOf(RuntimeException.class);
+        assertThat(span.ended).isTrue();
+        assertThat(span.exception).isEqualTo(exception);
     }
 
     @Test
     void wrapRunnableWorks() {
         span.wrapRunnable(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
         }).run();
-        assertTrue(span.ended);
+        assertThat(span.ended).isTrue();
     }
 
     @Test
     void wrapRunnableRegistersException() {
         RuntimeException exception = new RuntimeException("My custom exception");
         Runnable wrappedRunnable = span.wrapRunnable(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             throw exception;
         });
-        assertThrows(RuntimeException.class, wrappedRunnable::run);
-        assertTrue(span.ended);
-        assertEquals(exception, span.exception);
+        assertThatThrownBy(wrappedRunnable::run).isInstanceOf(RuntimeException.class);
+        assertThat(span.ended).isTrue();
+        assertThat(span.exception).isEqualTo(exception);
     }
 
     @Test
     void runSupplierWorks() {
         String result = span.runSupplier(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             return "SupplyString";
         });
-        assertTrue(span.ended);
-        assertEquals("SupplyString", result);
+        assertThat(span.ended).isTrue();
+        assertThat(result).isEqualTo("SupplyString");
     }
 
     @Test
     void runSupplierRegistersException() {
         RuntimeException exception = new RuntimeException("My custom exception");
-        assertThrows(RuntimeException.class, () -> span.runSupplier(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+        assertThatThrownBy(() -> span.runSupplier(() -> {
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             throw exception;
-        }));
-        assertTrue(span.ended);
-        assertEquals(exception, span.exception);
+        })).isInstanceOf(RuntimeException.class);
+        assertThat(span.ended).isTrue();
+        assertThat(span.exception).isEqualTo(exception);
     }
 
     @Test
     void wrapSupplierWorks() {
         String result = span.wrapSupplier(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             return "SupplyString";
         }).get();
-        assertTrue(span.ended);
-        assertEquals("SupplyString", result);
+        assertThat(span.ended).isTrue();
+        assertThat(result).isEqualTo("SupplyString");
     }
 
     @Test
     void wrapSupplierRegistersException() {
         RuntimeException exception = new RuntimeException("My custom exception");
         Supplier<Object> wrappedSupplier = span.wrapSupplier(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             throw exception;
         });
-        assertThrows(RuntimeException.class, wrappedSupplier::get);
-        assertTrue(span.ended);
-        assertEquals(exception, span.exception);
+        assertThatThrownBy(wrappedSupplier::get).isInstanceOf(RuntimeException.class);
+        assertThat(span.ended).isTrue();
+        assertThat(span.exception).isEqualTo(exception);
     }
 
     @Test
     void runCallableWorks() throws Exception {
         String result = span.runCallable(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             return "CallString";
         });
-        assertTrue(span.ended);
-        assertEquals("CallString", result);
+        assertThat(span.ended).isTrue();
+        assertThat(result).isEqualTo("CallString");
     }
 
     @Test
     void runCallableRegistersRuntimeException() {
         RuntimeException exception = new RuntimeException("My custom exception");
-        assertThrows(RuntimeException.class, () -> span.runCallable(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+        assertThatThrownBy(() -> span.runCallable(() -> {
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             throw exception;
-        }));
-        assertTrue(span.ended);
-        assertEquals(exception, span.exception);
+        })).isInstanceOf(RuntimeException.class);
+        assertThat(span.ended).isTrue();
+        assertThat(span.exception).isEqualTo(exception);
     }
 
     @Test
     void runCallableRegistersCheckedException() {
         IOException exception = new IOException("My custom exception");
-        assertThrows(IOException.class, () -> span.runCallable(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+        assertThatThrownBy(() -> span.runCallable(() -> {
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             throw exception;
-        }));
-        assertTrue(span.ended);
-        assertEquals(exception, span.exception);
+        })).isInstanceOf(IOException.class);
+        assertThat(span.ended).isTrue();
+        assertThat(span.exception).isEqualTo(exception);
     }
 
     @Test
     void wrapCallableWorks() throws Exception {
         String result = span.wrapCallable(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             return "CallString";
         }).call();
-        assertTrue(span.ended);
-        assertEquals("CallString", result);
+        assertThat(span.ended).isTrue();
+        assertThat(result).isEqualTo("CallString");
     }
 
     @Test
     void wrapCallableRegistersRuntimeException() {
         RuntimeException exception = new RuntimeException("My custom exception");
         Callable<Object> wrappedCallable = span.wrapCallable(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             throw exception;
         });
-        assertThrows(RuntimeException.class, wrappedCallable::call);
-        assertTrue(span.ended);
-        assertEquals(exception, span.exception);
+        assertThatThrownBy(wrappedCallable::call).isInstanceOf(RuntimeException.class);
+        assertThat(span.ended).isTrue();
+        assertThat(span.exception).isEqualTo(exception);
     }
 
     @Test
     void wrapCallableRegistersCheckedException() {
         IOException exception = new IOException("My custom exception");
         Callable<Object> wrappedCallable = span.wrapCallable(() -> {
-            assertTrue(span.started);
-            assertFalse(span.ended);
+            assertThat(span.started).isTrue();
+            assertThat(span.ended).isFalse();
             throw exception;
         });
-        assertThrows(IOException.class, wrappedCallable::call);
-        assertTrue(span.ended);
-        assertEquals(exception, span.exception);
+        assertThatThrownBy(wrappedCallable::call).isInstanceOf(IOException.class);
+        assertThat(span.ended).isTrue();
+        assertThat(span.exception).isEqualTo(exception);
     }
 
     static class TestSpan implements Span {

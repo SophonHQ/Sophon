@@ -16,8 +16,8 @@
 
 package org.sophonhq.sophon.migration;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.io.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.InMemoryExecutionContext;
 import org.openrewrite.java.JavaParser;
@@ -35,7 +35,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.openrewrite.java.Assertions.java;
 import static org.openrewrite.maven.Assertions.pomXml;
 import static org.openrewrite.properties.Assertions.properties;
@@ -234,10 +235,9 @@ class MigrateFromAxonFramework4Test implements RewriteTest {
                                 """,
                         spec -> spec.path(
                                 "src/main/resources/META-INF/services/org.axonframework.messaging.annotation.ParameterResolverFactory"
-                        ).afterRecipe(file -> assertEquals(
+                        ).afterRecipe(file -> assertThat(file.getSourcePath()).isEqualTo(
                                 Paths.get("src/main/resources/META-INF/services/"
-                                                  + "org.sophonhq.sophon.messaging.annotation.ParameterResolverFactory"),
-                                file.getSourcePath()
+                                                  + "org.sophonhq.sophon.messaging.annotation.ParameterResolverFactory")
                         ))
                 )
         );

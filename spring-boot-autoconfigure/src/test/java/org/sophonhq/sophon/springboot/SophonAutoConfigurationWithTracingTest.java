@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.springboot;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.commandhandling.CommandBusSpanFactory;
 import org.sophonhq.sophon.commandhandling.DefaultCommandBusSpanFactory;
@@ -62,7 +62,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 
 class SophonAutoConfigurationWithTracingTest {
@@ -72,11 +73,11 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("spanFactory"));
-                    assertNotNull(context.getBean(SpanFactory.class));
-                    assertEquals(NoOpSpanFactory.class, context.getBean(SpanFactory.class).getClass());
+                    assertThat(context.containsBean("spanFactory")).isTrue();
+                    assertThat(context.getBean(SpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(SpanFactory.class).getClass()).isEqualTo(NoOpSpanFactory.class);
                 });
     }
 
@@ -86,12 +87,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("tracingHandlerEnhancerDefinition"));
-                    assertNotNull(context.getBean(HandlerEnhancerDefinition.class));
-                    assertEquals(TracingHandlerEnhancerDefinition.class,
-                                 context.getBean(HandlerEnhancerDefinition.class).getClass());
+                    assertThat(context.containsBean("tracingHandlerEnhancerDefinition")).isTrue();
+                    assertThat(context.getBean(HandlerEnhancerDefinition.class)).isNotNull();
+                    assertThat(context.getBean(HandlerEnhancerDefinition.class).getClass())
+                            .isEqualTo(TracingHandlerEnhancerDefinition.class);
                 });
     }
 
@@ -101,25 +102,25 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("aggregateIdentifierSpanAttributesProvider"));
-                    assertNotNull(context.getBean(AggregateIdentifierSpanAttributesProvider.class));
+                    assertThat(context.containsBean("aggregateIdentifierSpanAttributesProvider")).isTrue();
+                    assertThat(context.getBean(AggregateIdentifierSpanAttributesProvider.class)).isNotNull();
 
-                    assertTrue(context.containsBean("messageIdSpanAttributesProvider"));
-                    assertNotNull(context.getBean(MessageIdSpanAttributesProvider.class));
+                    assertThat(context.containsBean("messageIdSpanAttributesProvider")).isTrue();
+                    assertThat(context.getBean(MessageIdSpanAttributesProvider.class)).isNotNull();
 
-                    assertTrue(context.containsBean("messageNameSpanAttributesProvider"));
-                    assertNotNull(context.getBean(MessageNameSpanAttributesProvider.class));
+                    assertThat(context.containsBean("messageNameSpanAttributesProvider")).isTrue();
+                    assertThat(context.getBean(MessageNameSpanAttributesProvider.class)).isNotNull();
 
-                    assertTrue(context.containsBean("messageTypeSpanAttributesProvider"));
-                    assertNotNull(context.getBean(MessageTypeSpanAttributesProvider.class));
+                    assertThat(context.containsBean("messageTypeSpanAttributesProvider")).isTrue();
+                    assertThat(context.getBean(MessageTypeSpanAttributesProvider.class)).isNotNull();
 
-                    assertTrue(context.containsBean("metadataSpanAttributesProvider"));
-                    assertNotNull(context.getBean(MetadataSpanAttributesProvider.class));
+                    assertThat(context.containsBean("metadataSpanAttributesProvider")).isTrue();
+                    assertThat(context.getBean(MetadataSpanAttributesProvider.class)).isNotNull();
 
-                    assertTrue(context.containsBean("payloadTypeSpanAttributesProvider"));
-                    assertNotNull(context.getBean(AggregateIdentifierSpanAttributesProvider.class));
+                    assertThat(context.containsBean("payloadTypeSpanAttributesProvider")).isTrue();
+                    assertThat(context.getBean(AggregateIdentifierSpanAttributesProvider.class)).isNotNull();
                 });
     }
 
@@ -128,16 +129,16 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
                     Map<String, SpanAttributesProvider> beansOfType = context.getBeansOfType(SpanAttributesProvider.class);
 
-                    assertTrue(beansOfType.containsKey("aggregateIdentifierSpanAttributesProvider"));
-                    assertTrue(beansOfType.containsKey("messageIdSpanAttributesProvider"));
-                    assertTrue(beansOfType.containsKey("messageNameSpanAttributesProvider"));
-                    assertTrue(beansOfType.containsKey("messageTypeSpanAttributesProvider"));
-                    assertTrue(beansOfType.containsKey("metadataSpanAttributesProvider"));
-                    assertTrue(beansOfType.containsKey("payloadTypeSpanAttributesProvider"));
+                    assertThat(beansOfType).containsKey("aggregateIdentifierSpanAttributesProvider");
+                    assertThat(beansOfType).containsKey("messageIdSpanAttributesProvider");
+                    assertThat(beansOfType).containsKey("messageNameSpanAttributesProvider");
+                    assertThat(beansOfType).containsKey("messageTypeSpanAttributesProvider");
+                    assertThat(beansOfType).containsKey("metadataSpanAttributesProvider");
+                    assertThat(beansOfType).containsKey("payloadTypeSpanAttributesProvider");
                 });
     }
 
@@ -149,11 +150,11 @@ class SophonAutoConfigurationWithTracingTest {
                 )
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertFalse(context.containsBean("aggregateIdentifierSpanAttributesProvider"));
-                    assertThrows(NoSuchBeanDefinitionException.class,
-                                 () -> context.getBean(AggregateIdentifierSpanAttributesProvider.class));
+                    assertThat(context.containsBean("aggregateIdentifierSpanAttributesProvider")).isFalse();
+                    assertThatThrownBy(() -> context.getBean(AggregateIdentifierSpanAttributesProvider.class))
+                            .isInstanceOf(NoSuchBeanDefinitionException.class);
                 });
     }
 
@@ -166,11 +167,11 @@ class SophonAutoConfigurationWithTracingTest {
                 )
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertFalse(context.containsBean("messageIdSpanAttributesProvider"));
-                    assertThrows(NoSuchBeanDefinitionException.class,
-                                 () -> context.getBean(MessageIdSpanAttributesProvider.class));
+                    assertThat(context.containsBean("messageIdSpanAttributesProvider")).isFalse();
+                    assertThatThrownBy(() -> context.getBean(MessageIdSpanAttributesProvider.class))
+                            .isInstanceOf(NoSuchBeanDefinitionException.class);
                 });
     }
 
@@ -182,11 +183,11 @@ class SophonAutoConfigurationWithTracingTest {
                 )
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertFalse(context.containsBean("messageNameSpanAttributesProvider"));
-                    assertThrows(NoSuchBeanDefinitionException.class,
-                                 () -> context.getBean(MessageNameSpanAttributesProvider.class));
+                    assertThat(context.containsBean("messageNameSpanAttributesProvider")).isFalse();
+                    assertThatThrownBy(() -> context.getBean(MessageNameSpanAttributesProvider.class))
+                            .isInstanceOf(NoSuchBeanDefinitionException.class);
                 });
     }
 
@@ -198,11 +199,11 @@ class SophonAutoConfigurationWithTracingTest {
                 )
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertFalse(context.containsBean("messageTypeSpanAttributesProvider"));
-                    assertThrows(NoSuchBeanDefinitionException.class,
-                                 () -> context.getBean(MessageTypeSpanAttributesProvider.class));
+                    assertThat(context.containsBean("messageTypeSpanAttributesProvider")).isFalse();
+                    assertThatThrownBy(() -> context.getBean(MessageTypeSpanAttributesProvider.class))
+                            .isInstanceOf(NoSuchBeanDefinitionException.class);
                 });
     }
 
@@ -214,11 +215,11 @@ class SophonAutoConfigurationWithTracingTest {
                 )
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertFalse(context.containsBean("metadataSpanAttributesProvider"));
-                    assertThrows(NoSuchBeanDefinitionException.class,
-                                 () -> context.getBean(MetadataSpanAttributesProvider.class));
+                    assertThat(context.containsBean("metadataSpanAttributesProvider")).isFalse();
+                    assertThatThrownBy(() -> context.getBean(MetadataSpanAttributesProvider.class))
+                            .isInstanceOf(NoSuchBeanDefinitionException.class);
                 });
     }
 
@@ -230,11 +231,11 @@ class SophonAutoConfigurationWithTracingTest {
                 )
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertFalse(context.containsBean("payloadTypeSpanAttributesProvider"));
-                    assertThrows(NoSuchBeanDefinitionException.class,
-                                 () -> context.getBean(PayloadTypeSpanAttributesProvider.class));
+                    assertThat(context.containsBean("payloadTypeSpanAttributesProvider")).isFalse();
+                    assertThatThrownBy(() -> context.getBean(PayloadTypeSpanAttributesProvider.class))
+                            .isInstanceOf(NoSuchBeanDefinitionException.class);
                 });
     }
 
@@ -245,8 +246,8 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(SpanFactory.class, () -> spanFactory)
                 .run(context -> {
-                    assertNotNull(context);
-                    assertSame(spanFactory, context.getBean(SpanFactory.class));
+                    assertThat(context).isNotNull();
+                    assertThat(context.getBean(SpanFactory.class)).isSameAs(spanFactory);
 
                     int numberOfProviders = context.getBeansOfType(SpanAttributesProvider.class).size();
                     Mockito.verify(spanFactory, Mockito.times(numberOfProviders)).registerSpanAttributeProvider(any());
@@ -259,11 +260,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("snapshotterSpanFactory"));
-                    assertNotNull(context.getBean(SnapshotterSpanFactory.class));
-                    assertEquals(DefaultSnapshotterSpanFactory.class, context.getBean(SnapshotterSpanFactory.class).getClass());
+                    assertThat(context.containsBean("snapshotterSpanFactory")).isTrue();
+                    assertThat(context.getBean(SnapshotterSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(SnapshotterSpanFactory.class).getClass())
+                            .isEqualTo(DefaultSnapshotterSpanFactory.class);
                 });
     }
 
@@ -274,11 +276,11 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(SnapshotterSpanFactory.class, () -> mock)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("snapshotterSpanFactory"));
-                    assertNotNull(context.getBean(SnapshotterSpanFactory.class));
-                    assertSame(context.getBean(SnapshotterSpanFactory.class), mock);
+                    assertThat(context.containsBean("snapshotterSpanFactory")).isTrue();
+                    assertThat(context.getBean(SnapshotterSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(SnapshotterSpanFactory.class)).isSameAs(mock);
                 });
     }
 
@@ -287,11 +289,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("eventBusSpanFactory"));
-                    assertNotNull(context.getBean(EventBusSpanFactory.class));
-                    assertEquals(DefaultEventBusSpanFactory.class, context.getBean(EventBusSpanFactory.class).getClass());
+                    assertThat(context.containsBean("eventBusSpanFactory")).isTrue();
+                    assertThat(context.getBean(EventBusSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(EventBusSpanFactory.class).getClass())
+                            .isEqualTo(DefaultEventBusSpanFactory.class);
                 });
     }
 
@@ -302,11 +305,11 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(EventBusSpanFactory.class, () -> mock)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("eventBusSpanFactory"));
-                    assertNotNull(context.getBean(EventBusSpanFactory.class));
-                    assertSame(context.getBean(EventBusSpanFactory.class), mock);
+                    assertThat(context.containsBean("eventBusSpanFactory")).isTrue();
+                    assertThat(context.getBean(EventBusSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(EventBusSpanFactory.class)).isSameAs(mock);
                 });
     }
 
@@ -315,11 +318,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("queryBusSpanFactory"));
-                    assertNotNull(context.getBean(QueryBusSpanFactory.class));
-                    assertEquals(DefaultQueryBusSpanFactory.class, context.getBean(QueryBusSpanFactory.class).getClass());
+                    assertThat(context.containsBean("queryBusSpanFactory")).isTrue();
+                    assertThat(context.getBean(QueryBusSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(QueryBusSpanFactory.class).getClass())
+                            .isEqualTo(DefaultQueryBusSpanFactory.class);
                 });
     }
 
@@ -330,11 +334,11 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(QueryBusSpanFactory.class, () -> mock)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("queryBusSpanFactory"));
-                    assertNotNull(context.getBean(QueryBusSpanFactory.class));
-                    assertSame(context.getBean(QueryBusSpanFactory.class), mock);
+                    assertThat(context.containsBean("queryBusSpanFactory")).isTrue();
+                    assertThat(context.getBean(QueryBusSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(QueryBusSpanFactory.class)).isSameAs(mock);
                 });
     }
 
@@ -343,11 +347,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("queryUpdateEmitterSpanFactory"));
-                    assertNotNull(context.getBean(QueryUpdateEmitterSpanFactory.class));
-                    assertEquals(DefaultQueryUpdateEmitterSpanFactory.class, context.getBean(QueryUpdateEmitterSpanFactory.class).getClass());
+                    assertThat(context.containsBean("queryUpdateEmitterSpanFactory")).isTrue();
+                    assertThat(context.getBean(QueryUpdateEmitterSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(QueryUpdateEmitterSpanFactory.class).getClass())
+                            .isEqualTo(DefaultQueryUpdateEmitterSpanFactory.class);
                 });
     }
     @Test
@@ -357,11 +362,11 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(QueryUpdateEmitterSpanFactory.class, () -> mock)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("queryUpdateEmitterSpanFactory"));
-                    assertNotNull(context.getBean(QueryUpdateEmitterSpanFactory.class));
-                    assertSame(context.getBean(QueryUpdateEmitterSpanFactory.class), mock);
+                    assertThat(context.containsBean("queryUpdateEmitterSpanFactory")).isTrue();
+                    assertThat(context.getBean(QueryUpdateEmitterSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(QueryUpdateEmitterSpanFactory.class)).isSameAs(mock);
                 });
     }
 
@@ -370,11 +375,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("commandBusSpanFactory"));
-                    assertNotNull(context.getBean(CommandBusSpanFactory.class));
-                    assertEquals(DefaultCommandBusSpanFactory.class, context.getBean(CommandBusSpanFactory.class).getClass());
+                    assertThat(context.containsBean("commandBusSpanFactory")).isTrue();
+                    assertThat(context.getBean(CommandBusSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(CommandBusSpanFactory.class).getClass())
+                            .isEqualTo(DefaultCommandBusSpanFactory.class);
                 });
     }
 
@@ -385,11 +391,11 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(CommandBusSpanFactory.class, () -> mock)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("commandBusSpanFactory"));
-                    assertNotNull(context.getBean(CommandBusSpanFactory.class));
-                    assertSame(context.getBean(CommandBusSpanFactory.class), mock);
+                    assertThat(context.containsBean("commandBusSpanFactory")).isTrue();
+                    assertThat(context.getBean(CommandBusSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(CommandBusSpanFactory.class)).isSameAs(mock);
                 });
     }
 
@@ -398,12 +404,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("deadlineManagerSpanFactory"));
-                    assertNotNull(context.getBean(DeadlineManagerSpanFactory.class));
-                    assertEquals(DefaultDeadlineManagerSpanFactory.class,
-                                 context.getBean(DeadlineManagerSpanFactory.class).getClass());
+                    assertThat(context.containsBean("deadlineManagerSpanFactory")).isTrue();
+                    assertThat(context.getBean(DeadlineManagerSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(DeadlineManagerSpanFactory.class).getClass())
+                            .isEqualTo(DefaultDeadlineManagerSpanFactory.class);
                 });
     }
 
@@ -414,11 +420,11 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(DeadlineManagerSpanFactory.class, () -> mock)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("deadlineManagerSpanFactory"));
-                    assertNotNull(context.getBean(DeadlineManagerSpanFactory.class));
-                    assertSame(context.getBean(DeadlineManagerSpanFactory.class), mock);
+                    assertThat(context.containsBean("deadlineManagerSpanFactory")).isTrue();
+                    assertThat(context.getBean(DeadlineManagerSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(DeadlineManagerSpanFactory.class)).isSameAs(mock);
                 });
     }
 
@@ -445,12 +451,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("sagaManagerSpanFactory"));
-                    assertNotNull(context.getBean(SagaManagerSpanFactory.class));
-                    assertEquals(DefaultSagaManagerSpanFactory.class,
-                                 context.getBean(SagaManagerSpanFactory.class).getClass());
+                    assertThat(context.containsBean("sagaManagerSpanFactory")).isTrue();
+                    assertThat(context.getBean(SagaManagerSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(SagaManagerSpanFactory.class).getClass())
+                            .isEqualTo(DefaultSagaManagerSpanFactory.class);
                 });
     }
 
@@ -461,11 +467,11 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(SagaManagerSpanFactory.class, () -> mock)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("sagaManagerSpanFactory"));
-                    assertNotNull(context.getBean(SagaManagerSpanFactory.class));
-                    assertSame(context.getBean(SagaManagerSpanFactory.class), mock);
+                    assertThat(context.containsBean("sagaManagerSpanFactory")).isTrue();
+                    assertThat(context.getBean(SagaManagerSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(SagaManagerSpanFactory.class)).isSameAs(mock);
                 });
     }
 
@@ -474,12 +480,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("repositorySpanFactory"));
-                    assertNotNull(context.getBean(RepositorySpanFactory.class));
-                    assertEquals(DefaultRepositorySpanFactory.class,
-                                 context.getBean(RepositorySpanFactory.class).getClass());
+                    assertThat(context.containsBean("repositorySpanFactory")).isTrue();
+                    assertThat(context.getBean(RepositorySpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(RepositorySpanFactory.class).getClass())
+                            .isEqualTo(DefaultRepositorySpanFactory.class);
                 });
     }
 
@@ -490,11 +496,11 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(RepositorySpanFactory.class, () -> mock)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("repositorySpanFactory"));
-                    assertNotNull(context.getBean(RepositorySpanFactory.class));
-                    assertSame(context.getBean(RepositorySpanFactory.class), mock);
+                    assertThat(context.containsBean("repositorySpanFactory")).isTrue();
+                    assertThat(context.getBean(RepositorySpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(RepositorySpanFactory.class)).isSameAs(mock);
                 });
     }
 
@@ -534,12 +540,12 @@ class SophonAutoConfigurationWithTracingTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("eventProcessorSpanFactory"));
-                    assertNotNull(context.getBean(EventProcessorSpanFactory.class));
-                    assertEquals(DefaultEventProcessorSpanFactory.class,
-                                 context.getBean(EventProcessorSpanFactory.class).getClass());
+                    assertThat(context.containsBean("eventProcessorSpanFactory")).isTrue();
+                    assertThat(context.getBean(EventProcessorSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(EventProcessorSpanFactory.class).getClass())
+                            .isEqualTo(DefaultEventProcessorSpanFactory.class);
                 });
     }
 
@@ -550,11 +556,11 @@ class SophonAutoConfigurationWithTracingTest {
                 .withUserConfiguration(Context.class)
                 .withBean(EventProcessorSpanFactory.class, () -> mock)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("eventProcessorSpanFactory"));
-                    assertNotNull(context.getBean(EventProcessorSpanFactory.class));
-                    assertSame(context.getBean(EventProcessorSpanFactory.class), mock);
+                    assertThat(context.containsBean("eventProcessorSpanFactory")).isTrue();
+                    assertThat(context.getBean(EventProcessorSpanFactory.class)).isNotNull();
+                    assertThat(context.getBean(EventProcessorSpanFactory.class)).isSameAs(mock);
                 });
     }
 

@@ -27,7 +27,8 @@ import org.sophonhq.sophon.monitoring.MessageMonitor;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link MessageTimerMonitor}.
@@ -60,10 +61,10 @@ class MessageTimerMonitorTest {
         Timer failureTimer = (Timer) metricSet.get("failureTimer");
         Timer ignoredTimer = (Timer) metricSet.get("ignoredTimer");
 
-        assertArrayEquals(new long[]{1000000}, all.getSnapshot().getValues());
-        assertArrayEquals(new long[]{1000000}, successTimer.getSnapshot().getValues());
-        assertArrayEquals(new long[]{}, failureTimer.getSnapshot().getValues());
-        assertArrayEquals(new long[]{}, ignoredTimer.getSnapshot().getValues());
+        assertThat(all.getSnapshot().getValues()).containsExactly(1000000);
+        assertThat(successTimer.getSnapshot().getValues()).containsExactly(1000000);
+        assertThat(failureTimer.getSnapshot().getValues()).isEmpty();
+        assertThat(ignoredTimer.getSnapshot().getValues()).isEmpty();
     }
 
     @Test
@@ -79,10 +80,10 @@ class MessageTimerMonitorTest {
         Timer failureTimer = (Timer) metricSet.get("failureTimer");
         Timer ignoredTimer = (Timer) metricSet.get("ignoredTimer");
 
-        assertArrayEquals(new long[]{1000000}, all.getSnapshot().getValues());
-        assertArrayEquals(new long[]{}, successTimer.getSnapshot().getValues());
-        assertArrayEquals(new long[]{}, ignoredTimer.getSnapshot().getValues());
-        assertArrayEquals(new long[]{1000000}, failureTimer.getSnapshot().getValues());
+        assertThat(all.getSnapshot().getValues()).containsExactly(1000000);
+        assertThat(successTimer.getSnapshot().getValues()).isEmpty();
+        assertThat(ignoredTimer.getSnapshot().getValues()).isEmpty();
+        assertThat(failureTimer.getSnapshot().getValues()).containsExactly(1000000);
     }
 
     @Test
@@ -98,10 +99,10 @@ class MessageTimerMonitorTest {
         Timer failureTimer = (Timer) metricSet.get("failureTimer");
         Timer ignoredTimer = (Timer) metricSet.get("ignoredTimer");
 
-        assertArrayEquals(new long[]{1000000}, all.getSnapshot().getValues());
-        assertArrayEquals(new long[]{}, successTimer.getSnapshot().getValues());
-        assertArrayEquals(new long[]{1000000}, ignoredTimer.getSnapshot().getValues());
-        assertArrayEquals(new long[]{}, failureTimer.getSnapshot().getValues());
+        assertThat(all.getSnapshot().getValues()).containsExactly(1000000);
+        assertThat(successTimer.getSnapshot().getValues()).isEmpty();
+        assertThat(ignoredTimer.getSnapshot().getValues()).containsExactly(1000000);
+        assertThat(failureTimer.getSnapshot().getValues()).isEmpty();
     }
 
     /**
@@ -127,21 +128,22 @@ class MessageTimerMonitorTest {
         Timer failureTimer = (Timer) metrics.get("failureTimer");
         Timer ignoredTimer = (Timer) metrics.get("ignoredTimer");
 
-        assertArrayEquals(new long[]{1000000}, all.getSnapshot().getValues());
-        assertArrayEquals(new long[]{1000000}, successTimer.getSnapshot().getValues());
-        assertArrayEquals(new long[]{}, failureTimer.getSnapshot().getValues());
-        assertArrayEquals(new long[]{}, ignoredTimer.getSnapshot().getValues());
+        assertThat(all.getSnapshot().getValues()).containsExactly(1000000);
+        assertThat(successTimer.getSnapshot().getValues()).containsExactly(1000000);
+        assertThat(failureTimer.getSnapshot().getValues()).isEmpty();
+        assertThat(ignoredTimer.getSnapshot().getValues()).isEmpty();
     }
 
     @Test
     void buildWithNullClockThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.clock(null));
+        assertThatThrownBy(() -> testSubject.clock(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullReservoirFactoryThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.reservoirFactory(null));
+        assertThatThrownBy(() -> testSubject.reservoirFactory(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 }

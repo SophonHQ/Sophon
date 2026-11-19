@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.modelling.saga;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.eventhandling.ResetNotSupportedException;
@@ -37,7 +38,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonMap;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
@@ -72,14 +74,14 @@ public class AnnotatedSagaManagerTest {
     @Test
     void creationPolicy_NoneExists() throws Exception {
         handle(new GenericEventMessage<>(new StartingEvent("123")));
-        assertEquals(1, repositoryContents("123").size());
+        assertThat(repositoryContents("123")).hasSize(1);
     }
 
     @Test
     void creationPolicy_OneAlreadyExists() throws Exception {
         handle(new GenericEventMessage<>(new StartingEvent("123")));
         handle(new GenericEventMessage<>(new StartingEvent("123")));
-        assertEquals(1, repositoryContents("123").size());
+        assertThat(repositoryContents("123")).hasSize(1);
     }
 
     @Test
@@ -94,32 +96,32 @@ public class AnnotatedSagaManagerTest {
         handle(new GenericEventMessage<>(startingEvent));
         handle(new GenericEventMessage<>(new ForcingStartEvent("123")));
         Collection<MyTestSaga> sagas = repositoryContents("123");
-        assertEquals(2, sagas.size());
+        assertThat(sagas).hasSize(2);
         for (MyTestSaga saga : sagas) {
             if (saga.getCapturedEvents().contains(startingEvent)) {
-                assertEquals(2, saga.getCapturedEvents().size());
+                assertThat(saga.getCapturedEvents()).hasSize(2);
             }
-            assertTrue(saga.getCapturedEvents().size() >= 1);
+            assertThat(saga.getCapturedEvents().size()).isGreaterThanOrEqualTo(1);
         }
     }
 
     @Test
     void creationPolicy_SagaNotCreated() throws Exception {
         handle(new GenericEventMessage<>(new MiddleEvent("123")));
-        assertEquals(0, repositoryContents("123").size());
+        assertThat(repositoryContents("123")).isEmpty();
     }
 
     @Test
     void mostSpecificHandlerEvaluatedFirst() throws Exception {
         handle(new GenericEventMessage<>(new StartingEvent("12")));
         handle(new GenericEventMessage<>(new StartingEvent("23")));
-        assertEquals(1, repositoryContents("12").size());
-        assertEquals(1, repositoryContents("23").size());
+        assertThat(repositoryContents("12")).hasSize(1);
+        assertThat(repositoryContents("23")).hasSize(1);
 
         handle(new GenericEventMessage<>(new MiddleEvent("12")));
         handle(new GenericEventMessage<>(new MiddleEvent("23"), singletonMap("catA", "value")));
-        assertEquals(0, repositoryContents("12").iterator().next().getSpecificHandlerInvocations());
-        assertEquals(1, repositoryContents("23").iterator().next().getSpecificHandlerInvocations());
+        assertThat(repositoryContents("12").iterator().next().getSpecificHandlerInvocations()).isZero();
+        assertThat(repositoryContents("23").iterator().next().getSpecificHandlerInvocations()).isOne();
     }
 
     @Test
@@ -136,16 +138,16 @@ public class AnnotatedSagaManagerTest {
         handle(new GenericEventMessage<>(new MiddleEvent("12")));
         handle(new GenericEventMessage<>(new MiddleEvent("23"), singletonMap("catA", "value")));
 
-        assertEquals(1, repositoryContents("12").size());
-        assertEquals(1, repositoryContents("23").size());
-        assertEquals(0, repositoryContents("12").iterator().next().getSpecificHandlerInvocations());
-        assertEquals(1, repositoryContents("23").iterator().next().getSpecificHandlerInvocations());
+        assertThat(repositoryContents("12")).hasSize(1);
+        assertThat(repositoryContents("23")).hasSize(1);
+        assertThat(repositoryContents("12").iterator().next().getSpecificHandlerInvocations()).isZero();
+        assertThat(repositoryContents("23").iterator().next().getSpecificHandlerInvocations()).isOne();
         handle(new GenericEventMessage<>(new EndingEvent("12")));
-        assertEquals(1, repositoryContents("23").size());
-        assertEquals(0, repositoryContents("12").size());
+        assertThat(repositoryContents("23")).hasSize(1);
+        assertThat(repositoryContents("12")).isEmpty();
         handle(new GenericEventMessage<>(new EndingEvent("23")));
-        assertEquals(0, repositoryContents("23").size());
-        assertEquals(0, repositoryContents("12").size());
+        assertThat(repositoryContents("23")).isEmpty();
+        assertThat(repositoryContents("12")).isEmpty();
     }
 
     @Test
@@ -157,28 +159,29 @@ public class AnnotatedSagaManagerTest {
     void lifeCycle_ExistingInstanceIgnoresEvent() throws Exception {
         handle(new GenericEventMessage<>(new StartingEvent("12")));
         handle(new GenericEventMessage<>(new StubDomainEvent()));
-        assertEquals(1, repositoryContents("12").size());
-        assertEquals(1, repositoryContents("12").iterator().next().getCapturedEvents().size());
+        assertThat(repositoryContents("12")).hasSize(1);
+        assertThat(repositoryContents("12").iterator().next().getCapturedEvents()).hasSize(1);
     }
 
     @Test
     void lifeCycle_IgnoredEventDoesNotCreateInstance() throws Exception {
         handle(new GenericEventMessage<>(new StubDomainEvent()));
-        assertEquals(0, repositoryContents("12").size());
+        assertThat(repositoryContents("12")).isEmpty();
     }
 
     @Test
     void performResetThrowsResetNotSupportedException() {
         AnnotatedSagaManager<MyTestSaga> spiedTestSubject = spy(testSubject);
 
-        assertThrows(ResetNotSupportedException.class, spiedTestSubject::performReset);
+        assertThatThrownBy(spiedTestSubject::performReset).isInstanceOf(ResetNotSupportedException.class);
 
         verify(spiedTestSubject).performReset(null);
     }
 
     @Test
     void performResetWithResetInfoThrowsResetNotSupportedException() {
-        assertThrows(ResetNotSupportedException.class, () -> testSubject.performReset("reset-info"));
+        assertThatThrownBy(() -> testSubject.performReset("reset-info"))
+                .isInstanceOf(ResetNotSupportedException.class);
     }
 
     private void handle(EventMessage<?> event) throws Exception {

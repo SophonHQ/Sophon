@@ -22,7 +22,7 @@ import org.sophonhq.sophon.eventhandling.EventProcessor;
 import org.sophonhq.sophon.eventhandling.SubscribingEventProcessor;
 import org.sophonhq.sophon.modelling.saga.repository.inmemory.InMemorySagaStore;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Testing functionality of assigning different invokers (saga or event handlers) to the same event processor.
@@ -46,15 +46,17 @@ class SingleEventProcessorAssigningToMultipleInvokersTest {
         EventProcessor saga2Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga2.class).orElse(null);
         EventProcessor saga3Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga3.class).orElse(null);
 
-        assertNotNull(saga1Processor);
-        assertNotNull(saga2Processor);
-        assertNotNull(saga3Processor);
-        assertNotNull(configuration.eventProcessingConfiguration().eventProcessor("processor1").get());
-        assertEquals(saga1Processor, saga2Processor);
-        assertEquals(saga1Processor, configuration.eventProcessingConfiguration().eventProcessor("processor1").get());
-        assertNotEquals(saga1Processor, saga3Processor);
-        assertNotEquals(saga2Processor, saga3Processor);
-        assertNotEquals(saga3Processor, configuration.eventProcessingConfiguration().eventProcessor("processor1").get());
+        assertThat(saga1Processor).isNotNull();
+        assertThat(saga2Processor).isNotNull();
+        assertThat(saga3Processor).isNotNull();
+        assertThat(configuration.eventProcessingConfiguration().eventProcessor("processor1").get()).isNotNull();
+        assertThat(saga2Processor).isEqualTo(saga1Processor);
+        assertThat(configuration.eventProcessingConfiguration().eventProcessor("processor1").get())
+                .isEqualTo(saga1Processor);
+        assertThat(saga3Processor).isNotEqualTo(saga1Processor);
+        assertThat(saga3Processor).isNotEqualTo(saga2Processor);
+        assertThat(configuration.eventProcessingConfiguration().eventProcessor("processor1").get())
+                .isNotEqualTo(saga3Processor);
     }
 
     @Test
@@ -72,17 +74,17 @@ class SingleEventProcessorAssigningToMultipleInvokersTest {
         EventProcessor saga2Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga2.class).orElse(null);
         EventProcessor saga3Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga3.class).orElse(null);
 
-        assertNotNull(saga1Processor);
-        assertNotNull(saga2Processor);
-        assertNotNull(saga3Processor);
-        assertNotNull(configuration.eventProcessingConfiguration().eventProcessor("processor1").get());
-        assertEquals(saga1Processor, saga2Processor);
-        assertEquals(saga1Processor,
-                     configuration.eventProcessingConfiguration().eventProcessor("processor1").get());
-        assertNotEquals(saga1Processor, saga3Processor);
-        assertNotEquals(saga2Processor, saga3Processor);
-        assertNotEquals(configuration.eventProcessingConfiguration().eventProcessor("processor1").get(),
-                        saga3Processor);
+        assertThat(saga1Processor).isNotNull();
+        assertThat(saga2Processor).isNotNull();
+        assertThat(saga3Processor).isNotNull();
+        assertThat(configuration.eventProcessingConfiguration().eventProcessor("processor1").get()).isNotNull();
+        assertThat(saga2Processor).isEqualTo(saga1Processor);
+        assertThat(configuration.eventProcessingConfiguration().eventProcessor("processor1").get())
+                .isEqualTo(saga1Processor);
+        assertThat(saga3Processor).isNotEqualTo(saga1Processor);
+        assertThat(saga3Processor).isNotEqualTo(saga2Processor);
+        assertThat(saga3Processor)
+                .isNotEqualTo(configuration.eventProcessingConfiguration().eventProcessor("processor1").get());
     }
 
     @Test
@@ -109,15 +111,18 @@ class SingleEventProcessorAssigningToMultipleInvokersTest {
         EventProcessor saga1Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga1.class).orElse(null);
         EventProcessor saga2Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga2.class).orElse(null);
         EventProcessor saga3Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga3.class).orElse(null);
-        assertNotNull(saga1Processor);
-        assertNotNull(saga2Processor);
-        assertNotNull(saga3Processor);
-        assertNotNull(configuration.eventProcessingConfiguration().eventProcessor("myProcessor").get());
-        assertEquals(saga1Processor, saga3Processor);
-        assertEquals(saga2Processor, configuration.eventProcessingConfiguration().eventProcessor("someOtherProcessor").get());
-        assertNotEquals(saga2Processor, saga3Processor);
-        assertEquals(saga3Processor, configuration.eventProcessingConfiguration().eventProcessor("myProcessor").get());
-        assertNotEquals(saga3Processor, configuration.eventProcessingConfiguration().eventProcessor("someOtherProcessor").get());
+        assertThat(saga1Processor).isNotNull();
+        assertThat(saga2Processor).isNotNull();
+        assertThat(saga3Processor).isNotNull();
+        assertThat(configuration.eventProcessingConfiguration().eventProcessor("myProcessor").get()).isNotNull();
+        assertThat(saga3Processor).isEqualTo(saga1Processor);
+        assertThat(configuration.eventProcessingConfiguration().eventProcessor("someOtherProcessor").get())
+                .isEqualTo(saga2Processor);
+        assertThat(saga3Processor).isNotEqualTo(saga2Processor);
+        assertThat(configuration.eventProcessingConfiguration().eventProcessor("myProcessor").get())
+                .isEqualTo(saga3Processor);
+        assertThat(configuration.eventProcessingConfiguration().eventProcessor("someOtherProcessor").get())
+                .isNotEqualTo(saga3Processor);
     }
 
     @Test
@@ -140,9 +145,9 @@ class SingleEventProcessorAssigningToMultipleInvokersTest {
         EventProcessor saga2Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga2.class).orElse(null);
         EventProcessor saga3Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga3.class).orElse(null);
 
-        assertEquals("myProcessor", saga1Processor.getName());
-        assertEquals("myProcessor", saga2Processor.getName());
-        assertEquals("Saga3Processor", saga3Processor.getName());
+        assertThat(saga1Processor.getName()).isEqualTo("myProcessor");
+        assertThat(saga2Processor.getName()).isEqualTo("myProcessor");
+        assertThat(saga3Processor.getName()).isEqualTo("Saga3Processor");
     }
 
     @Test
@@ -167,9 +172,9 @@ class SingleEventProcessorAssigningToMultipleInvokersTest {
         EventProcessor saga2Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga2.class).orElse(null);
         EventProcessor saga3Processor = configuration.eventProcessingConfiguration().sagaEventProcessor(Saga3.class).orElse(null);
 
-        assertEquals("myProcessor", saga1Processor.getName());
-        assertEquals("myProcessor", saga2Processor.getName());
-        assertEquals("myProcessor", saga3Processor.getName());
+        assertThat(saga1Processor.getName()).isEqualTo("myProcessor");
+        assertThat(saga2Processor.getName()).isEqualTo("myProcessor");
+        assertThat(saga3Processor.getName()).isEqualTo("myProcessor");
     }
 
     @ProcessingGroup("processor1")

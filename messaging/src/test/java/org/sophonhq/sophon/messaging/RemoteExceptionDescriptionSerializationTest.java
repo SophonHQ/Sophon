@@ -23,7 +23,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests serialization capabilities of {@link RemoteExceptionDescription}.
@@ -42,6 +42,6 @@ class RemoteExceptionDescriptionSerializationTest {
         Throwable cause = new IllegalArgumentException("This is a test");
         Throwable exception = new IllegalStateException("Test with cause", cause);
         RemoteExceptionDescription descriptionToTest = RemoteExceptionDescription.describing(exception);
-        assertEquals(descriptionToTest, serializer.serializeDeserialize(descriptionToTest));
+        assertThat(serializer.serializeDeserialize(descriptionToTest)).isEqualTo(descriptionToTest);
     }
 }

@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventsourcing.eventstore;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -35,7 +36,7 @@ import java.util.Optional;
 import static java.util.Collections.singletonMap;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.*;
 
 /**
@@ -59,11 +60,11 @@ public abstract class EventStorageEngineTest {
     @Test
     public void storeAndLoadEvents() {
         testSubject.appendEvents(createEvents(4));
-        assertEquals(4, testSubject.readEvents(AGGREGATE).asStream().count());
+        assertThat(testSubject.readEvents(AGGREGATE).asStream().count()).isEqualTo(4);
 
         testSubject.appendEvents(createEvent("otherAggregate", 0));
-        assertEquals(4, testSubject.readEvents(AGGREGATE).asStream().count());
-        assertEquals(1, testSubject.readEvents("otherAggregate").asStream().count());
+        assertThat(testSubject.readEvents(AGGREGATE).asStream().count()).isEqualTo(4);
+        assertThat(testSubject.readEvents("otherAggregate").asStream().count()).isOne();
     }
 
     @Test
@@ -72,25 +73,25 @@ public abstract class EventStorageEngineTest {
 
         List<? extends TrackedEventMessage<?>> actual = testSubject.readEvents(null, false)
                                                                    .collect(toList());
-        assertEquals(1, actual.size());
-        assertFalse(actual.get(0) instanceof DomainEventMessage);
+        assertThat(actual.size()).isOne();
+        assertThat(actual.get(0)).isNotInstanceOf(DomainEventMessage.class);
     }
 
     @Test
     public void storeAndLoadEventsArray() {
         testSubject.appendEvents(createEvent(0), createEvent(1));
-        assertEquals(2, testSubject.readEvents(AGGREGATE).asStream().count());
+        assertThat(testSubject.readEvents(AGGREGATE).asStream().count()).isEqualTo(2);
     }
 
     @Test
     public void storeAndLoadApplicationEvent() {
         testSubject.appendEvents(new GenericEventMessage<>("application event", MetaData.with("key", "value")));
-        assertEquals(1, testSubject.readEvents(null, false).count());
+        assertThat(testSubject.readEvents(null, false).count()).isOne();
         Optional<? extends TrackedEventMessage<?>> optionalFirst = testSubject.readEvents(null, false).findFirst();
-        assertTrue(optionalFirst.isPresent());
+        assertThat(optionalFirst).isPresent();
         EventMessage<?> message = optionalFirst.get();
-        assertEquals("application event", message.getPayload());
-        assertEquals(MetaData.with("key", "value"), message.getMetaData());
+        assertThat(message.getPayload()).isEqualTo("application event");
+        assertThat(message.getMetaData()).isEqualTo(MetaData.with("key", "value"));
     }
 
     @Test
@@ -101,29 +102,30 @@ public abstract class EventStorageEngineTest {
         /// we make sure persisted events have the same MetaData alteration logic
         DomainEventMessage<?> altered = messageWithMetaData.withMetaData(singletonMap("key2", "value"));
         DomainEventMessage<?> combined = messageWithMetaData.andMetaData(singletonMap("key2", "value"));
-        assertTrue(altered.getMetaData().containsKey("key2"));
+        assertThat(altered.getMetaData()).containsKey("key2");
         altered.getPayload();
-        assertFalse(altered.getMetaData().containsKey("key"));
-        assertTrue(altered.getMetaData().containsKey("key2"));
-        assertTrue(combined.getMetaData().containsKey("key"));
-        assertTrue(combined.getMetaData().containsKey("key2"));
-        assertNotNull(messageWithMetaData.getPayload());
-        assertNotNull(messageWithMetaData.getMetaData());
-        assertFalse(messageWithMetaData.getMetaData().isEmpty());
+        assertThat(altered.getMetaData()).doesNotContainKey("key");
+        assertThat(altered.getMetaData()).containsKey("key2");
+        assertThat(combined.getMetaData()).containsKey("key");
+        assertThat(combined.getMetaData()).containsKey("key2");
+        assertThat(messageWithMetaData.getPayload()).isNotNull();
+        assertThat(messageWithMetaData.getMetaData()).isNotNull();
+        assertThat(messageWithMetaData.getMetaData().isEmpty()).isFalse();
     }
 
     @Test
     public void loadNonExistent() {
-        assertEquals(0L, testSubject.readEvents(randomUUID().toString()).asStream().count());
+        assertThat(testSubject.readEvents(randomUUID().toString()).asStream().count()).isZero();
     }
 
     @Test
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void readPartialStream() {
         testSubject.appendEvents(createEvents(5));
-        assertEquals(2L, testSubject.readEvents(AGGREGATE, 2).asStream().findFirst().get().getSequenceNumber());
-        assertEquals(4L, testSubject.readEvents(AGGREGATE, 2).asStream().reduce((a, b) -> b).get().getSequenceNumber());
-        assertEquals(3L, testSubject.readEvents(AGGREGATE, 2).asStream().count());
+        assertThat(testSubject.readEvents(AGGREGATE, 2).asStream().findFirst().get().getSequenceNumber()).isEqualTo(2L);
+        assertThat(testSubject.readEvents(AGGREGATE, 2).asStream().reduce((a, b) -> b).get().getSequenceNumber())
+                .isEqualTo(4L);
+        assertThat(testSubject.readEvents(AGGREGATE, 2).asStream().count()).isEqualTo(3L);
     }
 
     @Test
@@ -132,24 +134,24 @@ public abstract class EventStorageEngineTest {
         testSubject.storeSnapshot(createEvent(1));
         testSubject.storeSnapshot(createEvent(3));
         testSubject.storeSnapshot(createEvent(2));
-        assertTrue(testSubject.readSnapshot(AGGREGATE).isPresent());
-        assertEquals(3, testSubject.readSnapshot(AGGREGATE).get().getSequenceNumber());
+        assertThat(testSubject.readSnapshot(AGGREGATE)).isPresent();
+        assertThat(testSubject.readSnapshot(AGGREGATE).get().getSequenceNumber()).isEqualTo(3);
     }
 
     @Test
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public void loadTrackedEvents() throws InterruptedException {
         testSubject.appendEvents(createEvents(4));
-        assertEquals(4, testSubject.readEvents(null, false).count());
+        assertThat(testSubject.readEvents(null, false).count()).isEqualTo(4);
 
         // give the clock some time to make sure the last message is really last
         Thread.sleep(10);
 
         DomainEventMessage<?> eventMessage = createEvent("otherAggregate", 0);
         testSubject.appendEvents(eventMessage);
-        assertEquals(5, testSubject.readEvents(null, false).count());
-        assertEquals(eventMessage.getIdentifier(),
-                     testSubject.readEvents(null, false).reduce((a, b) -> b).get().getIdentifier());
+        assertThat(testSubject.readEvents(null, false).count()).isEqualTo(5);
+        assertThat(testSubject.readEvents(null, false).reduce((a, b) -> b).get().getIdentifier())
+                .isEqualTo(eventMessage.getIdentifier());
     }
 
     @Test
@@ -158,9 +160,11 @@ public abstract class EventStorageEngineTest {
         List<DomainEventMessage<?>> events = createEvents(4);
         testSubject.appendEvents(events);
         TrackingToken token = testSubject.readEvents(null, false).findFirst().get().trackingToken();
-        assertEquals(3, testSubject.readEvents(token, false).count());
-        assertEquals(events.subList(1, events.size()).stream().map(EventMessage::getIdentifier).collect(toList()),
-                     testSubject.readEvents(token, false).map(EventMessage::getIdentifier).collect(toList()));
+        assertThat(testSubject.readEvents(token, false).count()).isEqualTo(3);
+        assertThat(testSubject.readEvents(token, false).map(EventMessage::getIdentifier))
+                .containsExactlyElementsOf(
+                        events.subList(1, events.size()).stream().map(EventMessage::getIdentifier).collect(toList())
+                );
     }
 
     @Test
@@ -192,7 +196,7 @@ public abstract class EventStorageEngineTest {
         List<EventMessage<?>> readEvents = testSubject.readEvents(headToken, false)
                                                       .collect(toList());
 
-        assertTrue(readEvents.isEmpty());
+        assertThat(readEvents).isEmpty();
     }
 
     @Test
@@ -262,7 +266,7 @@ public abstract class EventStorageEngineTest {
 
         List<EventMessage<?>> readEvents = testSubject.readEvents(result, false).collect(toList());
 
-        assertTrue(readEvents.isEmpty());
+        assertThat(readEvents).isEmpty();
     }
 
     /**
@@ -290,7 +294,7 @@ public abstract class EventStorageEngineTest {
     }
 
     protected void assertEventStreamsById(List<EventMessage<?>> s1, List<EventMessage<?>> s2) {
-        assertEquals(s1.stream().map(EventMessage::getIdentifier).collect(toList()),
-                     s2.stream().map(EventMessage::getIdentifier).collect(toList()));
+        assertThat(s2.stream().map(EventMessage::getIdentifier))
+                .containsExactlyElementsOf(s1.stream().map(EventMessage::getIdentifier).collect(toList()));
     }
 }

@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.test.deadline;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.deadline.DeadlineMessage;
 import org.sophonhq.sophon.messaging.Scope;
 import org.sophonhq.sophon.messaging.ScopeDescriptor;
@@ -27,7 +28,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class StubDeadlineManagerTest {
 
@@ -47,8 +48,8 @@ class StubDeadlineManagerTest {
         List<DeadlineMessage<?>> triggered = new ArrayList<>();
         testSubject.advanceTimeBy(Duration.ofMinutes(75), (s, message) -> triggered.add(message));
 
-        assertEquals(1, triggered.size());
-        assertEquals(triggerTime, triggered.get(0).getTimestamp());
+        assertThat(triggered).hasSize(1);
+        assertThat(triggered.get(0).getTimestamp()).isEqualTo(triggerTime);
     }
 
     private static class MockScope extends Scope {

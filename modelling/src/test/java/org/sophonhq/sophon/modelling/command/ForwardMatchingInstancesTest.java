@@ -18,7 +18,9 @@
 package org.sophonhq.sophon.modelling.command;
 
 import org.hibernate.EntityMode;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.property.Property;
 import org.sophonhq.sophon.common.property.PropertyAccessStrategy;
 import org.sophonhq.sophon.messaging.GenericMessage;
@@ -28,7 +30,7 @@ import org.sophonhq.sophon.modelling.command.inspection.EntityModel;
 import java.lang.reflect.Field;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class ForwardMatchingInstancesTest {
@@ -69,7 +71,7 @@ class ForwardMatchingInstancesTest {
         Stream<String> result = testSubject.filterCandidates(new GenericMessage<>("Mock"), Stream.of(candidate1));
 
         verify(mockAccessStrategy).propertyFor(String.class, "implicitRoutingKey");
-        assertEquals(0, result.count());
+        assertThat(result.count()).isZero();
     }
 
     @Test
@@ -84,7 +86,7 @@ class ForwardMatchingInstancesTest {
         Stream<String> result = testSubject.filterCandidates(new GenericMessage<>("Mock"), Stream.of(candidate1));
 
         verify(mockAccessStrategy).propertyFor(String.class, "explicitRoutingKey");
-        assertEquals(0, result.count());
+        assertThat(result.count()).isZero();
     }
 
     @Test
@@ -105,7 +107,7 @@ class ForwardMatchingInstancesTest {
 
         verify(mockAccessStrategy).propertyFor(String.class, "explicitRoutingKey");
         verify(mockProperty).getValue(same(payload));
-        assertEquals(1, result.count());
+        assertThat(result.count()).isOne();
     }
 
     @Test
@@ -126,7 +128,7 @@ class ForwardMatchingInstancesTest {
 
         verify(mockAccessStrategy).propertyFor(String.class, "explicitRoutingKey");
         verify(mockProperty).getValue(same(payload));
-        assertEquals(0, result.count());
+        assertThat(result.count()).isZero();
     }
 
     @Test
@@ -151,8 +153,8 @@ class ForwardMatchingInstancesTest {
         verify(mockAccessStrategy, times(1)).propertyFor(String.class, "explicitRoutingKey");
         verify(mockProperty, times(1)).getValue(same(payload1));
         verify(mockProperty, times(1)).getValue(same(payload2));
-        assertEquals(1, result1.count());
-        assertEquals(1, result2.count());
+        assertThat(result1.count()).isOne();
+        assertThat(result2.count()).isOne();
     }
 
     @Test
@@ -181,8 +183,8 @@ class ForwardMatchingInstancesTest {
         verify(mockAccessStrategy, times(1)).propertyFor(Long.class, "explicitRoutingKey");
         verify(mockStringProperty, times(1)).getValue(same(payload1));
         verify(mockLongProperty, times(1)).getValue(same(payload2));
-        assertEquals(1, result1.count());
-        assertEquals(1, result2.count());
+        assertThat(result1.count()).isOne();
+        assertThat(result2.count()).isOne();
     }
 
 

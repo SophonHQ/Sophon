@@ -17,9 +17,10 @@
 
 package org.sophonhq.sophon.spring.jdbc;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.*;
-import org.mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
 import org.sophonhq.sophon.common.jdbc.ConnectionProvider;
 import org.sophonhq.sophon.common.jdbc.UnitOfWorkAwareConnectionProviderWrapper;
 import org.sophonhq.sophon.common.transaction.Transaction;
@@ -40,7 +41,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Connection;
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -94,7 +96,7 @@ class SpringDataSourceConnectionProviderTest {
         uow.onRollback(u -> transaction.rollback());
 
         Connection innerConnection = connectionProvider.getConnection();
-        assertNotSame(innerConnection, mockConnection);
+        assertThat(mockConnection).isNotSameAs(innerConnection);
 
         innerConnection.commit();
         verify(mockConnection, never()).commit();

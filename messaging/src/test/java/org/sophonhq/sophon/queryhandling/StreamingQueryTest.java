@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.queryhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.queryhandling.annotation.AnnotationQueryHandlerAdapter;
 import reactor.core.publisher.Flux;
@@ -36,7 +38,7 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests Streaming Query functionality using a {@link SimpleQueryBus}. Query Handlers are subscribed using
@@ -100,7 +102,7 @@ class StreamingQueryTest {
                     .verifyComplete();
 
         List<String> handlers_invoked = new ArrayList<>(handlersInvoked);
-        Assertions.assertEquals(asList("handler_error", "handler_healthy"), handlers_invoked);
+        assertThat(handlers_invoked).containsExactlyElementsOf(asList("handler_error", "handler_healthy"));
     }
 
     @Test
@@ -249,7 +251,7 @@ class StreamingQueryTest {
                     .expectNext("a", "b", "c", "d")
                     .verifyComplete();
 
-        assertTrue(hasBeenCalled.get());
+        assertThat(hasBeenCalled.get()).isTrue();
     }
 
     @Test

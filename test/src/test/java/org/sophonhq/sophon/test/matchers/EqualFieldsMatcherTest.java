@@ -18,11 +18,12 @@
 package org.sophonhq.sophon.test.matchers;
 
 import org.hamcrest.StringDescription;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.test.aggregate.MyEvent;
 import org.sophonhq.sophon.test.aggregate.MyOtherEvent;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link EqualFieldsMatcher}.
@@ -43,35 +44,35 @@ class EqualFieldsMatcherTest {
 
     @Test
     void matches_SameInstance() {
-        assertTrue(testSubject.matches(expectedEvent));
+        assertThat(testSubject.matches(expectedEvent)).isTrue();
     }
 
     @Test
     void matches_EqualInstance() {
-        assertTrue(testSubject.matches(new MyEvent(aggregateId, 1)));
+        assertThat(testSubject.matches(new MyEvent(aggregateId, 1))).isTrue();
     }
 
     @Test
     void matches_WrongEventType() {
-        assertFalse(testSubject.matches(new MyOtherEvent()));
+        assertThat(testSubject.matches(new MyOtherEvent())).isFalse();
     }
 
     @Test
     void matches_WrongFieldValue() {
-        assertFalse(testSubject.matches(new MyEvent(aggregateId, 2)));
-        assertEquals("someValue", testSubject.getFailedField().getName());
+        assertThat(testSubject.matches(new MyEvent(aggregateId, 2))).isFalse();
+        assertThat(testSubject.getFailedField().getName()).isEqualTo("someValue");
     }
 
     @Test
     void matches_WrongFieldValueInIgnoredField() {
         testSubject = Matchers.equalTo(expectedEvent, field -> !field.getName().equals("someValue"));
-        assertTrue(testSubject.matches(new MyEvent(aggregateId, 2)));
+        assertThat(testSubject.matches(new MyEvent(aggregateId, 2))).isTrue();
     }
 
     @Test
     void matches_WrongFieldValueInArray() {
-        assertFalse(testSubject.matches(new MyEvent(aggregateId, 1, new byte[]{1, 2})));
-        assertEquals("someBytes", testSubject.getFailedField().getName());
+        assertThat(testSubject.matches(new MyEvent(aggregateId, 1, new byte[]{1, 2}))).isFalse();
+        assertThat(testSubject.getFailedField().getName()).isEqualTo("someBytes");
     }
 
     @Test
@@ -79,7 +80,7 @@ class EqualFieldsMatcherTest {
         testSubject.matches(expectedEvent);
         StringDescription description = new StringDescription();
         testSubject.describeTo(description);
-        assertEquals("org.sophonhq.sophon.test.aggregate.MyEvent", description.toString());
+        assertThat(description).hasToString("org.sophonhq.sophon.test.aggregate.MyEvent");
     }
 
     @Test
@@ -87,7 +88,7 @@ class EqualFieldsMatcherTest {
         testSubject.matches(new MyOtherEvent());
         StringDescription description = new StringDescription();
         testSubject.describeTo(description);
-        assertEquals("org.sophonhq.sophon.test.aggregate.MyEvent", description.toString());
+        assertThat(description).hasToString("org.sophonhq.sophon.test.aggregate.MyEvent");
     }
 
     @Test
@@ -95,6 +96,6 @@ class EqualFieldsMatcherTest {
         testSubject.matches(new MyEvent(aggregateId, 2));
         StringDescription description = new StringDescription();
         testSubject.describeTo(description);
-        assertEquals("org.sophonhq.sophon.test.aggregate.MyEvent (failed on field 'someValue')", description.toString());
+        assertThat(description).hasToString("org.sophonhq.sophon.test.aggregate.MyEvent (failed on field 'someValue')");
     }
 }

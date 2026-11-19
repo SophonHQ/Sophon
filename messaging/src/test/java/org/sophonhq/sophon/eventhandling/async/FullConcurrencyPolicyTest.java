@@ -24,7 +24,7 @@ import org.sophonhq.sophon.messaging.MetaData;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -35,9 +35,9 @@ class FullConcurrencyPolicyTest {
     @Test
     void sequencingIdentifier() {
         FullConcurrencyPolicy testSubject = new FullConcurrencyPolicy();
-        assertNotNull(testSubject.getSequenceIdentifierFor(newStubDomainEvent(UUID.randomUUID())));
-        assertNotNull(testSubject.getSequenceIdentifierFor(newStubDomainEvent(UUID.randomUUID())));
-        assertNotNull(testSubject.getSequenceIdentifierFor(newStubDomainEvent(UUID.randomUUID())));
+        assertThat(testSubject.getSequenceIdentifierFor(newStubDomainEvent(UUID.randomUUID()))).isNotNull();
+        assertThat(testSubject.getSequenceIdentifierFor(newStubDomainEvent(UUID.randomUUID()))).isNotNull();
+        assertThat(testSubject.getSequenceIdentifierFor(newStubDomainEvent(UUID.randomUUID()))).isNotNull();
     }
 
     private DomainEventMessage newStubDomainEvent(Object aggregateIdentifier) {

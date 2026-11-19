@@ -20,7 +20,7 @@ package org.sophonhq.sophon.messaging.unitofwork;
 import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.ResultMessage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.messaging.GenericResultMessage.asResultMessage;
 
 /**
@@ -33,9 +33,9 @@ class ExecutionResultTest {
         Object resultPayload = new Object();
         ResultMessage<Object> result = asResultMessage(resultPayload);
         ExecutionResult subject = new ExecutionResult(result);
-        assertSame(result, subject.getResult());
-        assertFalse(subject.isExceptionResult());
-        assertNull(subject.getExceptionResult());
+        assertThat(subject.getResult()).isSameAs(result);
+        assertThat(subject.isExceptionResult()).isFalse();
+        assertThat(subject.getExceptionResult()).isNull();
     }
 
     @Test
@@ -43,9 +43,9 @@ class ExecutionResultTest {
         RuntimeException mockException = new RuntimeException();
         ResultMessage<RuntimeException> resultMessage = asResultMessage(mockException);
         ExecutionResult subject = new ExecutionResult(resultMessage);
-        assertTrue(subject.isExceptionResult());
-        assertSame(mockException, subject.getExceptionResult());
-        assertSame(mockException, subject.getResult().exceptionResult());
+        assertThat(subject.isExceptionResult()).isTrue();
+        assertThat(subject.getExceptionResult()).isSameAs(mockException);
+        assertThat(subject.getResult().exceptionResult()).isSameAs(mockException);
     }
 
     @Test
@@ -53,8 +53,8 @@ class ExecutionResultTest {
         Exception mockException = new Exception();
         ResultMessage<Exception> resultMessage = asResultMessage(mockException);
         ExecutionResult subject = new ExecutionResult(resultMessage);
-        assertTrue(subject.isExceptionResult());
-        assertSame(mockException, subject.getExceptionResult());
-        assertSame(mockException, subject.getResult().exceptionResult());
+        assertThat(subject.isExceptionResult()).isTrue();
+        assertThat(subject.getExceptionResult()).isSameAs(mockException);
+        assertThat(subject.getResult().exceptionResult()).isSameAs(mockException);
     }
 }

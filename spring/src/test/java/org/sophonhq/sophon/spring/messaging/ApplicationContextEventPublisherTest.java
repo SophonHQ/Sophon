@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.spring.messaging;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.sophonhq.sophon.eventhandling.EventBus;
 import org.sophonhq.sophon.eventhandling.SimpleEventBus;
@@ -32,7 +32,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 @ExtendWith(SpringExtension.class)
@@ -49,7 +49,7 @@ public class ApplicationContextEventPublisherTest {
     void eventsForwardedToListenerBean() {
         eventBus.publish(asEventMessage("test"));
 
-        assertEquals("test", listenerBean.getEvents().get(0));
+        assertThat(listenerBean.getEvents().get(0)).isEqualTo("test");
     }
 
     @Configuration

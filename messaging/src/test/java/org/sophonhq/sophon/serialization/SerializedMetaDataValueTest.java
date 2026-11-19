@@ -17,10 +17,10 @@
 
 package org.sophonhq.sophon.serialization;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.messaging.MetaData;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -31,18 +31,18 @@ class SerializedMetaDataValueTest {
     void serializeMetaData() {
         byte[] stubData = new byte[]{};
         SerializedMetaData<byte[]> serializedMetaData = new SerializedMetaData<>(stubData, byte[].class);
-        assertEquals(stubData, serializedMetaData.getData());
-        assertEquals(byte[].class, serializedMetaData.getContentType());
-        assertNull(serializedMetaData.getType().getRevision());
-        assertEquals(MetaData.class.getName(), serializedMetaData.getType().getName());
+        assertThat(serializedMetaData.getData()).isSameAs(stubData);
+        assertThat(serializedMetaData.getContentType()).isEqualTo(byte[].class);
+        assertThat(serializedMetaData.getType().getRevision()).isNull();
+        assertThat(serializedMetaData.getType().getName()).isEqualTo(MetaData.class.getName());
     }
 
     @Test
     void isSerializedMetaData() {
         SerializedMetaData<byte[]> serializedMetaData = new SerializedMetaData<>(new byte[]{}, byte[].class);
-        assertTrue(SerializedMetaData.isSerializedMetaData(serializedMetaData));
-        assertFalse(SerializedMetaData.isSerializedMetaData(
-                new SimpleSerializedObject<>("test", String.class, "type", "rev")));
+        assertThat(SerializedMetaData.isSerializedMetaData(serializedMetaData)).isTrue();
+        assertThat(SerializedMetaData.isSerializedMetaData(
+                new SimpleSerializedObject<>("test", String.class, "type", "rev")
+        )).isFalse();
     }
-
 }

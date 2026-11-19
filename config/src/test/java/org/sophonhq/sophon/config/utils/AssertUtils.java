@@ -17,8 +17,6 @@
 
 package org.sophonhq.sophon.config.utils;
 
-import org.opentest4j.AssertionFailedError;
-
 import java.time.Duration;
 
 /**
@@ -45,7 +43,7 @@ public abstract class AssertUtils {
             try {
                 assertion.run();
                 break;
-            } catch (AssertionFailedError e) {
+            } catch (AssertionError e) {
                 if (now >= deadline) {
                     throw e;
                 }

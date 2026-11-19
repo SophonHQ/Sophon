@@ -19,15 +19,13 @@ package org.sophonhq.sophon.serialization.upcasting;
 
 import org.junit.jupiter.api.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link GenericUpcasterChain}.
@@ -41,7 +39,7 @@ class GenericUpcasterChainTest {
         Object a = "a", b = "b", c = "c";
         Upcaster<Object> testSubject = new GenericUpcasterChain<>(new AToBUpcaster(a, b));
         Stream<Object> result = testSubject.upcast(Stream.of(a, b, a, c));
-        assertEquals(Arrays.asList(b, b, b, c), result.collect(toList()));
+        assertThat(result).containsExactly(b, b, b, c);
     }
 
     @Test
@@ -49,7 +47,7 @@ class GenericUpcasterChainTest {
         Object a = "a", b = "b", c = "c";
         Upcaster<Object> testSubject = new GenericUpcasterChain<>(new AToBUpcaster(a, b), new AToBUpcaster(b, c));
         Stream<Object> result = testSubject.upcast(Stream.of(a, b, a, c));
-        assertEquals(Arrays.asList(c, c, c, c), result.collect(toList()));
+        assertThat(result).containsExactly(c, c, c, c);
     }
 
     @Test
@@ -57,7 +55,7 @@ class GenericUpcasterChainTest {
         Object a = "a", b = "b", c = "c";
         Upcaster<Object> testSubject = new GenericUpcasterChain<>(new AToBUpcaster(b, c), new AToBUpcaster(a, b));
         Stream<Object> result = testSubject.upcast(Stream.of(a, b, a, c));
-        assertEquals(Arrays.asList(b, c, b, c), result.collect(toList()));
+        assertThat(result).containsExactly(b, c, b, c);
     }
 
     @Test
@@ -66,7 +64,7 @@ class GenericUpcasterChainTest {
         Upcaster<Object> testSubject =
                 new GenericUpcasterChain<>(new UpcasterWithRemainder(a, b), new AToBUpcaster(b, c));
         Stream<Object> result = testSubject.upcast(Stream.of(a, b, a, c));
-        assertEquals(Arrays.asList(a, c, a, c, a, c), result.collect(toList()));
+        assertThat(result).containsExactly(a, c, a, c, a, c);
     }
 
     @Test
@@ -75,7 +73,7 @@ class GenericUpcasterChainTest {
         Upcaster<Object> testSubject =
                 new GenericUpcasterChain<>(new ConditionalUpcaster(a, b, c), new ConditionalUpcaster(c, d, a));
         Stream<Object> result = testSubject.upcast(Stream.of(a, d, a, b, d, a));
-        assertEquals(Arrays.asList(a, d, a, a), result.collect(toList()));
+        assertThat(result).containsExactly(a, d, a, a);
     }
 
     @Test
@@ -83,7 +81,7 @@ class GenericUpcasterChainTest {
         Object a = "a", b = "b", c = "c";
         Upcaster<Object> testSubject = new GenericUpcasterChain<>(new MultipleTypesUpcaster(), new AToBUpcaster(b, c));
         Stream<Object> result = testSubject.upcast(Stream.of(a, b, c));
-        assertEquals(Arrays.asList(a, a, c, c, c, c), result.collect(toList()));
+        assertThat(result).containsExactly(a, a, c, c, c, c);
     }
 
     private static class AToBUpcaster extends SingleEntryUpcaster<Object> {
@@ -106,12 +104,10 @@ class GenericUpcasterChainTest {
         }
     }
 
-    private static class UpcasterWithRemainder implements Upcaster<Object> {
+    private record UpcasterWithRemainder(List<Object> remainder) implements Upcaster<Object> {
 
-        private final List<Object> remainder;
-
-        public UpcasterWithRemainder(Object... remainder) {
-            this.remainder = Arrays.asList(remainder);
+        private UpcasterWithRemainder(Object... remainder) {
+            this(List.of(remainder));
         }
 
         @Override
@@ -120,15 +116,7 @@ class GenericUpcasterChainTest {
         }
     }
 
-    private static class ConditionalUpcaster implements Upcaster<Object> {
-
-        private final Object first, second, replacement;
-
-        public ConditionalUpcaster(Object first, Object second, Object replacement) {
-            this.first = first;
-            this.second = second;
-            this.replacement = replacement;
-        }
+    private record ConditionalUpcaster(Object first, Object second, Object replacement) implements Upcaster<Object> {
 
         @Override
         public Stream<Object> upcast(Stream<Object> intermediateRepresentations) {

@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.io.IOUtils;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -43,6 +43,6 @@ class JsonNodeToByteArrayConverterTest {
     void convertNodeToBytes() throws Exception {
         final String content = "{\"someKey\":\"someValue\",\"someOther\":true}";
         JsonNode node = objectMapper.readTree(content);
-        assertArrayEquals(content.getBytes(IOUtils.UTF8), testSubject.convert(node));
+        assertThat(testSubject.convert(node)).containsExactly(content.getBytes(IOUtils.UTF8));
     }
 }

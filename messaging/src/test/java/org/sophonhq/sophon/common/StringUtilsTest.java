@@ -17,9 +17,9 @@
 
 package org.sophonhq.sophon.common;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.common.StringUtils.lowerCaseFirstCharacterOf;
 
 /**
@@ -31,44 +31,45 @@ class StringUtilsTest {
 
     @Test
     void nonEmptyOrNullReturnsFalseForEmptyString() {
-        assertFalse(StringUtils.nonEmptyOrNull(""));
+        assertThat(StringUtils.nonEmptyOrNull("")).isFalse();
     }
 
     @Test
     void nonEmptyOrNullReturnsFalseForNullString() {
-        assertFalse(StringUtils.nonEmptyOrNull(null));
+        assertThat(StringUtils.nonEmptyOrNull(null)).isFalse();
     }
 
     @Test
     void nonEmptyOrNullReturnsTrueForNonEmptyString() {
-        assertTrue(StringUtils.nonEmptyOrNull("some-string"));
+        assertThat(StringUtils.nonEmptyOrNull("some-string")).isTrue();
     }
 
     @Test
     void emptyOrNullReturnsTrueForEmptyStrings() {
-        assertTrue(StringUtils.emptyOrNull(""));
+        assertThat(StringUtils.emptyOrNull("")).isTrue();
     }
 
     @Test
     void emptyOrNullReturnsTrueForNullString() {
-        assertTrue(StringUtils.emptyOrNull(null));
+        assertThat(StringUtils.emptyOrNull(null)).isTrue();
     }
 
     @Test
     void emptyOrNullReturnsFalseForNonEmptyString() {
-        assertFalse(StringUtils.emptyOrNull("some-string"));
+        assertThat(StringUtils.emptyOrNull("some-string")).isFalse();
     }
 
     @Test
     void lowerCaseFirstCharacterOfAdjustsFirstCharacterToLowerCase() {
         String fullUppercase = "FOO";
         String lowerCasedOutputOfFullUppercase = "fOO";
-        assertEquals(lowerCasedOutputOfFullUppercase, lowerCaseFirstCharacterOf(fullUppercase));
-        assertEquals(lowerCasedOutputOfFullUppercase, lowerCaseFirstCharacterOf(lowerCasedOutputOfFullUppercase));
+        assertThat(lowerCaseFirstCharacterOf(fullUppercase)).isEqualTo(lowerCasedOutputOfFullUppercase);
+        assertThat(lowerCaseFirstCharacterOf(lowerCasedOutputOfFullUppercase))
+                .isEqualTo(lowerCasedOutputOfFullUppercase);
 
         String partialUppercase = "FOo";
         String partialLowercase = "fOo";
-        assertEquals(partialLowercase, lowerCaseFirstCharacterOf(partialUppercase));
-        assertEquals(partialLowercase, lowerCaseFirstCharacterOf(partialLowercase));
+        assertThat(lowerCaseFirstCharacterOf(partialUppercase)).isEqualTo(partialLowercase);
+        assertThat(lowerCaseFirstCharacterOf(partialLowercase)).isEqualTo(partialLowercase);
     }
 }

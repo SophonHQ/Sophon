@@ -16,13 +16,15 @@
  */
 package org.sophonhq.sophon.messaging.timeout;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -44,15 +46,15 @@ class SophonTimeLimitedTaskTest {
     void correctlyInterruptsTaskWhenNoWarningWasConfiguredOnUncustomizedConstructor() {
         SophonTimeLimitedTask testSubject = new SophonTimeLimitedTask("My test task", 100, 100, 1);
 
-        assertThrows(InterruptedException.class, () -> {
+        assertThatThrownBy(() -> {
             testSubject.start();
             // Even though the timeout is 100ms, the InterruptedException apparently needs time to travel up.
             // We accept a 150ms delay.
             Thread.sleep(150);
-        });
+        }).isInstanceOf(InterruptedException.class);
 
-        assertTrue(testSubject.isInterrupted());
-        assertFalse(testSubject.isCompleted());
+        assertThat(testSubject.isInterrupted()).isTrue();
+        assertThat(testSubject.isCompleted()).isFalse();
     }
 
 
@@ -60,15 +62,15 @@ class SophonTimeLimitedTaskTest {
     void correctlyInterruptsTaskWithWarningWasConfiguredOnUncustomizedConstructor() {
         SophonTimeLimitedTask testSubject = new SophonTimeLimitedTask("My test task", 100, 50, 10);
 
-        assertThrows(InterruptedException.class, () -> {
+        assertThatThrownBy(() -> {
             testSubject.start();
             // Even though the timeout is 100ms, the InterruptedException apparently needs time to travel up.
             // We accept a 150ms delay.
             Thread.sleep(150);
-        });
+        }).isInstanceOf(InterruptedException.class);
 
-        assertTrue(testSubject.isInterrupted());
-        assertFalse(testSubject.isCompleted());
+        assertThat(testSubject.isInterrupted()).isTrue();
+        assertThat(testSubject.isCompleted()).isFalse();
     }
 
     @Test
@@ -77,15 +79,15 @@ class SophonTimeLimitedTaskTest {
         SophonTimeLimitedTask testSubject =
                 new SophonTimeLimitedTask("My test task", 1000, 100, 100, SophonTaskJanitor.INSTANCE, logger);
 
-        assertThrows(InterruptedException.class, () -> {
+        assertThatThrownBy(() -> {
             testSubject.start();
             // Even though the timeout is 100ms, the InterruptedException apparently needs time to travel up.
             // We accept a 1500ms delay.
             Thread.sleep(1500);
-        });
+        }).isInstanceOf(InterruptedException.class);
 
-        assertTrue(testSubject.isInterrupted());
-        assertFalse(testSubject.isCompleted());
+        assertThat(testSubject.isInterrupted()).isTrue();
+        assertThat(testSubject.isCompleted()).isFalse();
         verify(logger, atLeast(8)).warn(anyString(), any(), any(), any(), any(), any());
     }
 
@@ -100,8 +102,8 @@ class SophonTimeLimitedTaskTest {
         // We accept a 500ms delay.
         Thread.sleep(500);
 
-        assertFalse(testSubject.isInterrupted());
-        assertFalse(testSubject.isCompleted());
+        assertThat(testSubject.isInterrupted()).isFalse();
+        assertThat(testSubject.isCompleted()).isFalse();
         // Complete manually to ensure it does not block the SophonTaskJanitor!
         testSubject.complete();
         verify(logger, atLeast(3)).warn(anyString(), any(), any(), any(), any(), any());

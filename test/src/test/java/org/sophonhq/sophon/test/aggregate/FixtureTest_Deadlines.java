@@ -28,7 +28,8 @@ import org.sophonhq.sophon.test.SophonAssertionError;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.sophonhq.sophon.deadline.GenericDeadlineMessage.asDeadlineMessage;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 import static org.sophonhq.sophon.test.matchers.Matchers.*;
@@ -137,14 +138,12 @@ class FixtureTest_Deadlines {
                        .andGivenCommands(CREATE_COMMAND)
                        .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlines(NONE_OCCURRING_DEADLINE_PAYLOAD)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlines(NONE_OCCURRING_DEADLINE_PAYLOAD))
+                .actual();
 
-        assertTrue(
-                result.getMessage().contains("Expected deadlines were not triggered at the given deadline manager.")
-        );
+        assertThat(result.getMessage())
+                .contains("Expected deadlines were not triggered at the given deadline manager.");
     }
 
     @Test
@@ -154,12 +153,11 @@ class FixtureTest_Deadlines {
                        .andGivenCommands(CREATE_COMMAND)
                        .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlines(DEADLINE_PAYLOAD, NONE_OCCURRING_DEADLINE_PAYLOAD)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlines(DEADLINE_PAYLOAD, NONE_OCCURRING_DEADLINE_PAYLOAD))
+                .actual();
 
-        assertTrue(result.getMessage().contains("Got wrong number of triggered deadlines."));
+        assertThat(result.getMessage()).contains("Got wrong number of triggered deadlines.");
     }
 
     @Test
@@ -177,14 +175,12 @@ class FixtureTest_Deadlines {
                        .andGivenCommands(CREATE_COMMAND)
                        .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlinesWithName(NONE_OCCURRING_DEADLINE_PAYLOAD)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlinesWithName(NONE_OCCURRING_DEADLINE_PAYLOAD))
+                .actual();
 
-        assertTrue(
-                result.getMessage().contains("Expected deadlines were not triggered at the given deadline manager.")
-        );
+        assertThat(result.getMessage())
+                .contains("Expected deadlines were not triggered at the given deadline manager.");
     }
 
     @Test
@@ -194,12 +190,12 @@ class FixtureTest_Deadlines {
                        .andGivenCommands(CREATE_COMMAND)
                        .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlinesWithName(DEADLINE_PAYLOAD, NONE_OCCURRING_DEADLINE_PAYLOAD)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlinesWithName(DEADLINE_PAYLOAD,
+                                                                         NONE_OCCURRING_DEADLINE_PAYLOAD))
+                .actual();
 
-        assertTrue(result.getMessage().contains("Got wrong number of triggered deadlines."));
+        assertThat(result.getMessage()).contains("Got wrong number of triggered deadlines.");
     }
 
     @Test
@@ -217,14 +213,12 @@ class FixtureTest_Deadlines {
                        .andGivenCommands(CREATE_COMMAND)
                        .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlinesOfType(Integer.class)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlinesOfType(Integer.class))
+                .actual();
 
-        assertTrue(
-                result.getMessage().contains("Expected deadlines were not triggered at the given deadline manager.")
-        );
+        assertThat(result.getMessage())
+                .contains("Expected deadlines were not triggered at the given deadline manager.");
     }
 
     @Test
@@ -234,12 +228,11 @@ class FixtureTest_Deadlines {
                        .andGivenCommands(CREATE_COMMAND)
                        .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlinesOfType(String.class, String.class)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlinesOfType(String.class, String.class))
+                .actual();
 
-        assertTrue(result.getMessage().contains("Got wrong number of triggered deadlines."));
+        assertThat(result.getMessage()).contains("Got wrong number of triggered deadlines.");
     }
 
     @Test
@@ -261,7 +254,7 @@ class FixtureTest_Deadlines {
     @Test
     void deadlineDispatcherInterceptor() {
         fixture.registerDeadlineDispatchInterceptor(
-                messages -> (i, m) -> asDeadlineMessage(m.getDeadlineName(), "fakeDeadlineDetails", m.getTimestamp()))
+                       messages -> (i, m) -> asDeadlineMessage(m.getDeadlineName(), "fakeDeadlineDetails", m.getTimestamp()))
                .givenNoPriorActivity()
                .andGivenCommands(CREATE_COMMAND)
                .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1))
@@ -271,46 +264,28 @@ class FixtureTest_Deadlines {
     @Test
     void deadlineHandlerInterceptor() {
         fixture.registerDeadlineHandlerInterceptor((uow, chain) -> {
-            uow.transformMessage(deadlineMessage -> asDeadlineMessage(
-                    deadlineMessage.getDeadlineName(), "fakeDeadlineDetails", deadlineMessage.getTimestamp())
-            );
-            return chain.proceed();
-        })
+                   uow.transformMessage(deadlineMessage -> asDeadlineMessage(
+                           deadlineMessage.getDeadlineName(), "fakeDeadlineDetails", deadlineMessage.getTimestamp())
+                   );
+                   return chain.proceed();
+               })
                .givenNoPriorActivity()
                .andGivenCommands(CREATE_COMMAND)
                .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1))
                .expectTriggeredDeadlines("fakeDeadlineDetails");
     }
 
-    private static class CreateMyAggregateCommand {
+    private record CreateMyAggregateCommand(@TargetAggregateIdentifier String aggregateId) {
 
-        @TargetAggregateIdentifier
-        private final String aggregateId;
-
-        private CreateMyAggregateCommand(String aggregateId) {
-            this.aggregateId = aggregateId;
-        }
     }
 
-    private static class MyAggregateCreatedEvent {
+    private record MyAggregateCreatedEvent(String aggregateId, String deadlineName, String deadlineId) {
 
-        private final String aggregateId;
-        private final String deadlineName;
-        private final String deadlineId;
-
-        private MyAggregateCreatedEvent(String aggregateId, String deadlineName, String deadlineId) {
-            this.aggregateId = aggregateId;
-            this.deadlineName = deadlineName;
-            this.deadlineId = deadlineId;
-        }
     }
 
     @SuppressWarnings("unused")
-    private static class ResetTriggerCommand {
-
-        @SuppressWarnings("FieldCanBeLocal")
-        @TargetAggregateIdentifier
-        private final String aggregateId;
+    private record ResetTriggerCommand(
+            @SuppressWarnings("FieldCanBeLocal") @TargetAggregateIdentifier String aggregateId) {
 
         private ResetTriggerCommand(String aggregateId) {
             this.aggregateId = aggregateId;
@@ -318,22 +293,16 @@ class FixtureTest_Deadlines {
     }
 
     @SuppressWarnings("unused")
-    private static class ResetAllTriggerCommand {
-
-        @SuppressWarnings("FieldCanBeLocal")
-        @TargetAggregateIdentifier
-        private final String aggregateId;
+    private record ResetAllTriggerCommand(
+            @SuppressWarnings("FieldCanBeLocal") @TargetAggregateIdentifier String aggregateId) {
 
         private ResetAllTriggerCommand(String aggregateId) {
             this.aggregateId = aggregateId;
         }
     }
 
-    private static class SetPayloadlessDeadlineCommand {
-
-        @SuppressWarnings({"FieldCanBeLocal", "unused"})
-        @TargetAggregateIdentifier
-        private final String aggregateId;
+    private record SetPayloadlessDeadlineCommand(
+            @SuppressWarnings({"FieldCanBeLocal", "unused"}) @TargetAggregateIdentifier String aggregateId) {
 
         private SetPayloadlessDeadlineCommand(String aggregateId) {
             this.aggregateId = aggregateId;

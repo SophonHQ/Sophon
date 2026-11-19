@@ -41,8 +41,8 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 import java.time.Duration;
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.jobrunr.server.BackgroundJobServerConfiguration.usingStandardBackgroundJobServerConfiguration;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -128,6 +128,6 @@ class JobrunrDeadlineManagerTest extends AbstractDeadlineManagerTestSuite {
         String scheduleId = testSubject.schedule(Duration.ofMinutes(15), deadlineName, null,
                                                  new AggregateScopeDescriptor("aggregateType", "aggregateId"));
         testSubject.cancelSchedule(deadlineName, scheduleId);
-        assertDoesNotThrow(() -> testSubject.cancelSchedule(deadlineName, scheduleId));
+        assertThatNoException().isThrownBy(() -> testSubject.cancelSchedule(deadlineName, scheduleId));
     }
 }

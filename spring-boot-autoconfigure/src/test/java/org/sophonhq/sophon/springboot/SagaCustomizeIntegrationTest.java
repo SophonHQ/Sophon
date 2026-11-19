@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.springboot;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.transaction.Transaction;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
 import org.sophonhq.sophon.config.EventProcessingModule;
@@ -49,8 +49,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 /**
@@ -79,10 +79,12 @@ class SagaCustomizeIntegrationTest {
     void publishSomeEvents() {
         publishEvent(new EchoEvent(UUID.randomUUID().toString()));
         eventProcessingModule.eventProcessors()
-                             .forEach((name, ep) -> assertTrue(ep.isRunning()));
+                             .forEach((name, ep) -> assertThat(ep.isRunning()).isTrue());
 
         eventProcessingModule.eventProcessors()
-                             .forEach((name, ep) -> assertFalse(ep.isError(), "Processor ended with error"));
+                             .forEach((name, ep) -> assertThat(ep.isError())
+                                     .as("Processor ended with error")
+                                     .isFalse());
 
         await().atMost(Duration.ofSeconds(1)).until(() -> eventsReceived.get() == 1);
         publishEvent(new EchoEvent(UUID.randomUUID().toString()));

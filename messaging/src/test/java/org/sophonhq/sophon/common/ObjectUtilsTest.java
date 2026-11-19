@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.common;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link ObjectUtils}.
@@ -38,13 +38,13 @@ class ObjectUtilsTest {
     @Test
     void getOrDefaultUsingValueProvider() {
         Function<String, String> valueProvider = o -> o;
-        assertEquals(DEFAULT_VALUE, ObjectUtils.getOrDefault(NULL_INSTANCE, valueProvider, DEFAULT_VALUE));
-        assertEquals(INSTANCE, ObjectUtils.getOrDefault(INSTANCE, valueProvider, DEFAULT_VALUE));
+        assertThat(ObjectUtils.getOrDefault(NULL_INSTANCE, valueProvider, DEFAULT_VALUE)).isEqualTo(DEFAULT_VALUE);
+        assertThat(ObjectUtils.getOrDefault(INSTANCE, valueProvider, DEFAULT_VALUE)).isEqualTo(INSTANCE);
     }
 
     @Test
     void supplySameInstance() {
         Supplier<Object> testSubject = ObjectUtils.sameInstanceSupplier(Object::new);
-        assertSame(testSubject.get(), testSubject.get());
+        assertThat(testSubject.get()).isSameAs(testSubject.get());
     }
 }

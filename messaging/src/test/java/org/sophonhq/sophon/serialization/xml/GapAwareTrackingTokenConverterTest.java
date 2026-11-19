@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.serialization.xml;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.GapAwareTrackingToken;
 import org.sophonhq.sophon.serialization.GapAwareTrackingTokenConverter;
 import org.sophonhq.sophon.serialization.SerializedObject;
@@ -25,7 +25,7 @@ import org.sophonhq.sophon.serialization.SimpleSerializedObject;
 import org.sophonhq.sophon.serialization.TestSerializer;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link GapAwareTrackingTokenConverter}. Does so against the new format the
@@ -73,7 +73,7 @@ class GapAwareTrackingTokenConverterTest {
                 new SimpleSerializedObject<>(REFLECTIVE_XML_FORMAT, String.class, TOKEN_CLASS_NAME, null);
 
         GapAwareTrackingToken result = serializer.deserialize(reflectivelySerializedToken);
-        assertEquals(TEST_TOKEN, result);
+        assertThat(result).isEqualTo(TEST_TOKEN);
     }
 
     @Test
@@ -82,6 +82,6 @@ class GapAwareTrackingTokenConverterTest {
                 new SimpleSerializedObject<>(CUSTOM_CONVERTER_XML_FORMAT, String.class, TOKEN_CLASS_NAME, null);
 
         GapAwareTrackingToken result = serializer.deserialize(reflectivelySerializedToken);
-        assertEquals(TEST_TOKEN, result);
+        assertThat(result).isEqualTo(TEST_TOKEN);
     }
 }

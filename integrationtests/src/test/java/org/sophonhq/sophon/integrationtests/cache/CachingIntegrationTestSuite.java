@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.integrationtests.cache;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.caching.Cache;
 import org.sophonhq.sophon.config.Configuration;
 import org.sophonhq.sophon.config.DefaultConfigurer;
@@ -49,8 +51,8 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Abstract integration test suite to validate the provided {@link org.sophonhq.sophon.common.caching.Cache}
@@ -156,16 +158,16 @@ public abstract class CachingIntegrationTestSuite {
 
         // Validate initial association cache
         Optional<Set<String>> optionalAssociations = associationsCacheListener.get(associationCacheKey);
-        assertTrue(optionalAssociations.isPresent());
+        assertThat(optionalAssociations).isPresent();
         Optional<String> optionalAssociationValue = optionalAssociations.get().stream().findFirst();
-        assertTrue(optionalAssociationValue.isPresent());
+        assertThat(optionalAssociationValue).isPresent();
         String sagaIdentifier = optionalAssociationValue.get();
         // Validate initial saga cache
         Optional<SagaStore.Entry<CachedSaga>> optionalCachedSaga = sagaCacheListener.get(sagaIdentifier);
-        assertTrue(optionalCachedSaga.isPresent());
+        assertThat(optionalCachedSaga).isPresent();
         CachedSaga cachedSaga = optionalCachedSaga.get().saga();
-        assertEquals(sagaName, cachedSaga.getName());
-        assertTrue(cachedSaga.getState().isEmpty());
+        assertThat(cachedSaga.getName()).isEqualTo(sagaName);
+        assertThat(cachedSaga.getState()).isEmpty();
 
         // Bulk update the saga...
         publishBulkUpdatesTo(associationValue, NUMBER_OF_UPDATES);
@@ -175,10 +177,10 @@ public abstract class CachingIntegrationTestSuite {
 
         // Validate caches again
         optionalCachedSaga = sagaCacheListener.get(sagaIdentifier);
-        assertTrue(optionalCachedSaga.isPresent());
+        assertThat(optionalCachedSaga).isPresent();
         cachedSaga = optionalCachedSaga.get().saga();
-        assertEquals(sagaName, cachedSaga.getName());
-        assertEquals(NUMBER_OF_UPDATES, cachedSaga.getState().size());
+        assertThat(cachedSaga.getName()).isEqualTo(sagaName);
+        assertThat(cachedSaga.getState()).hasSize(NUMBER_OF_UPDATES);
 
         // Destruct the saga...
         publish(new CachedSaga.SagaEndsEvent(associationValue, true));
@@ -187,8 +189,8 @@ public abstract class CachingIntegrationTestSuite {
                .until(() -> handledEventsUpTo(createEvents + NUMBER_OF_UPDATES + deleteEvents));
 
         // Validate caches are empty
-        assertTrue(associationsCacheListener.isRemoved(associationCacheKey));
-        assertTrue(sagaCacheListener.isRemoved(sagaIdentifier));
+        assertThat(associationsCacheListener.isRemoved(associationCacheKey)).isTrue();
+        assertThat(sagaCacheListener.isRemoved(sagaIdentifier)).isTrue();
     }
 
     @Test
@@ -209,16 +211,16 @@ public abstract class CachingIntegrationTestSuite {
 
         // Validate initial association cache
         Optional<Set<String>> optionalAssociations = associationsCacheListener.get(associationCacheKey);
-        assertTrue(optionalAssociations.isPresent());
+        assertThat(optionalAssociations).isPresent();
         Optional<String> optionalAssociationValue = optionalAssociations.get().stream().findFirst();
-        assertTrue(optionalAssociationValue.isPresent());
+        assertThat(optionalAssociationValue).isPresent();
         String sagaIdentifier = optionalAssociationValue.get();
         // Validate initial saga cache
         Optional<SagaStore.Entry<CachedSaga>> optionalCachedSaga = sagaCacheListener.get(sagaIdentifier);
-        assertTrue(optionalCachedSaga.isPresent());
+        assertThat(optionalCachedSaga).isPresent();
         CachedSaga cachedSaga = optionalCachedSaga.get().saga();
-        assertEquals(sagaName, cachedSaga.getName());
-        assertTrue(cachedSaga.getState().isEmpty());
+        assertThat(cachedSaga.getName()).isEqualTo(sagaName);
+        assertThat(cachedSaga.getState()).isEmpty();
 
         // Concurrent bulk update the saga...
         IntStream.range(0, NUMBER_OF_CONCURRENT_PUBLISHERS)
@@ -234,10 +236,10 @@ public abstract class CachingIntegrationTestSuite {
 
         // Validate caches again
         optionalCachedSaga = sagaCacheListener.get(sagaIdentifier);
-        assertTrue(optionalCachedSaga.isPresent());
+        assertThat(optionalCachedSaga).isPresent();
         cachedSaga = optionalCachedSaga.get().saga();
-        assertEquals(sagaName, cachedSaga.getName());
-        assertEquals(NUMBER_OF_UPDATES * NUMBER_OF_CONCURRENT_PUBLISHERS, cachedSaga.getState().size());
+        assertThat(cachedSaga.getName()).isEqualTo(sagaName);
+        assertThat(cachedSaga.getState()).hasSize(NUMBER_OF_UPDATES * NUMBER_OF_CONCURRENT_PUBLISHERS);
 
         // Destruct the saga...
         publish(new CachedSaga.SagaEndsEvent(associationValue, true));
@@ -248,8 +250,8 @@ public abstract class CachingIntegrationTestSuite {
                ));
 
         // Validate caches are empty
-        assertTrue(associationsCacheListener.isRemoved(associationCacheKey));
-        assertTrue(sagaCacheListener.isRemoved(sagaIdentifier));
+        assertThat(associationsCacheListener.isRemoved(associationCacheKey)).isTrue();
+        assertThat(sagaCacheListener.isRemoved(sagaIdentifier)).isTrue();
     }
 
     @Test
@@ -273,16 +275,16 @@ public abstract class CachingIntegrationTestSuite {
             String associationCacheKey = sagaAssociationCacheKey(associationValue);
             // Validate initial association cache
             Optional<Set<String>> optionalAssociations = associationsCacheListener.get(associationCacheKey);
-            assertTrue(optionalAssociations.isPresent());
+            assertThat(optionalAssociations).isPresent();
             Optional<String> optionalAssociationValue = optionalAssociations.get().stream().findFirst();
-            assertTrue(optionalAssociationValue.isPresent());
+            assertThat(optionalAssociationValue).isPresent();
             String sagaIdentifier = optionalAssociationValue.get();
             // Validate initial saga cache
             Optional<SagaStore.Entry<CachedSaga>> optionalCachedSaga = sagaCacheListener.get(sagaIdentifier);
-            assertTrue(optionalCachedSaga.isPresent());
+            assertThat(optionalCachedSaga).isPresent();
             CachedSaga cachedSaga = optionalCachedSaga.get().saga();
-            assertEquals(sagaName, cachedSaga.getName());
-            assertTrue(cachedSaga.getState().isEmpty());
+            assertThat(cachedSaga.getName()).isEqualTo(sagaName);
+            assertThat(cachedSaga.getState()).isEmpty();
         }
 
         // Bulk update the sagas...
@@ -303,16 +305,16 @@ public abstract class CachingIntegrationTestSuite {
             String associationCacheKey = sagaAssociationCacheKey(associationValue);
 
             Optional<Set<String>> optionalAssociations = associationsCacheListener.get(associationCacheKey);
-            assertTrue(optionalAssociations.isPresent());
+            assertThat(optionalAssociations).isPresent();
             Optional<String> optionalAssociationValue = optionalAssociations.get().stream().findFirst();
-            assertTrue(optionalAssociationValue.isPresent());
+            assertThat(optionalAssociationValue).isPresent();
             String sagaIdentifier = optionalAssociationValue.get();
 
             Optional<SagaStore.Entry<CachedSaga>> optionalCachedSaga = sagaCacheListener.get(sagaIdentifier);
-            assertTrue(optionalCachedSaga.isPresent());
+            assertThat(optionalCachedSaga).isPresent();
             CachedSaga cachedSaga = optionalCachedSaga.get().saga();
-            assertEquals(sagaName, cachedSaga.getName());
-            assertEquals(NUMBER_OF_UPDATES, cachedSaga.getState().size());
+            assertThat(cachedSaga.getName()).isEqualTo(sagaName);
+            assertThat(cachedSaga.getState()).hasSize(NUMBER_OF_UPDATES);
         }
 
         // Destruct the sagas...
@@ -327,7 +329,7 @@ public abstract class CachingIntegrationTestSuite {
 
         // Validate association cache is empty
         for (String sagaName : SAGA_NAMES) {
-            assertTrue(associationsCacheListener.isRemoved(sagaAssociationCacheKey(sagaName + "-id")));
+            assertThat(associationsCacheListener.isRemoved(sagaAssociationCacheKey(sagaName + "-id"))).isTrue();
         }
     }
 
@@ -353,16 +355,16 @@ public abstract class CachingIntegrationTestSuite {
 
             // Validate initial association cache
             Optional<Set<String>> optionalAssociations = associationsCacheListener.get(associationCacheKey);
-            assertTrue(optionalAssociations.isPresent());
+            assertThat(optionalAssociations).isPresent();
             Optional<String> optionalAssociationValue = optionalAssociations.get().stream().findFirst();
-            assertTrue(optionalAssociationValue.isPresent());
+            assertThat(optionalAssociationValue).isPresent();
             String sagaIdentifier = optionalAssociationValue.get();
             // Validate initial saga cache
             Optional<SagaStore.Entry<CachedSaga>> optionalCachedSaga = sagaCacheListener.get(sagaIdentifier);
-            assertTrue(optionalCachedSaga.isPresent());
+            assertThat(optionalCachedSaga).isPresent();
             CachedSaga cachedSaga = optionalCachedSaga.get().saga();
-            assertEquals(sagaName, cachedSaga.getName());
-            assertTrue(cachedSaga.getState().isEmpty());
+            assertThat(cachedSaga.getName()).isEqualTo(sagaName);
+            assertThat(cachedSaga.getState()).isEmpty();
         }
 
         // Bulk update the sagas...
@@ -386,16 +388,16 @@ public abstract class CachingIntegrationTestSuite {
             String associationCacheKey = sagaAssociationCacheKey(associationValue);
 
             Optional<Set<String>> optionalAssociations = associationsCacheListener.get(associationCacheKey);
-            assertTrue(optionalAssociations.isPresent());
+            assertThat(optionalAssociations).isPresent();
             Optional<String> optionalAssociationValue = optionalAssociations.get().stream().findFirst();
-            assertTrue(optionalAssociationValue.isPresent());
+            assertThat(optionalAssociationValue).isPresent();
             String sagaIdentifier = optionalAssociationValue.get();
 
             Optional<SagaStore.Entry<CachedSaga>> optionalCachedSaga = sagaCacheListener.get(sagaIdentifier);
-            assertTrue(optionalCachedSaga.isPresent());
+            assertThat(optionalCachedSaga).isPresent();
             CachedSaga cachedSaga = optionalCachedSaga.get().saga();
-            assertEquals(sagaName, cachedSaga.getName());
-            assertEquals(NUMBER_OF_UPDATES * NUMBER_OF_CONCURRENT_PUBLISHERS, cachedSaga.getState().size());
+            assertThat(cachedSaga.getName()).isEqualTo(sagaName);
+            assertThat(cachedSaga.getState()).hasSize(NUMBER_OF_UPDATES * NUMBER_OF_CONCURRENT_PUBLISHERS);
         }
 
         // Destruct the sagas...
@@ -412,7 +414,7 @@ public abstract class CachingIntegrationTestSuite {
 
         // Validate association cache is empty
         for (String sagaName : SAGA_NAMES) {
-            assertTrue(associationsCacheListener.isRemoved(sagaAssociationCacheKey(sagaName + "-id")));
+            assertThat(associationsCacheListener.isRemoved(sagaAssociationCacheKey(sagaName + "-id"))).isTrue();
         }
     }
 

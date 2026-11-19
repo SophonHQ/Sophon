@@ -17,11 +17,11 @@
 
 package org.sophonhq.sophon.common.jdbc;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.common.jdbc.JdbcUtils.nextAndExtract;
 
@@ -44,7 +44,7 @@ class JdbcUtilsTest {
         ResultSet resultSet = mock(ResultSet.class);
 
         when(resultSet.next()).thenReturn(false);
-        assertNull(nextAndExtract(resultSet, 1, Long.class));
+        assertThat(nextAndExtract(resultSet, 1, Long.class)).isNull();
     }
 
     /**
@@ -59,7 +59,7 @@ class JdbcUtilsTest {
 
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getObject(1, Long.class)).thenReturn(null);
-        assertNull(nextAndExtract(resultSet, 1, Long.class));
+        assertThat(nextAndExtract(resultSet, 1, Long.class)).isNull();
     }
 
     @Test
@@ -69,7 +69,7 @@ class JdbcUtilsTest {
 
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getObject(1, Long.class)).thenReturn(null);
-        assertEquals(defaultValue, nextAndExtract(resultSet, 1, Long.class, defaultValue));
+        assertThat(nextAndExtract(resultSet, 1, Long.class, defaultValue)).isEqualTo(defaultValue);
     }
 
     /**
@@ -84,7 +84,7 @@ class JdbcUtilsTest {
 
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getObject(1, Long.class)).thenReturn(10L);
-        assertEquals(Long.valueOf(10L), nextAndExtract(resultSet, 1, Long.class));
+        assertThat(nextAndExtract(resultSet, 1, Long.class)).isEqualTo(Long.valueOf(10L));
     }
 
     /**
@@ -104,7 +104,7 @@ class JdbcUtilsTest {
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getObject(1, Long.class)).thenReturn(0L);
         when(resultSet.wasNull()).thenReturn(true);
-        assertNull(nextAndExtract(resultSet, 1, Long.class));
+        assertThat(nextAndExtract(resultSet, 1, Long.class)).isNull();
     }
 
     @Test
@@ -115,6 +115,6 @@ class JdbcUtilsTest {
         when(resultSet.next()).thenReturn(true);
         when(resultSet.getObject(1, Long.class)).thenReturn(0L);
         when(resultSet.wasNull()).thenReturn(true);
-        assertEquals(defaultValue, nextAndExtract(resultSet, 1, Long.class, defaultValue));
+        assertThat(nextAndExtract(resultSet, 1, Long.class, defaultValue)).isEqualTo(defaultValue);
     }
 }

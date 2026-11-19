@@ -19,7 +19,7 @@ package org.sophonhq.sophon.springboot;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
@@ -50,7 +50,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -74,23 +74,23 @@ class SophonAutoConfigurationWithHibernateTest {
 
     @Test
     void contextInitialization() {
-        assertNotNull(applicationContext);
-        assertNotNull(snapshotter);
+        assertThat(applicationContext).isNotNull();
+        assertThat(snapshotter).isNotNull();
 
-        assertNotNull(applicationContext.getBean(CommandBus.class));
-        assertNotNull(applicationContext.getBean(EventBus.class));
-        assertNotNull(applicationContext.getBean(CommandGateway.class));
-        assertNotNull(applicationContext.getBean(EventGateway.class));
-        assertNotNull(applicationContext.getBean(Serializer.class));
-        assertNotNull(applicationContext.getBean(TokenStore.class));
-        assertNotNull(applicationContext.getBean(JpaEventStorageEngine.class));
-        Assertions.assertEquals(SQLErrorCodesResolver.class,
-                                applicationContext.getBean(PersistenceExceptionResolver.class).getClass());
-        assertNotNull(applicationContext.getBean(EntityManagerProvider.class));
-        assertNotNull(applicationContext.getBean(ConnectionProvider.class));
+        assertThat(applicationContext.getBean(CommandBus.class)).isNotNull();
+        assertThat(applicationContext.getBean(EventBus.class)).isNotNull();
+        assertThat(applicationContext.getBean(CommandGateway.class)).isNotNull();
+        assertThat(applicationContext.getBean(EventGateway.class)).isNotNull();
+        assertThat(applicationContext.getBean(Serializer.class)).isNotNull();
+        assertThat(applicationContext.getBean(TokenStore.class)).isNotNull();
+        assertThat(applicationContext.getBean(JpaEventStorageEngine.class)).isNotNull();
+        assertThat(applicationContext.getBean(PersistenceExceptionResolver.class).getClass())
+                .isEqualTo(SQLErrorCodesResolver.class);
+        assertThat(applicationContext.getBean(EntityManagerProvider.class)).isNotNull();
+        assertThat(applicationContext.getBean(ConnectionProvider.class)).isNotNull();
 
         // for some reason, this test picks up some entities used in other tests
-        Assertions.assertEquals(7, entityManager.getEntityManagerFactory().getMetamodel().getEntities().size());
+        assertThat(entityManager.getEntityManagerFactory().getMetamodel().getEntities()).hasSize(7);
     }
 
     @Transactional
@@ -99,11 +99,11 @@ class SophonAutoConfigurationWithHibernateTest {
         final Serializer serializer = applicationContext.getBean(Serializer.class);
         final JpaEventStorageEngine engine = applicationContext.getBean(JpaEventStorageEngine.class);
 
-        Assertions.assertEquals(serializer, engine.getSnapshotSerializer());
+        assertThat(engine.getSnapshotSerializer()).isEqualTo(serializer);
 
         engine.appendEvents(GenericEventMessage.asEventMessage("hello"));
         List<? extends TrackedEventMessage<?>> events = engine.readEvents(null, false).collect(Collectors.toList());
-        assertEquals(1, events.size());
+        assertThat(events.size()).isOne();
 
         verify(upcaster).upcast(any());
     }

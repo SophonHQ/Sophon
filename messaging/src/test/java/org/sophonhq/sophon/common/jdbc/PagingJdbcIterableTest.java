@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.common.jdbc;
 
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.IdentifierFactory;
 import org.sophonhq.sophon.common.transaction.Transaction;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
@@ -37,7 +38,8 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.common.jdbc.JdbcUtils.*;
 
 /**
@@ -137,8 +139,8 @@ class PagingJdbcIterableTest {
         List<String> result = StreamSupport.stream(testSubject.spliterator(), false)
                                            .collect(Collectors.toList());
 
-        assertEquals(1, result.size());
-        assertEquals(testId, result.get(0));
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0)).isEqualTo(testId);
     }
 
     @Test
@@ -151,8 +153,8 @@ class PagingJdbcIterableTest {
         List<String> result = StreamSupport.stream(testSubject.spliterator(), false)
                                            .collect(Collectors.toList());
 
-        assertEquals(expectedIds.size(), result.size());
-        expectedIds.forEach(resultId -> assertTrue(result.contains(resultId)));
+        assertThat(result).hasSameSizeAs(expectedIds);
+        expectedIds.forEach(resultId -> assertThat(result).contains(resultId));
     }
 
     private void addEntryAt(String id, long index) {
@@ -183,6 +185,6 @@ class PagingJdbcIterableTest {
 
     @Test
     void throwsExceptionWhenNoItemPresent() {
-        assertThrows(NoSuchElementException.class, testSubject.iterator()::next);
+        assertThatThrownBy(testSubject.iterator()::next).isInstanceOf(NoSuchElementException.class);
     }
 }

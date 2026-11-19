@@ -30,14 +30,16 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.*;
 
 /**
- * Abstract test class used to create tests for the {@link org.sophonhq.sophon.eventsourcing.eventstore.jpa.JpaEventStorageEngine}
- * and {@link org.sophonhq.sophon.eventsourcing.eventstore.jdbc.JdbcEventStorageEngine}.
+ * Abstract test class used to create tests for the
+ * {@link org.sophonhq.sophon.eventsourcing.eventstore.jpa.JpaEventStorageEngine} and
+ * {@link org.sophonhq.sophon.eventsourcing.eventstore.jdbc.JdbcEventStorageEngine}.
  * <p>
  * Methods are public so they can be overridden by {@link EventStorageEngine} implementation test cases in other
  * repositories.
@@ -51,18 +53,16 @@ public abstract class AbstractEventStorageEngineTest<E extends AbstractEventStor
 
     @Test
     public void uniqueKeyConstraintOnFirstEventIdentifierThrowsAggregateIdentifierAlreadyExistsException() {
-        assertThrows(
-                AggregateStreamCreationException.class,
-                () -> testSubject.appendEvents(createEvent("id", AGGREGATE, 0), createEvent("id", "otherAggregate", 0))
-        );
+        assertThatThrownBy(() -> testSubject.appendEvents(createEvent("id", AGGREGATE, 0),
+                                                          createEvent("id", "otherAggregate", 0)))
+                .isInstanceOf(AggregateStreamCreationException.class);
     }
 
     @Test
     public void uniqueKeyConstraintOnEventIdentifier() {
-        assertThrows(
-                ConcurrencyException.class,
-                () -> testSubject.appendEvents(createEvent("id", AGGREGATE, 1), createEvent("id", "otherAggregate", 1))
-        );
+        assertThatThrownBy(() -> testSubject.appendEvents(createEvent("id", AGGREGATE, 1),
+                                                          createEvent("id", "otherAggregate", 1)))
+                .isInstanceOf(ConcurrencyException.class);
     }
 
     @Test
@@ -78,42 +78,36 @@ public abstract class AbstractEventStorageEngineTest<E extends AbstractEventStor
 
         testSubject.appendEvents(createEvents(4));
         List<DomainEventMessage<?>> upcastedEvents = testSubject.readEvents(AGGREGATE).asStream().collect(toList());
-        assertEquals(8, upcastedEvents.size());
+        assertThat(upcastedEvents).hasSize(8);
 
         Iterator<DomainEventMessage<?>> iterator = upcastedEvents.iterator();
         while (iterator.hasNext()) {
             DomainEventMessage<?> event1 = iterator.next(), event2 = iterator.next();
-            assertEquals(event1.getAggregateIdentifier(), event2.getAggregateIdentifier());
-            assertEquals(event1.getSequenceNumber(), event2.getSequenceNumber());
-            assertEquals(event1.getPayload(), event2.getPayload());
-            assertEquals(event1.getMetaData(), event2.getMetaData());
+            assertThat(event2.getAggregateIdentifier()).isEqualTo(event1.getAggregateIdentifier());
+            assertThat(event2.getSequenceNumber()).isEqualTo(event1.getSequenceNumber());
+            assertThat(event2.getPayload()).isEqualTo(event1.getPayload());
+            assertThat(event2.getMetaData()).isEqualTo(event1.getMetaData());
         }
     }
 
     @Test
     public void storeDuplicateFirstEventWithExceptionTranslatorThrowsAggregateIdentifierAlreadyExistsException() {
-        assertThrows(
-                AggregateStreamCreationException.class,
-                () -> testSubject.appendEvents(createEvent(0), createEvent(0))
-        );
+        assertThatThrownBy(() -> testSubject.appendEvents(createEvent(0), createEvent(0)))
+                .isInstanceOf(AggregateStreamCreationException.class);
     }
 
     @Test
     public void storeDuplicateEventWithExceptionTranslator() {
-        assertThrows(
-                ConcurrencyException.class,
-                () -> testSubject.appendEvents(createEvent(1), createEvent(1))
-        );
+        assertThatThrownBy(() -> testSubject.appendEvents(createEvent(1), createEvent(1)))
+                .isInstanceOf(ConcurrencyException.class);
     }
 
     @Test
     public void storeDuplicateEventWithoutExceptionResolver() {
         //noinspection unchecked
         testSubject = createEngine(engineBuilder -> (EB) engineBuilder.persistenceExceptionResolver(e -> false));
-        assertThrows(
-                EventStoreException.class,
-                () -> testSubject.appendEvents(createEvent(0), createEvent(0))
-        );
+        assertThatThrownBy(() -> testSubject.appendEvents(createEvent(0), createEvent(0)))
+                .isInstanceOf(EventStoreException.class);
     }
 
     @Test
@@ -124,7 +118,7 @@ public abstract class AbstractEventStorageEngineTest<E extends AbstractEventStor
         testSubject = createEngine(builder -> (EB) builder.snapshotFilter(allowAll));
 
         testSubject.storeSnapshot(createEvent(1));
-        assertTrue(testSubject.readSnapshot(AGGREGATE).isPresent());
+        assertThat(testSubject.readSnapshot(AGGREGATE)).isPresent();
     }
 
     @Test
@@ -135,7 +129,7 @@ public abstract class AbstractEventStorageEngineTest<E extends AbstractEventStor
         testSubject = createEngine(builder -> (EB) builder.snapshotFilter(rejectAll));
 
         testSubject.storeSnapshot(createEvent(1));
-        assertFalse(testSubject.readSnapshot(AGGREGATE).isPresent());
+        assertThat(testSubject.readSnapshot(AGGREGATE)).isNotPresent();
     }
 
     @Test
@@ -146,7 +140,7 @@ public abstract class AbstractEventStorageEngineTest<E extends AbstractEventStor
         testSubject = createEngine(builder -> (EB) builder.snapshotFilter(combinedFilter));
 
         testSubject.storeSnapshot(createEvent(1));
-        assertFalse(testSubject.readSnapshot(AGGREGATE).isPresent());
+        assertThat(testSubject.readSnapshot(AGGREGATE)).isNotPresent();
     }
 
     protected void setTestSubject(AbstractEventStorageEngine testSubject) {

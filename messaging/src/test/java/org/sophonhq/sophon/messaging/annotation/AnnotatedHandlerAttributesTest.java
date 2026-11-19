@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.messaging.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.deadline.DeadlineMessage;
@@ -39,7 +40,8 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 /**
  * Test class validating the {@link AnnotatedHandlerAttributes}.
@@ -69,10 +71,10 @@ class AnnotatedHandlerAttributesTest {
 
         AnnotatedHandlerAttributes testSubject = new AnnotatedHandlerAttributes(messageHandlingMember);
 
-        assertFalse(testSubject.isEmpty());
-        assertTrue(testSubject.contains(HandlerAttributes.MESSAGE_TYPE));
-        assertEquals(testSubject.get(HandlerAttributes.MESSAGE_TYPE), CommandMessage.class);
-        assertEquals(expected, testSubject.getAll());
+        assertThat(testSubject.isEmpty()).isFalse();
+        assertThat(testSubject.contains(HandlerAttributes.MESSAGE_TYPE)).isTrue();
+        assertThatObject(testSubject.get(HandlerAttributes.MESSAGE_TYPE)).isEqualTo(CommandMessage.class);
+        assertThat(testSubject.getAll()).containsExactlyInAnyOrderEntriesOf(expected);
     }
 
     @Test
@@ -87,10 +89,10 @@ class AnnotatedHandlerAttributesTest {
 
         AnnotatedHandlerAttributes testSubject = new AnnotatedHandlerAttributes(messageHandlingMember);
 
-        assertFalse(testSubject.isEmpty());
-        assertTrue(testSubject.contains(HandlerAttributes.ALLOW_REPLAY));
-        assertEquals(true, testSubject.get(HandlerAttributes.ALLOW_REPLAY));
-        assertEquals(expected, testSubject.getAll());
+        assertThat(testSubject.isEmpty()).isFalse();
+        assertThat(testSubject.contains(HandlerAttributes.ALLOW_REPLAY)).isTrue();
+        assertThatObject(testSubject.get(HandlerAttributes.ALLOW_REPLAY)).isEqualTo(true);
+        assertThat(testSubject.getAll()).containsExactlyInAnyOrderEntriesOf(expected);
     }
 
     /**
@@ -116,10 +118,10 @@ class AnnotatedHandlerAttributesTest {
 
         AnnotatedHandlerAttributes testSubject = new AnnotatedHandlerAttributes(messageHandlingMember);
 
-        assertFalse(testSubject.isEmpty());
-        assertTrue(testSubject.contains(HandlerAttributes.EXCEPTION_RESULT_TYPE));
-        assertEquals(testSubject.get(HandlerAttributes.EXCEPTION_RESULT_TYPE), Exception.class);
-        assertEquals(expected, testSubject.getAll());
+        assertThat(testSubject.isEmpty()).isFalse();
+        assertThat(testSubject.contains(HandlerAttributes.EXCEPTION_RESULT_TYPE)).isTrue();
+        assertThatObject(testSubject.get(HandlerAttributes.EXCEPTION_RESULT_TYPE)).isEqualTo(Exception.class);
+        assertThat(testSubject.getAll()).containsExactlyInAnyOrderEntriesOf(expected);
     }
 
     @Test
@@ -137,10 +139,11 @@ class AnnotatedHandlerAttributesTest {
 
         AnnotatedHandlerAttributes testSubject = new AnnotatedHandlerAttributes(messageHandlingMember);
 
-        assertFalse(testSubject.isEmpty());
-        assertTrue(testSubject.contains(CustomCommandHandler.class.getSimpleName() + ".additionalAttribute"));
-        assertEquals(42, (int) testSubject.get(CustomCommandHandler.class.getSimpleName() + ".additionalAttribute"));
-        assertEquals(expected, testSubject.getAll());
+        assertThat(testSubject.isEmpty()).isFalse();
+        assertThat(testSubject.contains(CustomCommandHandler.class.getSimpleName() + ".additionalAttribute")).isTrue();
+        assertThat((int) testSubject.get(CustomCommandHandler.class.getSimpleName() + ".additionalAttribute"))
+                .isEqualTo(42);
+        assertThat(testSubject.getAll()).containsExactlyInAnyOrderEntriesOf(expected);
     }
 
     @Test
@@ -155,17 +158,17 @@ class AnnotatedHandlerAttributesTest {
 
         AnnotatedHandlerAttributes testSubject = new AnnotatedHandlerAttributes(messageHandlingMember);
 
-        assertFalse(testSubject.isEmpty());
-        assertTrue(testSubject.contains(HandlerAttributes.MESSAGE_TYPE));
-        assertEquals(testSubject.get(HandlerAttributes.MESSAGE_TYPE), DeadlineMessage.class);
-        assertEquals(expected, testSubject.getAll());
+        assertThat(testSubject.isEmpty()).isFalse();
+        assertThat(testSubject.contains(HandlerAttributes.MESSAGE_TYPE)).isTrue();
+        assertThatObject(testSubject.get(HandlerAttributes.MESSAGE_TYPE)).isEqualTo(DeadlineMessage.class);
+        assertThat(testSubject.getAll()).containsExactlyInAnyOrderEntriesOf(expected);
     }
 
     @Test
     void constructHandlerAttributesForAnnotatedNonMessageHandler() {
         Map<String, Map<String, Object>> expected = new HashMap<>();
 
-        assertEquals(expected, testSubject.getAll());
+        assertThat(testSubject.getAll()).containsExactlyInAnyOrderEntriesOf(expected);
     }
 
     @SuppressWarnings("unused")

@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventhandling.replay;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.AnnotationEventHandlerAdapter;
 import org.sophonhq.sophon.eventhandling.EventHandler;
 import org.sophonhq.sophon.eventhandling.GenericTrackedEventMessage;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 class ReplayContextParameterResolverFactoryTest {
@@ -57,15 +58,15 @@ class ReplayContextParameterResolverFactoryTest {
                                                                                           asEventMessage(1L));
         GenericTrackedEventMessage<Object> liveEvent = new GenericTrackedEventMessage<>(regularToken,
                                                                                         asEventMessage(2L));
-        assertTrue(testSubject.canHandle(replayEvent));
-        assertTrue(testSubject.canHandle(liveEvent));
+        assertThat(testSubject.canHandle(replayEvent)).isTrue();
+        assertThat(testSubject.canHandle(liveEvent)).isTrue();
         testSubject.handle(createMessage(1L, true));
         testSubject.handle(createMessage(2L, true));
         testSubject.handle(createMessage(3L, true));
         testSubject.handle(createMessage(4L, false));
 
-        assertEquals(asList(1L, 2L, 3L, 4L), handler.receivedLongs);
-        assertEquals(asList(2L, 3L), handler.receivedInReplay);
+        assertThat(handler.receivedLongs).containsExactlyElementsOf(asList(1L, 2L, 3L, 4L));
+        assertThat(handler.receivedInReplay).containsExactlyElementsOf(asList(2L, 3L));
     }
 
     private TrackedEventMessage<Object> createMessage(Long position, boolean replay) {

@@ -29,7 +29,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
 
 /**
@@ -59,10 +59,10 @@ class FutureCallbackTest {
             }
         });
         t.start();
-        assertTrue(t.isAlive());
+        assertThat(t.isAlive()).isTrue();
         testSubject.onResult(COMMAND_MESSAGE, COMMAND_RESPONSE_MESSAGE);
         t.join(THREAD_JOIN_TIMEOUT);
-        assertEquals(COMMAND_RESPONSE_MESSAGE, resultFromParallelThread);
+        assertThat(resultFromParallelThread).isEqualTo(COMMAND_RESPONSE_MESSAGE);
     }
 
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
@@ -76,12 +76,12 @@ class FutureCallbackTest {
             }
         });
         t.start();
-        assertTrue(t.isAlive());
+        assertThat(t.isAlive()).isTrue();
         RuntimeException exception = new MockException();
         testSubject.onResult(COMMAND_MESSAGE, asCommandResultMessage(exception));
         t.join(THREAD_JOIN_TIMEOUT);
-        assertTrue(resultFromParallelThread instanceof CommandResultMessage);
-        assertEquals(exception, ((CommandResultMessage) resultFromParallelThread).exceptionResult());
+        assertThat(resultFromParallelThread).isInstanceOf(CommandResultMessage.class);
+        assertThat(((CommandResultMessage) resultFromParallelThread).exceptionResult()).isEqualTo(exception);
     }
 
     @Test
@@ -96,7 +96,7 @@ class FutureCallbackTest {
         t.start();
         t.join(1000);
         testSubject.onResult(COMMAND_MESSAGE, COMMAND_RESPONSE_MESSAGE);
-        assertTrue(resultFromParallelThread instanceof TimeoutException);
+        assertThat(resultFromParallelThread).isInstanceOf(TimeoutException.class);
     }
 
     @Test
@@ -107,8 +107,8 @@ class FutureCallbackTest {
         t.start();
         t.join(1000);
         testSubject.onResult(COMMAND_MESSAGE, COMMAND_RESPONSE_MESSAGE);
-        assertTrue(resultFromParallelThread instanceof ResultMessage);
-        assertTrue(((ResultMessage) resultFromParallelThread).exceptionResult() instanceof TimeoutException);
+        assertThat(resultFromParallelThread).isInstanceOf(ResultMessage.class);
+        assertThat(((ResultMessage) resultFromParallelThread).exceptionResult()).isInstanceOf(TimeoutException.class);
     }
 
     @Test
@@ -119,8 +119,8 @@ class FutureCallbackTest {
         t.start();
         testSubject.completeExceptionally(new MockException("Mocking an exception"));
         t.join();
-        assertTrue(resultFromParallelThread instanceof ResultMessage);
-        assertTrue(((ResultMessage) resultFromParallelThread).exceptionResult() instanceof MockException);
+        assertThat(resultFromParallelThread).isInstanceOf(ResultMessage.class);
+        assertThat(((ResultMessage) resultFromParallelThread).exceptionResult()).isInstanceOf(MockException.class);
     }
 
     @Test
@@ -135,7 +135,7 @@ class FutureCallbackTest {
         t.start();
         testSubject.completeExceptionally(new MockException("Mocking an exception"));
         t.join();
-        assertTrue(resultFromParallelThread instanceof ExecutionException);
+        assertThat(resultFromParallelThread).isInstanceOf(ExecutionException.class);
     }
 
     @Test
@@ -148,11 +148,11 @@ class FutureCallbackTest {
             }
         });
         t.start();
-        assertTrue(t.isAlive());
-        assertFalse(testSubject.isDone());
+        assertThat(t.isAlive()).isTrue();
+        assertThat(testSubject.isDone()).isFalse();
         testSubject.onResult(COMMAND_MESSAGE, COMMAND_RESPONSE_MESSAGE);
-        assertTrue(testSubject.isDone());
+        assertThat(testSubject.isDone()).isTrue();
         t.join(THREAD_JOIN_TIMEOUT);
-        assertEquals(COMMAND_RESPONSE_MESSAGE, resultFromParallelThread);
+        assertThat(resultFromParallelThread).isEqualTo(COMMAND_RESPONSE_MESSAGE);
     }
 }

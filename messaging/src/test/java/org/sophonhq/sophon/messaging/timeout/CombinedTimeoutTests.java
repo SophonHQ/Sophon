@@ -18,7 +18,8 @@ package org.sophonhq.sophon.messaging.timeout;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.Message;
@@ -33,8 +34,8 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * The different timeout components, {@link TimeoutWrappedMessageHandlingMember} and
@@ -66,8 +67,8 @@ class CombinedTimeoutTests {
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
 
         await().until(uow::isRolledBack);
-        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
-        assertFalse(Thread.interrupted());
+        assertThat(uow.getExecutionResult().getExceptionResult()).isInstanceOf(SophonTimeoutException.class);
+        assertThat(Thread.interrupted()).isFalse();
     }
 
     /**
@@ -86,8 +87,8 @@ class CombinedTimeoutTests {
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
 
         await().until(uow::isRolledBack);
-        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
-        assertFalse(Thread.interrupted());
+        assertThat(uow.getExecutionResult().getExceptionResult()).isInstanceOf(SophonTimeoutException.class);
+        assertThat(Thread.interrupted()).isFalse();
     }
 
     @Test
@@ -104,8 +105,8 @@ class CombinedTimeoutTests {
         List<EventMessage<?>> batch = generateBatch(2);
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
         await().until(uow::isRolledBack);
-        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
-        assertFalse(Thread.interrupted());
+        assertThat(uow.getExecutionResult().getExceptionResult()).isInstanceOf(SophonTimeoutException.class);
+        assertThat(Thread.interrupted()).isFalse();
     }
 
     @Test
@@ -122,8 +123,8 @@ class CombinedTimeoutTests {
         List<EventMessage<?>> batch = generateBatch(2);
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
         await().until(uow::isRolledBack);
-        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
-        assertFalse(Thread.interrupted());
+        assertThat(uow.getExecutionResult().getExceptionResult()).isInstanceOf(SophonTimeoutException.class);
+        assertThat(Thread.interrupted()).isFalse();
     }
 
     @Test
@@ -140,8 +141,8 @@ class CombinedTimeoutTests {
         List<EventMessage<?>> batch = generateBatch(2);
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
         await().until(uow::isRolledBack);
-        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
-        assertFalse(Thread.interrupted());
+        assertThat(uow.getExecutionResult().getExceptionResult()).isInstanceOf(SophonTimeoutException.class);
+        assertThat(Thread.interrupted()).isFalse();
     }
 
     @Test
@@ -158,8 +159,8 @@ class CombinedTimeoutTests {
         List<EventMessage<?>> batch = generateBatch(2);
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
         await().until(uow::isRolledBack);
-        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
-        assertFalse(Thread.interrupted());
+        assertThat(uow.getExecutionResult().getExceptionResult()).isInstanceOf(SophonTimeoutException.class);
+        assertThat(Thread.interrupted()).isFalse();
     }
 
     @Test
@@ -175,8 +176,8 @@ class CombinedTimeoutTests {
         BatchingUnitOfWork<?> uow = doExecution(batch, interceptor, mhm);
 
         await().until(uow::isRolledBack);
-        assertInstanceOf(InterruptedException.class, uow.getExecutionResult().getExceptionResult());
-        assertTrue(Thread.interrupted());
+        assertThat(uow.getExecutionResult().getExceptionResult()).isInstanceOf(InterruptedException.class);
+        assertThat(Thread.interrupted()).isTrue();
     }
 
     private List<EventMessage<?>> generateBatch(int size) {

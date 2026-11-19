@@ -17,8 +17,7 @@
 
 package org.sophonhq.sophon.common.property;
 
-
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 public class UniformPropertyAccessStrategyTest
         extends AbstractPropertyAccessStrategyTest<UniformPropertyAccessStrategyTest.TestMessage> {

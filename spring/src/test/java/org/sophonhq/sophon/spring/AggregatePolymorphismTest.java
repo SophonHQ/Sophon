@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.spring;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
@@ -39,7 +39,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 /**
@@ -58,7 +58,7 @@ public class AggregatePolymorphismTest {
     @Test
     void config() {
         List<AggregateConfigurer> configurers = configuration.findModules(AggregateConfigurer.class);
-        assertEquals(3, configurers.size());
+        assertThat(configurers).hasSize(3);
 
         String bId = commandGateway.sendAndWait(new CreateBCommand("123"));
         String cId = commandGateway.sendAndWait(new CreateCCommand("456"));
@@ -71,11 +71,11 @@ public class AggregatePolymorphismTest {
         String fResult = commandGateway.sendAndWait(new FCommand(fId));
         String iResult = commandGateway.sendAndWait(new HCommand(iId));
 
-        assertEquals("B123", bResult);
-        assertEquals("C456", cResult);
-        assertEquals("D789", dResult);
-        assertEquals("F000", fResult);
-        assertEquals("I111", iResult);
+        assertThat(bResult).isEqualTo("B123");
+        assertThat(cResult).isEqualTo("C456");
+        assertThat(dResult).isEqualTo("D789");
+        assertThat(fResult).isEqualTo("F000");
+        assertThat(iResult).isEqualTo("I111");
     }
 
     private static class CreateBCommand {

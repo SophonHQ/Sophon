@@ -26,7 +26,8 @@ import org.sophonhq.sophon.queryhandling.QueryResponseMessage;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ConvertingResponseMessageTest {
 
@@ -38,9 +39,9 @@ class ConvertingResponseMessageTest {
                 ResponseTypes.multipleInstancesOf(String.class),
                 msg);
 
-        assertEquals(List.class, wrapped.getPayloadType());
-        assertEquals(singletonList("Some string result"), wrapped.getPayload());
-        assertEquals("value", wrapped.getMetaData().get("test"));
+        assertThat(wrapped.getPayloadType()).isEqualTo(List.class);
+        assertThat(wrapped.getPayload()).containsExactlyElementsOf(singletonList("Some string result"));
+        assertThat(wrapped.getMetaData()).containsEntry("test", "value");
     }
 
     @Test
@@ -50,7 +51,7 @@ class ConvertingResponseMessageTest {
                 ResponseTypes.multipleInstancesOf(String.class),
                 msg);
 
-        assertEquals(List.class, wrapped.getPayloadType());
-        assertThrows(IllegalPayloadAccessException.class, wrapped::getPayload);
+        assertThat(wrapped.getPayloadType()).isEqualTo(List.class);
+        assertThatThrownBy(wrapped::getPayload).isInstanceOf(IllegalPayloadAccessException.class);
     }
 }

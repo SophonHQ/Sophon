@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.spring.config.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.MessageHandler;
 import org.sophonhq.sophon.messaging.responsetypes.ResponseTypes;
 import org.sophonhq.sophon.queryhandling.GenericQueryMessage;
@@ -31,7 +32,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -52,15 +53,16 @@ class AnnotationQueryHandlerBeanPostProcessorTest {
         Object result1 = testSubject.postProcessBeforeInitialization(new AnnotatedQueryHandler(), "beanName");
         Object postProcessedBean = testSubject.postProcessAfterInitialization(result1, "beanName");
 
-        assertTrue(postProcessedBean instanceof MessageHandler<?>);
-        assertTrue(postProcessedBean instanceof AnnotatedQueryHandler);
+        assertThat(postProcessedBean)
+                .isInstanceOf(MessageHandler.class)
+                .isInstanceOf(AnnotatedQueryHandler.class);
 
         MessageHandler<QueryMessage<?, ?>> queryHandler = (MessageHandler<QueryMessage<?, ?>>) postProcessedBean;
         AnnotatedQueryHandler annotatedQueryHandler = (AnnotatedQueryHandler) postProcessedBean;
         QueryMessage<MyQuery, Integer> myCommand = new GenericQueryMessage<>(new MyQuery(), ResponseTypes.instanceOf(Integer.class));
 
-        assertEquals(0, queryHandler.handle(myCommand));
-        assertEquals(1, annotatedQueryHandler.getInvocationCount());
+        assertThat(queryHandler.handle(myCommand)).isEqualTo(0);
+        assertThat(annotatedQueryHandler.getInvocationCount()).isOne();
     }
 
     @SuppressWarnings({"unchecked"})
@@ -71,15 +73,16 @@ class AnnotationQueryHandlerBeanPostProcessorTest {
         Object result1 = testSubject.postProcessBeforeInitialization(new CustomAnnotatedQueryHandler(), "beanName");
         Object postProcessedBean = testSubject.postProcessAfterInitialization(result1, "beanName");
 
-        assertTrue(postProcessedBean instanceof MessageHandler<?>);
-        assertTrue(postProcessedBean instanceof CustomAnnotatedQueryHandler);
+        assertThat(postProcessedBean)
+                .isInstanceOf(MessageHandler.class)
+                .isInstanceOf(CustomAnnotatedQueryHandler.class);
 
         MessageHandler<QueryMessage<?,?>> queryHandler = (MessageHandler<QueryMessage<?, ?>>) postProcessedBean;
         CustomAnnotatedQueryHandler annotatedQueryHandler = (CustomAnnotatedQueryHandler) postProcessedBean;
         QueryMessage<MyQuery, Integer> myCommand = new GenericQueryMessage<>(new MyQuery(), ResponseTypes.instanceOf(Integer.class));
 
-        assertEquals(0, queryHandler.handle(myCommand));
-        assertEquals(1, annotatedQueryHandler.getInvocationCount());
+        assertThat(queryHandler.handle(myCommand)).isEqualTo(0);
+        assertThat(annotatedQueryHandler.getInvocationCount()).isOne();
     }
 
     @Test
@@ -91,8 +94,8 @@ class AnnotationQueryHandlerBeanPostProcessorTest {
         Object result1 = testSubject.postProcessBeforeInitialization(mockFactoryBean, "beanName");
         Object postProcessedBean = testSubject.postProcessAfterInitialization(mockFactoryBean, "beanName");
 
-        assertSame(mockFactoryBean, result1);
-        assertSame(mockFactoryBean, postProcessedBean);
+        assertThat(result1).isSameAs(mockFactoryBean);
+        assertThat(postProcessedBean).isSameAs(mockFactoryBean);
         // this call leads to problems in Spring Boot 2.6 when post-processing factory beans, so it needs to be avoided
         verify(mockBeanFactory, never()).isSingleton(anyString());
     }

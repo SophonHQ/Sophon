@@ -32,8 +32,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
@@ -53,9 +52,9 @@ class CBORMapperAutoConfigurationTest {
         final Serializer eventSerializer = applicationContext.getBean("serializer", Serializer.class);
         final CBORMapper objectMapper = applicationContext.getBean("defaultSophonCborMapper", CBORMapper.class);
 
-        assertTrue(serializer instanceof JacksonSerializer);
-        assertEquals(objectMapper, ((JacksonSerializer) serializer).getObjectMapper());
-        assertTrue(eventSerializer instanceof JacksonSerializer);
-        assertEquals(objectMapper, ((JacksonSerializer) eventSerializer).getObjectMapper());
+        assertThat(serializer).isInstanceOf(JacksonSerializer.class);
+        assertThat(((JacksonSerializer) serializer).getObjectMapper()).isEqualTo(objectMapper);
+        assertThat(eventSerializer).isInstanceOf(JacksonSerializer.class);
+        assertThat(((JacksonSerializer) eventSerializer).getObjectMapper()).isEqualTo(objectMapper);
     }
 }

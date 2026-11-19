@@ -19,9 +19,8 @@ package org.sophonhq.sophon.common;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Allard Buijze
@@ -36,10 +35,10 @@ class SophonThreadFactoryTest {
         Thread t1 = testSubject.newThread(new NoOpRunnable());
         Thread t2 = testSubject.newThread(new NoOpRunnable());
 
-        assertEquals("test", t1.getThreadGroup().getName());
-        assertEquals("test-0", t1.getName());
-        assertEquals("test-1", t2.getName());
-        assertSame(t1.getThreadGroup(), t2.getThreadGroup(), "Expected only a single ThreadGroup");
+        assertThat(t1.getThreadGroup().getName()).isEqualTo("test");
+        assertThat(t1.getName()).isEqualTo("test-0");
+        assertThat(t2.getName()).isEqualTo("test-1");
+        assertThat(t2.getThreadGroup()).as("Expected only a single ThreadGroup").isSameAs(t1.getThreadGroup());
     }
 
     @Test
@@ -49,10 +48,10 @@ class SophonThreadFactoryTest {
         Thread t1 = testSubject.newThread(new NoOpRunnable());
         Thread t2 = testSubject.newThread(new NoOpRunnable());
 
-        assertEquals("test", t1.getThreadGroup().getName());
-        assertEquals("test-0", t1.getName());
-        assertSame(threadGroup, t1.getThreadGroup(), "Expected only a single ThreadGroup");
-        assertSame(threadGroup, t2.getThreadGroup(), "Expected only a single ThreadGroup");
+        assertThat(t1.getThreadGroup().getName()).isEqualTo("test");
+        assertThat(t1.getName()).isEqualTo("test-0");
+        assertThat(t1.getThreadGroup()).as("Expected only a single ThreadGroup").isSameAs(threadGroup);
+        assertThat(t2.getThreadGroup()).as("Expected only a single ThreadGroup").isSameAs(threadGroup);
     }
 
     @Test
@@ -62,22 +61,22 @@ class SophonThreadFactoryTest {
         Thread t1 = testSubject.newThread(new NoOpRunnable());
         Thread t2 = testSubject.newThread(new NoOpRunnable());
 
-        assertEquals("test", t1.getThreadGroup().getName());
-        assertEquals(Thread.MAX_PRIORITY, t1.getPriority());
-        assertSame(threadGroup, t1.getThreadGroup(), "Expected only a single ThreadGroup");
-        assertSame(threadGroup, t2.getThreadGroup(), "Expected only a single ThreadGroup");
+        assertThat(t1.getThreadGroup().getName()).isEqualTo("test");
+        assertThat(t1.getPriority()).isEqualTo(Thread.MAX_PRIORITY);
+        assertThat(t1.getThreadGroup()).as("Expected only a single ThreadGroup").isSameAs(threadGroup);
+        assertThat(t2.getThreadGroup()).as("Expected only a single ThreadGroup").isSameAs(threadGroup);
     }
 
     @Test
     void rejectsTooHighPriority() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new SophonThreadFactory(Thread.MAX_PRIORITY + 1, new ThreadGroup("")));
+        assertThatThrownBy(() -> new SophonThreadFactory(Thread.MAX_PRIORITY + 1, new ThreadGroup("")))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void rejectsTooLowPriority() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new SophonThreadFactory(Thread.MIN_PRIORITY - 1, new ThreadGroup("")));
+        assertThatThrownBy(() -> new SophonThreadFactory(Thread.MIN_PRIORITY - 1, new ThreadGroup("")))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static class NoOpRunnable implements Runnable {

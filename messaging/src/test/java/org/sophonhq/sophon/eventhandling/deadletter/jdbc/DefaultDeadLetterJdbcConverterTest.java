@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.DateTimeUtils;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -38,7 +39,8 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -84,13 +86,13 @@ class DefaultDeadLetterJdbcConverterTest {
         JdbcDeadLetter<?> result = testSubject.convertToLetter(resultSet);
 
         EventMessage<?> resultMessage = result.message();
-        assertTrue(resultMessage instanceof GenericTrackedDomainEventMessage);
+        assertThat(resultMessage).isInstanceOf(GenericTrackedDomainEventMessage.class);
         GenericTrackedDomainEventMessage<?> castedResultMessage = (GenericTrackedDomainEventMessage<?>) resultMessage;
         TrackingToken resultToken = castedResultMessage.trackingToken();
-        assertEquals(TRACKING_TOKEN, resultToken);
-        assertEquals(AGGREGATE_ID, castedResultMessage.getAggregateIdentifier());
-        assertEquals(AGGREGATE_TYPE, castedResultMessage.getType());
-        assertEquals(SEQ_NO, castedResultMessage.getSequenceNumber());
+        assertThat(resultToken).isEqualTo(TRACKING_TOKEN);
+        assertThat(castedResultMessage.getAggregateIdentifier()).isEqualTo(AGGREGATE_ID);
+        assertThat(castedResultMessage.getType()).isEqualTo(AGGREGATE_TYPE);
+        assertThat(castedResultMessage.getSequenceNumber()).isEqualTo(SEQ_NO);
     }
 
     @Test
@@ -103,8 +105,8 @@ class DefaultDeadLetterJdbcConverterTest {
         JdbcDeadLetter<?> result = testSubject.convertToLetter(resultSet);
 
         EventMessage<?> resultMessage = result.message();
-        assertTrue(resultMessage instanceof GenericTrackedEventMessage);
-        assertEquals(TRACKING_TOKEN, ((GenericTrackedEventMessage<?>) resultMessage).trackingToken());
+        assertThat(resultMessage).isInstanceOf(GenericTrackedEventMessage.class);
+        assertThat(((GenericTrackedEventMessage<?>) resultMessage).trackingToken()).isEqualTo(TRACKING_TOKEN);
     }
 
     @Test
@@ -117,11 +119,11 @@ class DefaultDeadLetterJdbcConverterTest {
         JdbcDeadLetter<?> result = testSubject.convertToLetter(resultSet);
 
         EventMessage<?> resultMessage = result.message();
-        assertTrue(resultMessage instanceof GenericDomainEventMessage);
+        assertThat(resultMessage).isInstanceOf(GenericDomainEventMessage.class);
         GenericDomainEventMessage<?> castedResultMessage = (GenericDomainEventMessage<?>) resultMessage;
-        assertEquals(AGGREGATE_ID, castedResultMessage.getAggregateIdentifier());
-        assertEquals(AGGREGATE_TYPE, castedResultMessage.getType());
-        assertEquals(SEQ_NO, castedResultMessage.getSequenceNumber());
+        assertThat(castedResultMessage.getAggregateIdentifier()).isEqualTo(AGGREGATE_ID);
+        assertThat(castedResultMessage.getType()).isEqualTo(AGGREGATE_TYPE);
+        assertThat(castedResultMessage.getSequenceNumber()).isEqualTo(SEQ_NO);
     }
 
     @Test
@@ -133,7 +135,7 @@ class DefaultDeadLetterJdbcConverterTest {
 
         JdbcDeadLetter<?> result = testSubject.convertToLetter(resultSet);
 
-        assertTrue(result.message() instanceof GenericEventMessage);
+        assertThat(result.message()).isInstanceOf(GenericEventMessage.class);
     }
 
     @Test
@@ -146,10 +148,10 @@ class DefaultDeadLetterJdbcConverterTest {
         JdbcDeadLetter<?> result = testSubject.convertToLetter(resultSet);
 
         Optional<Cause> optionalCause = result.cause();
-        assertTrue(optionalCause.isPresent());
+        assertThat(optionalCause).isPresent();
         Cause resultCause = optionalCause.get();
-        assertEquals(CAUSE_TYPE, resultCause.type());
-        assertEquals(CAUSE_MESSAGE, resultCause.message());
+        assertThat(resultCause.type()).isEqualTo(CAUSE_TYPE);
+        assertThat(resultCause.message()).isEqualTo(CAUSE_MESSAGE);
     }
 
     @Test
@@ -161,7 +163,7 @@ class DefaultDeadLetterJdbcConverterTest {
 
         JdbcDeadLetter<?> result = testSubject.convertToLetter(resultSet);
 
-        assertFalse(result.cause().isPresent());
+        assertThat(result.cause()).isNotPresent();
     }
 
     private ResultSet mockedResultSet(boolean withToken, boolean isDomainEvent, boolean withCause) throws SQLException {
@@ -217,21 +219,23 @@ class DefaultDeadLetterJdbcConverterTest {
     void buildWithNullSchemaThrowsSophonConfigurationException() {
         DefaultDeadLetterJdbcConverter.Builder<?> testBuilder = DefaultDeadLetterJdbcConverter.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.schema(null));
+        assertThatThrownBy(() -> testBuilder.schema(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullGenericSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterJdbcConverter.Builder<?> testBuilder = DefaultDeadLetterJdbcConverter.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.genericSerializer(null));
+        assertThatThrownBy(() -> testBuilder.genericSerializer(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullEventSerializerThrowsSophonConfigurationException() {
         DefaultDeadLetterJdbcConverter.Builder<?> testBuilder = DefaultDeadLetterJdbcConverter.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventSerializer(null));
+        assertThatThrownBy(() -> testBuilder.eventSerializer(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -240,7 +244,7 @@ class DefaultDeadLetterJdbcConverterTest {
                 DefaultDeadLetterJdbcConverter.builder()
                                               .eventSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -249,6 +253,6 @@ class DefaultDeadLetterJdbcConverterTest {
                 DefaultDeadLetterJdbcConverter.builder()
                                               .genericSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 }

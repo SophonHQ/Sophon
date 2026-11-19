@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.springboot;
 
 import com.thoughtworks.xstream.XStream;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngine;
 import org.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
 import org.sophonhq.sophon.modelling.command.Repository;
@@ -31,7 +32,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.common.StringUtils.lowerCaseFirstCharacterOf;
 
 /**
@@ -53,15 +54,15 @@ class RepositoryWiringTest {
         testApplicationContext.withUserConfiguration(SingleAggregateContext.class).run(context -> {
             SingleAggregateContext.ExternalCommandHandlerForAggregateOne externalHandler =
                     context.getBean(SingleAggregateContext.ExternalCommandHandlerForAggregateOne.class);
-            assertNotNull(externalHandler);
+            assertThat(externalHandler).isNotNull();
 
             Repository<SingleAggregateContext.AggregateOne> repositoryFromHandler = externalHandler.getRepository();
-            assertNotNull(repositoryFromHandler);
+            assertThat(repositoryFromHandler).isNotNull();
             Object repositoryFromContext =
                     context.getBean(repositoryBeanName(SingleAggregateContext.AggregateOne.class));
-            assertNotNull(repositoryFromContext);
+            assertThat(repositoryFromContext).isNotNull();
 
-            assertEquals(repositoryFromHandler, repositoryFromContext);
+            assertThat(repositoryFromContext).isEqualTo(repositoryFromHandler);
         });
     }
 
@@ -70,31 +71,31 @@ class RepositoryWiringTest {
         testApplicationContext.withUserConfiguration(SeveralAggregatesContext.class).run(context -> {
             SeveralAggregatesContext.ExternalCommandHandlerWiringThroughGenerics externalHandler =
                     context.getBean(SeveralAggregatesContext.ExternalCommandHandlerWiringThroughGenerics.class);
-            assertNotNull(externalHandler);
+            assertThat(externalHandler).isNotNull();
 
             Repository<SeveralAggregatesContext.AggregateOne> repositoryOneFromHandler =
                     externalHandler.getRepositoryOne();
-            assertNotNull(repositoryOneFromHandler);
+            assertThat(repositoryOneFromHandler).isNotNull();
             Object repositoryOneFromContext =
                     context.getBean(repositoryBeanName(SeveralAggregatesContext.AggregateOne.class));
-            assertNotNull(repositoryOneFromContext);
-            assertEquals(repositoryOneFromHandler, repositoryOneFromContext);
+            assertThat(repositoryOneFromContext).isNotNull();
+            assertThat(repositoryOneFromContext).isEqualTo(repositoryOneFromHandler);
 
             Repository<SeveralAggregatesContext.AggregateTwo> repositoryTwoFromHandler =
                     externalHandler.getRepositoryTwo();
-            assertNotNull(repositoryTwoFromHandler);
+            assertThat(repositoryTwoFromHandler).isNotNull();
             Object repositoryTwoFromContext =
                     context.getBean(repositoryBeanName(SeveralAggregatesContext.AggregateTwo.class));
-            assertNotNull(repositoryTwoFromContext);
-            assertEquals(repositoryTwoFromHandler, repositoryTwoFromContext);
+            assertThat(repositoryTwoFromContext).isNotNull();
+            assertThat(repositoryTwoFromContext).isEqualTo(repositoryTwoFromHandler);
 
             Repository<SeveralAggregatesContext.AggregateThree> repositoryThreeFromHandler =
                     externalHandler.getRepositoryThree();
-            assertNotNull(repositoryThreeFromHandler);
+            assertThat(repositoryThreeFromHandler).isNotNull();
             Object repositoryThreeFromContext =
                     context.getBean(repositoryBeanName(SeveralAggregatesContext.AggregateThree.class));
-            assertNotNull(repositoryThreeFromContext);
-            assertEquals(repositoryThreeFromHandler, repositoryThreeFromContext);
+            assertThat(repositoryThreeFromContext).isNotNull();
+            assertThat(repositoryThreeFromContext).isEqualTo(repositoryThreeFromHandler);
         });
     }
 
@@ -103,28 +104,28 @@ class RepositoryWiringTest {
         testApplicationContext.withUserConfiguration(SeveralAggregatesContext.class).run(context -> {
             SeveralAggregatesContext.ExternalCommandHandlerWiringThroughBeanNames externalHandler =
                     context.getBean(SeveralAggregatesContext.ExternalCommandHandlerWiringThroughBeanNames.class);
-            assertNotNull(externalHandler);
+            assertThat(externalHandler).isNotNull();
 
             Repository<?> repositoryOneFromHandler = externalHandler.getRepositoryOne();
-            assertNotNull(repositoryOneFromHandler);
+            assertThat(repositoryOneFromHandler).isNotNull();
             Object repositoryOneFromContext =
                     context.getBean(repositoryBeanName(SeveralAggregatesContext.AggregateOne.class));
-            assertNotNull(repositoryOneFromContext);
-            assertEquals(repositoryOneFromHandler, repositoryOneFromContext);
+            assertThat(repositoryOneFromContext).isNotNull();
+            assertThat(repositoryOneFromContext).isEqualTo(repositoryOneFromHandler);
 
             Repository<?> repositoryTwoFromHandler = externalHandler.getRepositoryTwo();
-            assertNotNull(repositoryTwoFromHandler);
+            assertThat(repositoryTwoFromHandler).isNotNull();
             Object repositoryTwoFromContext =
                     context.getBean(repositoryBeanName(SeveralAggregatesContext.AggregateTwo.class));
-            assertNotNull(repositoryTwoFromContext);
-            assertEquals(repositoryTwoFromHandler, repositoryTwoFromContext);
+            assertThat(repositoryTwoFromContext).isNotNull();
+            assertThat(repositoryTwoFromContext).isEqualTo(repositoryTwoFromHandler);
 
             Repository<?> repositoryThreeFromHandler = externalHandler.getRepositoryThree();
-            assertNotNull(repositoryThreeFromHandler);
+            assertThat(repositoryThreeFromHandler).isNotNull();
             Object repositoryThreeFromContext =
                     context.getBean(repositoryBeanName(SeveralAggregatesContext.AggregateThree.class));
-            assertNotNull(repositoryThreeFromContext);
-            assertEquals(repositoryThreeFromHandler, repositoryThreeFromContext);
+            assertThat(repositoryThreeFromContext).isNotNull();
+            assertThat(repositoryThreeFromContext).isEqualTo(repositoryThreeFromHandler);
         });
     }
 

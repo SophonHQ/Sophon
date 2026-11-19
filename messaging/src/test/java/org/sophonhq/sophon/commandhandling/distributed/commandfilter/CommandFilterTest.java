@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.commandhandling.distributed.commandfilter;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.messaging.GenericMessage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the filtering process of the {@link AcceptAll}, {@link DenyAll}, {@link CommandNameFilter} and
@@ -36,20 +36,20 @@ class CommandFilterTest {
     void acceptAll() {
         CommandMessage<Object> testCommand = new GenericCommandMessage<>(new Object());
 
-        assertTrue(AcceptAll.INSTANCE.matches(testCommand));
-        assertFalse(AcceptAll.INSTANCE.negate().matches(testCommand));
-        assertTrue(AcceptAll.INSTANCE.or(DenyAll.INSTANCE).matches(testCommand));
-        assertFalse(AcceptAll.INSTANCE.and(DenyAll.INSTANCE).matches(testCommand));
+        assertThat(AcceptAll.INSTANCE.matches(testCommand)).isTrue();
+        assertThat(AcceptAll.INSTANCE.negate().matches(testCommand)).isFalse();
+        assertThat(AcceptAll.INSTANCE.or(DenyAll.INSTANCE).matches(testCommand)).isTrue();
+        assertThat(AcceptAll.INSTANCE.and(DenyAll.INSTANCE).matches(testCommand)).isFalse();
     }
 
     @Test
     void denyAll() {
         CommandMessage<Object> testCommand = new GenericCommandMessage<>(new Object());
 
-        assertFalse(DenyAll.INSTANCE.matches(testCommand));
-        assertTrue(DenyAll.INSTANCE.negate().matches(testCommand));
-        assertTrue(DenyAll.INSTANCE.or(AcceptAll.INSTANCE).matches(testCommand));
-        assertFalse(DenyAll.INSTANCE.and(AcceptAll.INSTANCE).matches(testCommand));
+        assertThat(DenyAll.INSTANCE.matches(testCommand)).isFalse();
+        assertThat(DenyAll.INSTANCE.negate().matches(testCommand)).isTrue();
+        assertThat(DenyAll.INSTANCE.or(AcceptAll.INSTANCE).matches(testCommand)).isTrue();
+        assertThat(DenyAll.INSTANCE.and(AcceptAll.INSTANCE).matches(testCommand)).isFalse();
     }
 
     @Test
@@ -60,26 +60,26 @@ class CommandFilterTest {
         CommandNameFilter filterAcceptable = new CommandNameFilter("acceptable");
         CommandNameFilter filterOther = new CommandNameFilter("other");
 
-        assertTrue(filterAcceptable.matches(testCommand));
-        assertFalse(filterAcceptable.negate().matches(testCommand));
+        assertThat(filterAcceptable.matches(testCommand)).isTrue();
+        assertThat(filterAcceptable.negate().matches(testCommand)).isFalse();
 
-        assertFalse(filterOther.matches(testCommand));
-        assertTrue(filterOther.negate().matches(testCommand));
+        assertThat(filterOther.matches(testCommand)).isFalse();
+        assertThat(filterOther.negate().matches(testCommand)).isTrue();
 
-        assertTrue(filterOther.or(filterAcceptable).matches(testCommand));
-        assertTrue(filterAcceptable.or(filterOther).matches(testCommand));
-        assertFalse(filterOther.and(filterAcceptable).matches(testCommand));
-        assertFalse(filterAcceptable.and(filterOther).matches(testCommand));
+        assertThat(filterOther.or(filterAcceptable).matches(testCommand)).isTrue();
+        assertThat(filterAcceptable.or(filterOther).matches(testCommand)).isTrue();
+        assertThat(filterOther.and(filterAcceptable).matches(testCommand)).isFalse();
+        assertThat(filterAcceptable.and(filterOther).matches(testCommand)).isFalse();
 
-        assertFalse(filterOther.or(DenyAll.INSTANCE).matches(testCommand));
-        assertTrue(filterOther.or(AcceptAll.INSTANCE).matches(testCommand));
-        assertFalse(filterOther.and(DenyAll.INSTANCE).matches(testCommand));
-        assertFalse(filterOther.and(AcceptAll.INSTANCE).matches(testCommand));
+        assertThat(filterOther.or(DenyAll.INSTANCE).matches(testCommand)).isFalse();
+        assertThat(filterOther.or(AcceptAll.INSTANCE).matches(testCommand)).isTrue();
+        assertThat(filterOther.and(DenyAll.INSTANCE).matches(testCommand)).isFalse();
+        assertThat(filterOther.and(AcceptAll.INSTANCE).matches(testCommand)).isFalse();
 
-        assertTrue(filterAcceptable.or(DenyAll.INSTANCE).matches(testCommand));
-        assertTrue(filterAcceptable.or(AcceptAll.INSTANCE).matches(testCommand));
-        assertFalse(filterAcceptable.and(DenyAll.INSTANCE).matches(testCommand));
-        assertTrue(filterAcceptable.and(AcceptAll.INSTANCE).matches(testCommand));
+        assertThat(filterAcceptable.or(DenyAll.INSTANCE).matches(testCommand)).isTrue();
+        assertThat(filterAcceptable.or(AcceptAll.INSTANCE).matches(testCommand)).isTrue();
+        assertThat(filterAcceptable.and(DenyAll.INSTANCE).matches(testCommand)).isFalse();
+        assertThat(filterAcceptable.and(AcceptAll.INSTANCE).matches(testCommand)).isTrue();
     }
 
     @Test
@@ -90,25 +90,25 @@ class CommandFilterTest {
         DenyCommandNameFilter filterAcceptable = new DenyCommandNameFilter("acceptable");
         DenyCommandNameFilter filterOther = new DenyCommandNameFilter("other");
 
-        assertFalse(filterAcceptable.matches(testCommand));
-        assertTrue(filterAcceptable.negate().matches(testCommand));
+        assertThat(filterAcceptable.matches(testCommand)).isFalse();
+        assertThat(filterAcceptable.negate().matches(testCommand)).isTrue();
 
-        assertTrue(filterOther.matches(testCommand));
-        assertFalse(filterOther.negate().matches(testCommand));
+        assertThat(filterOther.matches(testCommand)).isTrue();
+        assertThat(filterOther.negate().matches(testCommand)).isFalse();
 
-        assertTrue(filterOther.or(filterAcceptable).matches(testCommand));
-        assertTrue(filterAcceptable.or(filterOther).matches(testCommand));
-        assertFalse(filterOther.and(filterAcceptable).matches(testCommand));
-        assertFalse(filterAcceptable.and(filterOther).matches(testCommand));
+        assertThat(filterOther.or(filterAcceptable).matches(testCommand)).isTrue();
+        assertThat(filterAcceptable.or(filterOther).matches(testCommand)).isTrue();
+        assertThat(filterOther.and(filterAcceptable).matches(testCommand)).isFalse();
+        assertThat(filterAcceptable.and(filterOther).matches(testCommand)).isFalse();
 
-        assertTrue(filterOther.or(DenyAll.INSTANCE).matches(testCommand));
-        assertTrue(filterOther.or(AcceptAll.INSTANCE).matches(testCommand));
-        assertFalse(filterOther.and(DenyAll.INSTANCE).matches(testCommand));
-        assertTrue(filterOther.and(AcceptAll.INSTANCE).matches(testCommand));
+        assertThat(filterOther.or(DenyAll.INSTANCE).matches(testCommand)).isTrue();
+        assertThat(filterOther.or(AcceptAll.INSTANCE).matches(testCommand)).isTrue();
+        assertThat(filterOther.and(DenyAll.INSTANCE).matches(testCommand)).isFalse();
+        assertThat(filterOther.and(AcceptAll.INSTANCE).matches(testCommand)).isTrue();
 
-        assertFalse(filterAcceptable.or(DenyAll.INSTANCE).matches(testCommand));
-        assertTrue(filterAcceptable.or(AcceptAll.INSTANCE).matches(testCommand));
-        assertFalse(filterAcceptable.and(DenyAll.INSTANCE).matches(testCommand));
-        assertFalse(filterAcceptable.and(AcceptAll.INSTANCE).matches(testCommand));
+        assertThat(filterAcceptable.or(DenyAll.INSTANCE).matches(testCommand)).isFalse();
+        assertThat(filterAcceptable.or(AcceptAll.INSTANCE).matches(testCommand)).isTrue();
+        assertThat(filterAcceptable.and(DenyAll.INSTANCE).matches(testCommand)).isFalse();
+        assertThat(filterAcceptable.and(AcceptAll.INSTANCE).matches(testCommand)).isFalse();
     }
 }

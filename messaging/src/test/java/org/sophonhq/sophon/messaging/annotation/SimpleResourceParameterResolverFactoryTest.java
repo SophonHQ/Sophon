@@ -26,7 +26,7 @@ import org.sophonhq.sophon.messaging.Message;
 import java.lang.reflect.Method;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SimpleResourceParameterResolverFactoryTest {
 
@@ -73,8 +73,8 @@ class SimpleResourceParameterResolverFactoryTest {
         ParameterResolver resolver =
                 testSubject.createInstance(messageHandlingMethodWithResourceParameter, messageHandlingMethodWithResourceParameter.getParameters(), 1);
         final EventMessage<Object> eventMessage = GenericEventMessage.asEventMessage("test");
-        assertTrue(resolver.matches(eventMessage));
-        assertEquals(TEST_RESOURCE, resolver.resolveParameterValue(eventMessage));
+        assertThat(resolver.matches(eventMessage)).isTrue();
+        assertThat(resolver.resolveParameterValue(eventMessage)).isEqualTo(TEST_RESOURCE);
     }
 
     @SuppressWarnings("unchecked")
@@ -83,21 +83,21 @@ class SimpleResourceParameterResolverFactoryTest {
         ParameterResolver resolver =
                 testSubject.createInstance(messageHandlingMethodWithResource2Parameter, messageHandlingMethodWithResource2Parameter.getParameters(), 1);
         final EventMessage<Object> eventMessage = GenericEventMessage.asEventMessage("test");
-        assertTrue(resolver.matches(eventMessage));
-        assertEquals(TEST_RESOURCE2, resolver.resolveParameterValue(eventMessage));
+        assertThat(resolver.matches(eventMessage)).isTrue();
+        assertThat(resolver.resolveParameterValue(eventMessage)).isEqualTo(TEST_RESOURCE2);
     }
 
     @Test
     void ignoredWhenMessageHandlingMethodHasNoResourceParameter() {
         ParameterResolver resolver =
                 testSubject.createInstance(messageHandlingMethodWithoutResourceParameter, messageHandlingMethodWithoutResourceParameter.getParameters(), 0);
-        assertNull(resolver);
+        assertThat(resolver).isNull();
     }
 
     @Test
     void ignoredWhenMessageHandlingMethodHasResourceParameterOfDifferentType() {
         ParameterResolver resolver = testSubject.createInstance(messageHandlingMethodWithResourceParameterOfDifferentType, messageHandlingMethodWithResourceParameterOfDifferentType.getParameters(), 1);
-        assertNull(resolver);
+        assertThat(resolver).isNull();
     }
 
 }

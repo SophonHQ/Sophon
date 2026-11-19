@@ -19,7 +19,7 @@ package org.sophonhq.sophon.eventhandling.deadletter.jpa;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GapAwareTrackingToken;
@@ -45,7 +45,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class EventMessageDeadLetterJpaConverterTest {
 
@@ -97,8 +97,8 @@ class EventMessageDeadLetterJpaConverterTest {
                 eventSerializer
         ), Instant::now);
         DeadLetterEventEntry deadLetterEventEntry = converter.convert(message, eventSerializer, genericSerializer);
-        assertNotNull(deadLetterEventEntry);
-        assertEquals("{'my-wrong-payload':'wadawd'}", new String(deadLetterEventEntry.getPayload().getData()));
+        assertThat(deadLetterEventEntry).isNotNull();
+        assertThat(new String(deadLetterEventEntry.getPayload().getData())).isEqualTo("{'my-wrong-payload':'wadawd'}");
     }
 
     @Test
@@ -135,15 +135,15 @@ class EventMessageDeadLetterJpaConverterTest {
                 null, null, null, null, null, null, null, null, null
         );
 
-        assertTrue(converter.canConvert(legacyEntry));
+        assertThat(converter.canConvert(legacyEntry)).isTrue();
     }
 
     private void testConversion(EventMessage<?> message) {
-        assertTrue(converter.canConvert(message));
+        assertThat(converter.canConvert(message)).isTrue();
         DeadLetterEventEntry deadLetterEventEntry = converter.convert(message, eventSerializer, genericSerializer);
 
         assertCorrectlyMapped(message, deadLetterEventEntry);
-        assertTrue(converter.canConvert(deadLetterEventEntry));
+        assertThat(converter.canConvert(deadLetterEventEntry)).isTrue();
 
         EventMessage<?> restoredEventMessage =
                 converter.convert(deadLetterEventEntry, eventSerializer, genericSerializer);
@@ -151,59 +151,61 @@ class EventMessageDeadLetterJpaConverterTest {
     }
 
     private void assertCorrectlyRestored(EventMessage<?> expected, EventMessage<?> actual) {
-        assertEquals(expected.getIdentifier(), actual.getIdentifier());
-        assertEquals(expected.getTimestamp(), actual.getTimestamp());
-        assertEquals(expected.getPayload(), actual.getPayload());
-        assertEquals(expected.getPayloadType(), actual.getPayloadType());
-        assertEquals(expected.getMetaData(), actual.getMetaData());
+        assertThat(actual.getIdentifier()).isEqualTo(expected.getIdentifier());
+        assertThat(actual.getTimestamp()).isEqualTo(expected.getTimestamp());
+        assertThat(actual.getPayload()).isEqualTo(expected.getPayload());
+        assertThat(actual.getPayloadType()).isEqualTo(expected.getPayloadType());
+        assertThat(actual.getMetaData()).isEqualTo(expected.getMetaData());
 
-        assertEquals(expected.getClass(), actual.getClass());
+        assertThat(actual.getClass()).isEqualTo(expected.getClass());
         if (expected instanceof DomainEventMessage) {
             DomainEventMessage<?> domainExpected = (DomainEventMessage<?>) expected;
             DomainEventMessage<?> domainActual = (DomainEventMessage<?>) actual;
 
-            assertEquals(domainExpected.getType(), domainActual.getType());
-            assertEquals(domainExpected.getAggregateIdentifier(), domainActual.getAggregateIdentifier());
-            assertEquals(domainExpected.getSequenceNumber(), domainActual.getSequenceNumber());
+            assertThat(domainActual.getType()).isEqualTo(domainExpected.getType());
+            assertThat(domainActual.getAggregateIdentifier()).isEqualTo(domainExpected.getAggregateIdentifier());
+            assertThat(domainActual.getSequenceNumber()).isEqualTo(domainExpected.getSequenceNumber());
         }
         if (expected instanceof TrackedEventMessage) {
             TrackedEventMessage<?> trackedExpected = (TrackedEventMessage<?>) expected;
             TrackedEventMessage<?> trackedActual = (TrackedEventMessage<?>) actual;
 
-            assertEquals(trackedExpected.trackingToken(), trackedActual.trackingToken());
+            assertThat(trackedActual.trackingToken()).isEqualTo(trackedExpected.trackingToken());
         }
     }
 
     private void assertCorrectlyMapped(EventMessage<?> eventMessage, DeadLetterEventEntry deadLetterEventEntry) {
-        assertEquals(eventMessage.getIdentifier(), deadLetterEventEntry.getEventIdentifier());
-        assertEquals(eventMessage.getTimestamp().toString(), deadLetterEventEntry.getTimeStamp());
-        assertEquals(eventMessage.getPayload().getClass().getName(),
-                     deadLetterEventEntry.getPayload().getType().getName());
-        assertEquals(PAYLOAD_REVISION, deadLetterEventEntry.getPayload().getType().getRevision());
-        assertEquals(eventSerializer.serialize(event, String.class).getData(),
-                     new String(deadLetterEventEntry.getPayload().getData()));
-        assertEquals(MetaData.class.getName(), deadLetterEventEntry.getMetaData().getType().getName());
-        assertEquals(eventSerializer.serialize(metaData, String.class).getData(),
-                     new String(deadLetterEventEntry.getMetaData().getData()));
+        assertThat(deadLetterEventEntry.getEventIdentifier()).isEqualTo(eventMessage.getIdentifier());
+        assertThat(deadLetterEventEntry.getTimeStamp()).isEqualTo(eventMessage.getTimestamp().toString());
+        assertThat(deadLetterEventEntry.getPayload().getType().getName())
+                .isEqualTo(eventMessage.getPayload().getClass().getName());
+        assertThat(deadLetterEventEntry.getPayload().getType().getRevision()).isEqualTo(PAYLOAD_REVISION);
+        assertThat(new String(deadLetterEventEntry.getPayload().getData()))
+                .isEqualTo(eventSerializer.serialize(event, String.class).getData());
+        assertThat(deadLetterEventEntry.getMetaData().getType().getName()).isEqualTo(MetaData.class.getName());
+        assertThat(new String(deadLetterEventEntry.getMetaData().getData()))
+                .isEqualTo(eventSerializer.serialize(metaData, String.class).getData());
 
         if (eventMessage instanceof DomainEventMessage) {
             DomainEventMessage<?> domainEventMessage = (DomainEventMessage<?>) eventMessage;
-            assertEquals(domainEventMessage.getType(), deadLetterEventEntry.getType());
-            assertEquals(domainEventMessage.getAggregateIdentifier(), deadLetterEventEntry.getAggregateIdentifier());
-            assertEquals(domainEventMessage.getSequenceNumber(), deadLetterEventEntry.getSequenceNumber());
+            assertThat(deadLetterEventEntry.getType()).isEqualTo(domainEventMessage.getType());
+            assertThat(deadLetterEventEntry.getAggregateIdentifier())
+                    .isEqualTo(domainEventMessage.getAggregateIdentifier());
+            assertThat(deadLetterEventEntry.getSequenceNumber()).isEqualTo(domainEventMessage.getSequenceNumber());
         } else {
-            assertNull(deadLetterEventEntry.getType());
-            assertNull(deadLetterEventEntry.getAggregateIdentifier());
-            assertNull(deadLetterEventEntry.getSequenceNumber());
+            assertThat(deadLetterEventEntry.getType()).isNull();
+            assertThat(deadLetterEventEntry.getAggregateIdentifier()).isNull();
+            assertThat(deadLetterEventEntry.getSequenceNumber()).isNull();
         }
         if (eventMessage instanceof TrackedEventMessage) {
             TrackedEventMessage<?> trackedEventMessage = (TrackedEventMessage<?>) eventMessage;
-            assertEquals(trackedEventMessage.trackingToken().getClass().getName(),
-                         deadLetterEventEntry.getTrackingToken().getType().getName());
-            assertEquals(genericSerializer.serialize(trackedEventMessage.trackingToken(), String.class).getData(),
-                         new String(deadLetterEventEntry.getTrackingToken().getData()));
+            assertThat(deadLetterEventEntry.getTrackingToken().getType().getName())
+                    .isEqualTo(trackedEventMessage.trackingToken().getClass().getName());
+            assertThat(new String(deadLetterEventEntry.getTrackingToken().getData()))
+                    .isEqualTo(genericSerializer.serialize(trackedEventMessage.trackingToken(), String.class)
+                                                .getData());
         } else {
-            assertNull(deadLetterEventEntry.getTrackingToken());
+            assertThat(deadLetterEventEntry.getTrackingToken()).isNull();
         }
     }
 

@@ -17,9 +17,9 @@
 
 package org.sophonhq.sophon.messaging;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link HandlerExecutionException}.
@@ -30,42 +30,42 @@ class HandlerExecutionExceptionTest {
     void resolveDetailsFromNestedExecutionException() {
         Exception exception = new RuntimeException(new StubHandlerExecutionException("test", null, "Details!"));
 
-        assertEquals("Details!", HandlerExecutionException.resolveDetails(exception).orElse(null));
+        assertThat(HandlerExecutionException.resolveDetails(exception).orElse(null)).isEqualTo("Details!");
     }
 
     @Test
     void resolveDetailsFromExecutionException() {
         Exception exception = new StubHandlerExecutionException("test", null, "Details!");
 
-        assertEquals("Details!", HandlerExecutionException.resolveDetails(exception).orElse(null));
+        assertThat(HandlerExecutionException.resolveDetails(exception).orElse(null)).isEqualTo("Details!");
     }
 
     @Test
     void resolveDetailsFromNull() {
-        assertFalse(HandlerExecutionException.resolveDetails(null).isPresent());
+        assertThat(HandlerExecutionException.resolveDetails(null)).isEmpty();
     }
 
     @Test
     void resolveDetailsFromRuntimeException() {
-        assertFalse(HandlerExecutionException.resolveDetails(new RuntimeException()).isPresent());
+        assertThat(HandlerExecutionException.resolveDetails(new RuntimeException())).isEmpty();
     }
 
     @Test
     void validatePresenceOfStackTraceWithWritableStackTraceSetting() {
         Exception exception = new StubHandlerExecutionException("Some message");
-        assertEquals(0, exception.getStackTrace().length);
+        assertThat(exception.getStackTrace()).isEmpty();
 
         exception = new StubHandlerExecutionException("Some message", new RuntimeException());
-        assertEquals(0, exception.getStackTrace().length);
+        assertThat(exception.getStackTrace()).isEmpty();
 
         exception = new StubHandlerExecutionException("Some message", new RuntimeException(), "Some details");
-        assertEquals(0, exception.getStackTrace().length);
+        assertThat(exception.getStackTrace()).isEmpty();
 
         exception = new StubHandlerExecutionException("Some message", new RuntimeException(), "Some details", false);
-        assertEquals(0, exception.getStackTrace().length);
+        assertThat(exception.getStackTrace()).isEmpty();
 
         exception = new StubHandlerExecutionException("Some message", new RuntimeException(), "Some details", true);
-        assertTrue(exception.getStackTrace().length > 0);
+        assertThat(exception.getStackTrace().length).isGreaterThan(0);
     }
 
     private static class StubHandlerExecutionException extends HandlerExecutionException {

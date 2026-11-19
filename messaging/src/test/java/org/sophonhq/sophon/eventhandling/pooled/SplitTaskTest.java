@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventhandling.pooled;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.eventhandling.*;
 import org.sophonhq.sophon.eventhandling.tokenstore.TokenStore;
@@ -28,7 +29,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -80,8 +82,8 @@ class SplitTaskTest {
                 testTokenToSplit, PROCESSOR_NAME, expectedSplit.getSegment().getSegmentId()
         );
         verify(tokenStore).releaseClaim(PROCESSOR_NAME, expectedOriginal.getSegment().getSegmentId());
-        assertTrue(result.isDone());
-        assertTrue(result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.get()).isTrue();
     }
 
     @Test
@@ -103,8 +105,8 @@ class SplitTaskTest {
                 testTokenToSplit, PROCESSOR_NAME, expectedSplit.getSegment().getSegmentId()
         );
         verify(tokenStore).releaseClaim(PROCESSOR_NAME, expectedOriginal.getSegment().getSegmentId());
-        assertTrue(result.isDone());
-        assertTrue(result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.get()).isTrue();
     }
 
     @Test
@@ -126,8 +128,8 @@ class SplitTaskTest {
                 testTokenToSplit, PROCESSOR_NAME, expectedSplit.getSegment().getSegmentId()
         );
         verify(tokenStore).releaseClaim(PROCESSOR_NAME, expectedOriginal.getSegment().getSegmentId());
-        assertTrue(result.isDone());
-        assertTrue(result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.get()).isTrue();
     }
 
     @Test
@@ -138,9 +140,9 @@ class SplitTaskTest {
 
         testSubject.run();
 
-        assertTrue(result.isDone());
-        assertTrue(result.isCompletedExceptionally());
-        assertThrows(ExecutionException.class, () -> result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.isCompletedExceptionally()).isTrue();
+        assertThatThrownBy(() -> result.get()).isInstanceOf(ExecutionException.class);
     }
 
     @Test
@@ -149,15 +151,14 @@ class SplitTaskTest {
 
         testSubject.run();
 
-        assertTrue(result.isDone());
-        assertTrue(result.isCompletedExceptionally());
-        assertThrows(ExecutionException.class, () -> result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.isCompletedExceptionally()).isTrue();
+        assertThatThrownBy(() -> result.get()).isInstanceOf(ExecutionException.class);
     }
 
     @Test
     void description() {
         String result = testSubject.getDescription();
-        assertNotNull(result);
-        assertTrue(result.contains("Split"));
+        assertThat(result).contains("Split");
     }
 }

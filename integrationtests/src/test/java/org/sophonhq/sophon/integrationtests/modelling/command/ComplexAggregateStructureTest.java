@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.integrationtests.modelling.command;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 class ComplexAggregateStructureTest {
@@ -56,10 +56,10 @@ class ComplexAggregateStructureTest {
         bookAggregate.handle(command(new UpdateParagraphCommand("book1", 0, 0, "Hello world")));
         bookAggregate.handle(command(new UpdateParagraphCommand("book1", 0, 1, "Hello world2")));
 
-        assertEquals("Hello world",
-                     bookAggregate.getAggregateRoot().getPages().get(0).getParagraphs().get(0).getText());
-        assertEquals("Hello world2",
-                     bookAggregate.getAggregateRoot().getPages().get(0).getParagraphs().get(1).getText());
+        assertThat(bookAggregate.getAggregateRoot().getPages().get(0).getParagraphs().get(0).getText())
+                .isEqualTo("Hello world");
+        assertThat(bookAggregate.getAggregateRoot().getPages().get(0).getParagraphs().get(1).getText())
+                .isEqualTo("Hello world2");
     }
 
     private CommandMessage<Object> command(Object payload) {

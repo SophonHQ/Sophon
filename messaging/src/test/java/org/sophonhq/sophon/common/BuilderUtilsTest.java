@@ -17,11 +17,11 @@
 
 package org.sophonhq.sophon.common;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.fail;
 import static org.sophonhq.sophon.common.BuilderUtils.*;
 
 /**

@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.springboot;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = SophonHandlerConfigurationTest.Context.class)
@@ -50,8 +50,8 @@ public class SophonHandlerConfigurationTest {
 
     @Test
     void messageRoutedToCorrectMethod() throws Exception {
-        assertEquals("Command: info", commandGateway.send("info").get());
-        assertEquals("Query: info", queryGateway.query("info", String.class).get());
+        assertThat(commandGateway.send("info").get()).isEqualTo("Command: info");
+        assertThat(queryGateway.query("info", String.class).get()).isEqualTo("Query: info");
     }
 
     @SuppressWarnings("unused")

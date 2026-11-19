@@ -17,14 +17,14 @@
 
 package org.sophonhq.sophon.eventhandling.async;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.messaging.MetaData;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -39,14 +39,14 @@ class SequentialPolicyTest {
         Object id2 = testSubject.getSequenceIdentifierFor(newStubDomainEvent(UUID.randomUUID()));
         Object id3 = testSubject.getSequenceIdentifierFor(newStubDomainEvent(UUID.randomUUID()));
 
-        assertEquals(id1, id2);
-        assertEquals(id2, id3);
-        // this can only fail if equals is not implemented correctly
-        assertEquals(id1, id3);
+        assertThat(id2).isEqualTo(id1);
+        assertThat(id3)
+                .isEqualTo(id2)
+                .isEqualTo(id1); // this can only fail if equals is not implemented correctly
     }
 
-    private DomainEventMessage newStubDomainEvent(Object aggregateIdentifier) {
-        return new GenericDomainEventMessage<>("type", aggregateIdentifier.toString(), (long) 0, new Object(),
-                                                     MetaData.emptyInstance());
+    private DomainEventMessage<?> newStubDomainEvent(Object aggregateIdentifier) {
+        return new GenericDomainEventMessage<>("type", aggregateIdentifier.toString(), 0, new Object(),
+                                               MetaData.emptyInstance());
     }
 }

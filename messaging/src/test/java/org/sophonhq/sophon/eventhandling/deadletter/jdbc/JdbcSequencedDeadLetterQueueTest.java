@@ -43,7 +43,8 @@ import java.time.Clock;
 import java.time.Instant;
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.common.DateTimeUtils.formatInstant;
 import static org.sophonhq.sophon.common.DateTimeUtils.parseInstant;
@@ -179,14 +180,14 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                 DeadLetter<? extends EventMessage<?>> actual) {
         EventMessage<?> expectedMessage = expected.message();
         EventMessage<?> actualMessage = actual.message();
-        assertEquals(expectedMessage.getPayload(), actualMessage.getPayload());
-        assertEquals(expectedMessage.getPayloadType(), actualMessage.getPayloadType());
-        assertEquals(expectedMessage.getMetaData(), actualMessage.getMetaData());
-        assertEquals(expectedMessage.getIdentifier(), actualMessage.getIdentifier());
-        assertEquals(expected.cause(), actual.cause());
-        assertEquals(formatExpected(expected.enqueuedAt()), actual.enqueuedAt());
-        assertEquals(formatExpected(expected.lastTouched()), actual.lastTouched());
-        assertEquals(expected.diagnostics(), actual.diagnostics());
+        assertThat(actualMessage.getPayload()).isEqualTo(expectedMessage.getPayload());
+        assertThat(actualMessage.getPayloadType()).isEqualTo(expectedMessage.getPayloadType());
+        assertThat(actualMessage.getMetaData()).isEqualTo(expectedMessage.getMetaData());
+        assertThat(actualMessage.getIdentifier()).isEqualTo(expectedMessage.getIdentifier());
+        assertThat(actual.cause()).isEqualTo(expected.cause());
+        assertThat(actual.enqueuedAt()).isEqualTo(formatExpected(expected.enqueuedAt()));
+        assertThat(actual.lastTouched()).isEqualTo(formatExpected(expected.lastTouched()));
+        assertThat(actual.diagnostics()).isEqualTo(expected.diagnostics());
     }
 
     /**
@@ -204,111 +205,118 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
     @Test
     void invokingEvictWithNonJdbcDeadLetterThrowsWrongDeadLetterTypeException() {
         DeadLetter<EventMessage<?>> testLetter = generateInitialLetter();
-        assertThrows(WrongDeadLetterTypeException.class, () -> jdbcDeadLetterQueue.evict(testLetter));
+        assertThatThrownBy(() -> jdbcDeadLetterQueue.evict(testLetter))
+                .isInstanceOf(WrongDeadLetterTypeException.class);
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void buildWithNullProcessingGroupThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingGroup(null));
+        assertThatThrownBy(() -> testBuilder.processingGroup(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyProcessingGroupThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingGroup(""));
+        assertThatThrownBy(() -> testBuilder.processingGroup("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void buildWithNullConnectionProviderThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.connectionProvider(null));
+        assertThatThrownBy(() -> testBuilder.connectionProvider(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void buildWithNullTransactionManagerThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.transactionManager(null));
+        assertThatThrownBy(() -> testBuilder.transactionManager(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void buildWithNullSchemaThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.schema(null));
+        assertThatThrownBy(() -> testBuilder.schema(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void buildWithNullStatementFactoryThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.statementFactory(null));
+        assertThatThrownBy(() -> testBuilder.statementFactory(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void buildWithNullConverterThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.converter(null));
+        assertThatThrownBy(() -> testBuilder.converter(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void buildWithNullGenericSerializerThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.genericSerializer(null));
+        assertThatThrownBy(() -> testBuilder.genericSerializer(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void buildWithNullEventSerializerThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventSerializer(null));
+        assertThatThrownBy(() -> testBuilder.eventSerializer(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithZeroMaxSequencesThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.maxSequences(0));
+        assertThatThrownBy(() -> testBuilder.maxSequences(0)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNegativeMaxSequencesThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.maxSequences(-1));
+        assertThatThrownBy(() -> testBuilder.maxSequences(-1)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithZeroMaxSequenceSizeThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.maxSequenceSize(0));
+        assertThatThrownBy(() -> testBuilder.maxSequenceSize(0)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNegativeMaxSequenceSizeThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.maxSequenceSize(-1));
+        assertThatThrownBy(() -> testBuilder.maxSequenceSize(-1)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullClaimDurationThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.claimDuration(null));
+        assertThatThrownBy(() -> testBuilder.claimDuration(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithZeroPageSizeThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.pageSize(0));
+        assertThatThrownBy(() -> testBuilder.pageSize(0)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNegativePageSizeThrowsSophonConfigurationException() {
         JdbcSequencedDeadLetterQueue.Builder<EventMessage<?>> testBuilder = JdbcSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.pageSize(-1));
+        assertThatThrownBy(() -> testBuilder.pageSize(-1)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -321,7 +329,7 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .converter(mock(DeadLetterJdbcConverter.class));
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -334,7 +342,7 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .converter(mock(DeadLetterJdbcConverter.class));
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -347,7 +355,7 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .converter(mock(DeadLetterJdbcConverter.class));
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -360,7 +368,7 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .converter(mock(DeadLetterJdbcConverter.class))
                                             .eventSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -373,7 +381,7 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .converter(mock(DeadLetterJdbcConverter.class))
                                             .genericSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -386,7 +394,7 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .eventSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -399,6 +407,6 @@ class JdbcSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Even
                                             .statementFactory(mock(DeadLetterStatementFactory.class))
                                             .genericSerializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, testBuilder::build);
+        assertThatThrownBy(testBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 }

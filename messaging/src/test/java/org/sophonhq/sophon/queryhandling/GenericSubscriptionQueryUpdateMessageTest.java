@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.queryhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandResultMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandResultMessage;
 import org.sophonhq.sophon.messaging.GenericMessage;
@@ -27,7 +27,7 @@ import org.sophonhq.sophon.messaging.MetaData;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests for {@link GenericSubscriptionQueryUpdateMessage}.
@@ -42,7 +42,7 @@ class GenericSubscriptionQueryUpdateMessageTest {
 
         SubscriptionQueryUpdateMessage<Object> result = GenericSubscriptionQueryUpdateMessage.asUpdateMessage(payload);
 
-        assertEquals(payload, result.getPayload());
+        assertThat(result.getPayload()).isEqualTo(payload);
     }
 
     @Test
@@ -52,7 +52,7 @@ class GenericSubscriptionQueryUpdateMessageTest {
         GenericSubscriptionQueryUpdateMessage<String> result =
                 new GenericSubscriptionQueryUpdateMessage<>(String.class, payload);
 
-        assertNull(result.getPayload());
+        assertThat(result.getPayload()).isNull();
     }
 
     @Test
@@ -65,10 +65,10 @@ class GenericSubscriptionQueryUpdateMessageTest {
         Map<String, String> newMetaData = Collections.singletonMap("k2", "v3");
         SubscriptionQueryUpdateMessage<Object> result = original.andMetaData(newMetaData);
 
-        assertEquals(original.getPayload(), result.getPayload());
+        assertThat(result.getPayload()).isEqualTo(original.getPayload());
         MetaData expectedMetaData = MetaData.from(metaData)
                                             .mergedWith(newMetaData);
-        assertEquals(expectedMetaData, result.getMetaData());
+        assertThat(result.getMetaData()).isEqualTo(expectedMetaData);
     }
 
     @Test
@@ -81,8 +81,8 @@ class GenericSubscriptionQueryUpdateMessageTest {
         Map<String, String> newMetaData = Collections.singletonMap("k2", "v3");
         SubscriptionQueryUpdateMessage<Object> result = original.withMetaData(newMetaData);
 
-        assertEquals(original.getPayload(), result.getPayload());
-        assertEquals(newMetaData, result.getMetaData());
+        assertThat(result.getPayload()).isEqualTo(original.getPayload());
+        assertThat(result.getMetaData()).isEqualTo(newMetaData);
     }
 
     @Test
@@ -91,7 +91,7 @@ class GenericSubscriptionQueryUpdateMessageTest {
 
         SubscriptionQueryUpdateMessage<Object> result = GenericSubscriptionQueryUpdateMessage.asUpdateMessage(original);
 
-        assertEquals(result, original);
+        assertThat(result).isEqualTo(original);
     }
 
     @Test
@@ -103,8 +103,8 @@ class GenericSubscriptionQueryUpdateMessageTest {
         SubscriptionQueryUpdateMessage<Object> result = GenericSubscriptionQueryUpdateMessage.asUpdateMessage(
                 resultMessage);
 
-        assertEquals(result.getPayload(), resultMessage.getPayload());
-        assertEquals(result.getMetaData(), resultMessage.getMetaData());
+        assertThat(result.getPayload()).isEqualTo(resultMessage.getPayload());
+        assertThat(result.getMetaData()).isEqualTo(resultMessage.getMetaData());
     }
 
     @Test
@@ -117,9 +117,9 @@ class GenericSubscriptionQueryUpdateMessageTest {
         SubscriptionQueryUpdateMessage<Object> result = GenericSubscriptionQueryUpdateMessage.asUpdateMessage(
                 resultMessage);
 
-        assertEquals(result.getMetaData(), resultMessage.getMetaData());
-        assertTrue(result.isExceptional());
-        assertEquals(exception, result.exceptionResult());
+        assertThat(result.getMetaData()).isEqualTo(resultMessage.getMetaData());
+        assertThat(result.isExceptional()).isTrue();
+        assertThat(result.exceptionResult()).isEqualTo(exception);
     }
 
     @Test
@@ -129,7 +129,7 @@ class GenericSubscriptionQueryUpdateMessageTest {
 
         SubscriptionQueryUpdateMessage<Object> result = GenericSubscriptionQueryUpdateMessage.asUpdateMessage(message);
 
-        assertEquals(result.getPayload(), message.getPayload());
-        assertEquals(result.getMetaData(), message.getMetaData());
+        assertThat(result.getPayload()).isEqualTo(message.getPayload());
+        assertThat(result.getMetaData()).isEqualTo(message.getMetaData());
     }
 }

@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DbSchedulerHumanReadableDeadlineDetailsTest {
 
@@ -61,7 +61,7 @@ class DbSchedulerHumanReadableDeadlineDetailsTest {
         byte[] serialized = serializer.serialize(expected);
         DbSchedulerHumanReadableDeadlineDetails result = serializer.deserialize(DbSchedulerHumanReadableDeadlineDetails.class,
                                                                                 serialized);
-        assertEquals(expected, result);
+        assertThat(result).isEqualTo(expected);
     }
 
     @MethodSource("sophonSerializers")
@@ -74,13 +74,13 @@ class DbSchedulerHumanReadableDeadlineDetailsTest {
         DbSchedulerHumanReadableDeadlineDetails result = DbSchedulerHumanReadableDeadlineDetails.serialized(
                 TEST_DEADLINE_NAME, descriptor, MESSAGE, serializer);
 
-        assertEquals(TEST_DEADLINE_NAME, result.getDeadlineName());
-        assertEquals(descriptor, result.getDeserializedScopeDescriptor(serializer));
+        assertThat(result.getDeadlineName()).isEqualTo(TEST_DEADLINE_NAME);
+        assertThat(result.getDeserializedScopeDescriptor(serializer)).isEqualTo(descriptor);
         DeadlineMessage<?> resultMessage = result.asDeadLineMessage(serializer);
 
-        assertNotNull(resultMessage);
-        assertEquals(TEST_DEADLINE_PAYLOAD, resultMessage.getPayload());
-        assertEquals(META_DATA, resultMessage.getMetaData());
+        assertThat(resultMessage).isNotNull();
+        assertThat(resultMessage.getPayload()).isEqualTo(TEST_DEADLINE_PAYLOAD);
+        assertThat(resultMessage.getMetaData()).isEqualTo(META_DATA);
     }
 
     public static Collection<Serializer> dbSchedulerSerializers() {

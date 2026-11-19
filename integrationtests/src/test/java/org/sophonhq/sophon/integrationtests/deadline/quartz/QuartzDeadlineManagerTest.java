@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.integrationtests.deadline.quartz;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.junit.jupiter.*;
@@ -36,7 +36,7 @@ import org.sophonhq.sophon.messaging.ScopeAwareProvider;
 import org.sophonhq.sophon.serialization.TestSerializer;
 import org.sophonhq.sophon.serialization.json.JacksonSerializer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,7 +87,7 @@ class QuartzDeadlineManagerTest extends AbstractDeadlineManagerTestSuite {
                                                                  .serializer(TestSerializer.JACKSON.getSerializer())
                                                                  .build();
 
-        assertThrows(DeadlineException.class, testSubject::shutdown);
+        assertThatThrownBy(testSubject::shutdown).isInstanceOf(DeadlineException.class);
     }
 
     @Test
@@ -98,7 +98,7 @@ class QuartzDeadlineManagerTest extends AbstractDeadlineManagerTestSuite {
                                      .scopeAwareProvider(scopeAwareProvider)
                                      .serializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -109,6 +109,6 @@ class QuartzDeadlineManagerTest extends AbstractDeadlineManagerTestSuite {
                                      .scheduler(scheduler)
                                      .serializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 }

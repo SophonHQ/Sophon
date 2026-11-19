@@ -17,13 +17,14 @@
 
 package org.sophonhq.sophon.modelling.saga;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.sophonhq.sophon.modelling.saga.metamodel.AnnotationSagaMetaModelFactory;
 import org.sophonhq.sophon.modelling.saga.metamodel.SagaModel;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 import static org.sophonhq.sophon.modelling.utils.ConcurrencyUtils.testConcurrent;
 
@@ -54,9 +55,10 @@ class SagaMethodMessageHandlerDefinitionTest {
 
     public void testWrapHandler(EventMessage<?> eventMessage) {
         MessageHandlingMember<?> result = testSubject.wrapHandler(sagaModel.findHandlerMethods(eventMessage).get(0));
-        assertNotNull(result);
-        assertTrue(result instanceof SagaMethodMessageHandlingMember);
-        assertEquals(SagaCreationPolicy.NONE, ((SagaMethodMessageHandlingMember<?>) result).getCreationPolicy());
+        assertThat(result).isNotNull();
+        assertThat(result).isInstanceOf(SagaMethodMessageHandlingMember.class);
+        assertThat(((SagaMethodMessageHandlingMember<?>) result).getCreationPolicy())
+                .isEqualTo(SagaCreationPolicy.NONE);
     }
 
     @SagaEventHandler(associationProperty = TEST_PROPERTY_NAME)

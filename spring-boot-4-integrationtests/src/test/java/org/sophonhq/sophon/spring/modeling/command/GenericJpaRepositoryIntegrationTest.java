@@ -21,7 +21,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,7 +54,7 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = GenericJpaRepositoryIntegrationTest.TestContext.class)
@@ -104,15 +103,15 @@ class GenericJpaRepositoryIntegrationTest implements EventMessageHandler {
         entityManager.flush();
         entityManager.clear();
         List<JpaAggregate> results = entityManager.createQuery("SELECT a FROM JpaAggregate a").getResultList();
-        assertEquals(1, results.size());
+        assertThat(results).hasSize(1);
         JpaAggregate aggregate = results.get(0);
-        Assertions.assertEquals(originalId, aggregate.getIdentifier());
+        assertThat(aggregate.getIdentifier()).isEqualTo(originalId);
 
         uow = startAndGetUnitOfWork();
         Aggregate<JpaAggregate> storedAggregate = repository.load(originalId);
         uow.commit();
-        assertEquals(storedAggregate.identifierAsString(), originalId);
-        assertTrue(capturedEvents.isEmpty());
+        assertThat(storedAggregate.identifierAsString()).isEqualTo(originalId);
+        assertThat(capturedEvents).isEmpty();
     }
 
     @Test
@@ -128,9 +127,9 @@ class GenericJpaRepositoryIntegrationTest implements EventMessageHandler {
         aggregate.execute(r -> r.setMessage("And more"));
         uow.commit();
 
-        assertEquals((Long) 1L, aggregate.version());
-        assertEquals(2, capturedEvents.size());
-        assertNotNull(entityManager.find(JpaAggregate.class, aggregate.identifierAsString()));
+        assertThat(aggregate.version()).isEqualTo((Long) 1L);
+        assertThat(capturedEvents).hasSize(2);
+        assertThat(entityManager.find(JpaAggregate.class, aggregate.identifierAsString())).isNotNull();
     }
 
     @Test
@@ -139,7 +138,7 @@ class GenericJpaRepositoryIntegrationTest implements EventMessageHandler {
         entityManager.persist(agg);
         entityManager.flush();
         entityManager.clear();
-        Assertions.assertEquals((Long) 0L, agg.getVersion());
+        assertThat(agg.getVersion()).isEqualTo((Long) 0L);
 
         UnitOfWork<?> uow = startAndGetUnitOfWork();
         Aggregate<JpaAggregate> aggregate = repository.load(agg.getIdentifier());
@@ -150,8 +149,8 @@ class GenericJpaRepositoryIntegrationTest implements EventMessageHandler {
         entityManager.flush();
         entityManager.clear();
 
-        assertEquals(2, capturedEvents.size());
-        assertNull(entityManager.find(JpaAggregate.class, aggregate.identifierAsString()));
+        assertThat(capturedEvents).hasSize(2);
+        assertThat(entityManager.find(JpaAggregate.class, aggregate.identifierAsString())).isNull();
     }
 
     @Override

@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.modelling.command;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.deadline.DeadlineMessage;
 import org.sophonhq.sophon.deadline.GenericDeadlineMessage;
 import org.sophonhq.sophon.messaging.Message;
@@ -30,7 +32,8 @@ import org.sophonhq.sophon.modelling.saga.SagaScopeDescriptor;
 import java.time.Instant;
 import java.util.concurrent.Callable;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -140,32 +143,34 @@ class AbstractRepositoryTest {
                 };
 
         //noinspection unchecked
-        assertThrows(IllegalArgumentException.class, () -> anonymousTestSubject.newInstance(() -> "Not allowed"));
+        assertThatThrownBy(() -> anonymousTestSubject.newInstance(() -> "Not allowed"))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void canResolveReturnsTrueForMatchingAggregateDescriptor() {
-        assertTrue(testSubject.canResolve(new AggregateScopeDescriptor(
+        assertThat(testSubject.canResolve(new AggregateScopeDescriptor(
                 JpaAggregate.class.getSimpleName(), AGGREGATE_ID)
-        ));
+        )).isTrue();
     }
 
     @Test
     void canResolveReturnsTrueForExplicitAggregateType() {
-        assertTrue(testSubject.canResolve(new AggregateScopeDescriptor(
+        assertThat(testSubject.canResolve(new AggregateScopeDescriptor(
                 JpaAggregate.JPA_AGGREGATE_CUSTOM_TYPE_NAME, AGGREGATE_ID)
-        ));
+        )).isTrue();
     }
 
 
     @Test
     void canResolveReturnsFalseNonAggregateScopeDescriptorImplementation() {
-        assertFalse(testSubject.canResolve(new SagaScopeDescriptor("some-saga-type", AGGREGATE_ID)));
+        assertThat(testSubject.canResolve(new SagaScopeDescriptor("some-saga-type", AGGREGATE_ID))).isFalse();
     }
 
     @Test
     void canResolveReturnsFalseForNonMatchingAggregateType() {
-        assertFalse(testSubject.canResolve(new AggregateScopeDescriptor("other-non-matching-type", AGGREGATE_ID)));
+        assertThat(testSubject.canResolve(new AggregateScopeDescriptor("other-non-matching-type", AGGREGATE_ID)))
+                .isFalse();
     }
 
     @Test
@@ -186,7 +191,8 @@ class AbstractRepositoryTest {
                 new AggregateScopeDescriptor(JpaAggregate.class.getSimpleName(), AGGREGATE_ID);
 
         //noinspection ConstantConditions
-        assertThrows(IllegalArgumentException.class, () -> testSubject.send(failureMessage, testDescriptor));
+        assertThatThrownBy(() -> testSubject.send(failureMessage, testDescriptor))
+                .isInstanceOf(IllegalArgumentException.class);
 
         //noinspection ConstantConditions
         verify(spiedAggregate).handle(failureMessage);
@@ -212,9 +218,9 @@ class AbstractRepositoryTest {
             throw new Exception("Throwing checked exception");
         }), RuntimeException.class::isInstance);
 
-        assertFalse(uow.isActive());
-        assertFalse(uow.isRolledBack());
-        assertTrue(uow.getExecutionResult().isExceptionResult());
-        assertEquals("Throwing checked exception", uow.getExecutionResult().getExceptionResult().getMessage());
+        assertThat(uow.isActive()).isFalse();
+        assertThat(uow.isRolledBack()).isFalse();
+        assertThat(uow.getExecutionResult().isExceptionResult()).isTrue();
+        assertThat(uow.getExecutionResult().getExceptionResult().getMessage()).isEqualTo("Throwing checked exception");
     }
 }

@@ -23,7 +23,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests serialization capabilities of {@link SimpleScheduleToken}.
@@ -40,6 +40,6 @@ class SimpleScheduleTokenSerializationTest {
     @ParameterizedTest
     void tokenShouldBeSerializable(TestSerializer serializer) {
         SimpleScheduleToken tokenToTest = new SimpleScheduleToken("28bda08d-2dd5-4420-98cb-75ca073446b4");
-        assertEquals(tokenToTest, serializer.serializeDeserialize(tokenToTest));
+        assertThat(serializer.serializeDeserialize(tokenToTest)).isEqualTo(tokenToTest);
     }
 }

@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.commandhandling.gateway;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
@@ -44,7 +45,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Collections.singletonMap;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentCaptor.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
@@ -140,8 +142,8 @@ class CommandGatewayFactoryTest {
             }
         });
         t.start();
-        assertTrue(latch.await(1, TimeUnit.SECONDS), "Expected command bus to be invoked");
-        assertTrue(t.isAlive());
+        assertThat(latch.await(1, TimeUnit.SECONDS)).as("Expected command bus to be invoked").isTrue();
+        assertThat(t.isAlive()).isTrue();
         t.join(500);
     }
 
@@ -158,9 +160,9 @@ class CommandGatewayFactoryTest {
 
         Thread t = new Thread(() -> result.set(gateway.waitForReturnValue("Command")));
         t.start();
-        assertTrue(latch.await(1, TimeUnit.SECONDS), "Expected command bus to be invoked");
+        assertThat(latch.await(1, TimeUnit.SECONDS)).as("Expected command bus to be invoked").isTrue();
         t.join();
-        assertEquals(expectedReturnValue, result.get());
+        assertThat(result.get()).isEqualTo(expectedReturnValue);
         verify(callback).onResult(any(), eq(returnValue));
     }
 
@@ -183,17 +185,18 @@ class CommandGatewayFactoryTest {
         });
 
         t.start();
-        assertTrue(latch.await(1, TimeUnit.SECONDS), "Expected command bus to be invoked");
+        assertThat(latch.await(1, TimeUnit.SECONDS)).as("Expected command bus to be invoked").isTrue();
         t.join();
 
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertTrue(error.get() instanceof CommandExecutionException);
-        assertTrue(error.get().getCause() instanceof ExpectedException);
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get()).isInstanceOf(CommandExecutionException.class);
+        assertThat(error.get().getCause()).isInstanceOf(ExpectedException.class);
 
         ArgumentCaptor<CommandResultMessage<?>> commandResultMessageCaptor = forClass(CommandResultMessage.class);
         verify(callback).onResult(any(), commandResultMessageCaptor.capture());
-        assertTrue(commandResultMessageCaptor.getValue().isExceptional());
-        assertEquals(ExpectedException.class, commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isTrue();
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass())
+                .isEqualTo(ExpectedException.class);
     }
 
     @Test
@@ -214,9 +217,11 @@ class CommandGatewayFactoryTest {
         t.interrupt();
         t.join();
 
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertTrue(error.get() instanceof CommandExecutionException, "Expected CommandExecutionException");
-        assertTrue(error.get().getCause() instanceof InterruptedException, "Expected wrapped InterruptedException");
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get()).as("Expected CommandExecutionException").isInstanceOf(CommandExecutionException.class);
+        assertThat(error.get().getCause())
+                .as("Expected wrapped InterruptedException")
+                .isInstanceOf(InterruptedException.class);
     }
 
     @Test
@@ -234,12 +239,15 @@ class CommandGatewayFactoryTest {
             error.set(e);
         }
 
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertSame(runtimeException, error.get(), "Expected exact instance of RunTimeException being propagated");
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get())
+                .as("Expected exact instance of RunTimeException being propagated")
+                .isSameAs(runtimeException);
 
         ArgumentCaptor<CommandResultMessage<?>> commandResultMessageCaptor = forClass(CommandResultMessage.class);
         verify(callback).onResult(any(), commandResultMessageCaptor.capture());
-        assertEquals(RuntimeException.class, commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass())
+                .isEqualTo(RuntimeException.class);
     }
 
     @Test
@@ -260,8 +268,8 @@ class CommandGatewayFactoryTest {
         t.interrupt();
         t.join();
 
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertTrue(error.get() instanceof InterruptedException);
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get()).isInstanceOf(InterruptedException.class);
     }
 
     @Test
@@ -282,8 +290,8 @@ class CommandGatewayFactoryTest {
         t.interrupt();
         t.join();
 
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertTrue(error.get() instanceof CommandExecutionException);
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get()).isInstanceOf(CommandExecutionException.class);
     }
 
     @Test
@@ -305,12 +313,12 @@ class CommandGatewayFactoryTest {
         });
 
         t.start();
-        assertTrue(latch.await(1, TimeUnit.SECONDS));
+        assertThat(latch.await(1, TimeUnit.SECONDS)).isTrue();
         t.interrupt();
 
         // The return type of `fireAndWaitWithTimeoutParameter` is void, so return value is ignored
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertNull(error.get(), "Did not expect exception");
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get()).as("Did not expect exception").isNull();
     }
 
     @Test
@@ -330,9 +338,11 @@ class CommandGatewayFactoryTest {
         t.start();
         t.join();
 
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertTrue(error.get() instanceof CommandExecutionException, "Expected CommandExecutionException");
-        assertTrue(error.get().getCause() instanceof TimeoutException, "Expected wrapped InterruptedException");
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get()).as("Expected CommandExecutionException").isInstanceOf(CommandExecutionException.class);
+        assertThat(error.get().getCause())
+                .as("Expected wrapped InterruptedException")
+                .isInstanceOf(TimeoutException.class);
     }
 
     @Test
@@ -352,8 +362,8 @@ class CommandGatewayFactoryTest {
         t.start();
         t.join();
 
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertTrue(error.get() instanceof TimeoutException);
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get()).isInstanceOf(TimeoutException.class);
     }
 
     @Test
@@ -374,9 +384,11 @@ class CommandGatewayFactoryTest {
         t.interrupt();
         t.join();
 
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertTrue(error.get() instanceof CommandExecutionException, "Expected CommandExecutionException");
-        assertTrue(error.get().getCause() instanceof InterruptedException, "Expected wrapped InterruptedException");
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get()).as("Expected CommandExecutionException").isInstanceOf(CommandExecutionException.class);
+        assertThat(error.get().getCause())
+                .as("Expected wrapped InterruptedException")
+                .isInstanceOf(InterruptedException.class);
     }
 
     @Test
@@ -398,16 +410,17 @@ class CommandGatewayFactoryTest {
         });
 
         t.start();
-        assertTrue(latch.await(1, TimeUnit.SECONDS));
+        assertThat(latch.await(1, TimeUnit.SECONDS)).isTrue();
         t.join();
 
-        assertNull(result.get(), "Did not expect ReturnValue");
-        assertTrue(error.get() instanceof ExpectedException);
+        assertThat(result.get()).as("Did not expect ReturnValue").isNull();
+        assertThat(error.get()).isInstanceOf(ExpectedException.class);
 
         ArgumentCaptor<CommandResultMessage<?>> commandResultMessageCaptor = forClass(CommandResultMessage.class);
         verify(callback).onResult(any(), commandResultMessageCaptor.capture());
-        assertTrue(commandResultMessageCaptor.getValue().isExceptional());
-        assertEquals(ExpectedException.class, commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isTrue();
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass())
+                .isEqualTo(ExpectedException.class);
     }
 
     @Test
@@ -427,8 +440,8 @@ class CommandGatewayFactoryTest {
         t.start();
         t.join();
 
-        assertNotNull(result.get(), "Expected to get a Future return value");
-        assertNull(error.get());
+        assertThat(result.get()).as("Expected to get a Future return value").isNotNull();
+        assertThat(error.get()).isNull();
     }
 
     @Test
@@ -448,8 +461,8 @@ class CommandGatewayFactoryTest {
         t.start();
         t.join();
 
-        assertNotNull(result.get(), "Expected to get a Future return value");
-        assertNull(error.get());
+        assertThat(result.get()).as("Expected to get a Future return value").isNotNull();
+        assertThat(error.get()).isNull();
     }
 
     @Test
@@ -469,8 +482,8 @@ class CommandGatewayFactoryTest {
         t.start();
         t.join();
 
-        assertNotNull(result.get(), "Expected to get a Future return value");
-        assertNull(error.get());
+        assertThat(result.get()).as("Expected to get a Future return value").isNotNull();
+        assertThat(error.get()).isNull();
     }
 
     @Test
@@ -490,8 +503,8 @@ class CommandGatewayFactoryTest {
         t.start();
         t.join();
 
-        assertNotNull(result.get(), "Expected to get a CompletionStage return value");
-        assertNull(error.get());
+        assertThat(result.get()).as("Expected to get a CompletionStage return value").isNotNull();
+        assertThat(error.get()).isNull();
     }
 
     @Test
@@ -518,8 +531,8 @@ class CommandGatewayFactoryTest {
                                                  isA(SomeRuntimeException.class),
                                                  anyList(),
                                                  any(Runnable.class));
-        assertNotNull(error.get());
-        assertNull(result.get(), "Did not Expect to get a Future return value");
+        assertThat(error.get()).isNotNull();
+        assertThat(result.get()).as("Did not Expect to get a Future return value").isNull();
     }
 
     @Test
@@ -546,8 +559,8 @@ class CommandGatewayFactoryTest {
                                                           any(RuntimeException.class),
                                                           anyList(),
                                                           any(Runnable.class));
-        assertNotNull(error.get());
-        assertNull(result.get(), "Did not Expect to get a Future return value");
+        assertThat(error.get()).isNotNull();
+        assertThat(result.get()).as("Did not Expect to get a Future return value").isNull();
     }
 
     @Test
@@ -569,8 +582,8 @@ class CommandGatewayFactoryTest {
                                                  any(RuntimeException.class),
                                                  anyList(),
                                                  any(Runnable.class));
-        assertNotNull(error.get());
-        assertNull(result.get(), "Did not Expect to get a Future return value");
+        assertThat(error.get()).isNotNull();
+        assertThat(result.get()).as("Did not Expect to get a Future return value").isNull();
     }
 
     @Test
@@ -585,9 +598,9 @@ class CommandGatewayFactoryTest {
                 .when(mockCommandBus).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
 
         Object result = gateway.fireAndWaitAndInvokeCallbacks("Command", callback1, callback2);
-        assertEquals(0, latch.getCount());
+        assertThat(latch.getCount()).isZero();
 
-        assertNotNull(result);
+        assertThat(result).isNotNull();
         verify(callback1).onResult(any(), eq(resultMessage));
         verify(callback2).onResult(any(), eq(resultMessage));
     }
@@ -611,9 +624,9 @@ class CommandGatewayFactoryTest {
             verify(callback1).onResult(any(), commandResultMessageCaptor.capture());
             verify(callback2).onResult(any(), commandResultMessageCaptor.capture());
 
-            assertEquals(2, commandResultMessageCaptor.getAllValues().size());
-            assertEquals(exception, commandResultMessageCaptor.getAllValues().get(0).exceptionResult());
-            assertEquals(exception, commandResultMessageCaptor.getAllValues().get(1).exceptionResult());
+            assertThat(commandResultMessageCaptor.getAllValues()).hasSize(2);
+            assertThat(commandResultMessageCaptor.getAllValues().get(0).exceptionResult()).isEqualTo(exception);
+            assertThat(commandResultMessageCaptor.getAllValues().get(1).exceptionResult()).isEqualTo(exception);
         }
     }
 
@@ -629,7 +642,7 @@ class CommandGatewayFactoryTest {
                 .when(mockCommandBus).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
 
         gateway.fireAsyncWithCallbacks("Command", callback1, callback2);
-        assertEquals(0, latch.getCount());
+        assertThat(latch.getCount()).isZero();
 
         verify(callback1).onResult(any(), eq(resultMessage));
         verify(callback2).onResult(any(), eq(resultMessage));
@@ -647,7 +660,7 @@ class CommandGatewayFactoryTest {
                 .when(mockCommandBus).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
 
         gateway.fireAsyncWithCallbacks("Command", callback1, callback2);
-        assertEquals(0, latch.getCount());
+        assertThat(latch.getCount()).isZero();
 
         verify(callback1).onResult(any(), eq(resultMessage));
         verify(callback2).onResult(any(), eq(resultMessage));
@@ -671,9 +684,9 @@ class CommandGatewayFactoryTest {
                 forClass(CommandResultMessage.class);
         verify(callback1).onResult(any(), commandResultMessageCaptor.capture());
         verify(callback2).onResult(any(), commandResultMessageCaptor.capture());
-        assertEquals(2, commandResultMessageCaptor.getAllValues().size());
-        assertEquals(exception, commandResultMessageCaptor.getAllValues().get(0).exceptionResult());
-        assertEquals(exception, commandResultMessageCaptor.getAllValues().get(1).exceptionResult());
+        assertThat(commandResultMessageCaptor.getAllValues()).hasSize(2);
+        assertThat(commandResultMessageCaptor.getAllValues().get(0).exceptionResult()).isEqualTo(exception);
+        assertThat(commandResultMessageCaptor.getAllValues().get(1).exceptionResult()).isEqualTo(exception);
     }
 
     @Test
@@ -686,8 +699,8 @@ class CommandGatewayFactoryTest {
 
         CompletableFuture<Object> future = gateway.fireAndGetCompletableFuture("Command");
 
-        assertTrue(future.isDone());
-        assertTrue(future.isCompletedExceptionally());
+        assertThat(future.isDone()).isTrue();
+        assertThat(future.isCompletedExceptionally()).isTrue();
     }
 
     @Test
@@ -700,8 +713,8 @@ class CommandGatewayFactoryTest {
 
         CompletableFuture<Object> future = gateway.fireAndGetCompletableFuture("Command");
 
-        assertTrue(future.isDone());
-        assertEquals(expectedReturnValue, future.get());
+        assertThat(future.isDone()).isTrue();
+        assertThat(future.get()).isEqualTo(expectedReturnValue);
     }
 
     @Test
@@ -714,8 +727,8 @@ class CommandGatewayFactoryTest {
 
         Future<Object> future = gateway.fireAndGetFuture("Command");
 
-        assertTrue(future.isDone());
-        assertEquals("returnValue", future.get());
+        assertThat(future.isDone()).isTrue();
+        assertThat(future.get()).isEqualTo("returnValue");
     }
 
     @Test
@@ -740,8 +753,8 @@ class CommandGatewayFactoryTest {
                                                           any(RuntimeException.class),
                                                           anyList(),
                                                           any(Runnable.class));
-        assertNotNull(error.get());
-        assertNull(result.get(), "Did not Expect to get a Future return value");
+        assertThat(error.get()).isNotNull();
+        assertThat(result.get()).as("Did not Expect to get a Future return value").isNull();
     }
 
     @Test
@@ -749,8 +762,8 @@ class CommandGatewayFactoryTest {
     void createGatewayEqualsAndHashCode() {
         CompleteGateway gateway2 = testSubject.createGateway(CompleteGateway.class);
 
-        assertNotSame(gateway, gateway2);
-        assertNotEquals(gateway, gateway2);
+        assertThat(gateway2).isNotSameAs(gateway);
+        assertThat(gateway2).isNotEqualTo(gateway);
     }
 
     @Test
@@ -768,10 +781,11 @@ class CommandGatewayFactoryTest {
 
         Object result = gateway.fireAsyncWithCallbacksOfSpecificResultType("Command", stringCallback, integerCallback);
 
-        assertNotNull(result);
-        assertEquals(expectedResult, result);
-        assertTrue(stringCallbackInvocation.get());
-        assertTrue(integerCallbackInvocation.get());
+        assertThat(result)
+                .isNotNull()
+                .isEqualTo(expectedResult);
+        assertThat(stringCallbackInvocation.get()).isTrue();
+        assertThat(integerCallbackInvocation.get()).isTrue();
     }
 
     @SuppressWarnings("UnusedReturnValue")

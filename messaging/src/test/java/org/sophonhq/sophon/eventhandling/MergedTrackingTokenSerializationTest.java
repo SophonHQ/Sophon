@@ -23,7 +23,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /**
@@ -41,7 +41,7 @@ class MergedTrackingTokenSerializationTest {
     @ParameterizedTest
     void tokenShouldBeSerializable(TestSerializer serializer) {
         MergedTrackingToken testSubject = new MergedTrackingToken(new MergedTrackingToken(token(1), token(5)), token(3));
-        assertEquals(testSubject, serializer.serializeDeserialize(testSubject));
+        assertThat(serializer.serializeDeserialize(testSubject)).isEqualTo(testSubject);
     }
 
     private GlobalSequenceTrackingToken token(int sequence) {

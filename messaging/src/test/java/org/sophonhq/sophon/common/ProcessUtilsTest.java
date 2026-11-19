@@ -23,14 +23,20 @@ import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.logging.log4j.core.test.appender.ListAppender;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * @author Marc Gathier
@@ -48,14 +54,14 @@ class ProcessUtilsTest {
                                       }, e -> ExceptionUtils.findException(e, IllegalArgumentException.class).isPresent(),
                                       100, TimeUnit.MILLISECONDS, 10);
 
-        assertEquals(6, retryCounter.get());
+        assertThat(retryCounter.get()).isEqualTo(6);
     }
 
     @Test
     void executeWithRetryStops() {
         AtomicLong retryCounter = new AtomicLong();
 
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThatThrownBy(() ->
                 ProcessUtils.executeWithRetry(() -> {
                             if (retryCounter.getAndIncrement() < 11) {
                                 throw new IllegalArgumentException("Waiting for 11");
@@ -64,8 +70,7 @@ class ProcessUtilsTest {
                         e -> ExceptionUtils.findException(e, IllegalArgumentException.class).isPresent(),
                         100,
                         TimeUnit.MILLISECONDS,
-                        10)
-        );
+                        10)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -80,8 +85,8 @@ class ProcessUtilsTest {
             }, e -> false, 100, TimeUnit.MILLISECONDS, 10);
             fail("Should not get here");
         } catch (Exception ex) {
-            assertTrue(ex instanceof IllegalArgumentException);
-            assertEquals(1, retryCounter.get());
+            assertThat(ex).isInstanceOf(IllegalArgumentException.class);
+            assertThat(retryCounter.get()).isOne();
         }
     }
 
@@ -89,16 +94,15 @@ class ProcessUtilsTest {
     void executeUntilTrueRetries(){
         AtomicLong retryCounter = new AtomicLong();
         ProcessUtils.executeUntilTrue(() -> retryCounter.getAndIncrement() >= 1, 10L, 10L);
-        assertEquals(2, retryCounter.get());
+        assertThat(retryCounter.get()).isEqualTo(2);
     }
 
     @Test
     void executeUntilTrueThrowsWhenMaxRetriesReached(){
         AtomicLong retryCounter = new AtomicLong();
-        assertThrows(ProcessRetriesExhaustedException.class, () ->
-                ProcessUtils.executeUntilTrue(() -> retryCounter.getAndIncrement() >= 100, 1L, 10L)
-        );
-        assertEquals(10, retryCounter.get());
+        assertThatThrownBy(() ->
+                ProcessUtils.executeUntilTrue(() -> retryCounter.getAndIncrement() >= 100, 1L, 10L)).isInstanceOf(ProcessRetriesExhaustedException.class);
+        assertThat(retryCounter.get()).isEqualTo(10);
     }
 
     @Nested
@@ -141,8 +145,8 @@ class ProcessUtilsTest {
 
             safeguarded.run();
 
-            assertTrue(invoked.get());
-            assertTrue(events().isEmpty());
+            assertThat(invoked.get()).isTrue();
+            assertThat(events()).isEmpty();
         }
 
         @Test
@@ -152,13 +156,13 @@ class ProcessUtilsTest {
                 throw exception;
             }, "task failed");
 
-            assertDoesNotThrow(safeguarded::run);
+            assertThatNoException().isThrownBy(safeguarded::run);
 
-            assertEquals(1, events().size());
+            assertThat(events()).hasSize(1);
             LogEvent event = events().get(0);
-            assertEquals(Level.ERROR, event.getLevel());
-            assertEquals("task failed", event.getMessage().getFormattedMessage());
-            assertSame(exception, event.getThrown());
+            assertThat(event.getLevel()).isEqualTo(Level.ERROR);
+            assertThat(event.getMessage().getFormattedMessage()).isEqualTo("task failed");
+            assertThat(event.getThrown()).isSameAs(exception);
         }
 
         @Test
@@ -168,10 +172,10 @@ class ProcessUtilsTest {
                 throw error;
             }, "task failed with an error");
 
-            assertDoesNotThrow(safeguarded::run);
+            assertThatNoException().isThrownBy(safeguarded::run);
 
-            assertEquals(1, events().size());
-            assertSame(error, events().get(0).getThrown());
+            assertThat(events()).hasSize(1);
+            assertThat(events().get(0).getThrown()).isSameAs(error);
         }
 
         @Test
@@ -188,10 +192,10 @@ class ProcessUtilsTest {
             safeguarded.run();
 
             // Two failures are logged, and the third invocation completes without logging.
-            assertEquals(3, invocationCount.get());
-            assertEquals(2, events().size());
-            assertEquals("repeated failure", events().get(0).getMessage().getFormattedMessage());
-            assertEquals("repeated failure", events().get(1).getMessage().getFormattedMessage());
+            assertThat(invocationCount.get()).isEqualTo(3);
+            assertThat(events()).hasSize(2);
+            assertThat(events().get(0).getMessage().getFormattedMessage()).isEqualTo("repeated failure");
+            assertThat(events().get(1).getMessage().getFormattedMessage()).isEqualTo("repeated failure");
         }
     }
 }

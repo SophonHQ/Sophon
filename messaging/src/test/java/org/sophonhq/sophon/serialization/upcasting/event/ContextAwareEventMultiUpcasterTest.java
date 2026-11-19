@@ -25,7 +25,8 @@ import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventData;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.messaging.MetaData;
@@ -46,7 +47,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This test class only asserts whether the context map is created, filled with data and if that data is used to upcast
@@ -107,43 +108,43 @@ class ContextAwareEventMultiUpcasterTest {
         List<IntermediateEventRepresentation> result = upcaster.upcast(testEventRepresentationStream)
                                                                .collect(toList());
 
-        assertEquals(expectedNumberOfEvents, result.size());
+        assertThat(result).hasSize(expectedNumberOfEvents);
 
         IntermediateEventRepresentation firstEventResult = result.get(0);
-        assertNull(firstEventResult.getType().getRevision());
-        assertEquals(firstTestEventData.getEventIdentifier(), firstEventResult.getMessageIdentifier());
-        assertEquals(firstTestEventData.getTimestamp(), firstEventResult.getTimestamp());
-        assertEquals(testMetaData, firstEventResult.getMetaData().getObject());
+        assertThat(firstEventResult.getType().getRevision()).isNull();
+        assertThat(firstEventResult.getMessageIdentifier()).isEqualTo(firstTestEventData.getEventIdentifier());
+        assertThat(firstEventResult.getTimestamp()).isEqualTo(firstTestEventData.getTimestamp());
+        assertThat(firstEventResult.getMetaData().getObject()).isEqualTo(testMetaData);
         SecondStubEvent contextEvent = serializer.deserialize(firstEventResult.getData());
-        assertEquals(expectedContextEventString, contextEvent.getName());
-        assertEquals(expectedContextEventNumber, contextEvent.getNumber());
+        assertThat(contextEvent.getName()).isEqualTo(expectedContextEventString);
+        assertThat(contextEvent.getNumber()).isEqualTo(expectedContextEventNumber);
 
         IntermediateEventRepresentation secondEventResult = result.get(1);
-        assertEquals(expectedRevisionNumber, secondEventResult.getType().getRevision());
-        assertEquals(secondTestEventData.getEventIdentifier(), secondEventResult.getMessageIdentifier());
-        assertEquals(secondTestEventData.getTimestamp(), secondEventResult.getTimestamp());
-        assertEquals(testMetaData, secondEventResult.getMetaData().getObject());
+        assertThat(secondEventResult.getType().getRevision()).isEqualTo(expectedRevisionNumber);
+        assertThat(secondEventResult.getMessageIdentifier()).isEqualTo(secondTestEventData.getEventIdentifier());
+        assertThat(secondEventResult.getTimestamp()).isEqualTo(secondTestEventData.getTimestamp());
+        assertThat(secondEventResult.getMetaData().getObject()).isEqualTo(testMetaData);
         StubDomainEvent firstUpcastedEvent = serializer.deserialize(secondEventResult.getData());
-        assertEquals(expectedNewString, firstUpcastedEvent.getName());
+        assertThat(firstUpcastedEvent.getName()).isEqualTo(expectedNewString);
 
         IntermediateEventRepresentation thirdEventResult = result.get(2);
-        assertNull(thirdEventResult.getType().getRevision());
-        assertEquals(secondTestEventData.getEventIdentifier(), thirdEventResult.getMessageIdentifier());
-        assertEquals(secondTestEventData.getTimestamp(), thirdEventResult.getTimestamp());
-        assertEquals(testMetaData, thirdEventResult.getMetaData().getObject());
+        assertThat(thirdEventResult.getType().getRevision()).isNull();
+        assertThat(thirdEventResult.getMessageIdentifier()).isEqualTo(secondTestEventData.getEventIdentifier());
+        assertThat(thirdEventResult.getTimestamp()).isEqualTo(secondTestEventData.getTimestamp());
+        assertThat(thirdEventResult.getMetaData().getObject()).isEqualTo(testMetaData);
         SecondStubEvent secondUpcastedEvent = serializer.deserialize(thirdEventResult.getData());
-        assertEquals(expectedNewString, secondUpcastedEvent.getName());
-        assertEquals(expectedNewInteger, secondUpcastedEvent.getNumber());
+        assertThat(secondUpcastedEvent.getName()).isEqualTo(expectedNewString);
+        assertThat(secondUpcastedEvent.getNumber()).isEqualTo(expectedNewInteger);
 
         IntermediateEventRepresentation fourthEventResult = result.get(3);
-        assertNull(fourthEventResult.getType().getRevision());
-        assertEquals(secondTestEventData.getEventIdentifier(), fourthEventResult.getMessageIdentifier());
-        assertEquals(secondTestEventData.getTimestamp(), fourthEventResult.getTimestamp());
-        assertEquals(testMetaData, fourthEventResult.getMetaData().getObject());
+        assertThat(fourthEventResult.getType().getRevision()).isNull();
+        assertThat(fourthEventResult.getMessageIdentifier()).isEqualTo(secondTestEventData.getEventIdentifier());
+        assertThat(fourthEventResult.getTimestamp()).isEqualTo(secondTestEventData.getTimestamp());
+        assertThat(fourthEventResult.getMetaData().getObject()).isEqualTo(testMetaData);
         ThirdStubEvent thirdUpcastedEvent = serializer.deserialize(fourthEventResult.getData());
-        assertEquals(expectedNewString, thirdUpcastedEvent.getName());
-        assertEquals(expectedNewInteger, thirdUpcastedEvent.getNumber());
-        assertEquals(expectedNewBooleans, thirdUpcastedEvent.getTruths());
+        assertThat(thirdUpcastedEvent.getName()).isEqualTo(expectedNewString);
+        assertThat(thirdUpcastedEvent.getNumber()).isEqualTo(expectedNewInteger);
+        assertThat(thirdUpcastedEvent.getTruths()).containsExactlyElementsOf(expectedNewBooleans);
     }
 
     private static class StubContextAwareEventMultiUpcaster

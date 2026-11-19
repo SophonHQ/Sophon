@@ -27,7 +27,8 @@ import org.sophonhq.sophon.messaging.HandlerAttributes;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Test class validating the {@link AnnotatedMessageHandlingMember}.
@@ -54,14 +55,14 @@ class AnnotatedMessageHandlingMemberTest {
 
     @Test
     void canHandleMessageType() {
-        assertTrue(testSubject.canHandleMessageType(EventMessage.class));
-        assertFalse(testSubject.canHandleMessageType(CommandMessage.class));
+        assertThat(testSubject.canHandleMessageType(EventMessage.class)).isTrue();
+        assertThat(testSubject.canHandleMessageType(CommandMessage.class)).isFalse();
     }
 
     @Test
     void hasAnnotation() {
-        assertTrue(testSubject.hasAnnotation(EventHandler.class));
-        assertFalse(testSubject.hasAnnotation(CommandHandler.class));
+        assertThat(testSubject.hasAnnotation(EventHandler.class)).isTrue();
+        assertThat(testSubject.hasAnnotation(CommandHandler.class)).isFalse();
     }
 
     @Test
@@ -69,11 +70,11 @@ class AnnotatedMessageHandlingMemberTest {
         Optional<Object> resultMessageType = testSubject.attribute(HandlerAttributes.MESSAGE_TYPE);
         Optional<Object> resultPayloadType = testSubject.attribute(HandlerAttributes.PAYLOAD_TYPE);
 
-        assertTrue(resultMessageType.isPresent());
-        assertEquals(EventMessage.class, resultMessageType.get());
+        assertThat(resultMessageType).isPresent();
+        assertThat(resultMessageType).contains(EventMessage.class);
 
-        assertTrue(resultPayloadType.isPresent());
-        assertEquals(Object.class, resultPayloadType.get());
+        assertThat(resultPayloadType).isPresent();
+        assertThat(resultPayloadType).hasValue(Object.class);
     }
 
     @SuppressWarnings("unused")

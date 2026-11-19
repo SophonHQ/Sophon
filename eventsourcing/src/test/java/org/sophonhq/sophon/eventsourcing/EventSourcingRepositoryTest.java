@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.eventsourcing;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
@@ -42,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.messaging.MetaData.emptyInstance;
 
@@ -99,11 +101,11 @@ class EventSourcingRepositoryTest {
 
         Aggregate<TestAggregate> aggregate = testSubject.load(identifier, null);
 
-        assertEquals(2, aggregate.invoke(TestAggregate::getHandledEvents).size());
-        assertSame(event1, aggregate.invoke(TestAggregate::getHandledEvents).get(0));
-        assertSame(event2, aggregate.invoke(TestAggregate::getHandledEvents).get(1));
+        assertThat(aggregate.invoke(TestAggregate::getHandledEvents)).hasSize(2);
+        assertThat(aggregate.invoke(TestAggregate::getHandledEvents).get(0)).isSameAs(event1);
+        assertThat(aggregate.invoke(TestAggregate::getHandledEvents).get(1)).isSameAs(event2);
 
-        assertEquals(0, aggregate.invoke(TestAggregate::getLiveEvents).size());
+        assertThat(aggregate.invoke(TestAggregate::getLiveEvents)).hasSize(0);
 
         // now the aggregate is loaded (and hopefully correctly locked)
         StubDomainEvent event3 = new StubDomainEvent();
@@ -113,8 +115,8 @@ class EventSourcingRepositoryTest {
         CurrentUnitOfWork.commit();
 
         verify(mockEventStore, times(1)).publish((EventMessage) any());
-        assertEquals(1, aggregate.invoke(TestAggregate::getLiveEvents).size());
-        assertSame(event3, aggregate.invoke(TestAggregate::getLiveEvents).get(0).getPayload());
+        assertThat(aggregate.invoke(TestAggregate::getLiveEvents)).hasSize(1);
+        assertThat(aggregate.invoke(TestAggregate::getLiveEvents).get(0).getPayload()).isSameAs(event3);
     }
 
     @Test
@@ -160,10 +162,10 @@ class EventSourcingRepositoryTest {
 
         Aggregate<TestAggregate> aggregate = testSubject.load(identifier, null);
 
-        assertEquals(1, aggregate.invoke(TestAggregate::getHandledEvents).size());
-        assertSame(event1, aggregate.invoke(TestAggregate::getHandledEvents).get(0));
+        assertThat(aggregate.invoke(TestAggregate::getHandledEvents)).hasSize(1);
+        assertThat(aggregate.invoke(TestAggregate::getHandledEvents).get(0)).isSameAs(event1);
 
-        assertEquals(0, aggregate.invoke(TestAggregate::getLiveEvents).size());
+        assertThat(aggregate.invoke(TestAggregate::getLiveEvents)).hasSize(0);
     }
 
     @Test
@@ -172,7 +174,7 @@ class EventSourcingRepositoryTest {
         TestAggregate aggregate = new TestAggregate(identifier);
         when(mockEventStore.readEvents(identifier)).thenReturn(
                 DomainEventStream.of(new GenericDomainEventMessage<>("type", identifier, 10, aggregate)));
-        assertSame(aggregate, testSubject.load(identifier).getWrappedAggregate().getAggregateRoot());
+        assertThat(testSubject.load(identifier).getWrappedAggregate().getAggregateRoot()).isSameAs(aggregate);
     }
 
     @Test
@@ -189,9 +191,9 @@ class EventSourcingRepositoryTest {
             CurrentUnitOfWork.commit();
             fail("Expected ConflictingAggregateVersionException");
         } catch (ConflictingAggregateVersionException e) {
-            assertEquals(identifier, e.getAggregateIdentifier());
-            assertEquals(1L, e.getExpectedVersion());
-            assertEquals(3L, e.getActualVersion());
+            assertThat(e.getAggregateIdentifier()).isEqualTo(identifier);
+            assertThat(e.getExpectedVersion()).isOne();
+            assertThat(e.getActualVersion()).isEqualTo(3L);
         }
     }
 
@@ -208,9 +210,9 @@ class EventSourcingRepositoryTest {
             testSubject.load(identifier, 100L);
             fail("Expected ConflictingAggregateVersionException");
         } catch (ConflictingAggregateVersionException e) {
-            assertEquals(identifier, e.getAggregateIdentifier());
-            assertEquals(100L, e.getExpectedVersion());
-            assertEquals(3L, e.getActualVersion());
+            assertThat(e.getAggregateIdentifier()).isEqualTo(identifier);
+            assertThat(e.getExpectedVersion()).isEqualTo(100L);
+            assertThat(e.getActualVersion()).isEqualTo(3L);
         }
     }
 
@@ -239,7 +241,8 @@ class EventSourcingRepositoryTest {
                 EventSourcingRepository.builder(TestAggregate.class)
                                        .eventStore(mockEventStore);
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.subtypes(null));
+        assertThatThrownBy(() -> builderTestSubject.subtypes(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -248,7 +251,8 @@ class EventSourcingRepositoryTest {
                 EventSourcingRepository.builder(TestAggregate.class)
                                        .eventStore(mockEventStore);
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.subtype(null));
+        assertThatThrownBy(() -> builderTestSubject.subtype(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     private static class StubAggregateFactory extends AbstractAggregateFactory<TestAggregate> {

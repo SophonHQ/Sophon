@@ -21,7 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
 
 class CommandCallbackRepositoryTest {
@@ -40,14 +40,14 @@ class CommandCallbackRepositoryTest {
         CommandCallbackWrapper<Object, Object, Object> commandCallbackWrapper = createWrapper("A");
         repository.store("A", commandCallbackWrapper);
 
-        assertEquals(1, repository.callbacks().size());
+        assertThat(repository.callbacks()).hasSize(1);
 
         CommandCallbackWrapper<Object, Object, Object> fetchedCallback = repository.fetchAndRemove("A");
-        assertEquals(commandCallbackWrapper, fetchedCallback);
-        assertEquals(0, repository.callbacks().size());
+        assertThat(fetchedCallback).isEqualTo(commandCallbackWrapper);
+        assertThat(repository.callbacks()).hasSize(0);
 
         fetchedCallback.reportResult(asCommandResultMessage(new Object()));
-        assertEquals(1, successCounter);
+        assertThat(successCounter).isOne();
     }
 
 
@@ -57,14 +57,14 @@ class CommandCallbackRepositoryTest {
         CommandCallbackWrapper<Object, Object, Object> commandCallbackWrapper = createWrapper("A");
         repository.store("A", commandCallbackWrapper);
 
-        assertEquals(1, repository.callbacks().size());
+        assertThat(repository.callbacks()).hasSize(1);
 
         CommandCallbackWrapper<Object, Object, Object> commandCallbackWrapper2 = createWrapper("A");
         repository.store("A", commandCallbackWrapper2);
 
-        assertEquals(1, failCounter);
-        assertTrue(repository.callbacks().containsValue(commandCallbackWrapper2));
-        assertFalse(repository.callbacks().containsValue(commandCallbackWrapper));
+        assertThat(failCounter).isOne();
+        assertThat(repository.callbacks()).containsValue(commandCallbackWrapper2);
+        assertThat(repository.callbacks()).doesNotContainValue(commandCallbackWrapper);
     }
 
     @Test
@@ -75,16 +75,16 @@ class CommandCallbackRepositoryTest {
         repository.store("C", createWrapper("A"));
         repository.store("D", createWrapper("B"));
 
-        assertEquals(4, repository.callbacks().size());
+        assertThat(repository.callbacks()).hasSize(4);
 
         repository.cancelCallbacks("C");
-        assertEquals(4, repository.callbacks().size());
+        assertThat(repository.callbacks()).hasSize(4);
 
         repository.cancelCallbacks("A");
-        assertEquals(1, repository.callbacks().size());
+        assertThat(repository.callbacks()).hasSize(1);
 
-        assertEquals(3, failCounter);
-        assertEquals(0, successCounter);
+        assertThat(failCounter).isEqualTo(3);
+        assertThat(successCounter).isZero();
     }
 
     private CommandCallbackWrapper<Object, Object, Object> createWrapper(Object sessionId) {

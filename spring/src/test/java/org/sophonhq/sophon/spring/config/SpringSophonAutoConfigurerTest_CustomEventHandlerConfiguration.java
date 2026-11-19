@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.spring.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.sophonhq.sophon.commandhandling.AsynchronousCommandBus;
 import org.sophonhq.sophon.commandhandling.CommandBus;
@@ -52,7 +52,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonMap;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 @ExtendWith(SpringExtension.class)
@@ -72,9 +73,9 @@ public class SpringSophonAutoConfigurerTest_CustomEventHandlerConfiguration {
     void eventHandlerIsRegisteredWithCustomProcessor() {
         eventBus.publish(asEventMessage("Testing 123"));
 
-        assertNotNull(myEventHandler.eventBus, "Expected EventBus to be wired");
-        assertTrue(myEventHandler.received.contains("value"));
-        assertTrue(myOtherEventHandler.received.contains("Testing 123"));
+        assertThat(myEventHandler.eventBus).as("Expected EventBus to be wired").isNotNull();
+        assertThat(myEventHandler.received).contains("value");
+        assertThat(myOtherEventHandler.received).contains("Testing 123");
     }
 
     @Import(SpringSophonAutoConfigurer.ImportSelector.class)
@@ -180,7 +181,7 @@ public class SpringSophonAutoConfigurerTest_CustomEventHandlerConfiguration {
 
             @EventHandler(payloadType = String.class)
             public void handle(@MetaDataValue("key") String event) {
-                assertNotNull(eventBus);
+                assertThat(eventBus).isNotNull();
                 received.add(event);
             }
         }

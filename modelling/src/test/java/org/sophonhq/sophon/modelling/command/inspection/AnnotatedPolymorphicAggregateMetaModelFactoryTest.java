@@ -29,13 +29,14 @@ import java.lang.reflect.Executable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests for polymorphic aggregate model.
@@ -63,34 +64,39 @@ class AnnotatedPolymorphicAggregateMetaModelFactoryTest {
         Map<Class<?>, List<MessageHandlingMember<? super A>>> allCommandHandlerInterceptors = model
                 .allCommandHandlerInterceptors();
 
-        assertEquals(3, allCommandHandlers.size());
-        assertEquals(3, allEventHandlers.size());
-        assertEquals(3, allCommandHandlerInterceptors.size());
+        assertThat(allCommandHandlers).hasSize(3);
+        assertThat(allEventHandlers).hasSize(3);
+        assertThat(allCommandHandlerInterceptors).hasSize(3);
 
-        assertEquals(singletonList(aHandle), executables(allCommandHandlers.get(A.class)));
-        assertEquals(singletonList(aHandle), executables(model.commandHandlers(A.class)));
-        assertEquals(singletonList(aIntercept), executables(allCommandHandlerInterceptors.get(A.class)));
-        assertEquals(singletonList(aIntercept), executables(model.commandHandlerInterceptors(A.class)));
-        assertEquals(singletonList(aOn), executables(allEventHandlers.get(A.class)));
+        assertThat(executables(allCommandHandlers.get(A.class))).containsExactly(aHandle);
+        assertThat(executables(model.commandHandlers(A.class))).containsExactly(aHandle);
+        assertThat(executables(allCommandHandlerInterceptors.get(A.class)))
+                .containsExactly(aIntercept);
+        assertThat(executables(model.commandHandlerInterceptors(A.class)))
+                .containsExactly(aIntercept);
+        assertThat(executables(allEventHandlers.get(A.class))).containsExactly(aOn);
 
-        assertEquals(asList(aHandle, bHandle), executables(allCommandHandlers.get(B.class)));
-        assertEquals(asList(aHandle, bHandle), executables(model.commandHandlers(B.class)));
-        assertEquals(asList(aIntercept, bIntercept), executables(allCommandHandlerInterceptors.get(B.class)));
-        assertEquals(asList(aIntercept, bIntercept), executables(model.commandHandlerInterceptors(B.class)));
-        assertEquals(asList(aOn, bOn), executables(allEventHandlers.get(B.class)));
+        assertThat(executables(allCommandHandlers.get(B.class))).containsExactly(aHandle, bHandle);
+        assertThat(executables(model.commandHandlers(B.class))).containsExactly(aHandle, bHandle);
+        assertThat(executables(allCommandHandlerInterceptors.get(B.class)))
+                .containsExactly(aIntercept, bIntercept);
+        assertThat(executables(model.commandHandlerInterceptors(B.class)))
+                .containsExactly(aIntercept, bIntercept);
+        assertThat(executables(allEventHandlers.get(B.class))).containsExactly(aOn, bOn);
 
-        assertEquals(asList(aHandle, cHandle), executables(allCommandHandlers.get(C.class)));
-        assertEquals(asList(aHandle, cHandle), executables(model.commandHandlers(C.class)));
-        assertEquals(asList(aIntercept, cIntercept), executables(allCommandHandlerInterceptors.get(C.class)));
-        assertEquals(asList(aIntercept, cIntercept), executables(model.commandHandlerInterceptors(C.class)));
-        assertEquals(asList(aOn, cOn), executables(allEventHandlers.get(C.class)));
+        assertThat(executables(allCommandHandlers.get(C.class))).containsExactly(aHandle, cHandle);
+        assertThat(executables(model.commandHandlers(C.class))).containsExactly(aHandle, cHandle);
+        assertThat(executables(allCommandHandlerInterceptors.get(C.class)))
+                .containsExactly(aIntercept, cIntercept);
+        assertThat(executables(model.commandHandlerInterceptors(C.class)))
+                .containsExactly(aIntercept, cIntercept);
+        assertThat(executables(allEventHandlers.get(C.class))).containsExactly(aOn, cOn);
     }
 
     @Test
     void uniqueAggregateIdentifierField() {
-        assertThrows(AggregateModellingException.class,
-                     () -> AnnotatedAggregateMetaModelFactory
-                             .inspectAggregate(D.class, new HashSet<>(singleton(E.class))));
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory.inspectAggregate(D.class, Set.of(E.class)))
+                .isInstanceOf(AggregateModellingException.class);
     }
 
     @Test

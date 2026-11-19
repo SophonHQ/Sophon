@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.common.lock;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +30,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link PessimisticLockFactory}.
@@ -63,7 +66,7 @@ class PessimisticLockFactoryTest {
         locksField.setAccessible(true);
         //noinspection unchecked
         Map<String, Lock> locks = (Map<String, Lock>) locksField.get(testSubject);
-        assertEquals(0, locks.size(), "Expected lock to be cleaned up");
+        assertThat(locks).as("Expected lock to be cleaned up").hasSize(0);
     }
 
     @Test
@@ -78,12 +81,12 @@ class PessimisticLockFactoryTest {
         locksField.setAccessible(true);
         //noinspection unchecked
         Map<String, Lock> locks = (Map<String, Lock>) locksField.get(testSubject);
-        assertEquals(1, locks.size(), "Expected lock not to be cleaned up");
+        assertThat(locks).as("Expected lock not to be cleaned up").hasSize(1);
 
         lockTwo.release();
         //noinspection unchecked
         locks = (Map<String, Lock>) locksField.get(testSubject);
-        assertTrue(locks.isEmpty(), "Expected locks to be cleaned up");
+        assertThat(locks).as("Expected locks to be cleaned up").isEmpty();
     }
 
     @Test
@@ -107,7 +110,7 @@ class PessimisticLockFactoryTest {
         try {
             //noinspection resource
             Lock lockOne = testSubject.obtainLock(idOne);
-            assertTrue(deadlockInThread.get());
+            assertThat(deadlockInThread.get()).isTrue();
             lockOne.release();
         } catch (DeadlockException e) {
             // this is ok!
@@ -136,7 +139,7 @@ class PessimisticLockFactoryTest {
         try {
             //noinspection resource
             Lock thisLock = testSubject.obtainLock(idOne);
-            assertTrue(deadlockInThread.get());
+            assertThat(deadlockInThread.get()).isTrue();
             thisLock.release();
         } catch (DeadlockException e) {
             // this is ok!
@@ -176,7 +179,7 @@ class PessimisticLockFactoryTest {
         try {
             //noinspection resource
             Lock lockOne = testSubject.obtainLock(idOne);
-            assertTrue(deadlockInThread.get());
+            assertThat(deadlockInThread.get()).isTrue();
             lockOne.release();
         } catch (DeadlockException e) {
             // this is ok!
@@ -199,11 +202,11 @@ class PessimisticLockFactoryTest {
             // Obtain the lock
             createThreadObtainLockAndWaitForState(lockFactory, Thread.State.WAITING, rendezvous, exceptionInThread, id);
             // backoff triggers, too many spins
-            assertThrows(LockAcquisitionFailedException.class, () -> {
+            assertThatThrownBy(() -> {
                 //noinspection resource
                 Lock lock = lockFactory.obtainLock(id);
                 lock.release();
-            });
+            }).isInstanceOf(LockAcquisitionFailedException.class);
         } finally {
             rendezvous.countDown();
         }
@@ -236,11 +239,11 @@ class PessimisticLockFactoryTest {
                                                   exceptionInThread,
                                                   id);
             // backoff triggers, queue
-            assertThrows(LockAcquisitionFailedException.class, () -> {
+            assertThatThrownBy(() -> {
                 //noinspection resource
                 Lock lock = lockFactory.obtainLock(id);
                 lock.release();
-            });
+            }).isInstanceOf(LockAcquisitionFailedException.class);
         } finally {
             rendezvous.countDown();
         }
@@ -296,7 +299,8 @@ class PessimisticLockFactoryTest {
         PessimisticLockFactory.Builder builderTestSubject = PessimisticLockFactory.builder();
 
         int illegalValue = 0;
-        assertThrows(IllegalArgumentException.class, () -> builderTestSubject.acquireAttempts(illegalValue));
+        assertThatThrownBy(() -> builderTestSubject.acquireAttempts(illegalValue))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -304,7 +308,8 @@ class PessimisticLockFactoryTest {
         PessimisticLockFactory.Builder builderTestSubject = PessimisticLockFactory.builder();
 
         int illegalValue = 0;
-        assertThrows(IllegalArgumentException.class, () -> builderTestSubject.queueLengthThreshold(illegalValue));
+        assertThatThrownBy(() -> builderTestSubject.queueLengthThreshold(illegalValue))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -312,7 +317,8 @@ class PessimisticLockFactoryTest {
         PessimisticLockFactory.Builder builderTestSubject = PessimisticLockFactory.builder();
 
         int illegalValue = -1;
-        assertThrows(IllegalArgumentException.class, () -> builderTestSubject.lockAttemptTimeout(illegalValue));
+        assertThatThrownBy(() -> builderTestSubject.lockAttemptTimeout(illegalValue))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -320,6 +326,6 @@ class PessimisticLockFactoryTest {
         this.identifier = null;
 
         //noinspection resource
-        assertThrows(IllegalArgumentException.class, () -> testSubject.obtainLock(identifier));
+        assertThatThrownBy(() -> testSubject.obtainLock(identifier)).isInstanceOf(IllegalArgumentException.class);
     }
 }

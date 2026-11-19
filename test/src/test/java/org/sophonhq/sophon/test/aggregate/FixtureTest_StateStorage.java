@@ -17,9 +17,10 @@
 
 package org.sophonhq.sophon.test.aggregate;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
-import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
 import org.sophonhq.sophon.modelling.command.TargetAggregateIdentifier;
@@ -28,9 +29,13 @@ import org.sophonhq.sophon.test.FixtureExecutionException;
 import java.util.Collections;
 import java.util.function.Supplier;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.CoreMatchers.any;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 /**
@@ -62,7 +67,7 @@ class FixtureTest_StateStorage {
         fixture.givenState(() -> new StateStoredAggregate(AGGREGATE_ID, "message"))
                .when(new SetMessageCommand(AGGREGATE_ID, "message2"))
                .expectEvents(new StubDomainEvent())
-               .expectState(aggregate -> assertEquals("message2", aggregate.getMessage()));
+               .expectState(aggregate -> assertThat(aggregate.getMessage()).isEqualTo("message2"));
     }
 
     @Test
@@ -71,7 +76,7 @@ class FixtureTest_StateStorage {
                .givenCommands(new InitializeCommand(AGGREGATE_ID, "message"))
                .when(new SetMessageCommand(AGGREGATE_ID, "message2"))
                .expectEvents(new StubDomainEvent())
-               .expectState(aggregate -> assertEquals("message2", aggregate.getMessage()));
+               .expectState(aggregate -> assertThat(aggregate.getMessage()).isEqualTo("message2"));
     }
 
 
@@ -81,7 +86,7 @@ class FixtureTest_StateStorage {
                .givenNoPriorActivity()
                .when(new InitializeCommand(AGGREGATE_ID, "message"))
                .expectEvents(new StubDomainEvent())
-               .expectState(aggregate -> assertEquals("message", aggregate.getMessage()));
+               .expectState(aggregate -> assertThat(aggregate.getMessage()).isEqualTo("message"));
     }
 
     @Test
@@ -91,10 +96,10 @@ class FixtureTest_StateStorage {
                .expectEvents(new StubDomainEvent())
                .expectState(aggregate -> {
                    apply(new StubDomainEvent());
-                   assertEquals("message2", aggregate.getMessage());
+                   assertThat(aggregate.getMessage()).isEqualTo("message2");
                })
                .expectEvents(new StubDomainEvent())
-               .expectState(Assertions::assertNotNull);
+               .expectState(aggregate -> assertThat(aggregate).isNotNull());
     }
 
     @Test
@@ -104,12 +109,11 @@ class FixtureTest_StateStorage {
                        .when(new ErrorCommand(AGGREGATE_ID, "message2"))
                        .expectException(any(Exception.class))
                        .expectNoEvents();
-        IllegalStateException e = assertThrows(
-                IllegalStateException.class,
-                () -> result.expectState(aggregate -> assertEquals("message2", aggregate.getMessage()))
-        );
-        assertTrue(e.getMessage().contains("Unit of Work"), "Wrong message: " + e.getMessage());
-        assertTrue(e.getMessage().contains("rolled back"), "Wrong message: " + e.getMessage());
+        IllegalStateException e = assertThatExceptionOfType(IllegalStateException.class).isThrownBy(
+                () -> result.expectState(aggregate -> assertThat(aggregate.getMessage()).isEqualTo("message2"))
+        ).actual();
+        assertThat(e.getMessage()).as("Wrong message: " + e.getMessage()).contains("Unit of Work");
+        assertThat(e.getMessage()).as("Wrong message: " + e.getMessage()).contains("rolled back");
     }
 
     /**
@@ -132,20 +136,16 @@ class FixtureTest_StateStorage {
     void givenWithStateStorageException() {
         fixture.useStateStorage();
 
-        assertThrows(
-                FixtureExecutionException.class,
-                () -> fixture.given(new StubDomainEvent())
-        );
+        assertThatThrownBy(() -> fixture.given(new StubDomainEvent()))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
     void givenWithEventListAndStateStorageExpectException() {
         fixture.useStateStorage();
 
-        assertThrows(
-                FixtureExecutionException.class,
-                () -> fixture.given(Collections.singletonList(new StubDomainEvent()))
-        );
+        assertThatThrownBy(() -> fixture.given(Collections.singletonList(new StubDomainEvent())))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 
     private static class InitializeCommand {

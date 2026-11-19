@@ -17,11 +17,12 @@
 
 package org.sophonhq.sophon.lifecycle;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.CompletableFuture;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests targeted towards the {@link ShutdownLatch}.
@@ -39,14 +40,14 @@ class ShutdownLatchTest {
         CompletableFuture<Void> latch = testSubject.initiateShutdown();
         testSubject.initialize();
 
-        assertTrue(latch.isCompletedExceptionally());
+        assertThat(latch.isCompletedExceptionally()).isTrue();
     }
 
     @Test
     void incrementThrowsShutdownInProgressExceptionIfShuttingDown() {
         testSubject.initiateShutdown();
 
-        assertThrows(ShutdownInProgressException.class, testSubject::registerActivity);
+        assertThatThrownBy(testSubject::registerActivity).isInstanceOf(ShutdownInProgressException.class);
     }
 
     @Test
@@ -55,39 +56,39 @@ class ShutdownLatchTest {
 
         CompletableFuture<Void> latch = testSubject.initiateShutdown();
 
-        assertFalse(latch.isDone());
+        assertThat(latch.isDone()).isFalse();
 
         activityHandle.end();
 
-        assertTrue(latch.isDone());
+        assertThat(latch.isDone()).isTrue();
     }
 
     @Test
     void isShuttingDownIsFalseForNonAwaitedLatch() {
-        assertFalse(testSubject.isShuttingDown());
+        assertThat(testSubject.isShuttingDown()).isFalse();
     }
 
     @Test
     void initiateShutdownOnEmptyLatchOpensImmediately() {
         CompletableFuture<Void> latch = testSubject.initiateShutdown();
 
-        assertTrue(latch.isDone());
+        assertThat(latch.isDone()).isTrue();
     }
 
     @Test
     void isShuttingDownIsTrueForAwaitedLatch() {
         CompletableFuture<Void> latch = testSubject.initiateShutdown();
 
-        assertTrue(testSubject.isShuttingDown());
-        assertTrue(latch.isDone());
+        assertThat(testSubject.isShuttingDown()).isTrue();
+        assertThat(latch.isDone()).isTrue();
     }
 
     @Test
     void isShuttingDownThrowsSuppliedExceptionForAwaitedLatch() {
         CompletableFuture<Void> latch = testSubject.initiateShutdown();
 
-        assertThrows(SomeException.class, () -> testSubject.ifShuttingDown(SomeException::new));
-        assertTrue(latch.isDone());
+        assertThatThrownBy(() -> testSubject.ifShuttingDown(SomeException::new)).isInstanceOf(SomeException.class);
+        assertThat(latch.isDone()).isTrue();
     }
 
     @Test
@@ -100,10 +101,10 @@ class ShutdownLatchTest {
         handleOne.end();
 
         CompletableFuture<Void> latch = testSubject.initiateShutdown();
-        assertFalse(latch.isDone());
+        assertThat(latch.isDone()).isFalse();
         // Only ending to other activity handle will open the latch
         handleTwo.end();
-        assertTrue(latch.isDone());
+        assertThat(latch.isDone()).isTrue();
     }
 
     private static class SomeException extends RuntimeException {

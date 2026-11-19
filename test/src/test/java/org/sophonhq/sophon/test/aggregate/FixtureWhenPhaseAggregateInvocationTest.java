@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.test.aggregate;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventsourcing.EventSourcingHandler;
 import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
 import org.sophonhq.sophon.modelling.command.AggregateLifecycle;
@@ -25,7 +26,7 @@ import org.sophonhq.sophon.modelling.command.AggregateLifecycle;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 /**
@@ -97,14 +98,13 @@ class FixtureWhenPhaseAggregateInvocationTest {
 
     @Test
     void usingWhenInvokedWithNonExistingAggregateIdentifierThrowsIllegalArgumentException() {
-        assertThrows(
-                AssertionError.class,
+        assertThatThrownBy(
                 () -> testFixture.given(new AggregateCreatedEvent(AGGREGATE_ID, SHOULD_NOT_FAIL))
                                  .whenInvoking(
                                          "non-existing-aggregate-id",
                                          aggregate -> aggregate.createEntity(STATE, SHOULD_NOT_FAIL)
                                  )
-        );
+        ).isInstanceOf(AssertionError.class);
     }
 
     private static class AggregateCreatedEvent {

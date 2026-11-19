@@ -20,11 +20,10 @@ import org.junit.jupiter.api.*;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.mock.env.MockEnvironment;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.TreeSet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 /**
  * Test class validating the {@link LegacyPropertiesDetector}.
@@ -42,9 +41,8 @@ class LegacyPropertiesDetectorTest {
 
         LegacyPropertiesDetector testSubject = new LegacyPropertiesDetector(environment);
 
-        assertEquals(new TreeSet<>(Arrays.asList("AXON_EVENTHANDLING_TOKENSTORE_CLAIMTIMEOUT",
-                                                 "axon.serializer.general")),
-                     testSubject.legacyPropertyNames());
+        assertThat(testSubject.legacyPropertyNames())
+                .containsExactly("AXON_EVENTHANDLING_TOKENSTORE_CLAIMTIMEOUT", "axon.serializer.general");
     }
 
     @Test
@@ -53,7 +51,7 @@ class LegacyPropertiesDetectorTest {
 
         LegacyPropertiesDetector testSubject = new LegacyPropertiesDetector(environment);
 
-        assertTrue(testSubject.legacyPropertyNames().isEmpty());
-        assertDoesNotThrow(testSubject::afterPropertiesSet);
+        assertThat(testSubject.legacyPropertyNames()).isEmpty();
+        assertThatNoException().isThrownBy(testSubject::afterPropertiesSet);
     }
 }

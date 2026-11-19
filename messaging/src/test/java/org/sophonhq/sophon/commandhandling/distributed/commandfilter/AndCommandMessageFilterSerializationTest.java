@@ -23,7 +23,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link AndCommandMessageFilter} can be serialized through Sophon's {@link
@@ -43,6 +43,6 @@ class AndCommandMessageFilterSerializationTest {
     @ParameterizedTest
     @MethodSource("testSerializers")
     void andCommandMessageFilterShouldBeSerializable(TestSerializer serializer) {
-        assertEquals(testSubject, serializer.serializeDeserialize(testSubject));
+        assertThat(serializer.serializeDeserialize(testSubject)).isEqualTo(testSubject);
     }
 }

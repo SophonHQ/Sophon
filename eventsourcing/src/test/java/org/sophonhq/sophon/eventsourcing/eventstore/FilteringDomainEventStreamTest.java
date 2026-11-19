@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventsourcing.eventstore;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.messaging.MetaData;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FilteringDomainEventStreamTest {
 
@@ -56,7 +57,7 @@ class FilteringDomainEventStreamTest {
         List<DomainEventMessage<?>> actualMessages = new ArrayList<>();
         concat.forEachRemaining(actualMessages::add);
 
-        assertEquals(expectedMessages, actualMessages);
+        assertThat(actualMessages).isEqualTo(expectedMessages);
     }
     
     @Test
@@ -71,6 +72,6 @@ class FilteringDomainEventStreamTest {
         List<DomainEventMessage<?>> actualMessages = new ArrayList<>();
         concat.forEachRemaining(actualMessages::add);
 
-        assertEquals(expectedMessages, actualMessages);
+        assertThat(actualMessages).isEqualTo(expectedMessages);
     }
 }

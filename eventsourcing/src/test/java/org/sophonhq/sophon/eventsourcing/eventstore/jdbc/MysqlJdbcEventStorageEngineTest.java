@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.eventsourcing.eventstore.jdbc;
 
 import com.mysql.cj.jdbc.MysqlDataSource;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.eventsourcing.eventstore.jpa.SQLErrorCodesResolver;
 import org.sophonhq.sophon.eventsourcing.utils.TestSerializer;
@@ -30,7 +31,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.createEvent;
 
 /**
@@ -67,8 +68,8 @@ class MysqlJdbcEventStorageEngineTest {
     void loadLastSequenceNumber() {
         final String aggregateId = UUID.randomUUID().toString();
         testSubject.appendEvents(createEvent(aggregateId, 0), createEvent(aggregateId, 1));
-        assertEquals(1L, (long) testSubject.lastSequenceNumberFor(aggregateId).orElse(-1L));
-        assertFalse(testSubject.lastSequenceNumberFor("nonexistent").isPresent());
+        assertThat((long) testSubject.lastSequenceNumberFor(aggregateId).orElse(-1L)).isOne();
+        assertThat(testSubject.lastSequenceNumberFor("nonexistent")).isEmpty();
     }
 
     @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})

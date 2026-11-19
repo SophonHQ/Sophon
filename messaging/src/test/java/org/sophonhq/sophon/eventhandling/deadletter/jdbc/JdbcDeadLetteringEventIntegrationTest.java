@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.jdbc.JdbcException;
 import org.sophonhq.sophon.common.transaction.Transaction;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
@@ -46,7 +47,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.common.jdbc.JdbcUtils.closeQuietly;
 import static org.sophonhq.sophon.common.jdbc.JdbcUtils.executeUpdate;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
@@ -148,7 +149,7 @@ class JdbcDeadLetteringEventIntegrationTest extends DeadLetteringEventIntegratio
         Iterator<DeadLetter<? extends EventMessage<?>>> resultIterator =
                 jdbcDeadLetterQueue.deadLetterSequence(aggregateId)
                                    .iterator();
-        assertFalse(resultIterator.hasNext());
+        assertThat(resultIterator).isExhausted();
 
         IntStream.range(0, 64)
                  .boxed()
@@ -164,18 +165,22 @@ class JdbcDeadLetteringEventIntegrationTest extends DeadLetteringEventIntegratio
         for (Map.Entry<Integer, GenericDeadLetter<EventMessage<?>>> entry : insertedLetters.entrySet()) {
             Integer sequenceIndex = entry.getKey();
             Supplier<String> assertMessageSupplier = () -> "Failed asserting event [" + sequenceIndex + "]";
-            assertTrue(resultIterator.hasNext(), assertMessageSupplier);
+            assertThat(resultIterator).as(assertMessageSupplier).hasNext();
 
             GenericDeadLetter<EventMessage<?>> expected = entry.getValue();
             DeadLetter<? extends EventMessage<?>> result = resultIterator.next();
-            assertTrue(result instanceof JdbcDeadLetter);
+            assertThat(result).isInstanceOf(JdbcDeadLetter.class);
             JdbcDeadLetter<? extends EventMessage<?>> actual = ((JdbcDeadLetter<? extends EventMessage<?>>) result);
 
-            assertEquals(expected.getSequenceIdentifier(), actual.getSequenceIdentifier(), assertMessageSupplier);
-            assertEquals(expected.message().getPayload(), actual.message().getPayload(), assertMessageSupplier);
-            assertFalse(result.cause().isPresent(), assertMessageSupplier);
-            assertEquals(expected.diagnostics(), actual.diagnostics(), assertMessageSupplier);
-            assertEquals(sequenceIndex.longValue(), actual.getSequenceIndex(), assertMessageSupplier);
+            assertThat(actual.getSequenceIdentifier())
+                    .as(assertMessageSupplier)
+                    .isEqualTo(expected.getSequenceIdentifier());
+            assertThat(actual.message().getPayload())
+                    .as(assertMessageSupplier)
+                    .isEqualTo(expected.message().getPayload());
+            assertThat(result.cause()).as(assertMessageSupplier).isNotPresent();
+            assertThat(actual.diagnostics()).as(assertMessageSupplier).isEqualTo(expected.diagnostics());
+            assertThat(actual.getSequenceIndex()).as(assertMessageSupplier).isEqualTo(sequenceIndex.longValue());
         }
     }
 

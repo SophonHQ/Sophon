@@ -16,7 +16,7 @@
  */
 package org.sophonhq.sophon.messaging.timeout;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.DefaultInterceptorChain;
@@ -24,7 +24,7 @@ import org.sophonhq.sophon.messaging.unitofwork.DefaultUnitOfWork;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class UnitOfWorkTimeoutInterceptorTest {
 
@@ -43,9 +43,9 @@ class UnitOfWorkTimeoutInterceptorTest {
                     return null;
                 });
         uow.executeWithResult(interceptorChain::proceed);
-        assertTrue(uow.isRolledBack());
-        assertTrue(uow.getExecutionResult().isExceptionResult());
-        assertInstanceOf(SophonTimeoutException.class, uow.getExecutionResult().getExceptionResult());
+        assertThat(uow.isRolledBack()).isTrue();
+        assertThat(uow.getExecutionResult().isExceptionResult()).isTrue();
+        assertThat(uow.getExecutionResult().getExceptionResult()).isInstanceOf(SophonTimeoutException.class);
     }
 
 
@@ -64,7 +64,7 @@ class UnitOfWorkTimeoutInterceptorTest {
                     return null;
                 });
         uow.executeWithResult(interceptorChain::proceed);
-        assertFalse(uow.isRolledBack());
-        assertFalse(uow.getExecutionResult().isExceptionResult());
+        assertThat(uow.isRolledBack()).isFalse();
+        assertThat(uow.getExecutionResult().isExceptionResult()).isFalse();
     }
 }

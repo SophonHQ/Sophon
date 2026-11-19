@@ -20,7 +20,8 @@ package org.sophonhq.sophon.test.matchers;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -28,7 +29,7 @@ import org.sophonhq.sophon.eventhandling.EventMessage;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.test.matchers.Matchers.andNoMore;
 import static org.sophonhq.sophon.test.matchers.Matchers.exactSequenceOf;
@@ -63,7 +64,7 @@ class ExactSequenceOfEventsMatcherTest {
 
     @Test
     void match_FullMatch() {
-        assertTrue(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3)));
+        assertThat(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3))).isTrue();
 
         verify(mockMatcher1).matches(stubEvent1);
         verify(mockMatcher1, never()).matches(stubEvent2);
@@ -81,7 +82,7 @@ class ExactSequenceOfEventsMatcherTest {
     @Test
     void match_FullMatchAndNoMore() {
         testSubject = exactSequenceOf(mockMatcher1, mockMatcher2, mockMatcher3, andNoMore());
-        assertTrue(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3)));
+        assertThat(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3))).isTrue();
 
         verify(mockMatcher1).matches(stubEvent1);
         verify(mockMatcher1, never()).matches(stubEvent2);
@@ -99,7 +100,7 @@ class ExactSequenceOfEventsMatcherTest {
     @Test
     void match_ExcessIsRefused() {
         testSubject = exactSequenceOf(mockMatcher1, mockMatcher2, mockMatcher3, andNoMore());
-        assertFalse(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3, new StubEvent())));
+        assertThat(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3, new StubEvent()))).isFalse();
 
         verify(mockMatcher1).matches(stubEvent1);
         verify(mockMatcher1, never()).matches(stubEvent2);
@@ -119,7 +120,7 @@ class ExactSequenceOfEventsMatcherTest {
         reset(mockMatcher2);
         when(mockMatcher2.matches(any())).thenReturn(false);
 
-        assertFalse(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3)));
+        assertThat(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3))).isFalse();
 
         verify(mockMatcher1).matches(stubEvent1);
         verify(mockMatcher1, never()).matches(stubEvent2);
@@ -135,7 +136,7 @@ class ExactSequenceOfEventsMatcherTest {
     @Test
     void match_MoreMatchersThanEvents() {
         when(mockMatcher3.matches(null)).thenReturn(false);
-        assertFalse(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2)));
+        assertThat(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2))).isFalse();
 
         verify(mockMatcher1).matches(stubEvent1);
         verify(mockMatcher1, never()).matches(stubEvent2);
@@ -148,7 +149,7 @@ class ExactSequenceOfEventsMatcherTest {
 
     @Test
     void match_ExcessEventsIgnored() {
-        assertTrue(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3, new StubEvent())));
+        assertThat(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2, stubEvent3, new StubEvent()))).isTrue();
 
         verify(mockMatcher1).matches(stubEvent1);
         verify(mockMatcher1, never()).matches(stubEvent2);
@@ -169,7 +170,7 @@ class ExactSequenceOfEventsMatcherTest {
         StringDescription description = new StringDescription();
         testSubject.describeTo(description);
         String actual = description.toString();
-        assertEquals("list with exact sequence of: <A>, <B> and <C>", actual);
+        assertThat(actual).isEqualTo("list with exact sequence of: <A>, <B> and <C>");
     }
 
     @Test
@@ -186,7 +187,7 @@ class ExactSequenceOfEventsMatcherTest {
         StringDescription description = new StringDescription();
         testSubject.describeTo(description);
         String actual = description.toString();
-        assertEquals("list with exact sequence of: <A>, <B> (FAILED!) and <C>", actual);
+        assertThat(actual).isEqualTo("list with exact sequence of: <A>, <B> (FAILED!) and <C>");
     }
 
     private static class DescribingAnswer implements Answer<Object> {

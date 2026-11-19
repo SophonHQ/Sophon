@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.test.saga;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.deadline.DeadlineManager;
 import org.sophonhq.sophon.deadline.annotation.DeadlineHandler;
 import org.sophonhq.sophon.eventhandling.Timestamp;
@@ -29,7 +30,8 @@ import org.sophonhq.sophon.test.SophonAssertionError;
 import java.time.Duration;
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.sophonhq.sophon.deadline.GenericDeadlineMessage.asDeadlineMessage;
 import static org.sophonhq.sophon.test.matchers.Matchers.*;
 
@@ -162,14 +164,12 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlines(NONE_OCCURRING_DEADLINE_PAYLOAD)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlines(NONE_OCCURRING_DEADLINE_PAYLOAD))
+                .actual();
 
-        assertTrue(
-                result.getMessage().contains("Expected deadlines were not triggered at the given deadline manager.")
-        );
+        assertThat(result.getMessage())
+                .contains("Expected deadlines were not triggered at the given deadline manager.");
     }
 
     @Test
@@ -178,12 +178,11 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlines(DEADLINE_PAYLOAD, NONE_OCCURRING_DEADLINE_PAYLOAD)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlines(DEADLINE_PAYLOAD, NONE_OCCURRING_DEADLINE_PAYLOAD))
+                .actual();
 
-        assertTrue(result.getMessage().contains("Got wrong number of triggered deadlines."));
+        assertThat(result.getMessage()).contains("Got wrong number of triggered deadlines.");
     }
 
     @Test
@@ -201,14 +200,12 @@ class FixtureTest_Deadlines {
         FixtureExecutionResult given = fixture.givenAggregate(AGGREGATE_ID)
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlinesWithName(NONE_OCCURRING_DEADLINE_PAYLOAD)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlinesWithName(NONE_OCCURRING_DEADLINE_PAYLOAD))
+                .actual();
 
-        assertTrue(
-                result.getMessage().contains("Expected deadlines were not triggered at the given deadline manager.")
-        );
+        assertThat(result.getMessage())
+                .contains("Expected deadlines were not triggered at the given deadline manager.");
     }
 
     @Test
@@ -217,12 +214,12 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlinesWithName(DEADLINE_NAME, NONE_OCCURRING_DEADLINE_PAYLOAD)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlinesWithName(DEADLINE_NAME,
+                                                                         NONE_OCCURRING_DEADLINE_PAYLOAD))
+                .actual();
 
-        assertTrue(result.getMessage().contains("Got wrong number of triggered deadlines."));
+        assertThat(result.getMessage()).contains("Got wrong number of triggered deadlines.");
     }
 
     @Test
@@ -241,14 +238,12 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlinesOfType(Integer.class)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlinesOfType(Integer.class))
+                .actual();
 
-        assertTrue(
-                result.getMessage().contains("Expected deadlines were not triggered at the given deadline manager.")
-        );
+        assertThat(result.getMessage())
+                .contains("Expected deadlines were not triggered at the given deadline manager.");
     }
 
     @Test
@@ -257,12 +252,11 @@ class FixtureTest_Deadlines {
                                               .published(START_SAGA_EVENT)
                                               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1));
 
-        SophonAssertionError result = assertThrows(
-                SophonAssertionError.class,
-                () -> given.expectTriggeredDeadlinesOfType(String.class, String.class)
-        );
+        SophonAssertionError result = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> given.expectTriggeredDeadlinesOfType(String.class, String.class))
+                .actual();
 
-        assertTrue(result.getMessage().contains("Got wrong number of triggered deadlines."));
+        assertThat(result.getMessage()).contains("Got wrong number of triggered deadlines.");
     }
 
     @Test

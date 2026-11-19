@@ -17,12 +17,14 @@
 
 package org.sophonhq.sophon.commandhandling.gateway;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.commandhandling.gateway.IntervalRetrySchedulerTest.doScheduleRetry;
 
 class ExponentialBackOffIntervalRetrySchedulerTest {
@@ -48,18 +50,20 @@ class ExponentialBackOffIntervalRetrySchedulerTest {
             long expectedDelay = BACKOFF_FACTOR * (1L << (nrOfFailures - 1));
             long actualDelay = doScheduleRetry(retryScheduler, nrOfFailures);
 
-            assertTrue(actualDelay >= expectedDelay,
-                       "Scheduling a retry after " + nrOfFailures + " failure(s) should wait at least "
-                               + expectedDelay + "ms, but waited " + actualDelay + "ms.");
+            assertThat(actualDelay >= expectedDelay)
+                    .as("Scheduling a retry after " + nrOfFailures + " failure(s) should wait at least "
+                                + expectedDelay + "ms, but waited " + actualDelay + "ms.")
+                    .isTrue();
         }
 
-        assertEquals(0, doScheduleRetry(retryScheduler, MAX_RETRIES + 1),
-                     "Scheduling a retry when past maxRetryCount should have failed.");
+        assertThat(doScheduleRetry(retryScheduler, MAX_RETRIES + 1))
+                .as("Scheduling a retry when past maxRetryCount should have failed.")
+                .isZero();
     }
 
     @Test
     void buildingWhilstMissingScheduledExecutorServiceThrowsConfigurationException() {
         ExponentialBackOffIntervalRetryScheduler.Builder builder = ExponentialBackOffIntervalRetryScheduler.builder();
-        assertThrows(SophonConfigurationException.class, builder::build);
+        assertThatThrownBy(builder::build).isInstanceOf(SophonConfigurationException.class);
     }
 }

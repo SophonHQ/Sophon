@@ -18,7 +18,7 @@
 package org.sophonhq.sophon.springboot;
 
 import com.thoughtworks.xstream.XStream;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.json.JacksonSerializer;
@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration
 @EnableAutoConfiguration(exclude = {
@@ -55,15 +55,16 @@ class SophonAutoConfigurationWithOnlyEventSerializerTest {
 
     @Test
     void revertsToDefaultSerializer() {
-        assertNotNull(serializer);
-        assertNotNull(eventSerializer);
-        assertNotNull(messageSerializer);
-        assertEquals(XStreamSerializer.class, serializer.getClass());
-        assertEquals(JacksonSerializer.class, eventSerializer.getClass());
-        assertEquals(XStreamSerializer.class, messageSerializer.getClass());
-        assertNotSame(eventSerializer, serializer);
-        assertNotSame(eventSerializer, messageSerializer);
-        assertNotSame(serializer, messageSerializer);
+        assertThat(serializer).isNotNull();
+        assertThat(eventSerializer).isNotNull();
+        assertThat(messageSerializer).isNotNull();
+        assertThat(serializer.getClass()).isEqualTo(XStreamSerializer.class);
+        assertThat(eventSerializer.getClass()).isEqualTo(JacksonSerializer.class);
+        assertThat(messageSerializer.getClass()).isEqualTo(XStreamSerializer.class);
+        assertThat(serializer).isNotSameAs(eventSerializer);
+        assertThat(messageSerializer)
+                .isNotSameAs(eventSerializer)
+                .isNotSameAs(serializer);
     }
 
     @org.springframework.context.annotation.Configuration

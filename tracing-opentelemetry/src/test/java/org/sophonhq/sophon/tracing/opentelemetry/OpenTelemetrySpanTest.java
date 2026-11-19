@@ -21,7 +21,8 @@ import io.opentelemetry.api.trace.SpanBuilder;
 import io.opentelemetry.api.trace.SpanContext;
 import io.opentelemetry.api.trace.StatusCode;
 import io.opentelemetry.context.Scope;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.tracing.Span;
 import org.sophonhq.sophon.tracing.SpanScope;
@@ -29,7 +30,7 @@ import org.sophonhq.sophon.tracing.SpanScope;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class OpenTelemetrySpanTest {
@@ -62,7 +63,7 @@ class OpenTelemetrySpanTest {
         openTelemetrySpan.start();
 
         verify(spanBuilder).startSpan();
-        assertEquals(0, openScopeList.size());
+        assertThat(openScopeList).hasSize(0);
     }
 
     @Test
@@ -73,9 +74,9 @@ class OpenTelemetrySpanTest {
         verify(spanBuilder).startSpan();
         verify(span).makeCurrent();
 
-        assertEquals(1, openScopeList.size());
+        assertThat(openScopeList).hasSize(1);
         scope.close();
-        assertEquals(0, openScopeList.size());
+        assertThat(openScopeList).hasSize(0);
     }
 
     @Test

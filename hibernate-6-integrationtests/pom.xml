@@ -155,12 +155,6 @@
             <artifactId>jakarta.annotation-api</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest</artifactId>
-            <scope>test</scope>
-        </dependency>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>

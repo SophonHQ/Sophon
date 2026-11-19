@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventhandling.pooled;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.eventhandling.GlobalSequenceTrackingToken;
@@ -32,7 +33,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -78,8 +80,8 @@ class MergeTaskTest {
         testSubject.run();
 
         verify(tokenStore).fetchSegments(PROCESSOR_NAME);
-        assertTrue(result.isDone());
-        assertFalse(result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.get()).isFalse();
     }
 
     @Test
@@ -104,13 +106,13 @@ class MergeTaskTest {
         verify(tokenStore).deleteToken(PROCESSOR_NAME, SEGMENT_TO_BE_MERGED);
         verify(tokenStore).storeToken(mergedTokenCaptor.capture(), eq(PROCESSOR_NAME), eq(SEGMENT_TO_MERGE));
         TrackingToken resultToken = mergedTokenCaptor.getValue();
-        assertTrue(resultToken.getClass().isAssignableFrom(MergedTrackingToken.class));
-        assertEquals(testTokenToMerge, ((MergedTrackingToken) resultToken).lowerSegmentToken());
-        assertEquals(testTokenToBeMerged, ((MergedTrackingToken) resultToken).upperSegmentToken());
+        assertThat(resultToken.getClass().isAssignableFrom(MergedTrackingToken.class)).isTrue();
+        assertThat(((MergedTrackingToken) resultToken).lowerSegmentToken()).isEqualTo(testTokenToMerge);
+        assertThat(((MergedTrackingToken) resultToken).upperSegmentToken()).isEqualTo(testTokenToBeMerged);
         verify(tokenStore).releaseClaim(PROCESSOR_NAME, SEGMENT_TO_MERGE);
 
-        assertTrue(result.isDone());
-        assertTrue(result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.get()).isTrue();
     }
 
     @Test
@@ -128,13 +130,13 @@ class MergeTaskTest {
         verify(tokenStore).deleteToken(PROCESSOR_NAME, SEGMENT_TO_BE_MERGED);
         verify(tokenStore).storeToken(mergedTokenCaptor.capture(), eq(PROCESSOR_NAME), eq(SEGMENT_TO_MERGE));
         TrackingToken resultToken = mergedTokenCaptor.getValue();
-        assertTrue(resultToken.getClass().isAssignableFrom(MergedTrackingToken.class));
-        assertEquals(testTokenToMerge, ((MergedTrackingToken) resultToken).lowerSegmentToken());
-        assertEquals(testTokenToBeMerged, ((MergedTrackingToken) resultToken).upperSegmentToken());
+        assertThat(resultToken.getClass().isAssignableFrom(MergedTrackingToken.class)).isTrue();
+        assertThat(((MergedTrackingToken) resultToken).lowerSegmentToken()).isEqualTo(testTokenToMerge);
+        assertThat(((MergedTrackingToken) resultToken).upperSegmentToken()).isEqualTo(testTokenToBeMerged);
         verify(tokenStore).releaseClaim(PROCESSOR_NAME, SEGMENT_TO_MERGE);
 
-        assertTrue(result.isDone());
-        assertTrue(result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.get()).isTrue();
     }
 
     @Test
@@ -156,13 +158,13 @@ class MergeTaskTest {
         verify(tokenStore).deleteToken(PROCESSOR_NAME, SEGMENT_TO_BE_MERGED);
         verify(tokenStore).storeToken(mergedTokenCaptor.capture(), eq(PROCESSOR_NAME), eq(SEGMENT_TO_MERGE));
         TrackingToken resultToken = mergedTokenCaptor.getValue();
-        assertTrue(resultToken.getClass().isAssignableFrom(MergedTrackingToken.class));
-        assertEquals(testTokenToMerge, ((MergedTrackingToken) resultToken).lowerSegmentToken());
-        assertEquals(testTokenToBeMerged, ((MergedTrackingToken) resultToken).upperSegmentToken());
+        assertThat(resultToken.getClass().isAssignableFrom(MergedTrackingToken.class)).isTrue();
+        assertThat(((MergedTrackingToken) resultToken).lowerSegmentToken()).isEqualTo(testTokenToMerge);
+        assertThat(((MergedTrackingToken) resultToken).upperSegmentToken()).isEqualTo(testTokenToBeMerged);
         verify(tokenStore).releaseClaim(PROCESSOR_NAME, SEGMENT_TO_MERGE);
 
-        assertTrue(result.isDone());
-        assertTrue(result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.get()).isTrue();
     }
 
     @Test
@@ -173,9 +175,9 @@ class MergeTaskTest {
 
         testSubject.run();
 
-        assertTrue(result.isDone());
-        assertTrue(result.isCompletedExceptionally());
-        assertThrows(ExecutionException.class, () -> result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.isCompletedExceptionally()).isTrue();
+        assertThatThrownBy(() -> result.get()).isInstanceOf(ExecutionException.class);
     }
 
     @Test
@@ -195,9 +197,9 @@ class MergeTaskTest {
 
         testSubject.run();
 
-        assertTrue(result.isDone());
-        assertTrue(result.isCompletedExceptionally());
-        assertThrows(ExecutionException.class, () -> result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.isCompletedExceptionally()).isTrue();
+        assertThatThrownBy(() -> result.get()).isInstanceOf(ExecutionException.class);
     }
 
     @Test
@@ -217,15 +219,14 @@ class MergeTaskTest {
 
         testSubject.run();
 
-        assertTrue(result.isDone());
-        assertTrue(result.isCompletedExceptionally());
-        assertThrows(ExecutionException.class, () -> result.get());
+        assertThat(result.isDone()).isTrue();
+        assertThat(result.isCompletedExceptionally()).isTrue();
+        assertThatThrownBy(() -> result.get()).isInstanceOf(ExecutionException.class);
     }
 
     @Test
     void description() {
         String result = testSubject.getDescription();
-        assertNotNull(result);
-        assertTrue(result.contains("Merge"));
+        assertThat(result).contains("Merge");
     }
 }

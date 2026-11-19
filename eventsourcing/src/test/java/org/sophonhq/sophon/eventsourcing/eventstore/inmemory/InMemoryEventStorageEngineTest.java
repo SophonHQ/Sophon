@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventsourcing.eventstore.inmemory;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.eventhandling.TrackedEventMessage;
@@ -37,7 +38,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link InMemoryEventStorageEngine}.
@@ -61,7 +62,7 @@ class InMemoryEventStorageEngineTest extends EventStorageEngineTest {
         Stream<? extends TrackedEventMessage<?>> stream = testSubject.readEvents(null, true);
         testSubject.appendEvents(TEST_EVENT);
 
-        assertTrue(stream.findFirst().isPresent());
+        assertThat(stream.findFirst()).isPresent();
     }
 
     @Test
@@ -71,10 +72,10 @@ class InMemoryEventStorageEngineTest extends EventStorageEngineTest {
         testSubject.appendEvents(TEST_EVENT);
 
         Optional<? extends TrackedEventMessage<?>> optionalResult = stream.findFirst();
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         OptionalLong optionalResultPosition = optionalResult.get().trackingToken().position();
-        assertTrue(optionalResultPosition.isPresent());
-        assertEquals(1, optionalResultPosition.getAsLong());
+        assertThat(optionalResultPosition.isPresent()).isTrue();
+        assertThat(optionalResultPosition.getAsLong()).isOne();
     }
 
     @Test
@@ -86,14 +87,14 @@ class InMemoryEventStorageEngineTest extends EventStorageEngineTest {
 
         // then there are no events in the storage engine, since the UnitOfWork is not committed yet.
         Stream<? extends TrackedEventMessage<?>> eventStream = testSubject.readEvents(null, true);
-        assertEquals(0L, eventStream.count());
+        assertThat(eventStream.count()).isZero();
 
         // When rolling back the UnitOfWork...
         unitOfWork.commit();
 
         // then there are *still* no events in the storage engine.
         eventStream = testSubject.readEvents(null, true);
-        assertEquals(1L, eventStream.count());
+        assertThat(eventStream.count()).isOne();
     }
 
     @Test
@@ -105,14 +106,14 @@ class InMemoryEventStorageEngineTest extends EventStorageEngineTest {
 
         // then there are no events in the storage engine, since the UnitOfWork is not committed yet.
         Stream<? extends TrackedEventMessage<?>> eventStream = testSubject.readEvents(null, true);
-        assertEquals(0L, eventStream.count());
+        assertThat(eventStream.count()).isZero();
 
         // When rolling back the UnitOfWork...
         unitOfWork.rollback();
 
         // then there are *still* no events in the storage engine.
         eventStream = testSubject.readEvents(null, true);
-        assertEquals(0L, eventStream.count());
+        assertThat(eventStream.count()).isZero();
     }
 
     @Test
@@ -132,7 +133,7 @@ class InMemoryEventStorageEngineTest extends EventStorageEngineTest {
         reader.join();
 
         List<Long> expectedPositions = LongStream.rangeClosed(0, lastPosition).boxed().collect(Collectors.toList());
-        assertEquals(expectedPositions, readPositions);
+        assertThat(readPositions).containsExactlyElementsOf(expectedPositions);
     }
 
     private Thread startReaderThread(long lastPosition, long deadline, List<Long> readPositions) {

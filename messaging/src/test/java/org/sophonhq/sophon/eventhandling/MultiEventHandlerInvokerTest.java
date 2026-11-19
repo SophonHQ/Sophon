@@ -17,12 +17,14 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -61,8 +63,8 @@ class MultiEventHandlerInvokerTest {
     void delegatesReturnsSetDelegates() {
         List<EventHandlerInvoker> result = testSubject.delegates();
 
-        assertTrue(result.contains(mockedEventHandlerInvokerOne));
-        assertTrue(result.contains(mockedEventHandlerInvokerTwo));
+        assertThat(result).contains(mockedEventHandlerInvokerOne);
+        assertThat(result).contains(mockedEventHandlerInvokerTwo);
     }
 
     @Test
@@ -87,7 +89,8 @@ class MultiEventHandlerInvokerTest {
     void handleThrowsExceptionIfDelegatesThrowAnException() throws Exception {
         doThrow(new RuntimeException()).when(mockedEventHandlerInvokerTwo).handle(testEventMessage, testSegment);
 
-        assertThrows(RuntimeException.class, () -> testSubject.handle(testEventMessage, testSegment));
+        assertThatThrownBy(() -> testSubject.handle(testEventMessage, testSegment))
+                .isInstanceOf(RuntimeException.class);
     }
 
     @Test
@@ -95,7 +98,7 @@ class MultiEventHandlerInvokerTest {
         when(mockedEventHandlerInvokerOne.supportsReset()).thenReturn(true);
         when(mockedEventHandlerInvokerTwo.supportsReset()).thenReturn(true);
 
-        assertTrue(testSubject.supportsReset());
+        assertThat(testSubject.supportsReset()).isTrue();
     }
 
     @Test
@@ -103,7 +106,7 @@ class MultiEventHandlerInvokerTest {
         when(mockedEventHandlerInvokerOne.supportsReset()).thenReturn(true);
         when(mockedEventHandlerInvokerTwo.supportsReset()).thenReturn(false);
 
-        assertTrue(testSubject.supportsReset());
+        assertThat(testSubject.supportsReset()).isTrue();
     }
 
     @Test
@@ -111,7 +114,7 @@ class MultiEventHandlerInvokerTest {
         when(mockedEventHandlerInvokerOne.supportsReset()).thenReturn(false);
         when(mockedEventHandlerInvokerTwo.supportsReset()).thenReturn(false);
 
-        assertFalse(testSubject.supportsReset());
+        assertThat(testSubject.supportsReset()).isFalse();
     }
 
     @Test
@@ -143,7 +146,7 @@ class MultiEventHandlerInvokerTest {
         when(mockedEventHandlerInvokerOne.supportsReset()).thenReturn(true);
         when(mockedEventHandlerInvokerTwo.supportsReset()).thenReturn(false);
 
-        assertTrue(testSubject.canHandle(testEventMessage, testSegment));
+        assertThat(testSubject.canHandle(testEventMessage, testSegment)).isTrue();
         testSubject.handle(testEventMessage, testSegment);
         testSubject.handle(replayMessage, testSegment);
 
@@ -161,6 +164,6 @@ class MultiEventHandlerInvokerTest {
         when(mockedEventHandlerInvokerTwo.supportsReset()).thenReturn(false);
         doThrow(RuntimeException.class).when(mockedEventHandlerInvokerOne).performReset(any());
 
-        assertThrows(Exception.class, testSubject::performReset);
+        assertThatThrownBy(testSubject::performReset).isInstanceOf(Exception.class);
     }
 }

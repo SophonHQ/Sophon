@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.junit.jupiter.*;
@@ -31,7 +32,8 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.Mockito.*;
 
 /**
@@ -78,7 +80,7 @@ class ConfigurationScopeAwareProviderTest {
         List<ScopeAware> components = scopeAwareProvider.provideScopeAwareStream(anyScopeDescriptor())
                                                         .collect(toList());
 
-        assertEquals(singletonList(aggregateRepository), components);
+        assertThat(components).isEqualTo(singletonList(aggregateRepository));
     }
 
     @Test
@@ -90,7 +92,7 @@ class ConfigurationScopeAwareProviderTest {
         List<ScopeAware> components = scopeAwareProvider.provideScopeAwareStream(anyScopeDescriptor())
                                                         .collect(toList());
 
-        assertEquals(singletonList(sagaManager), components);
+        assertThat(components).isEqualTo(singletonList(sagaManager));
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -117,7 +119,7 @@ class ConfigurationScopeAwareProviderTest {
         List<ScopeAware> second = scopeAwareProvider.provideScopeAwareStream(anyScopeDescriptor()).collect(toList());
         verifyNoInteractions(configuration);
         verifyNoInteractions(aggregateConfiguration);
-        assertEquals(first, second);
+        assertThat(second).isEqualTo(first);
     }
     
     @Test
@@ -125,7 +127,7 @@ class ConfigurationScopeAwareProviderTest {
         when(configuration.eventProcessingConfiguration()).thenReturn(null);
         scopeAwareProvider = new ConfigurationScopeAwareProvider(configuration);
         
-        assertDoesNotThrow(() -> scopeAwareProvider.provideScopeAwareStream(anyScopeDescriptor()));
+        assertThatNoException().isThrownBy(() -> scopeAwareProvider.provideScopeAwareStream(anyScopeDescriptor()));
     }
 
     private static ScopeDescriptor anyScopeDescriptor() {

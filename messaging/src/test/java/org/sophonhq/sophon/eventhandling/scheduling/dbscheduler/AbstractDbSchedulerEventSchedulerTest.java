@@ -49,8 +49,9 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import javax.sql.DataSource;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.utils.DbSchedulerTestUtil.getScheduler;
 import static org.sophonhq.sophon.utils.DbSchedulerTestUtil.reCreateTable;
@@ -102,13 +103,13 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
         Instant rightAfterSchedule = Instant.now();
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(1, publishedMessage.getPayload());
-        assertTrue(rightAfterSchedule.isBefore(publishedMessage.getTimestamp()));
-        assertTrue(publishedMessage.getMetaData().isEmpty());
+        assertThat(publishedMessage.getPayload()).isEqualTo(1);
+        assertThat(rightAfterSchedule).isBefore(publishedMessage.getTimestamp());
+        assertThat(publishedMessage.getMetaData()).isEmpty();
     }
 
     @Test
@@ -116,11 +117,11 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
         eventScheduler.schedule(Duration.ofSeconds(-10L), 1);
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(1, publishedMessage.getPayload());
+        assertThat(publishedMessage.getPayload()).isEqualTo(1);
     }
 
     @Test
@@ -132,13 +133,13 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
         Instant rightAfterSchedule = Instant.now();
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(2, publishedMessage.getPayload());
-        assertTrue(rightAfterSchedule.isBefore(publishedMessage.getTimestamp()));
-        assertEquals(metadata, publishedMessage.getMetaData());
+        assertThat(publishedMessage.getPayload()).isEqualTo(2);
+        assertThat(rightAfterSchedule).isBefore(publishedMessage.getTimestamp());
+        assertThat(publishedMessage.getMetaData()).isEqualTo(metadata);
     }
 
     @Test
@@ -147,13 +148,13 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
         Instant rightAfterSchedule = Instant.now();
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(new PayloadWithRevision(), publishedMessage.getPayload());
-        assertTrue(rightAfterSchedule.isBefore(publishedMessage.getTimestamp()));
-        assertTrue(publishedMessage.getMetaData().isEmpty());
+        assertThat(publishedMessage.getPayload()).isEqualTo(new PayloadWithRevision());
+        assertThat(rightAfterSchedule).isBefore(publishedMessage.getTimestamp());
+        assertThat(publishedMessage.getMetaData()).isEmpty();
     }
 
     @Test
@@ -165,13 +166,13 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
         Instant rightAfterSchedule = Instant.now();
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(new PayloadWithRevision(), publishedMessage.getPayload());
-        assertTrue(rightAfterSchedule.isBefore(publishedMessage.getTimestamp()));
-        assertEquals(metadata, publishedMessage.getMetaData());
+        assertThat(publishedMessage.getPayload()).isEqualTo(new PayloadWithRevision());
+        assertThat(rightAfterSchedule).isBefore(publishedMessage.getTimestamp());
+        assertThat(publishedMessage.getMetaData()).isEqualTo(metadata);
     }
 
     @Test
@@ -180,10 +181,10 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
         eventScheduler.reschedule(token, Duration.ofMillis(100L), 4);
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
-        assertEquals(4, publishedMessage.getPayload());
+        assertThat(publishedMessage.getPayload()).isEqualTo(4);
     }
 
     @Test
@@ -192,10 +193,10 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
         eventScheduler.reschedule(token, Instant.now().plusMillis(100L), 6);
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
-        assertEquals(6, publishedMessage.getPayload());
+        assertThat(publishedMessage.getPayload()).isEqualTo(6);
     }
 
     @Test
@@ -207,16 +208,11 @@ abstract class AbstractDbSchedulerEventSchedulerTest {
     @Test
     void incorrectTokenClassShouldThrow() {
         ScheduleToken token = new SimpleScheduleToken("ff");
-        assertThrows(IllegalArgumentException.class, () -> eventScheduler.cancelSchedule(token));
+        assertThatThrownBy(() -> eventScheduler.cancelSchedule(token))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
-    private static class InMemoryEventBus implements EventBus {
-
-        private final List<EventMessage<?>> publishedMessages;
-
-        private InMemoryEventBus(List<EventMessage<?>> publishedMessages) {
-            this.publishedMessages = publishedMessages;
-        }
+    private record InMemoryEventBus(List<EventMessage<?>> publishedMessages) implements EventBus {
 
         @Override
         public void publish(@NonNull List<? extends EventMessage<?>> events) {

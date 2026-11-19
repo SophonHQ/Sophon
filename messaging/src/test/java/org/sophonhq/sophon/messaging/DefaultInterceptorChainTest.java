@@ -23,7 +23,7 @@ import org.sophonhq.sophon.messaging.unitofwork.DefaultUnitOfWork;
 import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -60,7 +60,7 @@ class DefaultInterceptorChainTest {
 
         String actual = (String) testSubject.proceed();
 
-        assertSame("Result", actual);
+        assertThat(actual).isSameAs("Result");
         verify(mockHandler).handle(argThat(x -> (x != null) && x.getPayload().equals("testing")));
     }
 }

@@ -17,11 +17,12 @@
 
 package org.sophonhq.sophon.commandhandling.distributed;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link UnresolvedRoutingKeyPolicy}.
@@ -34,20 +35,21 @@ class UnresolvedRoutingKeyPolicyTest {
 
     @Test
     void errorStrategy() {
-        assertThrows(CommandDispatchException.class, () -> UnresolvedRoutingKeyPolicy.ERROR.getRoutingKey(testCommand));
+        assertThatThrownBy(() -> UnresolvedRoutingKeyPolicy.ERROR.getRoutingKey(testCommand))
+                .isInstanceOf(CommandDispatchException.class);
     }
 
     @Test
     void randomStrategy() {
         String firstResult = UnresolvedRoutingKeyPolicy.RANDOM_KEY.getRoutingKey(testCommand);
         String secondResult = UnresolvedRoutingKeyPolicy.RANDOM_KEY.getRoutingKey(testCommand);
-        assertNotEquals(firstResult, secondResult);
+        assertThat(secondResult).isNotEqualTo(firstResult);
     }
 
     @Test
     void staticStrategy() {
         String firstResult = UnresolvedRoutingKeyPolicy.STATIC_KEY.getRoutingKey(testCommand);
         String secondResult = UnresolvedRoutingKeyPolicy.STATIC_KEY.getRoutingKey(testCommand);
-        assertEquals(firstResult, secondResult);
+        assertThat(secondResult).isEqualTo(firstResult);
     }
 }

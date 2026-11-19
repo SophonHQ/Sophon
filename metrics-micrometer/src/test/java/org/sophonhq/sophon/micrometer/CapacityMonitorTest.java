@@ -21,7 +21,7 @@ import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MockClock;
 import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 class CapacityMonitorTest {
@@ -59,7 +59,7 @@ class CapacityMonitorTest {
         callbacks.get(bar).reportFailure(null);
 
         Gauge capacityGauge = meterRegistry.get("1.capacity").gauge();
-        assertEquals(2, capacityGauge.value(), 0);
+        assertThat(capacityGauge.value()).isEqualTo(2.0);
     }
 
     @Test
@@ -87,11 +87,11 @@ class CapacityMonitorTest {
         callbacks.get(bar).reportFailure(null);
 
         Collection<Gauge> capacityGauges = meterRegistry.find("1.capacity").gauges();
-        assertEquals(2, capacityGauges.size(), 0);
-        assertTrue(capacityGauges.stream()
-                                 .anyMatch(gauge -> Objects.equals(gauge.getId().getTag("payloadType"), "Integer")));
-        assertTrue(capacityGauges.stream()
-                                 .anyMatch(gauge -> Objects.equals(gauge.getId().getTag("payloadType"), "String")));
+        assertThat(capacityGauges).hasSize(2);
+        assertThat(capacityGauges.stream()
+                .anyMatch(gauge -> Objects.equals(gauge.getId().getTag("payloadType"), "Integer"))).isTrue();
+        assertThat(capacityGauges.stream()
+                .anyMatch(gauge -> Objects.equals(gauge.getId().getTag("payloadType"), "String"))).isTrue();
     }
 
     @Test
@@ -124,16 +124,16 @@ class CapacityMonitorTest {
         callbacks.get(bar).reportFailure(null);
 
         Collection<Gauge> capacityGauges = meterRegistry.find("1.capacity").gauges();
-        assertEquals(2, capacityGauges.size(), 0);
-        assertTrue(capacityGauges.stream()
-                                 .anyMatch(gauge -> Objects.equals(gauge.getId().getTag("myPayloadType"), "Integer")));
-        assertTrue(capacityGauges.stream()
-                                 .anyMatch(gauge -> Objects.equals(gauge.getId().getTag("myPayloadType"), "String")));
-        assertTrue(capacityGauges.stream()
-                                 .anyMatch(gauge -> Objects
-                                         .equals(gauge.getId().getTag("myMetaData"), "myMetadataValue1")));
-        assertTrue(capacityGauges.stream()
-                                 .anyMatch(gauge -> Objects
-                                         .equals(gauge.getId().getTag("myMetaData"), "myMetadataValue2")));
+        assertThat(capacityGauges).hasSize(2);
+        assertThat(capacityGauges.stream()
+                .anyMatch(gauge -> Objects.equals(gauge.getId().getTag("myPayloadType"), "Integer"))).isTrue();
+        assertThat(capacityGauges.stream()
+                .anyMatch(gauge -> Objects.equals(gauge.getId().getTag("myPayloadType"), "String"))).isTrue();
+        assertThat(capacityGauges.stream()
+                .anyMatch(gauge -> Objects
+                        .equals(gauge.getId().getTag("myMetaData"), "myMetadataValue1"))).isTrue();
+        assertThat(capacityGauges.stream()
+                .anyMatch(gauge -> Objects
+                        .equals(gauge.getId().getTag("myMetaData"), "myMetadataValue2"))).isTrue();
     }
 }

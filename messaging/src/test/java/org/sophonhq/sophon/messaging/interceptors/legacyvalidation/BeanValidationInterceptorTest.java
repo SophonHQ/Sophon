@@ -30,8 +30,8 @@ import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -70,7 +70,7 @@ class BeanValidationInterceptorTest {
             testSubject.handle(uow, interceptorChain);
             fail("Expected exception");
         } catch (JSR303ViolationException e) {
-            assertFalse(e.getViolations().isEmpty());
+            assertThat(e.getViolations()).isNotEmpty();
         }
         verify(interceptorChain, never()).proceed();
     }
@@ -92,7 +92,7 @@ class BeanValidationInterceptorTest {
             testSubject.handle(uow, interceptorChain);
             fail("Expected exception");
         } catch (JSR303ViolationException e) {
-            assertFalse(e.getViolations().isEmpty());
+            assertThat(e.getViolations()).isNotEmpty();
         }
 
         verify(interceptorChain, never()).proceed();

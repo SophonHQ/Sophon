@@ -18,7 +18,7 @@
 package org.sophonhq.sophon.springboot;
 
 import com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.SimpleCommandBus;
@@ -78,7 +78,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Collections.singleton;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
@@ -89,42 +90,41 @@ class SophonAutoConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(SophonAutoConfigurationTest.Context.class)
                 .run(applicationContext -> {
-                    assertNotNull(applicationContext);
-                    assertNotNull(applicationContext.getBean(Configurer.class));
-                    assertNotNull(applicationContext.getBean(Snapshotter.class));
+                    assertThat(applicationContext).isNotNull();
+                    assertThat(applicationContext.getBean(Configurer.class)).isNotNull();
+                    assertThat(applicationContext.getBean(Snapshotter.class)).isNotNull();
 
-                    assertNotNull(applicationContext.getBean(CommandBus.class));
-                    assertNotNull(applicationContext.getBean(EventBus.class));
-                    assertNotNull(applicationContext.getBean(QueryBus.class));
-                    assertNotNull(applicationContext.getBean(EventStore.class));
-                    assertNotNull(applicationContext.getBean(CommandGateway.class));
-                    assertNotNull(applicationContext.getBean(EventGateway.class));
-                    assertNotNull(applicationContext.getBean(Serializer.class));
-                    assertNotNull(applicationContext.getBean(SpanFactory.class));
-                    assertEquals(MultiParameterResolverFactory.class,
-                                 applicationContext.getBean(ParameterResolverFactory.class).getClass());
-                    assertEquals(1, applicationContext.getBeansOfType(EventStorageEngine.class).size());
-                    assertEquals(0, applicationContext.getBeansOfType(TokenStore.class).size());
-                    assertNotNull(applicationContext.getBean(Context.MySaga.class));
-                    assertNotNull(applicationContext.getBean(Context.MyAggregate.class));
-                    assertNotNull(applicationContext.getBean(Repository.class));
-                    assertNotNull(applicationContext.getBean(AggregateFactory.class));
-                    assertNotNull(applicationContext.getBean(EventProcessingConfiguration.class));
+                    assertThat(applicationContext.getBean(CommandBus.class)).isNotNull();
+                    assertThat(applicationContext.getBean(EventBus.class)).isNotNull();
+                    assertThat(applicationContext.getBean(QueryBus.class)).isNotNull();
+                    assertThat(applicationContext.getBean(EventStore.class)).isNotNull();
+                    assertThat(applicationContext.getBean(CommandGateway.class)).isNotNull();
+                    assertThat(applicationContext.getBean(EventGateway.class)).isNotNull();
+                    assertThat(applicationContext.getBean(Serializer.class)).isNotNull();
+                    assertThat(applicationContext.getBean(SpanFactory.class)).isNotNull();
+                    assertThat(applicationContext.getBean(ParameterResolverFactory.class).getClass())
+                            .isEqualTo(MultiParameterResolverFactory.class);
+                    assertThat(applicationContext.getBeansOfType(EventStorageEngine.class)).hasSize(1);
+                    assertThat(applicationContext.getBeansOfType(TokenStore.class)).hasSize(0);
+                    assertThat(applicationContext.getBean(Context.MySaga.class)).isNotNull();
+                    assertThat(applicationContext.getBean(Context.MyAggregate.class)).isNotNull();
+                    assertThat(applicationContext.getBean(Repository.class)).isNotNull();
+                    assertThat(applicationContext.getBean(AggregateFactory.class)).isNotNull();
+                    assertThat(applicationContext.getBean(EventProcessingConfiguration.class)).isNotNull();
 
-                    assertEquals(2,
-                                 applicationContext.getBean(org.sophonhq.sophon.config.Configuration.class)
-                                                   .correlationDataProviders().size());
+                    assertThat(applicationContext.getBean(org.sophonhq.sophon.config.Configuration.class)
+                            .correlationDataProviders()).hasSize(2);
 
                     Context.SomeComponent someComponent = applicationContext.getBean(Context.SomeComponent.class);
-                    assertEquals(0, someComponent.invocations.size());
+                    assertThat(someComponent.invocations).isEmpty();
                     applicationContext.getBean(EventBus.class).publish(asEventMessage("testing"));
-                    assertEquals(1, someComponent.invocations.size());
+                    assertThat(someComponent.invocations).hasSize(1);
 
-                    assertTrue(applicationContext.getBean(Serializer.class) instanceof XStreamSerializer);
-                    assertSame(applicationContext.getBean("eventSerializer"),
-                               applicationContext.getBean("messageSerializer"));
-                    assertSame(applicationContext.getBean("serializer"),
-                               applicationContext.getBean("messageSerializer"));
+                    assertThat(applicationContext.getBean(Serializer.class)).isInstanceOf(XStreamSerializer.class);
+                    assertThat(applicationContext.getBean("messageSerializer"))
+                            .isSameAs(applicationContext.getBean("eventSerializer"));
+                    assertThat(applicationContext.getBean("messageSerializer"))
+                            .isSameAs(applicationContext.getBean("serializer"));
                 });
     }
 
@@ -135,13 +135,15 @@ class SophonAutoConfigurationTest {
                 .withBean("gatewayOne", CommandGateway.class, () -> DefaultCommandGateway.builder().commandBus(SimpleCommandBus.builder().build()).build())
                 .withBean("gatewayTwo", CommandGateway.class, () -> DefaultCommandGateway.builder().commandBus(SimpleCommandBus.builder().build()).build());
 
-        SophonConfigurationException actual = assertThrows(SophonConfigurationException.class, () -> {
-            applicationContextRunner
-                    .run(ctx -> ctx.getBean(org.sophonhq.sophon.config.Configuration.class).commandGateway());
-        });
-        assertTrue(actual.getMessage().contains("CommandGateway"));
-        assertTrue(actual.getMessage().contains("gatewayOne"));
-        assertTrue(actual.getMessage().contains("gatewayTwo"));
+        SophonConfigurationException actual = assertThatExceptionOfType(SophonConfigurationException.class)
+                .isThrownBy(() -> {
+                    applicationContextRunner
+                            .run(ctx -> ctx.getBean(org.sophonhq.sophon.config.Configuration.class).commandGateway());
+                })
+                .actual();
+        assertThat(actual.getMessage()).contains("CommandGateway");
+        assertThat(actual.getMessage()).contains("gatewayOne");
+        assertThat(actual.getMessage()).contains("gatewayTwo");
 
     }
 
@@ -152,7 +154,7 @@ class SophonAutoConfigurationTest {
                 .withBean("lifecycletest", CustomLifecycleBean.class, CustomLifecycleBean::new);
 
         applicationContextRunner.run(context -> {
-            assertTrue(context.getBean("lifecycletest", CustomLifecycleBean.class).isInvoked());
+            assertThat(context.getBean("lifecycletest", CustomLifecycleBean.class).isInvoked()).isTrue();
         });
     }
 
@@ -165,7 +167,7 @@ class SophonAutoConfigurationTest {
 
         applicationContextRunner.run(context -> {
             eventStore.set(context.getBean(EmbeddedEventStore.class));
-            assertNotNull(eventStore.get());
+            assertThat(eventStore.get()).isNotNull();
         });
         verify(eventStore.get(), atLeastOnce()).shutDown();
     }
@@ -183,13 +185,15 @@ class SophonAutoConfigurationTest {
                           () -> DefaultCommandGateway.builder().commandBus(SimpleCommandBus.builder().build()).build(),
                           beanDefinition -> beanDefinition.setPrimary(true));
 
-        SophonConfigurationException actual = assertThrows(SophonConfigurationException.class, () -> {
-            applicationContextRunner
-                    .run(ctx -> ctx.getBean(org.sophonhq.sophon.config.Configuration.class).commandGateway());
-        });
-        assertTrue(actual.getMessage().contains("CommandGateway"));
-        assertTrue(actual.getMessage().contains("gatewayOne"));
-        assertTrue(actual.getMessage().contains("gatewayTwo"));
+        SophonConfigurationException actual = assertThatExceptionOfType(SophonConfigurationException.class)
+                .isThrownBy(() -> {
+                    applicationContextRunner
+                            .run(ctx -> ctx.getBean(org.sophonhq.sophon.config.Configuration.class).commandGateway());
+                })
+                .actual();
+        assertThat(actual.getMessage()).contains("CommandGateway");
+        assertThat(actual.getMessage()).contains("gatewayOne");
+        assertThat(actual.getMessage()).contains("gatewayTwo");
     }
 
     @Test
@@ -200,10 +204,16 @@ class SophonAutoConfigurationTest {
                 .withBean("gatewayTwo", CommandBus.class, () -> SimpleCommandBus.builder().build())
                 .run(ctx -> {
                     Throwable startupFailure = ctx.getStartupFailure();
-                    assertTrue(startupFailure instanceof UnsatisfiedDependencyException);
-                    assertTrue(startupFailure.getMessage().contains("CommandBus"), "Expected mention of 'CommandBus' in: " + startupFailure.getMessage());
-                    assertTrue(startupFailure.getMessage().contains("gatewayOne"), "Expected mention of 'gatewayOne' in: " + startupFailure.getMessage());
-                    assertTrue(startupFailure.getMessage().contains("gatewayTwo"), "Expected mention of 'gatewayTwo' in: " + startupFailure.getMessage());
+                    assertThat(startupFailure).isInstanceOf(UnsatisfiedDependencyException.class);
+                    assertThat(startupFailure.getMessage())
+                            .as("Expected mention of 'CommandBus' in: " + startupFailure.getMessage())
+                            .contains("CommandBus");
+                    assertThat(startupFailure.getMessage())
+                            .as("Expected mention of 'gatewayOne' in: " + startupFailure.getMessage())
+                            .contains("gatewayOne");
+                    assertThat(startupFailure.getMessage())
+                            .as("Expected mention of 'gatewayTwo' in: " + startupFailure.getMessage())
+                            .contains("gatewayTwo");
                 });
     }
 
@@ -215,7 +225,7 @@ class SophonAutoConfigurationTest {
                     EmbeddedEventStore eventStore = context.getBean(EmbeddedEventStore.class);
                     java.lang.reflect.Field field = EmbeddedEventStore.class.getDeclaredField("optimizeEventConsumption");
                     field.setAccessible(true);
-                    assertTrue((boolean) field.get(eventStore));
+                    assertThat((boolean) field.get(eventStore)).isTrue();
                 });
     }
 
@@ -228,7 +238,7 @@ class SophonAutoConfigurationTest {
                     EmbeddedEventStore eventStore = context.getBean(EmbeddedEventStore.class);
                     java.lang.reflect.Field field = EmbeddedEventStore.class.getDeclaredField("optimizeEventConsumption");
                     field.setAccessible(true);
-                    assertFalse((boolean) field.get(eventStore));
+                    assertThat((boolean) field.get(eventStore)).isFalse();
                 });
     }
 
@@ -243,8 +253,8 @@ class SophonAutoConfigurationTest {
                 .run(context -> {
                     Serializer serializer = context.getBean(Serializer.class);
 
-                    assertTrue(serializer instanceof JacksonSerializer);
-                    assertSame(defaultCborMapper, ((JacksonSerializer) serializer).getObjectMapper());
+                    assertThat(serializer).isInstanceOf(JacksonSerializer.class);
+                    assertThat(((JacksonSerializer) serializer).getObjectMapper()).isSameAs(defaultCborMapper);
                 });
     }
 
@@ -256,8 +266,8 @@ class SophonAutoConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .withPropertyValues("sophon.serializer.translate-legacy-class-names=true")
-                .run(context -> assertEquals(GlobalSequenceTrackingToken.class,
-                                             context.getBean(Serializer.class).classForType(legacyType)));
+                .run(context -> assertThat(context.getBean(Serializer.class).classForType(legacyType))
+                        .isEqualTo(GlobalSequenceTrackingToken.class));
     }
 
     @Test
@@ -267,15 +277,15 @@ class SophonAutoConfigurationTest {
         );
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
-                .run(context -> assertEquals(UnknownSerializedType.class,
-                                             context.getBean(Serializer.class).classForType(legacyType)));
+                .run(context -> assertThat(context.getBean(Serializer.class).classForType(legacyType))
+                        .isEqualTo(UnknownSerializedType.class));
     }
 
     @Test
     void legacyPropertiesDetectorIsRegistered() {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
-                .run(context -> assertNotNull(context.getBean(LegacyPropertiesDetector.class)));
+                .run(context -> assertThat(context.getBean(LegacyPropertiesDetector.class)).isNotNull());
     }
 
     @EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})

@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventsourcing.snapshotting;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventData;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry;
@@ -25,7 +25,7 @@ import org.sophonhq.sophon.eventsourcing.utils.TestSerializer;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -46,18 +46,18 @@ class SnapshotFilterTest {
     void allowAllReturnsTrue() {
         SnapshotFilter testSubject = SnapshotFilter.allowAll();
 
-        assertTrue(testSubject.allow(NO_SNAPSHOT_DATA));
-        assertTrue(testSubject.allow(MOCK_SNAPSHOT_DATA));
-        assertTrue(testSubject.allow(TEST_SNAPSHOT_DATA));
+        assertThat(testSubject.allow(NO_SNAPSHOT_DATA)).isTrue();
+        assertThat(testSubject.allow(MOCK_SNAPSHOT_DATA)).isTrue();
+        assertThat(testSubject.allow(TEST_SNAPSHOT_DATA)).isTrue();
     }
 
     @Test
     void rejectAllReturnsFalseOnAnyInput() {
         SnapshotFilter testSubject = SnapshotFilter.rejectAll();
 
-        assertFalse(testSubject.allow(NO_SNAPSHOT_DATA));
-        assertFalse(testSubject.allow(MOCK_SNAPSHOT_DATA));
-        assertFalse(testSubject.allow(TEST_SNAPSHOT_DATA));
+        assertThat(testSubject.allow(NO_SNAPSHOT_DATA)).isFalse();
+        assertThat(testSubject.allow(MOCK_SNAPSHOT_DATA)).isFalse();
+        assertThat(testSubject.allow(TEST_SNAPSHOT_DATA)).isFalse();
     }
 
     @Test
@@ -76,9 +76,9 @@ class SnapshotFilterTest {
         SnapshotFilter testSubject = first.combine(second);
 
         boolean result = testSubject.allow(mock(DomainEventData.class));
-        assertFalse(result);
-        assertTrue(invokedFirst.get());
-        assertTrue(invokedSecond.get());
+        assertThat(result).isFalse();
+        assertThat(invokedFirst.get()).isTrue();
+        assertThat(invokedSecond.get()).isTrue();
     }
 
     @Test
@@ -97,8 +97,8 @@ class SnapshotFilterTest {
         SnapshotFilter testSubject = first.combine(second);
 
         boolean result = testSubject.allow(mock(DomainEventData.class));
-        assertFalse(result);
-        assertTrue(invokedFirst.get());
-        assertFalse(invokedSecond.get());
+        assertThat(result).isFalse();
+        assertThat(invokedFirst.get()).isTrue();
+        assertThat(invokedSecond.get()).isFalse();
     }
 }

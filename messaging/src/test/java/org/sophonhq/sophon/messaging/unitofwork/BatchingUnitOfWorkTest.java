@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.messaging.unitofwork;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.GenericMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.MetaData;
@@ -35,7 +36,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.messaging.GenericResultMessage.asResultMessage;
 import static org.sophonhq.sophon.messaging.unitofwork.UnitOfWork.Phase.*;
 
@@ -122,8 +123,8 @@ class BatchingUnitOfWorkTest {
         expectedResult.put(messages.get(1), new ExecutionResult(asResultMessage(commitException)));
         expectedResult.put(messages.get(2), new ExecutionResult(asResultMessage(taskException)));
         assertExecutionResults(expectedResult, subject.getExecutionResults());
-        assertSame(commitException, taskException.getSuppressed()[0]);
-        assertEquals(2, cleanupCounter.get());
+        assertThat(taskException.getSuppressed()[0]).isSameAs(commitException);
+        assertThat(cleanupCounter.get()).isEqualTo(2);
     }
 
     private void registerListeners(UnitOfWork<?> unitOfWork) {
@@ -149,16 +150,16 @@ class BatchingUnitOfWorkTest {
                     ? new LinkedList<>(messages).descendingIterator() : messages.iterator();
             messageIterator.forEachRemaining(message -> {
                 PhaseTransition expected = new PhaseTransition(message, phase);
-                assertTrue(iterator.hasNext());
+                assertThat(iterator).hasNext();
                 PhaseTransition actual = iterator.next();
-                assertEquals(expected, actual);
+                assertThat(actual).isEqualTo(expected);
             });
         }
     }
 
     private void assertExecutionResults(Map<Message<?>, ExecutionResult> expected,
                                         Map<Message<?>, ExecutionResult> actual) {
-        assertEquals(expected.keySet(), actual.keySet());
+        assertThat(actual.keySet()).isEqualTo(expected.keySet());
         List<ResultMessage<?>> expectedMessages = expected.values()
                                                           .stream()
                                                           .map(ExecutionResult::getResult)
@@ -190,12 +191,12 @@ class BatchingUnitOfWorkTest {
         List<MetaData> actualMetaData = actualMessages.stream()
                                                       .map(Message::getMetaData)
                                                       .collect(Collectors.toList());
-        assertEquals(expectedPayloads.size(), actualPayloads.size());
+        assertThat(actualPayloads.size()).isEqualTo(expectedPayloads.size());
         //noinspection SuspiciousMethodCalls
-        assertTrue(expectedPayloads.containsAll(actualPayloads));
-        assertEquals(expectedExceptions.size(), actualExceptions.size());
-        assertTrue(expectedExceptions.containsAll(actualExceptions));
-        assertTrue(expectedMetaData.containsAll(actualMetaData));
+        assertThat(expectedPayloads.containsAll(actualPayloads)).isTrue();
+        assertThat(actualExceptions).hasSameSizeAs(expectedExceptions);
+        assertThat(expectedExceptions).containsAll(actualExceptions);
+        assertThat(expectedMetaData).containsAll(actualMetaData);
     }
 
     private static class PhaseTransition {

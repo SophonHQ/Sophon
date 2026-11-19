@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.test.aggregate;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.eventsourcing.AggregateDeletedException;
 import org.sophonhq.sophon.eventsourcing.EventSourcingHandler;
@@ -31,7 +32,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.markDeleted;
 
@@ -64,7 +65,7 @@ class FixtureTest_CreationPolicy {
                .when(new CreateOrUpdateCommand(AGGREGATE_ID, PUBLISH_EVENTS))
                .expectEvents(new CreatedOrUpdatedEvent(AGGREGATE_ID))
                .expectSuccessfulHandlerExecution();
-        assertTrue(intercepted.get());
+        assertThat(intercepted.get()).isTrue();
     }
 
     @Test
@@ -73,7 +74,7 @@ class FixtureTest_CreationPolicy {
                .when(new CreateOrUpdateCommand(AGGREGATE_ID, PUBLISH_EVENTS))
                .expectEvents(new CreatedOrUpdatedEvent(AGGREGATE_ID))
                .expectSuccessfulHandlerExecution();
-        assertTrue(intercepted.get());
+        assertThat(intercepted.get()).isTrue();
     }
 
     @Test
@@ -83,7 +84,7 @@ class FixtureTest_CreationPolicy {
                .expectEvents(new AlwaysCreatedEvent(AGGREGATE_ID))
                .expectResultMessagePayload(AGGREGATE_ID)
                .expectSuccessfulHandlerExecution();
-        assertTrue(intercepted.get());
+        assertThat(intercepted.get()).isTrue();
     }
 
     @Test
@@ -94,7 +95,7 @@ class FixtureTest_CreationPolicy {
                .expectEvents(new AlwaysCreatedEvent(AGGREGATE_ID))
                .expectResultMessagePayload(testResult)
                .expectSuccessfulHandlerExecution();
-        assertTrue(intercepted.get());
+        assertThat(intercepted.get()).isTrue();
     }
 
     @Test
@@ -104,7 +105,7 @@ class FixtureTest_CreationPolicy {
                .expectEvents(new AlwaysCreatedEvent(AGGREGATE_ID))
                .expectResultMessagePayload(null)
                .expectSuccessfulHandlerExecution();
-        assertTrue(intercepted.get());
+        assertThat(intercepted.get()).isTrue();
     }
 
     @Test
@@ -113,7 +114,7 @@ class FixtureTest_CreationPolicy {
                .when(new ExecuteOnExistingCommand(AGGREGATE_ID))
                .expectEvents(new ExecutedOnExistingEvent(AGGREGATE_ID))
                .expectSuccessfulHandlerExecution();
-        assertTrue(intercepted.get());
+        assertThat(intercepted.get()).isTrue();
     }
 
     @Test
@@ -123,7 +124,7 @@ class FixtureTest_CreationPolicy {
                .expectEvents(new AlwaysCreatedEvent(AGGREGATE_ID))
                .expectResultMessagePayload(AGGREGATE_ID)
                .expectSuccessfulHandlerExecution();
-        assertTrue(intercepted.get());
+        assertThat(intercepted.get()).isTrue();
     }
 
     @Test
@@ -132,7 +133,7 @@ class FixtureTest_CreationPolicy {
                .when(new AlwaysCreateWithEventSourcedResultCommand(AGGREGATE_ID, PUBLISH_NO_EVENTS))
                .expectNoEvents()
                .expectException(RuntimeException.class);
-        assertTrue(intercepted.get());
+        assertThat(intercepted.get()).isTrue();
     }
 
     @Test

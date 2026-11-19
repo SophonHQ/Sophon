@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventsourcing;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.eventsourcing.eventstore.DomainEventStream;
@@ -26,7 +26,7 @@ import org.sophonhq.sophon.messaging.MetaData;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author Allard Buijze
@@ -40,14 +40,14 @@ class DomainEventStreamTest {
         DomainEventMessage event2 = new GenericDomainEventMessage<>("type", UUID.randomUUID().toString(), (long) 0,
                                                                     "Mock contents", MetaData.emptyInstance());
         DomainEventStream testSubject = DomainEventStream.of(event1, event2);
-        assertSame(event1, testSubject.peek());
-        assertSame(event1, testSubject.peek());
+        assertThat(testSubject.peek()).isSameAs(event1);
+        assertThat(testSubject.peek()).isSameAs(event1);
     }
 
     @Test
     void peek_EmptyStream() {
         DomainEventStream testSubject = DomainEventStream.of();
-        assertFalse(testSubject.hasNext());
+        assertThat(testSubject).isExhausted();
         try {
             testSubject.peek();
             fail("Expected NoSuchElementException");
@@ -63,11 +63,11 @@ class DomainEventStreamTest {
         DomainEventMessage event2 = new GenericDomainEventMessage<>("type", UUID.randomUUID().toString(), (long) 0,
                                                                     "Mock contents", MetaData.emptyInstance());
         DomainEventStream testSubject = DomainEventStream.of(event1, event2);
-        assertTrue(testSubject.hasNext());
-        assertSame(event1, testSubject.next());
-        assertTrue(testSubject.hasNext());
-        assertSame(event2, testSubject.next());
-        assertFalse(testSubject.hasNext());
+        assertThat(testSubject).hasNext();
+        assertThat(testSubject.next()).isSameAs(event1);
+        assertThat(testSubject).hasNext();
+        assertThat(testSubject.next()).isSameAs(event2);
+        assertThat(testSubject).isExhausted();
     }
 
     @Test
@@ -77,7 +77,7 @@ class DomainEventStreamTest {
         DomainEventStream testSubject = DomainEventStream.of(event1);
         testSubject.next();
 
-        assertThrows(NoSuchElementException.class, testSubject::next);
+        assertThatThrownBy(testSubject::next).isInstanceOf(NoSuchElementException.class);
     }
 
 }

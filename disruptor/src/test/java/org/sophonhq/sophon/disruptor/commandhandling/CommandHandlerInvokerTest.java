@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.disruptor.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.common.caching.Cache;
@@ -53,7 +54,8 @@ import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
@@ -190,7 +192,7 @@ class CommandHandlerInvokerTest {
                                   snapshotTriggerDefinition,
                                   ClasspathParameterResolverFactory.forClass(StubAggregate.class));
 
-        assertSame(repository1, repository2);
+        assertThat(repository2).isSameAs(repository1);
     }
 
     @Test
@@ -201,9 +203,9 @@ class CommandHandlerInvokerTest {
                                              snapshotTriggerDefinition,
                                              ClasspathParameterResolverFactory.forClass(StubAggregate.class));
 
-        assertTrue(testRepository.canResolve(new AggregateScopeDescriptor(
+        assertThat(testRepository.canResolve(new AggregateScopeDescriptor(
                 StubAggregate.class.getSimpleName(), "some-identifier")
-        ));
+        )).isTrue();
     }
 
     @Test
@@ -214,7 +216,7 @@ class CommandHandlerInvokerTest {
                                              snapshotTriggerDefinition,
                                              ClasspathParameterResolverFactory.forClass(StubAggregate.class));
 
-        assertFalse(testRepository.canResolve(new SagaScopeDescriptor("some-saga-type", "some-identifier")));
+        assertThat(testRepository.canResolve(new SagaScopeDescriptor("some-saga-type", "some-identifier"))).isFalse();
     }
 
     @Test
@@ -225,9 +227,9 @@ class CommandHandlerInvokerTest {
                                              snapshotTriggerDefinition,
                                              ClasspathParameterResolverFactory.forClass(StubAggregate.class));
 
-        assertFalse(testRepository.canResolve(
+        assertThat(testRepository.canResolve(
                 new AggregateScopeDescriptor("other-non-matching-type", "some-identifier")
-        ));
+        )).isFalse();
     }
 
     @Test
@@ -255,7 +257,7 @@ class CommandHandlerInvokerTest {
             commandHandlingEntry.pause();
         }
 
-        assertEquals(1, messageHandlingCounter.get());
+        assertThat(messageHandlingCounter.get()).isOne();
     }
 
     private static class FailingPayload {

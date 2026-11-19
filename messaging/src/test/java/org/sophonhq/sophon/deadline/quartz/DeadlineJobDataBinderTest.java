@@ -39,7 +39,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.deadline.quartz.DeadlineJob.DeadlineJobDataBinder.*;
 import static org.sophonhq.sophon.messaging.Headers.*;
@@ -90,18 +90,19 @@ class DeadlineJobDataBinderTest {
     ) {
         JobDataMap result = toJobData(serializer, testDeadlineMessage, testDeadlineScope);
 
-        assertEquals(TEST_DEADLINE_NAME, result.get(DEADLINE_NAME));
-        assertEquals(testDeadlineMessage.getIdentifier(), result.get(MESSAGE_ID));
-        assertEquals(testDeadlineMessage.getTimestamp().toString(), result.get(MESSAGE_TIMESTAMP));
+        assertThat(result)
+                .containsEntry(DEADLINE_NAME, TEST_DEADLINE_NAME)
+                .containsEntry(MESSAGE_ID, testDeadlineMessage.getIdentifier())
+                .containsEntry(MESSAGE_TIMESTAMP, testDeadlineMessage.getTimestamp().toString());
         String expectedPayloadType = expectedSerializedClassType.apply(testDeadlineMessage.getPayloadType());
-        assertEquals(expectedPayloadType, result.get(MESSAGE_TYPE));
+        assertThat(result).containsEntry(MESSAGE_TYPE, expectedPayloadType);
         Object resultRevision = result.get(MESSAGE_REVISION);
-        assertTrue(revisionMatcher.test(resultRevision));
+        assertThat(revisionMatcher).accepts(resultRevision);
 
-        assertNotNull(result.get(SERIALIZED_MESSAGE_PAYLOAD));
-        assertNotNull(result.get(MESSAGE_METADATA));
-        assertNotNull(result.get(SERIALIZED_DEADLINE_SCOPE));
-        assertEquals(testDeadlineScope.getClass().getName(), result.get(SERIALIZED_DEADLINE_SCOPE_CLASS_NAME));
+        assertThat(result.get(SERIALIZED_MESSAGE_PAYLOAD)).isNotNull();
+        assertThat(result.get(MESSAGE_METADATA)).isNotNull();
+        assertThat(result.get(SERIALIZED_DEADLINE_SCOPE)).isNotNull();
+        assertThat(result).containsEntry(SERIALIZED_DEADLINE_SCOPE_CLASS_NAME, testDeadlineScope.getClass().getName());
 
         verify(serializer).serialize(TEST_DEADLINE_PAYLOAD, byte[].class);
         verify(serializer).serialize(testMetaData, byte[].class);
@@ -120,12 +121,12 @@ class DeadlineJobDataBinderTest {
 
         DeadlineMessage<String> result = deadlineMessage(serializer, testJobDataMap);
 
-        assertEquals(testDeadlineMessage.getDeadlineName(), result.getDeadlineName());
-        assertEquals(testDeadlineMessage.getIdentifier(), result.getIdentifier());
-        assertEquals(testDeadlineMessage.getTimestamp(), result.getTimestamp());
-        assertEquals(testDeadlineMessage.getPayload(), result.getPayload());
-        assertEquals(testDeadlineMessage.getPayloadType(), result.getPayloadType());
-        assertEquals(testDeadlineMessage.getMetaData(), result.getMetaData());
+        assertThat(result.getDeadlineName()).isEqualTo(testDeadlineMessage.getDeadlineName());
+        assertThat(result.getIdentifier()).isEqualTo(testDeadlineMessage.getIdentifier());
+        assertThat(result.getTimestamp()).isEqualTo(testDeadlineMessage.getTimestamp());
+        assertThat(result.getPayload()).isEqualTo(testDeadlineMessage.getPayload());
+        assertThat(result.getPayloadType()).isEqualTo(testDeadlineMessage.getPayloadType());
+        assertThat(result.getMetaData()).isEqualTo(testDeadlineMessage.getMetaData());
 
         verify(serializer, times(2))
                 .deserialize(argThat(new DeadlineMessageSerializedObjectMatcher(expectedSerializedClassType, revisionMatcher)));
@@ -162,7 +163,7 @@ class DeadlineJobDataBinderTest {
 
         ScopeDescriptor result = deadlineScope(serializer, testJobDataMap);
 
-        assertEquals(testDeadlineScope, result);
+        assertThat(result).isEqualTo(testDeadlineScope);
         verify(serializer).deserialize(
                 (SimpleSerializedObject<?>) argThat(this::assertDeadlineScopeSerializedObject)
         );

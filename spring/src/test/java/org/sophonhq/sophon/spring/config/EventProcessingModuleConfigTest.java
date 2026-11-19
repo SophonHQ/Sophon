@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.spring.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.config.EventProcessingModule;
 import org.sophonhq.sophon.config.ProcessingGroup;
@@ -37,7 +37,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests configuration of {@link EventProcessingModule}.
@@ -52,26 +52,26 @@ public class EventProcessingModuleConfigTest {
 
     @Test
     void eventProcessingConfiguration() {
-        assertEquals(3, eventProcessingConfiguration.eventProcessors().size());
-        assertTrue(eventProcessingConfiguration.eventProcessor("processor2").isPresent());
-        assertTrue(eventProcessingConfiguration.eventProcessor("subscribingProcessor").isPresent());
+        assertThat(eventProcessingConfiguration.eventProcessors()).hasSize(3);
+        assertThat(eventProcessingConfiguration.eventProcessor("processor2")).isPresent();
+        assertThat(eventProcessingConfiguration.eventProcessor("subscribingProcessor")).isPresent();
 
         EventProcessor processor2 = eventProcessingConfiguration.eventProcessorByProcessingGroup("processor1").get();
-        assertEquals("processor2", processor2.getName());
+        assertThat(processor2.getName()).isEqualTo("processor2");
         List<MessageHandlerInterceptor<? super EventMessage<?>>> interceptorsFor = eventProcessingConfiguration
                 .interceptorsFor("processor2");
-        assertEquals(2, interceptorsFor.size());
-        assertTrue(interceptorsFor.stream().anyMatch(i -> i instanceof CorrelationDataInterceptor));
-        assertTrue(interceptorsFor.stream().anyMatch(i -> i instanceof LoggingInterceptor));
+        assertThat(interceptorsFor).hasSize(2);
+        assertThat(interceptorsFor.stream().anyMatch(i -> i instanceof CorrelationDataInterceptor)).isTrue();
+        assertThat(interceptorsFor.stream().anyMatch(i -> i instanceof LoggingInterceptor)).isTrue();
 
-        assertEquals("processor2",
-                     eventProcessingConfiguration.eventProcessorByProcessingGroup("processor2").get().getName());
-        assertEquals("subscribingProcessor",
-                     eventProcessingConfiguration.eventProcessorByProcessingGroup("processor3").get().getName());
-        assertEquals("subscribingProcessor",
-                     eventProcessingConfiguration.eventProcessorByProcessingGroup("Saga3Processor").get().getName());
-        assertEquals("processor4",
-                     eventProcessingConfiguration.eventProcessorByProcessingGroup("processor4").get().getName());
+        assertThat(eventProcessingConfiguration.eventProcessorByProcessingGroup("processor2").get().getName())
+                .isEqualTo("processor2");
+        assertThat(eventProcessingConfiguration.eventProcessorByProcessingGroup("processor3").get().getName())
+                .isEqualTo("subscribingProcessor");
+        assertThat(eventProcessingConfiguration.eventProcessorByProcessingGroup("Saga3Processor").get().getName())
+                .isEqualTo("subscribingProcessor");
+        assertThat(eventProcessingConfiguration.eventProcessorByProcessingGroup("processor4").get().getName())
+                .isEqualTo("processor4");
     }
 
     @Import(SpringSophonAutoConfigurer.ImportSelector.class)

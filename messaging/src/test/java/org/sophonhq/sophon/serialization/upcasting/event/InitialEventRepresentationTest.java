@@ -29,7 +29,7 @@ import org.sophonhq.sophon.utils.TestDomainEventEntry;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Unit test class validating the {@link IntermediateEventRepresentation}.
@@ -60,6 +60,6 @@ class InitialEventRepresentationTest {
         InitialEventRepresentation testSubject =
                 new InitialEventRepresentation(eventData, serializer);
 
-        assertEquals(eventData.getPayload().getContentType(), testSubject.getContentType());
+        assertThat(testSubject.getContentType()).isEqualTo(eventData.getPayload().getContentType());
     }
 }

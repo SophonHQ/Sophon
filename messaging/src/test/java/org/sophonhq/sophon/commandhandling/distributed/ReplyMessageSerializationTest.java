@@ -29,10 +29,11 @@ import org.sophonhq.sophon.serialization.SerializationException;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.TestSerializer;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
 
 /**
@@ -43,7 +44,7 @@ import static org.sophonhq.sophon.commandhandling.GenericCommandResultMessage.as
 class ReplyMessageSerializationTest {
 
     public static Collection<TestSerializer> serializers() {
-       return TestSerializer.all();
+        return TestSerializer.all();
     }
 
     @MethodSource("serializers")
@@ -53,7 +54,7 @@ class ReplyMessageSerializationTest {
         CommandResultMessage<String> success = asCommandResultMessage("success");
         DummyReplyMessage message = new DummyReplyMessage(commandId, success, serializer.getSerializer());
 
-        assertEquals(message, serializer.serializeDeserialize(message));
+        assertThat(serializer.serializeDeserialize(message)).isEqualTo(message);
     }
 
     @MethodSource("serializers")
@@ -63,7 +64,7 @@ class ReplyMessageSerializationTest {
         CommandResultMessage<String> failure = asCommandResultMessage(new RuntimeException("oops"));
         DummyReplyMessage message = new DummyReplyMessage(commandId, failure, serializer.getSerializer());
 
-        assertEquals(message, serializer.serializeDeserialize(message));
+        assertThat(serializer.serializeDeserialize(message)).isEqualTo(message);
     }
 
     @MethodSource("serializers")
@@ -74,8 +75,9 @@ class ReplyMessageSerializationTest {
         DummyReplyMessage message = new DummyReplyMessage(commandId, failure, serializer.getSerializer());
 
         CommandResultMessage<?> commandResultMessage = message.getCommandResultMessage(serializer.getSerializer());
-        assertTrue(commandResultMessage.exceptionResult() instanceof CommandExecutionException);
-        assertTrue(commandResultMessage.exceptionResult().getCause() instanceof RemoteNonTransientHandlingException);
+        assertThat(commandResultMessage.exceptionResult()).isInstanceOf(CommandExecutionException.class);
+        assertThat(commandResultMessage.exceptionResult().getCause())
+                .isInstanceOf(RemoteNonTransientHandlingException.class);
     }
 
     @MethodSource("serializers")
@@ -86,12 +88,13 @@ class ReplyMessageSerializationTest {
         DummyReplyMessage message = new DummyReplyMessage(commandId, failure, serializer.getSerializer());
 
         CommandResultMessage<?> commandResultMessage = message.getCommandResultMessage(serializer.getSerializer());
-        assertTrue(commandResultMessage.exceptionResult() instanceof CommandExecutionException);
-        assertTrue(commandResultMessage.exceptionResult().getCause() instanceof RemoteHandlingException);
+        assertThat(commandResultMessage.exceptionResult()).isInstanceOf(CommandExecutionException.class);
+        assertThat(commandResultMessage.exceptionResult().getCause()).isInstanceOf(RemoteHandlingException.class);
     }
 
     private static class DummyReplyMessage extends ReplyMessage implements Serializable {
 
+        @Serial
         private static final long serialVersionUID = -6583822511843818492L;
 
         @JsonCreator

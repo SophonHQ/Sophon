@@ -36,7 +36,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.messaging.Headers.*;
@@ -85,15 +85,16 @@ class DirectEventJobDataBinderTest {
 
         JobDataMap result = testSubject.toJobData(testEventMessage);
 
-        assertEquals(testEventMessage.getIdentifier(), result.get(MESSAGE_ID));
-        assertEquals(testEventMessage.getTimestamp().toString(), result.get(MESSAGE_TIMESTAMP));
+        assertThat(result)
+                .containsEntry(MESSAGE_ID, testEventMessage.getIdentifier())
+                .containsEntry(MESSAGE_TIMESTAMP, testEventMessage.getTimestamp().toString());
         String expectedPayloadType = expectedSerializedClassType.apply(testEventMessage.getPayloadType());
-        assertEquals(expectedPayloadType, result.get(MESSAGE_TYPE));
+        assertThat(result).containsEntry(MESSAGE_TYPE, expectedPayloadType);
         Object resultRevision = result.get(MESSAGE_REVISION);
-        assertTrue(revisionMatcher.test(resultRevision));
+        assertThat(revisionMatcher).accepts(resultRevision);
 
-        assertNotNull(result.get(SERIALIZED_MESSAGE_PAYLOAD));
-        assertNotNull(result.get(MESSAGE_METADATA));
+        assertThat(result.get(SERIALIZED_MESSAGE_PAYLOAD)).isNotNull();
+        assertThat(result.get(MESSAGE_METADATA)).isNotNull();
 
         verify(serializer).serialize(TEST_EVENT_PAYLOAD, byte[].class);
         verify(serializer).serialize(testMetaData, byte[].class);
@@ -112,15 +113,15 @@ class DirectEventJobDataBinderTest {
 
         Object result = testSubject.fromJobData(testJobDataMap);
 
-        assertTrue(result instanceof EventMessage);
+        assertThat(result).isInstanceOf(EventMessage.class);
 
         EventMessage<String> resultEventMessage = (EventMessage<String>) result;
 
-        assertEquals(testEventMessage.getIdentifier(), resultEventMessage.getIdentifier());
-        assertEquals(testEventMessage.getTimestamp(), resultEventMessage.getTimestamp());
-        assertEquals(testEventMessage.getPayload(), resultEventMessage.getPayload());
-        assertEquals(testEventMessage.getPayloadType(), resultEventMessage.getPayloadType());
-        assertEquals(testEventMessage.getMetaData(), resultEventMessage.getMetaData());
+        assertThat(resultEventMessage.getIdentifier()).isEqualTo(testEventMessage.getIdentifier());
+        assertThat(resultEventMessage.getTimestamp()).isEqualTo(testEventMessage.getTimestamp());
+        assertThat(resultEventMessage.getPayload()).isEqualTo(testEventMessage.getPayload());
+        assertThat(resultEventMessage.getPayloadType()).isEqualTo(testEventMessage.getPayloadType());
+        assertThat(resultEventMessage.getMetaData()).isEqualTo(testEventMessage.getMetaData());
 
         verify(serializer, times(2)).deserialize(
                 argThat(new MatchEventMessageSerializedObject(expectedSerializedClassType, revisionMatcher))

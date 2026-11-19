@@ -21,7 +21,8 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test all possible permutations of Query Handler return types through the {@link InstanceResponseType}. To that end,
@@ -241,7 +242,7 @@ class InstanceResponseTypeTest extends AbstractResponseTypeTest<AbstractResponse
 
         QueryResponse result = testSubject.convert(testResponse);
 
-        assertEquals(testResponse, result);
+        assertThat(result).isEqualTo(testResponse);
     }
 
     @Test
@@ -250,23 +251,23 @@ class InstanceResponseTypeTest extends AbstractResponseTypeTest<AbstractResponse
 
         QueryResponse result = testSubject.convert(testResponse);
 
-        assertEquals(testResponse, result);
+        assertThat(result).isEqualTo(testResponse);
     }
 
     @SuppressWarnings("unused")
     @Test
     void convertThrowsClassCastExceptionForDifferentSingleInstanceResponse() {
-        assertThrows(Exception.class, () -> {
+        assertThatThrownBy(() -> {
             QueryResponse convert = testSubject.convert(new QueryResponseInterface() {
             });
-        });
+        }).isInstanceOf(Exception.class);
     }
 
     @SuppressWarnings("unused")
     @Test
     void convertThrowsClassCastExceptionForMultipleInstanceResponse() {
-        assertThrows(Exception.class, () -> {
+        assertThatThrownBy(() -> {
             QueryResponse convert = testSubject.convert(new ArrayList<QueryResponse>());
-        });
+        }).isInstanceOf(Exception.class);
     }
 }

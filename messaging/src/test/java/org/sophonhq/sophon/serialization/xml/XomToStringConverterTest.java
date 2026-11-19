@@ -22,7 +22,7 @@ import nu.xom.Element;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Jochen Munz
@@ -38,8 +38,8 @@ class XomToStringConverterTest {
 
     @Test
     void canConvert() {
-        assertEquals(Document.class, testSubject.expectedSourceType());
-        assertEquals(String.class, testSubject.targetType());
+        assertThat(testSubject.expectedSourceType()).isEqualTo(Document.class);
+        assertThat(testSubject.targetType()).isEqualTo(String.class);
     }
 
     @Test
@@ -48,8 +48,8 @@ class XomToStringConverterTest {
 
         String actual = testSubject.convert(doc);
 
-        assertNotNull(actual);
+        assertThat(actual).isNotNull();
 
-        assertTrue(actual.contains("rootElement"), "Wrong output: " + actual);
+        assertThat(actual).as("Wrong output: " + actual).contains("rootElement");
     }
 }

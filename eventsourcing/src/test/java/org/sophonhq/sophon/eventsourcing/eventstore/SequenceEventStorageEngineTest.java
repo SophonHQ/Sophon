@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventsourcing.eventstore;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -37,7 +38,7 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyBoolean;
@@ -86,23 +87,23 @@ class SequenceEventStorageEngineTest {
         when(activeStorage.readEvents(eq("aggregate"), anyLong())).thenReturn(DomainEventStream.of(event2));
 
         DomainEventStream actual = testSubject.readEvents("aggregate", 0);
-        assertEquals(0L, (long) actual.getLastSequenceNumber());
+        assertThat((long) actual.getLastSequenceNumber()).isZero();
 
-        assertTrue(actual.hasNext());
-        assertSame(event1, actual.peek());
-        assertSame(event1, actual.next());
+        assertThat(actual).hasNext();
+        assertThat(actual.peek()).isSameAs(event1);
+        assertThat(actual.next()).isSameAs(event1);
         verify(activeStorage, never()).readEvents(anyString(), anyLong());
 
-        assertTrue(actual.hasNext());
-        assertSame(event2, actual.peek());
-        assertSame(event2, actual.next());
-        assertEquals(1L, (long) actual.getLastSequenceNumber());
+        assertThat(actual).hasNext();
+        assertThat(actual.peek()).isSameAs(event2);
+        assertThat(actual.next()).isSameAs(event2);
+        assertThat((long) actual.getLastSequenceNumber()).isOne();
 
         InOrder inOrder = Mockito.inOrder(historicStorage, activeStorage);
         inOrder.verify(historicStorage).readEvents("aggregate", 0);
         inOrder.verify(activeStorage).readEvents("aggregate", 1);
 
-        assertFalse(actual.hasNext());
+        assertThat(actual).isExhausted();
     }
 
     @Test
@@ -115,20 +116,20 @@ class SequenceEventStorageEngineTest {
         DomainEventStream actual = testSubject.readEvents("aggregate", 0);
         verify(activeStorage, never()).readEvents(anyString(), anyLong());
 
-        assertSame(event1, actual.peek());
-        assertSame(event1, actual.next());
+        assertThat(actual.peek()).isSameAs(event1);
+        assertThat(actual.next()).isSameAs(event1);
 
-        assertSame(event2, actual.peek());
-        assertSame(event2, actual.next());
+        assertThat(actual.peek()).isSameAs(event2);
+        assertThat(actual.next()).isSameAs(event2);
 
         Long seq = actual.getLastSequenceNumber();
-        assertNotNull(seq);
+        assertThat(seq).isNotNull();
 
         InOrder inOrder = Mockito.inOrder(historicStorage, activeStorage);
         inOrder.verify(historicStorage).readEvents("aggregate", 0);
         inOrder.verify(activeStorage).readEvents("aggregate", 0);
 
-        assertFalse(actual.hasNext());
+        assertThat(actual).isExhausted();
     }
 
     @Test
@@ -139,26 +140,26 @@ class SequenceEventStorageEngineTest {
         when(activeStorage.readEvents(eq("aggregate"), anyLong())).thenReturn(DomainEventStream.empty());
 
         DomainEventStream actual = testSubject.readEvents("aggregate", 0);
-        assertEquals(1L, (long) actual.getLastSequenceNumber());
+        assertThat((long) actual.getLastSequenceNumber()).isOne();
         verify(activeStorage, never()).readEvents(anyString(), anyLong());
 
-        assertSame(event1, actual.peek());
-        assertSame(event1, actual.next());
+        assertThat(actual.peek()).isSameAs(event1);
+        assertThat(actual.next()).isSameAs(event1);
 
-        assertSame(event2, actual.peek());
-        assertSame(event2, actual.next());
+        assertThat(actual.peek()).isSameAs(event2);
+        assertThat(actual.next()).isSameAs(event2);
 
         verify(activeStorage, never()).readEvents(anyString(), anyLong());
 
-        assertFalse(actual.hasNext()); // this initializes second domain stream
+        assertThat(actual).isExhausted(); // this initializes second domain stream
         verify(activeStorage).readEvents("aggregate", 2);
-        assertEquals(1L, (long) actual.getLastSequenceNumber());
+        assertThat((long) actual.getLastSequenceNumber()).isOne();
 
         InOrder inOrder = Mockito.inOrder(historicStorage, activeStorage);
         inOrder.verify(historicStorage).readEvents("aggregate", 0);
         inOrder.verify(activeStorage).readEvents("aggregate", 2);
 
-        assertFalse(actual.hasNext());
+        assertThat(actual).isExhausted();
     }
 
     @Test
@@ -187,8 +188,8 @@ class SequenceEventStorageEngineTest {
         Stream<? extends TrackedEventMessage<?>> actual = testSubject.readEvents(startToken, true);
         List<? extends TrackedEventMessage<?>> actualList = actual.collect(toList());
 
-        assertEquals(2, actualList.size());
-        assertEquals(Arrays.asList(trackedEvent1, trackedEvent2), actualList);
+        assertThat(actualList.size()).isEqualTo(2);
+        assertThat(actualList).isEqualTo(Arrays.asList(trackedEvent1, trackedEvent2));
 
         verify(historicStorage).readEvents(startToken, true);
         verify(activeStorage).readEvents(token1, true);
@@ -202,8 +203,8 @@ class SequenceEventStorageEngineTest {
         when(activeStorage.readSnapshot("aggregate")).thenReturn(Optional.empty());
 
         Optional<DomainEventMessage<?>> actual = testSubject.readSnapshot("aggregate");
-        assertTrue(actual.isPresent());
-        assertSame(event1, actual.get());
+        assertThat(actual).isPresent();
+        assertThat(actual.get()).isSameAs(event1);
 
         InOrder inOrder = inOrder(historicStorage, activeStorage);
         inOrder.verify(activeStorage).readSnapshot("aggregate");
@@ -219,8 +220,8 @@ class SequenceEventStorageEngineTest {
         when(activeStorage.readSnapshot("aggregate")).thenReturn(Optional.of(event1));
 
         Optional<DomainEventMessage<?>> actual = testSubject.readSnapshot("aggregate");
-        assertTrue(actual.isPresent());
-        assertSame(event1, actual.get());
+        assertThat(actual).isPresent();
+        assertThat(actual.get()).isSameAs(event1);
 
         InOrder inOrder = inOrder(historicStorage, activeStorage);
         inOrder.verify(activeStorage).readSnapshot("aggregate");
@@ -249,7 +250,7 @@ class SequenceEventStorageEngineTest {
 
         TrackingToken tokenAt = testSubject.createTokenAt(now);
 
-        assertEquals(mockTrackingToken, tokenAt);
+        assertThat(tokenAt).isEqualTo(mockTrackingToken);
         verify(historicStorage, times(0)).createTokenAt(now);
     }
 
@@ -262,7 +263,7 @@ class SequenceEventStorageEngineTest {
 
         TrackingToken tokenAt = testSubject.createTokenAt(now);
 
-        assertEquals(mockTrackingToken, tokenAt);
+        assertThat(tokenAt).isEqualTo(mockTrackingToken);
     }
 
     @Test
@@ -281,23 +282,23 @@ class SequenceEventStorageEngineTest {
 
         Stream<? extends TrackedEventMessage<?>> stream = testSubject.readEvents(null, true);
         TrackedEventMessage<?> firstEvent = stream.findFirst().orElseThrow(IllegalStateException::new);
-        assertEquals("test1", firstEvent.getPayload());
+        assertThat(firstEvent.getPayload()).isEqualTo("test1");
 
         Stream<? extends TrackedEventMessage<?>> stream2 = testSubject.readEvents(firstEvent.trackingToken(), true);
         List<TrackedEventMessage<?>> secondBatch = stream2.collect(toList());
-        assertEquals(2, secondBatch.size());
-        assertEquals("test2", secondBatch.get(0).getPayload());
-        assertEquals("test3", secondBatch.get(1).getPayload());
+        assertThat(secondBatch).hasSize(2);
+        assertThat(secondBatch.get(0).getPayload()).isEqualTo("test2");
+        assertThat(secondBatch.get(1).getPayload()).isEqualTo("test3");
 
         Stream<? extends TrackedEventMessage<?>> stream3 =
                 testSubject.readEvents(secondBatch.get(0).trackingToken(), true);
         List<TrackedEventMessage<?>> thirdBatch = stream3.collect(toList());
-        assertEquals(1, thirdBatch.size());
-        assertEquals("test3", thirdBatch.get(0).getPayload());
+        assertThat(thirdBatch).hasSize(1);
+        assertThat(thirdBatch.get(0).getPayload()).isEqualTo("test3");
 
         Stream<? extends TrackedEventMessage<?>> stream4 =
                 testSubject.readEvents(secondBatch.get(1).trackingToken(), true);
-        assertFalse(stream4.findFirst().isPresent());
+        assertThat(stream4.findFirst()).isNotPresent();
     }
 
     @Test
@@ -319,12 +320,12 @@ class SequenceEventStorageEngineTest {
 
         verify(activeStorage, never()).readEvents(anyString(), anyLong());
 
-        assertTrue(actual.hasNext());
-        assertSame(event3, actual.peek());
-        assertSame(event3, actual.next());
-        assertEquals(2L, (long) actual.getLastSequenceNumber());
+        assertThat(actual).hasNext();
+        assertThat(actual.peek()).isSameAs(event3);
+        assertThat(actual.next()).isSameAs(event3);
+        assertThat((long) actual.getLastSequenceNumber()).isEqualTo(2L);
 
-        assertFalse(actual.hasNext());
+        assertThat(actual).isExhausted();
 
         InOrder inOrder = Mockito.inOrder(historicStorage, activeStorage);
         inOrder.verify(historicStorage).readEvents("aggregate", 2);
@@ -351,12 +352,12 @@ class SequenceEventStorageEngineTest {
 
         verify(activeStorage, never()).readEvents(anyString(), anyLong());
 
-        assertTrue(actual.hasNext());
-        assertSame(event3, actual.peek());
-        assertSame(event3, actual.next());
-        assertEquals(2L, (long) actual.getLastSequenceNumber());
+        assertThat(actual).hasNext();
+        assertThat(actual.peek()).isSameAs(event3);
+        assertThat(actual.next()).isSameAs(event3);
+        assertThat((long) actual.getLastSequenceNumber()).isEqualTo(2L);
 
-        assertFalse(actual.hasNext());
+        assertThat(actual).isExhausted();
 
         InOrder inOrder = Mockito.inOrder(historicStorage, activeStorage);
         inOrder.verify(historicStorage).readEvents("aggregate", 2);
@@ -382,12 +383,12 @@ class SequenceEventStorageEngineTest {
 
         verify(activeStorage, never()).readEvents(anyString(), anyLong());
 
-        assertTrue(actual.hasNext());
-        assertSame(event3, actual.peek());
-        assertSame(event3, actual.next());
-        assertEquals(2L, (long) actual.getLastSequenceNumber());
+        assertThat(actual).hasNext();
+        assertThat(actual.peek()).isSameAs(event3);
+        assertThat(actual.next()).isSameAs(event3);
+        assertThat((long) actual.getLastSequenceNumber()).isEqualTo(2L);
 
-        assertFalse(actual.hasNext());
+        assertThat(actual).isExhausted();
 
         InOrder inOrder = Mockito.inOrder(historicStorage, activeStorage);
         inOrder.verify(historicStorage).readEvents("aggregate", 2);

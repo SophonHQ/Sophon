@@ -18,7 +18,7 @@
 package org.sophonhq.sophon.spring.config;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.config.EventProcessingModule;
 import org.sophonhq.sophon.eventhandling.EventBus;
@@ -38,7 +38,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This test ensures that any handler interceptor registered via {@link EventProcessingModule} is triggered.
@@ -56,7 +56,7 @@ public class EventProcessingModuleWithInterceptorsTest {
     @Test
     void interceptorRegistration() {
         eventBus.publish(GenericEventMessage.asEventMessage("myEvent"));
-        assertEquals("myMetaDataValue", myEventHandler.getMetaDataValue());
+        assertThat(myEventHandler.getMetaDataValue()).isEqualTo("myMetaDataValue");
     }
 
     @Import(SpringSophonAutoConfigurer.ImportSelector.class)

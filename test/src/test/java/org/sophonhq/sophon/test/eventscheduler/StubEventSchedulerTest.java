@@ -27,7 +27,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Allard Buijze
@@ -44,7 +45,7 @@ class StubEventSchedulerTest {
     @Test
     void scheduleEvent() {
         testSubject.schedule(Instant.now().plus(Duration.ofDays(1)), event(new MockEvent()));
-        assertEquals(1, testSubject.getScheduledItems().size());
+        assertThat(testSubject.getScheduledItems()).hasSize(1);
     }
 
     @Test
@@ -54,16 +55,17 @@ class StubEventSchedulerTest {
         List<EventMessage<?>> triggered = new ArrayList<>();
         testSubject.advanceTimeBy(Duration.ofMinutes(75), triggered::add);
 
-        assertEquals(1, triggered.size());
-        assertEquals(triggerTime, triggered.get(0).getTimestamp());
+        assertThat(triggered).hasSize(1);
+        assertThat(triggered.get(0).getTimestamp()).isEqualTo(triggerTime);
     }
 
     @Test
     void initializeAtDateTimeAfterSchedulingEvent() {
         testSubject.schedule(Instant.now().plus(Duration.ofDays(1)), event(new MockEvent()));
 
-        assertThrows(IllegalStateException.class, () ->
-                        testSubject.initializeAt(Instant.now().minus(10, ChronoUnit.MINUTES)));
+        assertThatThrownBy(() ->
+                                   testSubject.initializeAt(Instant.now().minus(10, ChronoUnit.MINUTES)))
+                .isInstanceOf(IllegalStateException.class);
     }
 
     private EventMessage<MockEvent> event(MockEvent mockEvent) {

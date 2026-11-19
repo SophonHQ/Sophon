@@ -24,7 +24,9 @@ import org.jobrunr.server.JobActivator;
 import org.jobrunr.storage.InMemoryStorageProvider;
 import org.jobrunr.storage.StorageProvider;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.Registration;
 import org.sophonhq.sophon.eventhandling.EventBus;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -44,9 +46,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 import static org.jobrunr.server.BackgroundJobServerConfiguration.usingStandardBackgroundJobServerConfiguration;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class JobRunrEventSchedulerTest {
@@ -96,13 +99,13 @@ class JobRunrEventSchedulerTest {
         Instant rightAfterSchedule = Instant.now();
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(1, publishedMessage.getPayload());
-        assertTrue(rightAfterSchedule.isBefore(publishedMessage.getTimestamp()));
-        assertTrue(publishedMessage.getMetaData().isEmpty());
+        assertThat(publishedMessage.getPayload()).isEqualTo(1);
+        assertThat(rightAfterSchedule).isBefore(publishedMessage.getTimestamp());
+        assertThat(publishedMessage.getMetaData()).isEmpty();
     }
 
     @Test
@@ -110,11 +113,11 @@ class JobRunrEventSchedulerTest {
         eventScheduler.schedule(Duration.ofSeconds(-10L), 1);
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(1, publishedMessage.getPayload());
+        assertThat(publishedMessage.getPayload()).isEqualTo(1);
     }
 
     @Test
@@ -126,13 +129,13 @@ class JobRunrEventSchedulerTest {
         Instant rightAfterSchedule = Instant.now();
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(2, publishedMessage.getPayload());
-        assertTrue(rightAfterSchedule.isBefore(publishedMessage.getTimestamp()));
-        assertEquals(metadata, publishedMessage.getMetaData());
+        assertThat(publishedMessage.getPayload()).isEqualTo(2);
+        assertThat(rightAfterSchedule).isBefore(publishedMessage.getTimestamp());
+        assertThat(publishedMessage.getMetaData()).isEqualTo(metadata);
     }
 
     @Test
@@ -141,13 +144,13 @@ class JobRunrEventSchedulerTest {
         Instant rightAfterSchedule = Instant.now();
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(new PayloadWithRevision(), publishedMessage.getPayload());
-        assertTrue(rightAfterSchedule.isBefore(publishedMessage.getTimestamp()));
-        assertTrue(publishedMessage.getMetaData().isEmpty());
+        assertThat(publishedMessage.getPayload()).isEqualTo(new PayloadWithRevision());
+        assertThat(rightAfterSchedule).isBefore(publishedMessage.getTimestamp());
+        assertThat(publishedMessage.getMetaData()).isEmpty();
     }
 
     @Test
@@ -159,13 +162,13 @@ class JobRunrEventSchedulerTest {
         Instant rightAfterSchedule = Instant.now();
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
 
-        assertEquals(new PayloadWithRevision(), publishedMessage.getPayload());
-        assertTrue(rightAfterSchedule.isBefore(publishedMessage.getTimestamp()));
-        assertEquals(metadata, publishedMessage.getMetaData());
+        assertThat(publishedMessage.getPayload()).isEqualTo(new PayloadWithRevision());
+        assertThat(rightAfterSchedule).isBefore(publishedMessage.getTimestamp());
+        assertThat(publishedMessage.getMetaData()).isEqualTo(metadata);
     }
 
     @Test
@@ -174,10 +177,10 @@ class JobRunrEventSchedulerTest {
         eventScheduler.reschedule(token, Duration.ofMillis(100L), 4);
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
-        assertEquals(4, publishedMessage.getPayload());
+        assertThat(publishedMessage.getPayload()).isEqualTo(4);
     }
 
     @Test
@@ -186,10 +189,10 @@ class JobRunrEventSchedulerTest {
         eventScheduler.reschedule(token, Instant.now().plusMillis(100L), 6);
 
         await().atMost(Duration.ofSeconds(2)).until(() -> !publishedMessages.isEmpty());
-        assertEquals(1, publishedMessages.size());
+        assertThat(publishedMessages).hasSize(1);
 
         EventMessage<?> publishedMessage = publishedMessages.get(0);
-        assertEquals(6, publishedMessage.getPayload());
+        assertThat(publishedMessage.getPayload()).isEqualTo(6);
     }
 
     @Test
@@ -201,7 +204,8 @@ class JobRunrEventSchedulerTest {
     @Test
     void incorrectTokenClassShouldThrow() {
         ScheduleToken token = new SimpleScheduleToken("ff");
-        assertThrows(IllegalArgumentException.class, () -> eventScheduler.cancelSchedule(token));
+        assertThatThrownBy(() -> eventScheduler.cancelSchedule(token))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     private static class InMemoryEventBus implements EventBus {

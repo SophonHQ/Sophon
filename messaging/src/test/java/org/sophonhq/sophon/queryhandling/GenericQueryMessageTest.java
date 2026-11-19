@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.queryhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.GenericMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.responsetypes.ResponseTypes;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating behaviour of the {@link GenericQueryMessage}.
@@ -37,7 +37,7 @@ class GenericQueryMessageTest {
 
         String result = QueryMessage.queryName(testPayload);
 
-        assertEquals(String.class.getName(), result);
+        assertThat(result).isEqualTo(String.class.getName());
     }
 
     @Test
@@ -47,7 +47,7 @@ class GenericQueryMessageTest {
 
         String result = QueryMessage.queryName(testMessage);
 
-        assertEquals(String.class.getName(), result);
+        assertThat(result).isEqualTo(String.class.getName());
     }
 
     @Test
@@ -58,6 +58,6 @@ class GenericQueryMessageTest {
 
         String result = QueryMessage.queryName(testMessage);
 
-        assertEquals(expectedQueryName, result);
+        assertThat(result).isEqualTo(expectedQueryName);
     }
 }

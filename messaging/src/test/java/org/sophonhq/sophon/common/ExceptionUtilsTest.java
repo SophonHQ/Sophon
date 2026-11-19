@@ -17,11 +17,11 @@
 
 package org.sophonhq.sophon.common;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.NoHandlerForCommandException;
 import org.sophonhq.sophon.serialization.SerializationException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Stefan Andjelkovic
@@ -30,19 +30,19 @@ class ExceptionUtilsTest {
     @Test
     void isExplicitlyNonTransientForTransientExceptions() {
         NoHandlerForCommandException transientException = new NoHandlerForCommandException("No handler message");
-        assertFalse(ExceptionUtils.isExplicitlyNonTransient(transientException));
+        assertThat(ExceptionUtils.isExplicitlyNonTransient(transientException)).isFalse();
     }
 
     @Test
     void isExplicitlyNonTransientForRegularExceptions() {
         RuntimeException runtimeException = new RuntimeException("Something went wrong");
-        assertFalse(ExceptionUtils.isExplicitlyNonTransient(runtimeException));
+        assertThat(ExceptionUtils.isExplicitlyNonTransient(runtimeException)).isFalse();
     }
 
     @Test
     void isExplicitlyNonTransientForNonTransientExceptions() {
         SerializationException nonTransientException = new SerializationException("Serialization error");
-        assertTrue(ExceptionUtils.isExplicitlyNonTransient(nonTransientException));
+        assertThat(ExceptionUtils.isExplicitlyNonTransient(nonTransientException)).isTrue();
     }
 
     @Test
@@ -51,6 +51,6 @@ class ExceptionUtilsTest {
         RuntimeException nestedRuntimeException = new RuntimeException("Something went wrong nested", nonTransientException);
         RuntimeException baseRuntimeException = new RuntimeException("Something went wrong", nestedRuntimeException);
 
-        assertTrue(ExceptionUtils.isExplicitlyNonTransient(baseRuntimeException));
+        assertThat(ExceptionUtils.isExplicitlyNonTransient(baseRuntimeException)).isTrue();
     }
 }

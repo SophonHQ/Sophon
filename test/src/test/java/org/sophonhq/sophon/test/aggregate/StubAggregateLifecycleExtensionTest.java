@@ -17,10 +17,10 @@
 
 package org.sophonhq.sophon.test.aggregate;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.markDeleted;
 
@@ -38,16 +38,16 @@ class StubAggregateLifecycleExtensionTest {
     void appliedEventsArePassedToActiveLifecycle() {
         apply("test");
 
-        assertEquals(1, TEST_SUBJECT.getAppliedEvents().size());
-        assertEquals("test", TEST_SUBJECT.getAppliedEventPayloads().get(0));
-        assertEquals("test", TEST_SUBJECT.getAppliedEvents().get(0).getPayload());
+        assertThat(TEST_SUBJECT.getAppliedEvents()).hasSize(1);
+        assertThat(TEST_SUBJECT.getAppliedEventPayloads().get(0)).isEqualTo("test");
+        assertThat(TEST_SUBJECT.getAppliedEvents().get(0).getPayload()).isEqualTo("test");
     }
 
     @Test
     void testMarkDeletedIsRegisteredWithActiveLifecycle() {
         markDeleted();
 
-        assertEquals(0, TEST_SUBJECT.getAppliedEvents().size());
-        assertTrue(TEST_SUBJECT.isMarkedDeleted());
+        assertThat(TEST_SUBJECT.getAppliedEvents()).hasSize(0);
+        assertThat(TEST_SUBJECT.isMarkedDeleted()).isTrue();
     }
 }

@@ -19,7 +19,8 @@ package org.sophonhq.sophon.springboot.autoconfig;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
 import org.sophonhq.sophon.commandhandling.gateway.DefaultCommandGateway;
@@ -51,7 +52,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.common.StringUtils.lowerCaseFirstCharacterOf;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
@@ -93,19 +94,19 @@ class AggregateStereotypeAutoConfigurationTest {
             SnapshotTriggerDefinition snapshotTriggerDefinition =
                     context.getBean("testSnapshotTriggerDefinition", SnapshotTriggerDefinition.class);
             verify(snapshotTriggerDefinition).prepareTrigger(TestContext.TestAggregate.class);
-            assertTrue(cacheInvoked.get());
-            assertTrue(lockFactoryInvoked.get());
+            assertThat(cacheInvoked.get()).isTrue();
+            assertThat(lockFactoryInvoked.get()).isTrue();
 
             // Publish the second command to trigger the SnapshotFilter and CommandTargetResolver
             commandGateway.sendAndWait(new UpdateTestAggregate(aggregateId));
 
-            assertTrue(snapshotFilterInvoked.get());
-            assertTrue(commandTargetResolverInvoked.get());
+            assertThat(snapshotFilterInvoked.get()).isTrue();
+            assertThat(commandTargetResolverInvoked.get()).isTrue();
 
             EventStore eventStore = context.getBean("eventBus", EventStore.class);
-            assertTrue(eventStore.readEvents(aggregateId)
-                                 .asStream()
-                                 .allMatch(event -> Objects.equals(event.getType(), "testType")));
+            assertThat(eventStore.readEvents(aggregateId)
+                    .asStream()
+                    .allMatch(event -> Objects.equals(event.getType(), "testType"))).isTrue();
         });
     }
 
@@ -131,24 +132,24 @@ class AggregateStereotypeAutoConfigurationTest {
             SnapshotTriggerDefinition snapshotTriggerDefinition =
                     context.getBean("testSnapshotTriggerDefinition", SnapshotTriggerDefinition.class);
             verifyNoInteractions(snapshotTriggerDefinition);
-            assertFalse(cacheInvoked.get());
-            assertFalse(lockFactoryInvoked.get());
+            assertThat(cacheInvoked.get()).isFalse();
+            assertThat(lockFactoryInvoked.get()).isFalse();
 
             // Publish the second command to trigger the SnapshotFilter and CommandTargetResolver
             commandGateway.sendAndWait(new UpdateCustomRepoTestAggregate(aggregateId));
 
             verify(testRepository).load(aggregateId, null);
-            assertTrue(commandTargetResolverInvoked.get());
+            assertThat(commandTargetResolverInvoked.get()).isTrue();
 
             verifyNoInteractions(snapshotTriggerDefinition);
-            assertFalse(snapshotFilterInvoked.get());
-            assertFalse(cacheInvoked.get());
-            assertFalse(lockFactoryInvoked.get());
+            assertThat(snapshotFilterInvoked.get()).isFalse();
+            assertThat(cacheInvoked.get()).isFalse();
+            assertThat(lockFactoryInvoked.get()).isFalse();
 
             EventStore eventStore = context.getBean("eventBus", EventStore.class);
-            assertTrue(eventStore.readEvents(aggregateId)
-                                 .asStream()
-                                 .allMatch(event -> Objects.equals(event.getType(), "testTypeWithCustomRepository")));
+            assertThat(eventStore.readEvents(aggregateId)
+                    .asStream()
+                    .allMatch(event -> Objects.equals(event.getType(), "testTypeWithCustomRepository"))).isTrue();
         });
     }
 
@@ -156,9 +157,11 @@ class AggregateStereotypeAutoConfigurationTest {
     void aggregateWithEntityManagerAnnotationIsAutoconfiguredWitDefaultJpaRepository() {
         String expectedRepositoryBeanName = repositoryBeanName(TestContext.SimpleStateStoredAggregate.class);
         testApplicationContext.run(context -> {
-            assertTrue(context.containsBean(expectedRepositoryBeanName));
+            assertThat(context.containsBean(expectedRepositoryBeanName)).isTrue();
             Object actual = context.getBean(expectedRepositoryBeanName);
-            assertTrue(actual instanceof GenericJpaRepository, "Expected Jpa repository to have been configured");
+            assertThat(actual)
+                    .as("Expected Jpa repository to have been configured")
+                    .isInstanceOf(GenericJpaRepository.class);
         });
     }
 
@@ -172,9 +175,11 @@ class AggregateStereotypeAutoConfigurationTest {
         Repository<?> mockRepo = mock(Repository.class);
         testApplicationContext.withBean(beanName + "Repository", Repository.class, () -> mockRepo)
                               .run(context -> {
-                                  assertTrue(context.containsBean(beanName + "Repository"));
+                                  assertThat(context.containsBean(beanName + "Repository")).isTrue();
                                   Object actual = context.getBean(beanName + "Repository");
-                                  assertSame(mockRepo, actual, "Expected defined repository to have been configured");
+                                  assertThat(actual)
+                                          .as("Expected defined repository to have been configured")
+                                          .isSameAs(mockRepo);
                               });
     }
 

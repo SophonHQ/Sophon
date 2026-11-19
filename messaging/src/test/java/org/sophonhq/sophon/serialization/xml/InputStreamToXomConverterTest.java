@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Jochen Munz
@@ -44,6 +44,6 @@ class InputStreamToXomConverterTest {
         InputStream inputStream = new ByteArrayInputStream(bytes);
         Document actual = testSubject.convert(inputStream);
 
-        assertEquals("parent", actual.getRootElement().getLocalName());
+        assertThat(actual.getRootElement().getLocalName()).isEqualTo("parent");
     }
 }

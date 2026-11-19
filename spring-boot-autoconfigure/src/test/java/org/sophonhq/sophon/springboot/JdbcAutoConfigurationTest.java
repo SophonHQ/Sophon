@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.springboot;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.ReflectionUtils;
 import org.sophonhq.sophon.common.jdbc.ConnectionProvider;
 import org.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
@@ -59,7 +60,6 @@ import java.util.Optional;
 import javax.sql.DataSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -154,12 +154,12 @@ public class JdbcAutoConfigurationTest {
                    .run(context -> {
                        Map<String, TokenStore> tokenStores =
                                context.getBeansOfType(TokenStore.class);
-                       assertTrue(tokenStores.containsKey("tokenStore"));
+                       assertThat(tokenStores).containsKey("tokenStore");
                        TokenStore tokenStore = tokenStores.get("tokenStore");
                        TemporalAmount tokenClaimInterval = ReflectionUtils.getFieldValue(
                                JdbcTokenStore.class.getDeclaredField("claimTimeout"), tokenStore
                        );
-                       assertEquals(Duration.ofMinutes(10L), tokenClaimInterval);
+                       assertThat(tokenClaimInterval).isEqualTo(Duration.ofMinutes(10L));
                    });
     }
 
@@ -167,8 +167,8 @@ public class JdbcAutoConfigurationTest {
     void defaultDeadLetterSchemaIsPresent() {
         testContext.run(context -> {
             DeadLetterSchema schema = context.getBean(DeadLetterSchema.class);
-            assertNotNull(schema);
-            assertEquals("DeadLetterEntry", schema.deadLetterTable());
+            assertThat(schema).isNotNull();
+            assertThat(schema.deadLetterTable()).isEqualTo("DeadLetterEntry");
         });
     }
 
@@ -182,8 +182,8 @@ public class JdbcAutoConfigurationTest {
         testContext.withBean(DeadLetterSchema.class, () -> customSchema)
                    .run(context -> {
                        DeadLetterSchema schema = context.getBean(DeadLetterSchema.class);
-                       assertNotNull(schema);
-                       assertEquals(expectedDeadLetterTable, schema.deadLetterTable());
+                       assertThat(schema).isNotNull();
+                       assertThat(schema.deadLetterTable()).isEqualTo(expectedDeadLetterTable);
                    });
     }
 
@@ -191,18 +191,18 @@ public class JdbcAutoConfigurationTest {
     void sequencedDeadLetterQueueCanBeSetViaSpringConfiguration() {
         testContext.withPropertyValues("sophon.eventhandling.processors.first.dlq.enabled=true")
                    .run(context -> {
-                       assertNotNull(context.getBean(DeadLetterQueueProviderConfigurerModule.class));
+                       assertThat(context.getBean(DeadLetterQueueProviderConfigurerModule.class)).isNotNull();
 
                        EventProcessingModule eventProcessingConfig = context.getBean(EventProcessingModule.class);
-                       assertNotNull(eventProcessingConfig);
+                       assertThat(eventProcessingConfig).isNotNull();
 
                        Optional<SequencedDeadLetterQueue<EventMessage<?>>> dlq =
                                eventProcessingConfig.deadLetterQueue("first");
-                       assertTrue(dlq.isPresent());
-                       assertTrue(dlq.get() instanceof JdbcSequencedDeadLetterQueue);
+                       assertThat(dlq).isPresent();
+                       assertThat(dlq.get()).isInstanceOf(JdbcSequencedDeadLetterQueue.class);
 
                        dlq = eventProcessingConfig.deadLetterQueue("second");
-                       assertFalse(dlq.isPresent());
+                       assertThat(dlq).isNotPresent();
                    });
     }
 
@@ -210,19 +210,19 @@ public class JdbcAutoConfigurationTest {
     void deadLetterQueueProviderConfigurerModuleCanBeOverwritten() {
         testContext.withPropertyValues("sophon.eventhandling.processors.first.dlq.enabled=true")
                    .run(context -> {
-                       assertNotNull(context.getBean("deadLetterQueueProviderConfigurerModule",
-                                                     DeadLetterQueueProviderConfigurerModule.class));
+                       assertThat(context.getBean("deadLetterQueueProviderConfigurerModule",
+                                                  DeadLetterQueueProviderConfigurerModule.class)).isNotNull();
 
                        EventProcessingModule eventProcessingConfig = context.getBean(EventProcessingModule.class);
-                       assertNotNull(eventProcessingConfig);
+                       assertThat(eventProcessingConfig).isNotNull();
 
                        Optional<SequencedDeadLetterQueue<EventMessage<?>>> dlq =
                                eventProcessingConfig.deadLetterQueue("first");
-                       assertTrue(dlq.isPresent());
-                       assertTrue(dlq.get() instanceof JdbcSequencedDeadLetterQueue);
+                       assertThat(dlq).isPresent();
+                       assertThat(dlq.get()).isInstanceOf(JdbcSequencedDeadLetterQueue.class);
 
                        dlq = eventProcessingConfig.deadLetterQueue("second");
-                       assertFalse(dlq.isPresent());
+                       assertThat(dlq).isNotPresent();
                    });
     }
 

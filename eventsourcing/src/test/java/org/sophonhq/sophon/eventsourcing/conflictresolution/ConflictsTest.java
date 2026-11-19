@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventsourcing.conflictresolution;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 
 import java.util.List;
@@ -25,8 +25,9 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.sophonhq.sophon.eventsourcing.conflictresolution.Conflicts.payloadMatching;
+import static org.sophonhq.sophon.eventsourcing.conflictresolution.Conflicts.payloadTypeOf;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.*;
 
 class ConflictsTest {
@@ -37,16 +38,16 @@ class ConflictsTest {
 
     @Test
     void payload() {
-        assertTrue(Conflicts.payloadMatching(payload -> Objects.equals(payload, PAYLOAD + 2)).test(events));
-        assertTrue(Conflicts.payloadMatching(String.class, payload -> Objects.equals(payload, PAYLOAD + 5)).test(events));
-        assertFalse(Conflicts.payloadMatching(payload -> Objects.equals(payload, PAYLOAD + 11)).test(events));
+        assertThat(payloadMatching(payload -> Objects.equals(payload, PAYLOAD + 2))).accepts(events);
+        assertThat(payloadMatching(String.class, payload -> Objects.equals(payload, PAYLOAD + 5))).accepts(events);
+        assertThat(payloadMatching(payload -> Objects.equals(payload, PAYLOAD + 11))).rejects(events);
     }
 
     @Test
     void payloadType() {
-        assertTrue(Conflicts.payloadTypeOf(String.class).test(events));
-        assertTrue(Conflicts.payloadTypeOf(Object.class).test(events));
-        assertFalse(Conflicts.payloadTypeOf(Long.class).test(events));
+        assertThat(payloadTypeOf(String.class)).accepts(events);
+        assertThat(payloadTypeOf(Object.class)).accepts(events);
+        assertThat(payloadTypeOf(Long.class)).rejects(events);
     }
 
 }

@@ -22,7 +22,8 @@ import org.hamcrest.StringDescription;
 import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link ExactClassMatcher}.
@@ -39,25 +40,26 @@ public class ExactClassMatcherTest {
 
         boolean result = testSubject.matches(new SomeEvent());
 
-        assertFalse(result);
+        assertThat(result).isFalse();
         testSubject.describeTo(description);
-        assertTrue(description.toString().contains(" does not match with the actual type."));
+        assertThat(description.toString()).contains(" does not match with the actual type.");
     }
 
     @Test
     void matchesReturnsFalseForSubclass() {
-        assertFalse(new ExactClassMatcher<>(SomeBaseEvent.class).matches(new SomeSubclassEvent()));
+        assertThat(new ExactClassMatcher<>(SomeBaseEvent.class).matches(new SomeSubclassEvent())).isFalse();
     }
 
     @Test
     void matchesForSameClass() {
-        assertTrue(new ExactClassMatcher<>(SomeBaseEvent.class).matches(new SomeBaseEvent()));
+        assertThat(new ExactClassMatcher<>(SomeBaseEvent.class).matches(new SomeBaseEvent())).isTrue();
     }
 
     @Test
     void matchesIsNullSafe() {
-        assertFalse(new ExactClassMatcher<>(String.class).matches(null));
-        assertThrows(SophonConfigurationException.class, () -> new ExactClassMatcher<>(null).matches("foo"));
+        assertThat(new ExactClassMatcher<>(String.class).matches(null)).isFalse();
+        assertThatThrownBy(() -> new ExactClassMatcher<>(null).matches("foo"))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     private static class SomeBaseEvent {

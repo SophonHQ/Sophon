@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.tracing.opentelemetry;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MetadataContextGetterTest {
 
@@ -39,18 +39,19 @@ class MetadataContextGetterTest {
     void shouldReceiveMetadataKeysFromMessage() {
         List<String> keys = StreamSupport.stream(MetadataContextGetter.INSTANCE.keys(message).spliterator(), false)
                                          .collect(Collectors.toList());
-        assertTrue(keys.contains("myKeyOne"));
-        assertTrue(keys.contains("MyKeyTwo"));
-        assertFalse(keys.contains("MyKeyThree"));
+        assertThat(keys)
+                .contains("myKeyOne")
+                .contains("MyKeyTwo")
+                .doesNotContain("MyKeyThree");
     }
 
     @Test
     void shouldGetItemFromMessage() {
-        assertEquals("myValueTwo", MetadataContextGetter.INSTANCE.get(message, "myKeyOne"));
+        assertThat(MetadataContextGetter.INSTANCE.get(message, "myKeyOne")).isEqualTo("myValueTwo");
     }
 
     @Test
     void shouldGetNullFromNullMessage() {
-        assertNull(MetadataContextGetter.INSTANCE.get(null, "myKeyOne"));
+        assertThat(MetadataContextGetter.INSTANCE.get(null, "myKeyOne")).isNull();
     }
 }

@@ -35,7 +35,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.utils.EventTestUtils.createEvent;
 
@@ -99,9 +99,9 @@ class AsynchronousEventProcessingStrategyTest {
         InOrder inOrder = Mockito.inOrder(processor, processor);
         inOrder.verify(processor).accept(Arrays.asList(event1, event2));
 
-        assertEquals(2, ackedMessages.size());
-        assertEquals(event1, ackedMessages.get(0));
-        assertEquals(event2, ackedMessages.get(1));
+        assertThat(ackedMessages).hasSize(2);
+        assertThat(ackedMessages.get(0)).isEqualTo(event1);
+        assertThat(ackedMessages.get(1)).isEqualTo(event2);
     }
 
     @Test

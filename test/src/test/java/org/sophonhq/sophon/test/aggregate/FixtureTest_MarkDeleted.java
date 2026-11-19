@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import org.sophonhq.sophon.test.SophonAssertionError;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * @author Jan-Hendrik Kuperus
@@ -59,11 +59,11 @@ class FixtureTest_MarkDeleted {
     void createAggregateYieldsLiveAggregateInverted() {
         fixture.registerInjectableResource(new HardToCreateResource());
 
-        assertThrows(SophonAssertionError.class, () ->
+        assertThatThrownBy(() ->
                 fixture.givenNoPriorActivity()
                         .when(new CreateAggregateCommand("id"))
                         .expectEvents(new MyEvent("id", 0))
-                        .expectMarkedDeleted());
+                        .expectMarkedDeleted()).isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -77,11 +77,11 @@ class FixtureTest_MarkDeleted {
 
     @Test
     void deletedAggregateYieldsAggregateMarkedDeletedInverted() {
-        assertThrows(SophonAssertionError.class, () ->
+        assertThatThrownBy(() ->
                 fixture.given(new MyEvent("id", 0))
                         .when(new DeleteCommand("id", false))
                         .expectEvents(new MyAggregateDeletedEvent(false))
-                        .expectNotMarkedDeleted());
+                        .expectNotMarkedDeleted()).isInstanceOf(SophonAssertionError.class);
 
     }
 

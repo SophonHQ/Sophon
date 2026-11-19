@@ -19,8 +19,7 @@ package org.sophonhq.sophon.test.matchers;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class NonStaticFieldsFilterTest {
 
@@ -31,13 +30,13 @@ class NonStaticFieldsFilterTest {
 
     @Test
     void acceptNonTransientField() throws Exception {
-        assertTrue(NonStaticFieldsFilter.instance()
-                           .accept(getClass().getDeclaredField("nonStaticField")));
+        assertThat(NonStaticFieldsFilter.instance()
+                           .accept(getClass().getDeclaredField("nonStaticField"))).isTrue();
     }
 
     @Test
     void rejectTransientField() throws Exception {
-        assertFalse(NonStaticFieldsFilter.instance()
-                            .accept(getClass().getDeclaredField("staticField")));
+        assertThat(NonStaticFieldsFilter.instance()
+                           .accept(getClass().getDeclaredField("staticField"))).isFalse();
     }
 }

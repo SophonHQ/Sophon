@@ -30,8 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -58,11 +57,11 @@ class IntermediateRepresentationTest {
             new IntermediateRepresentationTest.MyEventUpcaster()
         );
         List<IntermediateEventRepresentation> result = eventUpcasterChain.upcast(Stream.of(input)).collect(toList());
-        assertEquals(1, result.size());
+        assertThat(result).hasSize(1);
 
 
-        assertTrue(input.canConvertDataTo(String.class));
-        assertTrue(result.get(0).canConvertDataTo(String.class));
+        assertThat(input.canConvertDataTo(String.class)).isTrue();
+        assertThat(result.get(0).canConvertDataTo(String.class)).isTrue();
 
         verify(converter).canConvert(String.class, String.class);
     }

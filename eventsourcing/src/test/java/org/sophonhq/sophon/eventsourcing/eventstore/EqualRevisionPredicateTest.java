@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventsourcing.eventstore;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.IdentifierFactory;
 import org.sophonhq.sophon.eventhandling.DomainEventData;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventEntry;
@@ -27,7 +28,7 @@ import org.sophonhq.sophon.serialization.Revision;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class EqualRevisionPredicateTest {
 
@@ -41,27 +42,27 @@ class EqualRevisionPredicateTest {
 
     @Test
     void sameRevisionForAggregateAndPayload() {
-        assertTrue(testSubject.test(createEntry(WithAnnotationAggregate.class.getName(), "2.3-TEST")));
+        assertThat(testSubject).accepts(createEntry(WithAnnotationAggregate.class.getName(), "2.3-TEST"));
     }
 
     @Test
     void differentRevisionsForAggregateAndPayload() {
-        assertFalse(testSubject.test(createEntry(WithAnnotationAggregate.class.getName(), "2.3-TEST-DIFFERENT")));
+        assertThat(testSubject).rejects(createEntry(WithAnnotationAggregate.class.getName(), "2.3-TEST-DIFFERENT"));
     }
 
     @Test
     void noRevisionForAggregateAndPayload() {
-        assertTrue(testSubject.test(createEntry(WithoutAnnotationAggregate.class.getName())));
+        assertThat(testSubject).accepts(createEntry(WithoutAnnotationAggregate.class.getName()));
     }
 
     @Test
     void noRevisionForPayload() {
-        assertFalse(testSubject.test(createEntry(WithAnnotationAggregate.class.getName())));
+        assertThat(testSubject).rejects(createEntry(WithAnnotationAggregate.class.getName()));
     }
 
     @Test
     void noRevisionForAggregate() {
-        assertFalse(testSubject.test(createEntry(WithoutAnnotationAggregate.class.getName(), "2.3-TEST")));
+        assertThat(testSubject).rejects(createEntry(WithoutAnnotationAggregate.class.getName(), "2.3-TEST"));
     }
 
     private static DomainEventData<?> createEntry(String payloadType) {

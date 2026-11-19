@@ -18,7 +18,9 @@
 package org.sophonhq.sophon.integrationtests.deadline;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.common.SophonNonTransientException;
@@ -69,8 +71,8 @@ import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
@@ -171,11 +173,11 @@ public abstract class AbstractDeadlineManagerTestSuite {
                               new DeadlineOccurredEvent(new DeadlinePayload(IDENTIFIER)));
 
         Message<?> aggregateCreatedEvent = publishedMessages.get(0);
-        assertTrue(aggregateCreatedEvent instanceof GenericEventMessage);
-        assertTrue(afterDeadlineWasScheduled.isAfter(((GenericEventMessage<?>) aggregateCreatedEvent).getTimestamp()));
+        assertThat(aggregateCreatedEvent).isInstanceOf(GenericEventMessage.class);
+        assertThat(afterDeadlineWasScheduled).isAfter(((GenericEventMessage<?>) aggregateCreatedEvent).getTimestamp());
         Message<?> deadLineEvent = publishedMessages.get(1);
-        assertTrue(deadLineEvent instanceof GenericEventMessage);
-        assertTrue(afterDeadlineWasScheduled.isBefore(((GenericEventMessage<?>) deadLineEvent).getTimestamp()));
+        assertThat(deadLineEvent).isInstanceOf(GenericEventMessage.class);
+        assertThat(afterDeadlineWasScheduled).isBefore(((GenericEventMessage<?>) deadLineEvent).getTimestamp());
     }
 
     @Test
@@ -321,11 +323,12 @@ public abstract class AbstractDeadlineManagerTestSuite {
                               new DeadlineOccurredEvent(new DeadlinePayload(IDENTIFIER)));
 
         Message<?> aggregateCreatedEvent = publishedMessages.get(0);
-        assertTrue(aggregateCreatedEvent.getMetaData().containsKey(CUSTOM_CORRELATION_DATA_KEY));
-        assertEquals(expectedCorrelationData, aggregateCreatedEvent.getMetaData().get(CUSTOM_CORRELATION_DATA_KEY));
+        assertThat(aggregateCreatedEvent.getMetaData()).containsKey(CUSTOM_CORRELATION_DATA_KEY);
+        assertThat(aggregateCreatedEvent.getMetaData())
+                .containsEntry(CUSTOM_CORRELATION_DATA_KEY, expectedCorrelationData);
         Message<?> deadLineEvent = publishedMessages.get(1);
-        assertTrue(deadLineEvent.getMetaData().containsKey(CUSTOM_CORRELATION_DATA_KEY));
-        assertEquals(expectedCorrelationData, deadLineEvent.getMetaData().get(CUSTOM_CORRELATION_DATA_KEY));
+        assertThat(deadLineEvent.getMetaData()).containsKey(CUSTOM_CORRELATION_DATA_KEY);
+        assertThat(deadLineEvent.getMetaData()).containsEntry(CUSTOM_CORRELATION_DATA_KEY, expectedCorrelationData);
     }
 
     @Test
@@ -512,11 +515,12 @@ public abstract class AbstractDeadlineManagerTestSuite {
         assertSagaIs(LIVE);
 
         Message<?> sagaStartingEvent = publishedMessages.get(0);
-        assertTrue(sagaStartingEvent.getMetaData().containsKey(CUSTOM_CORRELATION_DATA_KEY));
-        assertEquals(expectedCorrelationData, sagaStartingEvent.getMetaData().get(CUSTOM_CORRELATION_DATA_KEY));
+        assertThat(sagaStartingEvent.getMetaData()).containsKey(CUSTOM_CORRELATION_DATA_KEY);
+        assertThat(sagaStartingEvent.getMetaData()).containsEntry(CUSTOM_CORRELATION_DATA_KEY, expectedCorrelationData);
         Message<?> deadLineOccurredEvent = publishedMessages.get(1);
-        assertTrue(deadLineOccurredEvent.getMetaData().containsKey(CUSTOM_CORRELATION_DATA_KEY));
-        assertEquals(expectedCorrelationData, deadLineOccurredEvent.getMetaData().get(CUSTOM_CORRELATION_DATA_KEY));
+        assertThat(deadLineOccurredEvent.getMetaData()).containsKey(CUSTOM_CORRELATION_DATA_KEY);
+        assertThat(deadLineOccurredEvent.getMetaData())
+                .containsEntry(CUSTOM_CORRELATION_DATA_KEY, expectedCorrelationData);
     }
 
     private void assertPublishedEvents(Object... expectedEvents) {
@@ -536,7 +540,7 @@ public abstract class AbstractDeadlineManagerTestSuite {
         //noinspection unchecked
         SagaStore<MySaga> sagaStore = configuration.eventProcessingConfiguration().sagaStore();
         Set<String> sagaIds = sagaStore.findSagas(MySaga.class, new AssociationValue("id", IDENTIFIER.toString()));
-        assertEquals(live, sagaIds.isEmpty());
+        assertThat(sagaIds.isEmpty()).isEqualTo(live);
     }
 
     private static class CreateMyAggregateCommand {
@@ -976,13 +980,13 @@ public abstract class AbstractDeadlineManagerTestSuite {
 
         @DeadlineHandler
         public void on(DeadlinePayload deadlinePayload, @Timestamp Instant timestamp) {
-            assertNotNull(timestamp);
+            assertThat(timestamp).isNotNull();
             eventStore.publish(asEventMessage(new DeadlineOccurredEvent(deadlinePayload)));
         }
 
         @DeadlineHandler(deadlineName = "specificDeadlineName")
         public void on(Object deadlinePayload, @Timestamp Instant timestamp) {
-            assertNotNull(timestamp);
+            assertThat(timestamp).isNotNull();
             eventStore.publish(asEventMessage(new SpecificDeadlineOccurredEvent(deadlinePayload)));
         }
 
@@ -1060,7 +1064,7 @@ public abstract class AbstractDeadlineManagerTestSuite {
 
         @DeadlineHandler
         public void on(DeadlinePayload deadlinePayload, @Timestamp Instant timestamp) {
-            assertNotNull(timestamp);
+            assertThat(timestamp).isNotNull();
             apply(new DeadlineOccurredEvent(deadlinePayload));
         }
 
@@ -1096,7 +1100,7 @@ public abstract class AbstractDeadlineManagerTestSuite {
 
         @DeadlineHandler
         public void on(EntityDeadlinePayload deadlineInfo, @Timestamp Instant timestamp) {
-            assertNotNull(timestamp);
+            assertThat(timestamp).isNotNull();
             apply(new DeadlineOccurredInChildEvent(deadlineInfo));
         }
     }

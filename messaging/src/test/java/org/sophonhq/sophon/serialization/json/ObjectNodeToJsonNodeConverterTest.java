@@ -20,9 +20,9 @@ package org.sophonhq.sophon.serialization.json;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link ObjectNodeToJsonNodeConverter}.
@@ -35,12 +35,12 @@ class ObjectNodeToJsonNodeConverterTest {
 
     @Test
     void expectedSourceType() {
-        assertEquals(ObjectNode.class, testSubject.expectedSourceType());
+        assertThat(testSubject.expectedSourceType()).isEqualTo(ObjectNode.class);
     }
 
     @Test
     void targetType() {
-        assertEquals(JsonNode.class, testSubject.targetType());
+        assertThat(testSubject.targetType()).isEqualTo(JsonNode.class);
     }
 
     @Test
@@ -49,6 +49,6 @@ class ObjectNodeToJsonNodeConverterTest {
 
         JsonNode result = testSubject.convert(expectedJsonNode);
 
-        assertEquals(expectedJsonNode, result);
+        assertThat(result).isEqualTo(expectedJsonNode);
     }
 }

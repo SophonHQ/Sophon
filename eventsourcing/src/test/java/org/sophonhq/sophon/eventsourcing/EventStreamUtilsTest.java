@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventsourcing;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.IdentifierFactory;
 import org.sophonhq.sophon.eventhandling.DomainEventData;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventEntry;
@@ -30,7 +31,7 @@ import java.time.Instant;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -50,9 +51,9 @@ class EventStreamUtilsTest {
         DomainEventStream eventStream = EventStreamUtils
                 .upcastAndDeserializeDomainEvents(Stream.of(createEntry(1)), serializer,
                                                   NoOpEventUpcaster.INSTANCE);
-        assertNull(eventStream.getLastSequenceNumber());
+        assertThat(eventStream.getLastSequenceNumber()).isNull();
         eventStream.forEachRemaining(Objects::requireNonNull);
-        assertEquals(Long.valueOf(1L), eventStream.getLastSequenceNumber());
+        assertThat(eventStream.getLastSequenceNumber()).isEqualTo(Long.valueOf(1L));
     }
 
     @Test
@@ -62,10 +63,10 @@ class EventStreamUtilsTest {
                                                   new EventUpcasterChain(e -> e
                                                           .filter(entry -> entry.getSequenceNumber().get() < 2L))
                 );
-        assertNull(eventStream.getLastSequenceNumber());
-        assertTrue(eventStream.hasNext());
+        assertThat(eventStream.getLastSequenceNumber()).isNull();
+        assertThat(eventStream).hasNext();
         eventStream.forEachRemaining(Objects::requireNonNull);
-        assertEquals(Long.valueOf(3L), eventStream.getLastSequenceNumber());
+        assertThat(eventStream.getLastSequenceNumber()).isEqualTo(Long.valueOf(3L));
     }
 
     @Test
@@ -73,17 +74,17 @@ class EventStreamUtilsTest {
         DomainEventStream eventStream = EventStreamUtils
                 .upcastAndDeserializeDomainEvents(Stream.of(createEntry(1)), serializer,
                                                   new EventUpcasterChain(s -> s.filter(e -> false)));
-        assertNull(eventStream.getLastSequenceNumber());
-        assertFalse(eventStream.hasNext());
+        assertThat(eventStream.getLastSequenceNumber()).isNull();
+        assertThat(eventStream).isExhausted();
         eventStream.forEachRemaining(Objects::requireNonNull);
-        assertEquals(Long.valueOf(1L), eventStream.getLastSequenceNumber());
+        assertThat(eventStream.getLastSequenceNumber()).isEqualTo(Long.valueOf(1L));
     }
 
     @Test
     void domainEventStream_nullPointerExceptionOnEmptyEventStream() {
         DomainEventStream eventStream = EventStreamUtils.upcastAndDeserializeDomainEvents(Stream.empty(),
             serializer, NoOpEventUpcaster.INSTANCE);
-        assertNull(eventStream.getLastSequenceNumber());
+        assertThat(eventStream.getLastSequenceNumber()).isNull();
     }
 
     private static DomainEventData<?> createEntry(long sequenceNumber) {

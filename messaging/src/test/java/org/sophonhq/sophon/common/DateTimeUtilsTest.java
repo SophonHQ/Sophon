@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.common;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.temporal.ChronoField;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.common.DateTimeUtils.formatInstant;
 
 /**
@@ -38,9 +38,9 @@ class DateTimeUtilsTest {
         Instant nowAtZeroMillis = now.minusNanos(now.get(ChronoField.NANO_OF_SECOND));
 
         String formatted = formatInstant(nowAtZeroMillis);
-        assertTrue(formatted.matches(".*\\.0{3,}Z"), "Time doesn't seem to contain explicit millis: " + formatted);
+        assertThat(formatted).as("Time doesn't seem to contain explicit millis: " + formatted).matches(".*\\.0{3,}Z");
 
-        assertEquals(nowAtZeroMillis, DateTimeUtils.parseInstant(formatted));
+        assertThat(DateTimeUtils.parseInstant(formatted)).isEqualTo(nowAtZeroMillis);
     }
 
     @Test
@@ -52,9 +52,9 @@ class DateTimeUtilsTest {
         Instant testInstantWithoutTrailingZeroes = Instant.parse("2021-03-22T15:41:02.1019Z");
         Instant testInstantWithoutMillis = Instant.parse("2021-03-22T15:41:02Z");
 
-        assertEquals(expectedDateTimeString, formatInstant(testInstantWithTrailingZeroes));
-        assertEquals(expectedDateTimeString, formatInstant(testInstantWithTrailingNonZeroes));
-        assertEquals(expectedDateTimeString, formatInstant(testInstantWithoutTrailingZeroes));
-        assertEquals("2021-03-22T15:41:02.000Z", formatInstant(testInstantWithoutMillis));
+        assertThat(formatInstant(testInstantWithTrailingZeroes)).isEqualTo(expectedDateTimeString);
+        assertThat(formatInstant(testInstantWithTrailingNonZeroes)).isEqualTo(expectedDateTimeString);
+        assertThat(formatInstant(testInstantWithoutTrailingZeroes)).isEqualTo(expectedDateTimeString);
+        assertThat(formatInstant(testInstantWithoutMillis)).isEqualTo("2021-03-22T15:41:02.000Z");
     }
 }

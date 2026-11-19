@@ -17,14 +17,15 @@
 
 package org.sophonhq.sophon.messaging.responsetypes;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test all possible permutations of Query Handler return types through the {@link MultipleInstancesResponseType}. To
@@ -272,8 +273,8 @@ public class MultipleInstancesResponseTypeTest
         QueryResponse testResponse = new QueryResponse();
 
         List<QueryResponse> result = testSubject.convert(testResponse);
-        assertEquals(1, result.size());
-        assertEquals(testResponse, result.get(0));
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0)).isEqualTo(testResponse);
     }
 
     @Test
@@ -282,8 +283,8 @@ public class MultipleInstancesResponseTypeTest
 
         List<QueryResponse> result = testSubject.convert(testResponse);
 
-        assertEquals(testResponse.length, result.size());
-        assertEquals(testResponse[0], result.get(0));
+        assertThat(result).hasSize(testResponse.length);
+        assertThat(result.get(0)).isEqualTo(testResponse[0]);
     }
 
     @Test
@@ -292,8 +293,8 @@ public class MultipleInstancesResponseTypeTest
 
         List<QueryResponse> result = testSubject.convert(testResponse);
 
-        assertEquals(testResponse.length, result.size());
-        assertEquals(testResponse[0], result.get(0));
+        assertThat(result).hasSize(testResponse.length);
+        assertThat(result.get(0)).isEqualTo(testResponse[0]);
     }
 
     @SuppressWarnings("unused")
@@ -302,7 +303,7 @@ public class MultipleInstancesResponseTypeTest
         QueryResponseInterface[] testResponse = new QueryResponseInterface[]{new QueryResponseInterface() {
         }};
 
-        assertThrows(Exception.class, () -> testSubject.convert(testResponse));
+        assertThatThrownBy(() -> testSubject.convert(testResponse)).isInstanceOf(Exception.class);
     }
 
     @Test
@@ -312,8 +313,8 @@ public class MultipleInstancesResponseTypeTest
 
         List<QueryResponse> result = testSubject.convert(testResponse);
 
-        assertEquals(testResponse.size(), result.size());
-        assertEquals(testResponse.get(0), result.get(0));
+        assertThat(result).hasSize(testResponse.size());
+        assertThat(result.get(0)).isEqualTo(testResponse.get(0));
     }
 
     @Test
@@ -323,8 +324,8 @@ public class MultipleInstancesResponseTypeTest
 
         List<QueryResponse> result = testSubject.convert(testResponse);
 
-        assertEquals(testResponse.size(), result.size());
-        assertEquals(testResponse.get(0), result.get(0));
+        assertThat(result).hasSize(testResponse.size());
+        assertThat(result.get(0)).isEqualTo(testResponse.get(0));
     }
 
     @Test
@@ -334,8 +335,8 @@ public class MultipleInstancesResponseTypeTest
 
         List<QueryResponse> result = testSubject.convert(testResponse);
 
-        assertEquals(testResponse.size(), result.size());
-        assertEquals(testResponse.iterator().next(), result.get(0));
+        assertThat(result).hasSize(testResponse.size());
+        assertThat(result.get(0)).isEqualTo(testResponse.iterator().next());
     }
 
     @SuppressWarnings("unused")
@@ -345,7 +346,7 @@ public class MultipleInstancesResponseTypeTest
         testResponse.add(new QueryResponseInterface() {
         });
 
-        assertThrows(Exception.class, () -> testSubject.convert(testResponse));
+        assertThatThrownBy(() -> testSubject.convert(testResponse)).isInstanceOf(Exception.class);
     }
 
     @Test
@@ -354,6 +355,6 @@ public class MultipleInstancesResponseTypeTest
 
         List<QueryResponse> result = testSubject.convert(testResponse);
 
-        assertTrue(result.isEmpty());
+        assertThat(result).isEmpty();
     }
 }

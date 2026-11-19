@@ -20,7 +20,7 @@ package org.sophonhq.sophon.common.property;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 
 class PropertyAccessStrategyTest {
@@ -42,37 +42,37 @@ class PropertyAccessStrategyTest {
 
     @Test
     void beanPropertyAccess() {
-        assertEquals("beanProperty", PropertyAccessStrategy.getProperty(Bean.class, "beanProperty")
-                                                           .getValue(new Bean()));
+        assertThatObject(PropertyAccessStrategy.getProperty(Bean.class, "beanProperty").getValue(new Bean()))
+                .isEqualTo("beanProperty");
     }
 
     @Test
     void uniformPropertyAccess() {
-        assertEquals("uniformProperty", PropertyAccessStrategy.getProperty(Bean.class, "uniformProperty").getValue(
-                new Bean()));
+        assertThatObject(PropertyAccessStrategy.getProperty(Bean.class, "uniformProperty").getValue(new Bean()))
+                .isEqualTo("uniformProperty");
     }
 
     @Test
     void register() {
         PropertyAccessStrategy.register(testPropertyAccessStrategy);
-        assertEquals("testGetterInvoked",
-                     PropertyAccessStrategy.getProperty(Bean.class, "testProperty").getValue(new Bean()));
+        assertThatObject(PropertyAccessStrategy.getProperty(Bean.class, "testProperty").getValue(new Bean()))
+                .isEqualTo("testGetterInvoked");
     }
 
     @Test
     void invocationOrdering() {
         PropertyAccessStrategy.register(mock1);
         PropertyAccessStrategy.register(mock2);
-        assertEquals("mock2",
-                     PropertyAccessStrategy.getProperty(Bean.class, "testProperty").getValue(new Bean()));
+        assertThatObject(PropertyAccessStrategy.getProperty(Bean.class, "testProperty").getValue(new Bean()))
+                .isEqualTo("mock2");
     }
 
     @Test
     void invocationOrdering_EqualPriorityUsesClassName() {
         PropertyAccessStrategy.register(mock3);
         PropertyAccessStrategy.register(mock4);
-        assertEquals("mock3",
-                     PropertyAccessStrategy.getProperty(Bean.class, "testProperty").getValue(new Bean()));
+        assertThatObject(PropertyAccessStrategy.getProperty(Bean.class, "testProperty").getValue(new Bean()))
+                .isEqualTo("mock3");
     }
 
     static class TestPropertyAccessStrategy extends PropertyAccessStrategy {

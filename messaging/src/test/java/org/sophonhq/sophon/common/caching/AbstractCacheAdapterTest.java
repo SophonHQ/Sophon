@@ -6,8 +6,9 @@ import org.sophonhq.sophon.common.Registration;
 import java.time.Duration;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -46,17 +47,17 @@ public abstract class AbstractCacheAdapterTest {
         testSubject.put("three", new Object());
         testSubject.put("four", new Object());
 
-        assertTrue(testSubject.containsKey("one"));
-        assertTrue(testSubject.containsKey("two"));
-        assertTrue(testSubject.containsKey("three"));
-        assertTrue(testSubject.containsKey("four"));
+        assertThat(testSubject.containsKey("one")).isTrue();
+        assertThat(testSubject.containsKey("two")).isTrue();
+        assertThat(testSubject.containsKey("three")).isTrue();
+        assertThat(testSubject.containsKey("four")).isTrue();
 
         testSubject.removeAll();
 
-        assertFalse(testSubject.containsKey("one"));
-        assertFalse(testSubject.containsKey("two"));
-        assertFalse(testSubject.containsKey("three"));
-        assertFalse(testSubject.containsKey("four"));
+        assertThat(testSubject.containsKey("one")).isFalse();
+        assertThat(testSubject.containsKey("two")).isFalse();
+        assertThat(testSubject.containsKey("three")).isFalse();
+        assertThat(testSubject.containsKey("four")).isFalse();
     }
 
     @Test
@@ -68,7 +69,7 @@ public abstract class AbstractCacheAdapterTest {
             return v;
         });
 
-        assertFalse(invoked.get());
+        assertThat(invoked.get()).isFalse();
     }
 
     @Test
@@ -83,7 +84,7 @@ public abstract class AbstractCacheAdapterTest {
             return v;
         });
 
-        assertTrue(invoked.get());
+        assertThat(invoked.get()).isTrue();
     }
 
     @Test
@@ -92,10 +93,10 @@ public abstract class AbstractCacheAdapterTest {
         Object value2 = new Object();
 
         testSubject.putIfAbsent("test1", value);
-        assertEquals(value, testSubject.get("test1"));
+        assertThatObject(testSubject.get("test1")).isEqualTo(value);
 
         testSubject.putIfAbsent("test1", value2);
-        assertEquals(value, testSubject.get("test1"));
+        assertThatObject(testSubject.get("test1")).isEqualTo(value);
     }
 
     @Test
@@ -107,8 +108,8 @@ public abstract class AbstractCacheAdapterTest {
             return new Object();
         });
 
-        assertEquals(concurrentValue, result);
-        assertEquals(concurrentValue, testSubject.get("test1"));
+        assertThat(result).isEqualTo(concurrentValue);
+        assertThatObject(testSubject.get("test1")).isEqualTo(concurrentValue);
     }
 
 
@@ -128,7 +129,7 @@ public abstract class AbstractCacheAdapterTest {
         await().atMost(Duration.ofMillis(300L)).untilAsserted(
                 () -> verify(mockListener).onEntryRemoved("test1"));
 
-        assertNull(testSubject.get("test1"));
+        assertThatObject(testSubject.get("test1")).isNull();
         verifyNoMoreInteractions(mockListener);
     }
 

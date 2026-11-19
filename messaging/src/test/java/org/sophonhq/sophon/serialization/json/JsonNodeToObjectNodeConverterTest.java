@@ -21,10 +21,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.serialization.SerializationException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link JsonNodeToObjectNodeConverter}.
@@ -37,12 +38,12 @@ class JsonNodeToObjectNodeConverterTest {
 
     @Test
     void expectedSourceType() {
-        assertEquals(JsonNode.class, testSubject.expectedSourceType());
+        assertThat(testSubject.expectedSourceType()).isEqualTo(JsonNode.class);
     }
 
     @Test
     void targetType() {
-        assertEquals(ObjectNode.class, testSubject.targetType());
+        assertThat(testSubject.targetType()).isEqualTo(ObjectNode.class);
     }
 
     @Test
@@ -51,13 +52,13 @@ class JsonNodeToObjectNodeConverterTest {
 
         ObjectNode result = testSubject.convert(expectedJsonNode);
 
-        assertEquals(expectedJsonNode, result);
+        assertThat(result).isEqualTo(expectedJsonNode);
     }
 
     @Test
     void convertThrowsException() {
         JsonNode testJsonNode = new TextNode("some-text");
 
-        assertThrows(SerializationException.class, () -> testSubject.convert(testJsonNode));
+        assertThatThrownBy(() -> testSubject.convert(testJsonNode)).isInstanceOf(SerializationException.class);
     }
 }

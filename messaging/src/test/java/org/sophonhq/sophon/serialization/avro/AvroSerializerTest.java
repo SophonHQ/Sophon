@@ -24,7 +24,10 @@ import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.message.SchemaStore;
 import org.apache.avro.util.ClassSecurityValidator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 import org.sophonhq.sophon.common.SophonConfigurationException;
@@ -48,7 +51,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonMap;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -103,121 +108,102 @@ public class AvroSerializerTest {
 
     @Test
     void testBuilderMandatoryValues() {
-        assertEquals("SchemaStore is mandatory",
-                     assertThrows(SophonConfigurationException.class, () -> AvroSerializer.builder().build())
-                             .getMessage()
-        );
+        assertThatThrownBy(() -> AvroSerializer.builder().build())
+                .isInstanceOf(SophonConfigurationException.class)
+                .hasMessage("SchemaStore is mandatory");
 
-        assertEquals("SerializerDelegate is mandatory",
-                     assertThrows(SophonConfigurationException.class,
-                                  () -> AvroSerializer.builder()
-                                                      .schemaStore(new SchemaStore.Cache())
-                                                      .build())
-                             .getMessage()
-        );
+        assertThatThrownBy(() -> AvroSerializer.builder()
+                                               .schemaStore(new SchemaStore.Cache())
+                                               .build())
+                .isInstanceOf(SophonConfigurationException.class)
+                .hasMessage("SerializerDelegate is mandatory");
 
-        assertEquals("At least one AvroSerializerStrategy must be provided.",
-                     assertThrows(SophonConfigurationException.class,
-                                  () -> AvroSerializer
-                                          .builder()
-                                          .serializerDelegate(serializer)
-                                          .schemaStore(new SchemaStore.Cache())
-                                          .includeDefaultAvroSerializationStrategies(false)
-                                          .build()
-                     ).getMessage()
-        );
+        assertThatThrownBy(() -> AvroSerializer
+                .builder()
+                .serializerDelegate(serializer)
+                .schemaStore(new SchemaStore.Cache())
+                .includeDefaultAvroSerializationStrategies(false)
+                .build())
+                .isInstanceOf(SophonConfigurationException.class)
+                .hasMessage("At least one AvroSerializerStrategy must be provided.");
 
         // that should work fine
-        assertNotNull(
-                AvroSerializer
-                        .builder()
-                        .revisionResolver(c -> "")
-                        .serializerDelegate(serializer)
-                        .schemaStore(new SchemaStore.Cache())
-                        .includeDefaultAvroSerializationStrategies(false)
-                        .addSerializerStrategy(new SpecificRecordBaseSerializerStrategy(
-                                new SchemaStore.Cache(),
-                                c -> "",
-                                new DefaultSchemaIncompatibilityChecker()
-                        ))
-                        .build()
-        );
+        assertThat(AvroSerializer
+                .builder()
+                .revisionResolver(c -> "")
+                .serializerDelegate(serializer)
+                .schemaStore(new SchemaStore.Cache())
+                .includeDefaultAvroSerializationStrategies(false)
+                .addSerializerStrategy(new SpecificRecordBaseSerializerStrategy(
+                        new SchemaStore.Cache(),
+                        c -> "",
+                        new DefaultSchemaIncompatibilityChecker()
+                ))
+                .build()).isNotNull();
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Test
     void testBuilderSetterContracts() {
 
-        assertEquals("RevisionResolver may not be null",
-                     assertThrows(SophonConfigurationException.class,
-                                  () -> AvroSerializer.builder()
-                                                      .revisionResolver(null)
-                     ).getMessage()
-        );
+        assertThatThrownBy(() -> AvroSerializer.builder().revisionResolver(null))
+                .isInstanceOf(SophonConfigurationException.class)
+                .hasMessage("RevisionResolver may not be null");
 
 
-        assertEquals("SchemaStore may not be null",
-                     assertThrows(SophonConfigurationException.class,
-                                  () -> AvroSerializer.builder().schemaStore(null)
-                     ).getMessage()
-        );
+        assertThatThrownBy(() -> AvroSerializer.builder().schemaStore(null))
+                .isInstanceOf(SophonConfigurationException.class)
+                .hasMessage("SchemaStore may not be null");
 
 
-        assertEquals("Serializer delegate may not be null",
-                     assertThrows(SophonConfigurationException.class,
-                                  () -> AvroSerializer.builder()
-                                                      .serializerDelegate(null))
-                             .getMessage()
-        );
+        assertThatThrownBy(() -> AvroSerializer.builder().serializerDelegate(null))
+                .isInstanceOf(SophonConfigurationException.class)
+                .hasMessage("Serializer delegate may not be null");
 
-        assertEquals("AvroSerializerStrategy may not be null",
-                     assertThrows(SophonConfigurationException.class,
-                                  () -> AvroSerializer.builder()
-                                                      .addSerializerStrategy(null))
-                             .getMessage()
-        );
+        assertThatThrownBy(() -> AvroSerializer.builder().addSerializerStrategy(null))
+                .isInstanceOf(SophonConfigurationException.class)
+                .hasMessage("AvroSerializerStrategy may not be null");
     }
 
     @Test
     void deliverCorrectConverter() {
         Converter converter = testSubject.getConverter();
-        assertInstanceOf(ChainingConverter.class, converter);
-        assertTrue(converter.canConvert(byte[].class, GenericRecord.class)); // this is registered by AvroSerializer
-        assertTrue(converter.canConvert(byte[].class, JsonNode.class)); // this is registered by the JacksonSerializer
+        assertThat(converter).isInstanceOf(ChainingConverter.class);
+        // this is registered by AvroSerializer
+        assertThat(converter.canConvert(byte[].class, GenericRecord.class)).isTrue();
+        // this is registered by the JacksonSerializer
+        assertThat(converter.canConvert(byte[].class, JsonNode.class)).isTrue();
     }
 
     @Test
     void deliverUnknownClassIfTypeIsNotOnClasspath() {
         Class<?> clazz = testSubject.classForType(new SimpleSerializedType("org.acme.Foo", null));
-        assertEquals(UnknownSerializedType.class, clazz);
+        assertThat(clazz).isEqualTo(UnknownSerializedType.class);
     }
 
     @Test
     void deliverEmptyType() {
-        assertEquals(SimpleSerializedType.emptyType(), testSubject.typeForClass(null));
-        assertEquals(SimpleSerializedType.emptyType(), testSubject.typeForClass(Void.class));
+        assertThat(testSubject.typeForClass(null)).isEqualTo(SimpleSerializedType.emptyType());
+        assertThat(testSubject.typeForClass(Void.class)).isEqualTo(SimpleSerializedType.emptyType());
     }
 
     @Test
     void deliverNonEmptyType() {
-        assertEquals(
-                new SimpleSerializedType(
-                        String.class.getCanonicalName(),
-                        revisionResolver.revisionOf(String.class)
-                ),
-                testSubject.typeForClass(String.class)
-        );
+        assertThat(testSubject.typeForClass(String.class)).isEqualTo(new SimpleSerializedType(
+                String.class.getCanonicalName(),
+                revisionResolver.revisionOf(String.class)
+        ));
     }
 
 
     @Test
     void canSerialize() {
-        assertTrue(testSubject.canSerializeTo(byte[].class));
-        assertTrue(testSubject.canSerializeTo(GenericRecord.class));
+        assertThat(testSubject.canSerializeTo(byte[].class)).isTrue();
+        assertThat(testSubject.canSerializeTo(GenericRecord.class)).isTrue();
 
-        assertTrue(testSubject.canSerializeTo(String.class));
-        assertTrue(testSubject.canSerializeTo(InputStream.class));
-        assertFalse(testSubject.canSerializeTo(Integer.class));
+        assertThat(testSubject.canSerializeTo(String.class)).isTrue();
+        assertThat(testSubject.canSerializeTo(InputStream.class)).isTrue();
+        assertThat(testSubject.canSerializeTo(Integer.class)).isFalse();
     }
 
     @Test
@@ -227,9 +213,9 @@ public class AvroSerializerTest {
         SerializedObject<byte[]> serialized = testSubject.serialize(original, byte[].class);
         MetaData actual = testSubject.deserialize(serialized);
 
-        assertNotNull(actual);
-        assertEquals("test", actual.get("test"));
-        assertEquals(1, actual.size());
+        assertThat(actual).isNotNull();
+        assertThat(actual).containsEntry("test", "test");
+        assertThat(actual.size()).isOne();
 
         verify(serializer).serialize(original, byte[].class);
         verify(serializer).deserialize(serialized);
@@ -238,17 +224,17 @@ public class AvroSerializerTest {
     @Test
     void serializeNull() {
         SerializedObject<byte[]> serialized = testSubject.serialize(null, byte[].class);
-        assertEquals(SerializedType.emptyType(), serialized.getType());
-        assertArrayEquals("null".getBytes(StandardCharsets.UTF_8), serialized.getData());
+        assertThat(serialized.getType()).isEqualTo(SerializedType.emptyType());
+        assertThat(serialized.getData()).containsExactly("null".getBytes(StandardCharsets.UTF_8));
         verify(serializer).serialize(null, byte[].class);
     }
 
     @Test
     void deserializeEmptyBytes() {
-        assertEquals(Void.class, testSubject.classForType(SerializedType.emptyType()));
-        assertNull(testSubject.deserialize(
+        assertThat(testSubject.classForType(SerializedType.emptyType())).isEqualTo(Void.class);
+        assertThatObject(testSubject.deserialize(
                 new SimpleSerializedObject<>(new byte[0], byte[].class, SerializedType.emptyType())
-        ));
+        )).isNull();
     }
 
     @Test
@@ -256,11 +242,11 @@ public class AvroSerializerTest {
         store.addSchema(ComplexObject.getClassSchema());
 
         SerializedObject<byte[]> serialized = testSubject.serialize(complexObject, byte[].class);
-        assertEquals(serialized.getType().getName(), ComplexObject.class.getCanonicalName());
+        assertThat(serialized.getType().getName()).isEqualTo(ComplexObject.class.getCanonicalName());
 
 
         ComplexObject deserialized = testSubject.deserialize(serialized);
-        assertEquals(complexObject, deserialized);
+        assertThat(deserialized).isEqualTo(complexObject);
     }
 
     @Test
@@ -279,10 +265,10 @@ public class AvroSerializerTest {
                 encodedBytes,
                 ComplexObject.class.getCanonicalName()
         );
-        assertEquals(serialized.getType().getName(), ComplexObject.class.getCanonicalName());
+        assertThat(serialized.getType().getName()).isEqualTo(ComplexObject.class.getCanonicalName());
 
         ComplexObject deserialized = testSubject.deserialize(serialized);
-        assertEquals(complexObject, deserialized);
+        assertThat(deserialized).isEqualTo(complexObject);
     }
 
     @Test
@@ -299,7 +285,7 @@ public class AvroSerializerTest {
         SerializedObject<GenericRecord> serialized = createSerializedObject(record);
 
         ComplexObject deserialized = testSubject.deserialize(serialized);
-        assertEquals(complexObject, deserialized);
+        assertThat(deserialized).isEqualTo(complexObject);
     }
 
     @Test
@@ -319,10 +305,10 @@ public class AvroSerializerTest {
                 encodedBytes,
                 ComplexObject.class.getCanonicalName()
         );
-        assertEquals(serialized.getType().getName(), ComplexObject.class.getCanonicalName());
+        assertThat(serialized.getType().getName()).isEqualTo(ComplexObject.class.getCanonicalName());
 
         ComplexObject deserialized = testSubject.deserialize(serialized);
-        assertEquals(complexObject, deserialized);
+        assertThat(deserialized).isEqualTo(complexObject);
     }
 
     @Test
@@ -340,10 +326,10 @@ public class AvroSerializerTest {
                 encodedBytes,
                 ComplexObject.class.getCanonicalName()
         );
-        assertEquals(serialized.getType().getName(), ComplexObject.class.getCanonicalName());
+        assertThat(serialized.getType().getName()).isEqualTo(ComplexObject.class.getCanonicalName());
 
         ComplexObject deserialized = testSubject.deserialize(serialized);
-        assertEquals("default value", deserialized.getValue2());
+        assertThat(deserialized.getValue2()).isEqualTo("default value");
     }
 
     @ParameterizedTest
@@ -353,12 +339,11 @@ public class AvroSerializerTest {
             AvroSerializer serializer,
             DefaultSchemaIncompatibilityChecker incompatibilityChecker,
             String expectedMessage) {
-        assertEquals(
-                expectedMessage,
-                assertThrows(SerializationException.class, () -> serializer.deserialize(serialized)).getMessage()
-        );
+        assertThatThrownBy(() -> serializer.deserialize(serialized))
+                .isInstanceOf(SerializationException.class)
+                .hasMessage(expectedMessage);
         // check the incompatibility remains in the cache
-        assertEquals(1, incompatibilityChecker.getIncompatibilitiesCache().size());
+        assertThat(incompatibilityChecker.getIncompatibilitiesCache()).hasSize(1);
     }
 
     static Stream<Arguments> serializerAndIncompatibleSerializedObject() {
@@ -387,7 +372,7 @@ public class AvroSerializerTest {
                 encodedBytes,
                 ComplexObject.class.getCanonicalName()
         );
-        assertEquals(serialized.getType().getName(), ComplexObject.class.getCanonicalName());
+        assertThat(serialized.getType().getName()).isEqualTo(ComplexObject.class.getCanonicalName());
 
 
         return Stream.of(
@@ -484,7 +469,7 @@ public class AvroSerializerTest {
                 GenericRecord.class,
                 new SimpleSerializedType("org.acme.Foo", null));
         Object deserialized = testSubject.deserialize(object);
-        assertEquals(UnknownSerializedType.class, deserialized.getClass());
+        assertThat(deserialized.getClass()).isEqualTo(UnknownSerializedType.class);
     }
 
 

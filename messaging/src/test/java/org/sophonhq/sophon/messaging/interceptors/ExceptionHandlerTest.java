@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.messaging.interceptors;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.eventhandling.EventHandler;
@@ -32,13 +33,14 @@ import org.sophonhq.sophon.queryhandling.QueryHandler;
 import org.sophonhq.sophon.queryhandling.QueryMessage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
@@ -76,13 +78,13 @@ class ExceptionHandlerTest {
 
         try {
             Object result = handle(command);
-            assertNull(result);
+            assertThat(result).isNull();
         } catch (Exception e) {
-            assertTrue(e instanceof IllegalStateException);
+            assertThat(e).isInstanceOf(IllegalStateException.class);
         }
 
-        assertEquals(COMMAND_HANDLER_INVOKED, invokedHandler.get());
-        assertTrue(invokedExceptionHandlers.contains("leastSpecificExceptionHandler"));
+        assertThat(invokedHandler.get()).isEqualTo(COMMAND_HANDLER_INVOKED);
+        assertThat(invokedExceptionHandlers).contains("leastSpecificExceptionHandler");
     }
 
     @Test
@@ -92,13 +94,13 @@ class ExceptionHandlerTest {
 
         try {
             Object result = handle(event);
-            assertNull(result);
+            assertThat(result).isNull();
         } catch (Exception e) {
-            assertTrue(e instanceof IllegalStateException);
+            assertThat(e).isInstanceOf(IllegalStateException.class);
         }
 
-        assertEquals(EVENT_HANDLER_INVOKED, invokedHandler.get());
-        assertTrue(invokedExceptionHandlers.contains("leastSpecificExceptionHandler"));
+        assertThat(invokedHandler.get()).isEqualTo(EVENT_HANDLER_INVOKED);
+        assertThat(invokedExceptionHandlers).contains("leastSpecificExceptionHandler");
     }
 
     @Test
@@ -110,13 +112,13 @@ class ExceptionHandlerTest {
 
         try {
             Object result = handle(query);
-            assertNull(result);
+            assertThat(result).isNull();
         } catch (Exception e) {
-            assertTrue(e instanceof IllegalStateException);
+            assertThat(e).isInstanceOf(IllegalStateException.class);
         }
 
-        assertEquals(QUERY_HANDLER_INVOKED, invokedHandler.get());
-        assertTrue(invokedExceptionHandlers.contains("leastSpecificExceptionHandler"));
+        assertThat(invokedHandler.get()).isEqualTo(QUERY_HANDLER_INVOKED);
+        assertThat(invokedExceptionHandlers).contains("leastSpecificExceptionHandler");
     }
 
     @Test
@@ -124,18 +126,18 @@ class ExceptionHandlerTest {
         CommandMessage<SomeCommand> command =
                 asCommandMessage(new SomeCommand(() -> new IllegalStateException("some-exception")));
 
-        assertThrows(IllegalStateException.class, () -> handle(command));
+        assertThatThrownBy(() -> handle(command)).isInstanceOf(IllegalStateException.class);
 
-        assertEquals(COMMAND_HANDLER_INVOKED, invokedHandler.get());
+        assertThat(invokedHandler.get()).isEqualTo(COMMAND_HANDLER_INVOKED);
 
-        assertEquals(Arrays.asList("handleIllegalStateExceptionForSomeCommand",
-                                   "handleExceptionForSomeCommand",
-                                   "handleExceptionForSomeCommandThroughAnnotation",
-                                   "handleIllegalStateExceptionForSomeCommandThroughAnnotation",
-                                   "handleIllegalStateException",
-                                   "handleIllegalStateExceptionThroughAnnotation",
-                                   "leastSpecificExceptionHandler"),
-                     invokedExceptionHandlers);
+        assertThat(invokedExceptionHandlers)
+                .containsExactlyElementsOf(asList("handleIllegalStateExceptionForSomeCommand",
+                                                  "handleExceptionForSomeCommand",
+                                                  "handleExceptionForSomeCommandThroughAnnotation",
+                                                  "handleIllegalStateExceptionForSomeCommandThroughAnnotation",
+                                                  "handleIllegalStateException",
+                                                  "handleIllegalStateExceptionThroughAnnotation",
+                                                  "leastSpecificExceptionHandler"));
     }
 
     /**

@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventsourcing.snapshotting;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.eventhandling.DomainEventData;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
@@ -28,7 +28,8 @@ import org.sophonhq.sophon.modelling.command.AggregateRoot;
 import org.sophonhq.sophon.serialization.Revision;
 import org.sophonhq.sophon.serialization.Serializer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link RevisionSnapshotFilter}.
@@ -50,8 +51,8 @@ class RevisionSnapshotFilterTest {
     void allowsSnapshotMatchingDeclaredTypeAndRevision() {
         RevisionSnapshotFilter testSubject = filterFor(AggregateWithExpectedRevision.class, EXPECTED_REVISION);
 
-        assertTrue(testSubject.allow(snapshotOf(AggregateWithExpectedRevision.class,
-                                                new AggregateWithExpectedRevision())));
+        assertThat(testSubject.allow(snapshotOf(AggregateWithExpectedRevision.class,
+                                                new AggregateWithExpectedRevision()))).isTrue();
     }
 
     /**
@@ -62,16 +63,16 @@ class RevisionSnapshotFilterTest {
     void allowsSnapshotOfAnotherAggregateType() {
         RevisionSnapshotFilter testSubject = filterFor(AggregateWithExpectedRevision.class, EXPECTED_REVISION);
 
-        assertTrue(testSubject.allow(snapshotOf(AggregateWithOtherRevision.class,
-                                                new AggregateWithOtherRevision())));
+        assertThat(testSubject.allow(snapshotOf(AggregateWithOtherRevision.class,
+                                                new AggregateWithOtherRevision()))).isTrue();
     }
 
     @Test
     void disallowsSnapshotMatchingDeclaredTypeButWithWrongRevision() {
         RevisionSnapshotFilter testSubject = filterFor(AggregateWithOtherRevision.class, EXPECTED_REVISION);
 
-        assertFalse(testSubject.allow(snapshotOf(AggregateWithOtherRevision.class,
-                                                 new AggregateWithOtherRevision())));
+        assertThat(testSubject.allow(snapshotOf(AggregateWithOtherRevision.class,
+                                                new AggregateWithOtherRevision()))).isFalse();
     }
 
     /**
@@ -85,8 +86,8 @@ class RevisionSnapshotFilterTest {
                                       .revision(EXPECTED_REVISION)
                                       .build();
 
-        assertTrue(testSubject.allow(snapshotOf(AggregateWithExpectedRevision.class,
-                                                new AggregateWithExpectedRevision())));
+        assertThat(testSubject.allow(snapshotOf(AggregateWithExpectedRevision.class,
+                                                new AggregateWithExpectedRevision()))).isTrue();
     }
 
     /**
@@ -101,7 +102,7 @@ class RevisionSnapshotFilterTest {
                                       .revision(EXPECTED_REVISION)
                                       .build();
 
-        assertTrue(testSubject.allow(snapshotOf("custom-type", new CustomTypedAggregate())));
+        assertThat(testSubject.allow(snapshotOf("custom-type", new CustomTypedAggregate()))).isTrue();
     }
 
     /**
@@ -112,7 +113,7 @@ class RevisionSnapshotFilterTest {
     @Test
     void fullyQualifiedTypeDoesNotMatchDeclaredTypeAndAllowsSnapshot() {
         String fullyQualifiedType = AggregateWithOtherRevision.class.getName();
-        assertNotEquals(fullyQualifiedType, AggregateWithOtherRevision.class.getSimpleName());
+        assertThat(AggregateWithOtherRevision.class.getSimpleName()).isNotEqualTo(fullyQualifiedType);
 
         RevisionSnapshotFilter testSubject =
                 RevisionSnapshotFilter.builder()
@@ -123,24 +124,26 @@ class RevisionSnapshotFilterTest {
         DomainEventData<byte[]> outdatedSnapshot =
                 snapshotOf(AggregateWithOtherRevision.class, new AggregateWithOtherRevision());
 
-        assertTrue(testSubject.allow(outdatedSnapshot),
-                   "A fully-qualified filter type never matches the stored simple-name type, "
-                           + "so the filter keeps the outdated snapshot");
+        assertThat(testSubject.allow(outdatedSnapshot))
+                .as("A fully-qualified filter type never matches the stored simple-name type, "
+                            + "so the filter keeps the outdated snapshot")
+                .isTrue();
     }
 
     @Test
     void buildWithNullOrEmptyTypeThrowsSophonConfigurationException() {
         RevisionSnapshotFilter.Builder builderTestSubject = RevisionSnapshotFilter.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.type(""));
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.type((String) null));
+        assertThatThrownBy(() -> builderTestSubject.type("")).isInstanceOf(SophonConfigurationException.class);
+        assertThatThrownBy(() -> builderTestSubject.type((String) null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullOrEmptyRevisionThrowsSophonConfigurationException() {
         RevisionSnapshotFilter.Builder builderTestSubject = RevisionSnapshotFilter.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.revision(""));
+        assertThatThrownBy(() -> builderTestSubject.revision("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -148,15 +151,16 @@ class RevisionSnapshotFilterTest {
         RevisionSnapshotFilter.Builder builderTestSubject = RevisionSnapshotFilter.builder()
                                                                                   .revision(EXPECTED_REVISION);
 
-        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithBlankRevisionThrowsSophonConfigurationException() {
-        assertThrows(SophonConfigurationException.class, () -> RevisionSnapshotFilter.builder()
-                                                                                   .type(AggregateWithExpectedRevision.class)
-                                                                                   .revision("")
-                                                                                   .build());
+        assertThatThrownBy(() -> RevisionSnapshotFilter.builder()
+                                                       .type(AggregateWithExpectedRevision.class)
+                                                       .revision("")
+                                                       .build())
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     private RevisionSnapshotFilter filterFor(Class<?> aggregateType, String revision) {

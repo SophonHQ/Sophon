@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.modelling.command.inspection;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.messaging.HandlerAttributes;
@@ -27,7 +28,7 @@ import org.sophonhq.sophon.modelling.command.AggregateCreationPolicy;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -55,7 +56,7 @@ class ChildForwardingCommandMessageHandlingMemberTest {
     void canHandleMessageTypeIsDelegatedToChildHandler() {
         when(childMember.canHandleMessageType(any())).thenReturn(true);
 
-        assertTrue(testSubject.canHandleMessageType(CommandMessage.class));
+        assertThat(testSubject.canHandleMessageType(CommandMessage.class)).isTrue();
 
         verify(childMember).canHandleMessageType(CommandMessage.class);
     }
@@ -64,7 +65,7 @@ class ChildForwardingCommandMessageHandlingMemberTest {
     void hasAnnotationIsDelegatedToChildHandler() {
         when(childMember.hasAnnotation(any())).thenReturn(true);
 
-        assertTrue(testSubject.hasAnnotation(CommandHandler.class));
+        assertThat(testSubject.hasAnnotation(CommandHandler.class)).isTrue();
 
         verify(childMember).hasAnnotation(CommandHandler.class);
     }
@@ -77,8 +78,8 @@ class ChildForwardingCommandMessageHandlingMemberTest {
 
         Optional<Object> result = testSubject.attribute(HandlerAttributes.AGGREGATE_CREATION_POLICY);
 
-        assertTrue(result.isPresent());
-        assertEquals(expectedPolicy, result.get());
+        assertThat(result).isPresent();
+        assertThat(result).contains(expectedPolicy);
 
         verify(childMember).attribute(HandlerAttributes.AGGREGATE_CREATION_POLICY);
     }

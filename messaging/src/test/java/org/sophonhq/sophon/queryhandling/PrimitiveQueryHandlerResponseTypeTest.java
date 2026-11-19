@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.responsetypes.ResponseTypes;
 import org.sophonhq.sophon.queryhandling.annotation.AnnotationQueryHandlerAdapter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests resolving query handlers which return primitive types.
@@ -95,8 +95,8 @@ class PrimitiveQueryHandlerResponseTypeTest {
         final T responseBoxed = queryBus.query(queryBoxed).join().getPayload();
         final T responsePrimitive = queryBus.query(queryPrimitive).join().getPayload();
 
-        assertEquals(value, responseBoxed);
-        assertEquals(value, responsePrimitive);
+        assertThat(responseBoxed).isEqualTo(value);
+        assertThat(responsePrimitive).isEqualTo(value);
     }
 
     private static class PrimitiveQueryHandler {

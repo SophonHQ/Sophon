@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventsourcing.eventstore.jpa;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.DateTimeUtils;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -29,7 +29,8 @@ import java.time.Instant;
 import java.util.Collections;
 
 import static java.util.UUID.randomUUID;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 /**
  * Test class validating the {@link DomainEventEntry}.
@@ -59,13 +60,13 @@ class DomainEventEntryTest {
 
         DomainEventEntry result = new DomainEventEntry(testEvent, serializer);
 
-        assertEquals(expectedType, result.getType());
-        assertEquals(expectedAggregateId, result.getAggregateIdentifier());
-        assertEquals(expectedSequenceNumber, result.getSequenceNumber());
-        assertEquals(expectedEventIdentifier, result.getEventIdentifier());
-        assertEquals(expectedTimestamp, result.getTimestamp());
-        assertEquals(expectedPayload, serializer.deserialize(result.getPayload()));
-        assertEquals(byte[].class, result.getPayload().getContentType());
-        assertEquals(expectedMetaData, serializer.deserialize(result.getMetaData()));
+        assertThat(result.getType()).isEqualTo(expectedType);
+        assertThat(result.getAggregateIdentifier()).isEqualTo(expectedAggregateId);
+        assertThat(result.getSequenceNumber()).isEqualTo(expectedSequenceNumber);
+        assertThat(result.getEventIdentifier()).isEqualTo(expectedEventIdentifier);
+        assertThat(result.getTimestamp()).isEqualTo(expectedTimestamp);
+        assertThatObject(serializer.deserialize(result.getPayload())).isEqualTo(expectedPayload);
+        assertThat(result.getPayload().getContentType()).isEqualTo(byte[].class);
+        assertThatObject(serializer.deserialize(result.getMetaData())).isEqualTo(expectedMetaData);
     }
 }

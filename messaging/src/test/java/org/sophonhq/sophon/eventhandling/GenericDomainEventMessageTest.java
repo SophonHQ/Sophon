@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -42,28 +42,28 @@ class GenericDomainEventMessageTest {
         GenericDomainEventMessage<Object> message2 = new GenericDomainEventMessage<>("type", id, seqNo, payload, metaData);
         GenericDomainEventMessage<Object> message3 = new GenericDomainEventMessage<>("type", id, seqNo, payload, metaDataMap);
 
-        assertSame(id, message1.getAggregateIdentifier());
-        assertEquals(seqNo, message1.getSequenceNumber());
-        assertSame(MetaData.emptyInstance(), message1.getMetaData());
-        assertEquals(Object.class, message1.getPayload().getClass());
-        assertEquals(Object.class, message1.getPayloadType());
+        assertThat(message1.getAggregateIdentifier()).isSameAs(id);
+        assertThat(message1.getSequenceNumber()).isEqualTo(seqNo);
+        assertThat(message1.getMetaData()).isSameAs(MetaData.emptyInstance());
+        assertThat(message1.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(message1.getPayloadType()).isEqualTo(Object.class);
 
-        assertSame(id, message2.getAggregateIdentifier());
-        assertEquals(seqNo, message2.getSequenceNumber());
-        assertSame(metaData, message2.getMetaData());
-        assertEquals(Object.class, message2.getPayload().getClass());
-        assertEquals(Object.class, message2.getPayloadType());
+        assertThat(message2.getAggregateIdentifier()).isSameAs(id);
+        assertThat(message2.getSequenceNumber()).isEqualTo(seqNo);
+        assertThat(message2.getMetaData()).isSameAs(metaData);
+        assertThat(message2.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(message2.getPayloadType()).isEqualTo(Object.class);
 
-        assertSame(id, message3.getAggregateIdentifier());
-        assertEquals(seqNo, message3.getSequenceNumber());
-        assertNotSame(metaDataMap, message3.getMetaData());
-        assertEquals(metaDataMap, message3.getMetaData());
-        assertEquals(Object.class, message3.getPayload().getClass());
-        assertEquals(Object.class, message3.getPayloadType());
+        assertThat(message3.getAggregateIdentifier()).isSameAs(id);
+        assertThat(message3.getSequenceNumber()).isEqualTo(seqNo);
+        assertThat(message3.getMetaData()).isNotSameAs(metaDataMap);
+        assertThat(message3.getMetaData()).isEqualTo(metaDataMap);
+        assertThat(message3.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(message3.getPayloadType()).isEqualTo(Object.class);
 
-        assertNotEquals(message1.getIdentifier(), message2.getIdentifier());
-        assertNotEquals(message1.getIdentifier(), message3.getIdentifier());
-        assertNotEquals(message2.getIdentifier(), message3.getIdentifier());
+        assertThat(message2.getIdentifier()).isNotEqualTo(message1.getIdentifier());
+        assertThat(message3.getIdentifier()).isNotEqualTo(message1.getIdentifier());
+        assertThat(message3.getIdentifier()).isNotEqualTo(message2.getIdentifier());
     }
 
     @Test
@@ -78,8 +78,8 @@ class GenericDomainEventMessageTest {
         GenericDomainEventMessage<Object> message2 = message.withMetaData(
                 MetaData.from(Collections.singletonMap("key", (Object) "otherValue")));
 
-        assertEquals(0, message1.getMetaData().size());
-        assertEquals(1, message2.getMetaData().size());
+        assertThat(message1.getMetaData().size()).isZero();
+        assertThat(message2.getMetaData().size()).isOne();
     }
 
     @Test
@@ -94,22 +94,24 @@ class GenericDomainEventMessageTest {
         GenericDomainEventMessage<Object> message2 = message.andMetaData(
                 MetaData.from(Collections.singletonMap("key", (Object) "otherValue")));
 
-        assertEquals(1, message1.getMetaData().size());
-        assertEquals("value", message1.getMetaData().get("key"));
-        assertEquals(1, message2.getMetaData().size());
-        assertEquals("otherValue", message2.getMetaData().get("key"));
+        assertThat(message1.getMetaData().size()).isOne();
+        assertThat(message1.getMetaData()).containsEntry("key", "value");
+        assertThat(message2.getMetaData().size()).isOne();
+        assertThat(message2.getMetaData()).containsEntry("key", "otherValue");
     }
 
     @Test
     void testToString() {
         String actual = new GenericDomainEventMessage<>("AggregateType", "id1", 1, "MyPayload").andMetaData(MetaData.with("key", "value").and("key2", 13)).toString();
-        assertTrue(actual.startsWith("GenericDomainEventMessage{payload={MyPayload}, metadata={"), "Wrong output: " + actual);
-        assertTrue(actual.contains("'key'->'value'"), "Wrong output: " + actual);
-        assertTrue(actual.contains("'key2'->'13'"), "Wrong output: " + actual);
-        assertTrue(actual.contains("', timestamp='"), "Wrong output: " + actual);
-        assertTrue(actual.contains("', aggregateIdentifier='id1'"), "Wrong output: " + actual);
-        assertTrue(actual.contains("', aggregateType='AggregateType'"), "Wrong output: " + actual);
-        assertTrue(actual.contains("', sequenceNumber=1"), "Wrong output: " + actual);
-        assertTrue(actual.endsWith("}"), "Wrong output: " + actual);
+        assertThat(actual)
+                .as("Wrong output: " + actual)
+                .startsWith("GenericDomainEventMessage{payload={MyPayload}, metadata={");
+        assertThat(actual).as("Wrong output: " + actual).contains("'key'->'value'");
+        assertThat(actual).as("Wrong output: " + actual).contains("'key2'->'13'");
+        assertThat(actual).as("Wrong output: " + actual).contains("', timestamp='");
+        assertThat(actual).as("Wrong output: " + actual).contains("', aggregateIdentifier='id1'");
+        assertThat(actual).as("Wrong output: " + actual).contains("', aggregateType='AggregateType'");
+        assertThat(actual).as("Wrong output: " + actual).contains("', sequenceNumber=1");
+        assertThat(actual).as("Wrong output: " + actual).endsWith("}");
     }
 }

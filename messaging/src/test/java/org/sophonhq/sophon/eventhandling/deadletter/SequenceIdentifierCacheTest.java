@@ -17,14 +17,15 @@
 
 package org.sophonhq.sophon.eventhandling.deadletter;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.deadletter.SequencedDeadLetterQueue;
 
 import java.util.UUID;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class SequenceIdentifierCacheTest {
@@ -44,7 +45,7 @@ class SequenceIdentifierCacheTest {
     @Test
     void mightNotBePresentIfStartedWithEmptyQueue() {
         String sequenceIdentifier = UUID.randomUUID().toString();
-        assertFalse(testSubject.mightBePresent(sequenceIdentifier));
+        assertThat(testSubject.mightBePresent(sequenceIdentifier)).isFalse();
     }
 
     @Test
@@ -53,10 +54,10 @@ class SequenceIdentifierCacheTest {
         testSubject = new SequenceIdentifierCache(SEGMENT_ID, CACHE_SIZE, mockSequencedDeadLetterQueue);
 
         String sequenceIdentifier = UUID.randomUUID().toString();
-        assertTrue(testSubject.mightBePresent(sequenceIdentifier));
+        assertThat(testSubject.mightBePresent(sequenceIdentifier)).isTrue();
 
         testSubject.markNotEnqueued(sequenceIdentifier);
-        assertFalse(testSubject.mightBePresent(sequenceIdentifier));
+        assertThat(testSubject.mightBePresent(sequenceIdentifier)).isFalse();
     }
 
     @Test
@@ -65,20 +66,20 @@ class SequenceIdentifierCacheTest {
         testSubject = new SequenceIdentifierCache(SEGMENT_ID, CACHE_SIZE, mockSequencedDeadLetterQueue);
 
         String sequenceIdentifier = UUID.randomUUID().toString();
-        assertTrue(testSubject.mightBePresent(sequenceIdentifier));
+        assertThat(testSubject.mightBePresent(sequenceIdentifier)).isTrue();
         testSubject.markNotEnqueued(sequenceIdentifier);
-        assertFalse(testSubject.mightBePresent(sequenceIdentifier));
+        assertThat(testSubject.mightBePresent(sequenceIdentifier)).isFalse();
 
         IntStream.range(0, CACHE_SIZE).forEach(i -> testSubject.markNotEnqueued(UUID.randomUUID().toString()));
-        assertTrue(testSubject.mightBePresent(sequenceIdentifier));
+        assertThat(testSubject.mightBePresent(sequenceIdentifier)).isTrue();
     }
 
     @Test
     void itMightBePresentOnceItsMarkedAsEnqueued() {
         String sequenceIdentifier = UUID.randomUUID().toString();
-        assertFalse(testSubject.mightBePresent(sequenceIdentifier));
+        assertThat(testSubject.mightBePresent(sequenceIdentifier)).isFalse();
         testSubject.markEnqueued(sequenceIdentifier);
-        assertTrue(testSubject.mightBePresent(sequenceIdentifier));
+        assertThat(testSubject.mightBePresent(sequenceIdentifier)).isTrue();
     }
 
     @Test
@@ -86,6 +87,6 @@ class SequenceIdentifierCacheTest {
         String sequenceIdentifier = UUID.randomUUID().toString();
         testSubject.markEnqueued(sequenceIdentifier);
         testSubject.markNotEnqueued(sequenceIdentifier);
-        assertFalse(testSubject.mightBePresent(sequenceIdentifier));
+        assertThat(testSubject.mightBePresent(sequenceIdentifier)).isFalse();
     }
 }

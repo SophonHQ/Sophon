@@ -17,14 +17,14 @@
 
 package org.sophonhq.sophon.eventhandling.replay;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.GenericMessage;
 import org.sophonhq.sophon.messaging.MetaData;
 
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.replay.GenericResetContext.asResetContext;
 
 /**
@@ -47,30 +47,30 @@ class GenericResetContextTest {
         MetaData metaData = MetaData.from(metaDataMap);
         ResetContext<Object> messageFive = new GenericResetContext<>(TEST_PAYLOAD, metaData);
 
-        assertSame(MetaData.emptyInstance(), messageOne.getMetaData());
-        assertEquals(Object.class, messageOne.getPayload().getClass());
-        assertEquals(Object.class, messageOne.getPayloadType());
+        assertThat(messageOne.getMetaData()).isSameAs(MetaData.emptyInstance());
+        assertThat(messageOne.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(messageOne.getPayloadType()).isEqualTo(Object.class);
 
-        assertSame(MetaData.emptyInstance(), messageTwo.getMetaData());
-        assertEquals(Object.class, messageTwo.getPayload().getClass());
-        assertEquals(Object.class, messageTwo.getPayloadType());
+        assertThat(messageTwo.getMetaData()).isSameAs(MetaData.emptyInstance());
+        assertThat(messageTwo.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(messageTwo.getPayloadType()).isEqualTo(Object.class);
 
-        assertSame(MetaData.emptyInstance(), messageThree.getMetaData());
-        assertEquals(Object.class, messageThree.getPayload().getClass());
-        assertEquals(Object.class, messageThree.getPayloadType());
+        assertThat(messageThree.getMetaData()).isSameAs(MetaData.emptyInstance());
+        assertThat(messageThree.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(messageThree.getPayloadType()).isEqualTo(Object.class);
 
-        assertNotSame(metaDataMap, messageFour.getMetaData());
-        assertEquals(metaDataMap, messageFour.getMetaData());
-        assertEquals(Object.class, messageFour.getPayload().getClass());
-        assertEquals(Object.class, messageFour.getPayloadType());
+        assertThat(messageFour.getMetaData()).isNotSameAs(metaDataMap);
+        assertThat(messageFour.getMetaData()).isEqualTo(metaDataMap);
+        assertThat(messageFour.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(messageFour.getPayloadType()).isEqualTo(Object.class);
 
-        assertSame(metaData, messageFive.getMetaData());
-        assertEquals(Object.class, messageFive.getPayload().getClass());
-        assertEquals(Object.class, messageFive.getPayloadType());
+        assertThat(messageFive.getMetaData()).isSameAs(metaData);
+        assertThat(messageFive.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(messageFive.getPayloadType()).isEqualTo(Object.class);
 
-        assertNotEquals(messageOne.getIdentifier(), messageFour.getIdentifier());
-        assertNotEquals(messageFour.getIdentifier(), messageFive.getIdentifier());
-        assertNotEquals(messageFive.getIdentifier(), messageOne.getIdentifier());
+        assertThat(messageFour.getIdentifier()).isNotEqualTo(messageOne.getIdentifier());
+        assertThat(messageFive.getIdentifier()).isNotEqualTo(messageFour.getIdentifier());
+        assertThat(messageOne.getIdentifier()).isNotEqualTo(messageFive.getIdentifier());
     }
 
     @Test
@@ -82,8 +82,8 @@ class GenericResetContextTest {
         ResetContext<Object> messageTwo =
                 startMessage.withMetaData(MetaData.from(Collections.singletonMap("key", (Object) "otherValue")));
 
-        assertEquals(0, messageOne.getMetaData().size());
-        assertEquals(1, messageTwo.getMetaData().size());
+        assertThat(messageOne.getMetaData().size()).isZero();
+        assertThat(messageTwo.getMetaData().size()).isOne();
     }
 
     @Test
@@ -95,14 +95,14 @@ class GenericResetContextTest {
         ResetContext<Object> messageTwo =
                 startMessage.andMetaData(MetaData.from(Collections.singletonMap("key", (Object) "otherValue")));
 
-        assertEquals(1, messageOne.getMetaData().size());
-        assertEquals("value", messageOne.getMetaData().get("key"));
-        assertEquals(1, messageTwo.getMetaData().size());
-        assertEquals("otherValue", messageTwo.getMetaData().get("key"));
+        assertThat(messageOne.getMetaData().size()).isOne();
+        assertThat(messageOne.getMetaData()).containsEntry("key", "value");
+        assertThat(messageTwo.getMetaData().size()).isOne();
+        assertThat(messageTwo.getMetaData()).containsEntry("key", "otherValue");
     }
 
     @Test
     void describeType() {
-        assertEquals("GenericResetContext", new GenericResetContext<>(TEST_PAYLOAD).describeType());
+        assertThat(new GenericResetContext<>(TEST_PAYLOAD).describeType()).isEqualTo("GenericResetContext");
     }
 }

@@ -18,7 +18,7 @@
 package org.sophonhq.sophon.springboot;
 
 import com.codahale.metrics.MetricRegistry;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.config.Configurer;
 import org.sophonhq.sophon.config.MessageMonitorFactory;
@@ -37,7 +37,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -61,17 +61,17 @@ class SophonAutoConfigurationWithMetricsWithoutConfigurerTest {
 
     @Test
     void contextInitialization() {
-        assertNotNull(applicationContext);
+        assertThat(applicationContext).isNotNull();
 
-        assertTrue(applicationContext.containsBean("metricRegistry"));
-        assertNotNull(applicationContext.getBean(MetricRegistry.class));
-        assertEquals(MetricRegistry.class, metricRegistry.getClass());
+        assertThat(applicationContext.containsBean("metricRegistry")).isTrue();
+        assertThat(applicationContext.getBean(MetricRegistry.class)).isNotNull();
+        assertThat(metricRegistry.getClass()).isEqualTo(MetricRegistry.class);
 
-        assertTrue(applicationContext.containsBean("globalMetricRegistry"));
-        assertNotNull(applicationContext.getBean(GlobalMetricRegistry.class));
-        assertEquals(GlobalMetricRegistry.class, globalMetricRegistry.getClass());
+        assertThat(applicationContext.containsBean("globalMetricRegistry")).isTrue();
+        assertThat(applicationContext.getBean(GlobalMetricRegistry.class)).isNotNull();
+        assertThat(globalMetricRegistry.getClass()).isEqualTo(GlobalMetricRegistry.class);
 
-        assertFalse(applicationContext.containsBean("metricsConfigurerModule"));
+        assertThat(applicationContext.containsBean("metricsConfigurerModule")).isFalse();
     }
 
     @Configuration

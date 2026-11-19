@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.test.saga;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.test.SophonAssertionError;
@@ -25,7 +26,7 @@ import org.sophonhq.sophon.test.aggregate.MyOtherEvent;
 import org.sophonhq.sophon.test.matchers.AllFieldsFilter;
 import org.sophonhq.sophon.test.matchers.Matchers;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class EventValidatorTest {
 
@@ -45,7 +46,8 @@ class EventValidatorTest {
     void assertPublishedEventsWithNoEventsMatcherThrowsAssertionErrorIfEventWasPublished() {
         testSubject.handle(GenericEventMessage.asEventMessage(new MyOtherEvent()));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.assertPublishedEventsMatching(Matchers.noEvents()));
+        assertThatThrownBy(() -> testSubject.assertPublishedEventsMatching(Matchers.noEvents()))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -57,7 +59,7 @@ class EventValidatorTest {
     void assertPublishedEventsThrowsAssertionErrorIfEventWasPublished() {
         testSubject.handle(GenericEventMessage.asEventMessage(new MyOtherEvent()));
 
-        assertThrows(SophonAssertionError.class, testSubject::assertPublishedEvents);
+        assertThatThrownBy(testSubject::assertPublishedEvents).isInstanceOf(SophonAssertionError.class);
     }
 
     @Test

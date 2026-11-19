@@ -18,8 +18,9 @@
 package org.sophonhq.sophon.modelling.saga;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.eventhandling.ListenerInvocationErrorHandler;
@@ -28,7 +29,6 @@ import org.sophonhq.sophon.messaging.ResultMessage;
 import org.sophonhq.sophon.messaging.unitofwork.DefaultUnitOfWork;
 import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 import org.sophonhq.sophon.modelling.utils.MockException;
-import org.sophonhq.sophon.tracing.SpanFactory;
 import org.sophonhq.sophon.tracing.TestSpanFactory;
 
 import java.util.Arrays;
@@ -38,8 +38,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singleton;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.Mockito.*;
 
 class SagaManagerTest {
@@ -158,7 +159,7 @@ class SagaManagerTest {
         });
         if (resultMessage.isExceptional()) {
             Throwable e = resultMessage.exceptionResult();
-            assertEquals("Mock", e.getMessage());
+            assertThat(e.getMessage()).isEqualTo("Mock");
         } else {
             fail("Expected exception to be propagated");
         }
@@ -208,11 +209,13 @@ class SagaManagerTest {
         verify(mockSagaRepository).createInstance(any(), any());
 
         createdSaga.getAllValues()
-                   .forEach(sagaId -> assertTrue(matchingSegment.matches(sagaId),
-                           "Saga ID doesn't match segment that should have created it: " + sagaId) );
+                   .forEach(sagaId -> assertThat(matchingSegment.matches(sagaId))
+                           .as("Saga ID doesn't match segment that should have created it: " + sagaId)
+                           .isTrue());
         createdSaga.getAllValues()
-                   .forEach(sagaId -> assertFalse(otherSegment.matches(sagaId),
-                                                  "Saga ID matched against the wrong segment: " + sagaId));
+                   .forEach(sagaId -> assertThat(otherSegment.matches(sagaId))
+                           .as("Saga ID matched against the wrong segment: " + sagaId)
+                           .isFalse());
     }
 
     @Test

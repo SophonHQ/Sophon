@@ -47,7 +47,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
@@ -64,8 +65,9 @@ class AnnotatedAggregateMetaModelFactoryTest {
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(SomeAnnotatedHandlers.class);
 
         CommandMessage<?> message = asCommandMessage("ok");
-        assertEquals(true, getHandler(inspector, message).handle(message, new SomeAnnotatedHandlers()));
-        assertEquals(false, getHandler(inspector, message).handle(asCommandMessage("ko"), new SomeAnnotatedHandlers()));
+        assertThat(getHandler(inspector, message).handle(message, new SomeAnnotatedHandlers())).isEqualTo(true);
+        assertThat(getHandler(inspector, message).handle(asCommandMessage("ko"), new SomeAnnotatedHandlers()))
+                .isEqualTo(false);
     }
 
     @Test
@@ -75,8 +77,8 @@ class AnnotatedAggregateMetaModelFactoryTest {
 
         SomeSubclass target = new SomeSubclass();
         CommandMessage<?> message = asCommandMessage("sub");
-        assertEquals(true, getHandler(inspector, message).handle(message, target));
-        assertEquals(false, getHandler(inspector, message).handle(asCommandMessage("ok"), target));
+        assertThat(getHandler(inspector, message).handle(message, target)).isEqualTo(true);
+        assertThat(getHandler(inspector, message).handle(asCommandMessage("ok"), target)).isEqualTo(false);
     }
 
     @Test
@@ -89,10 +91,10 @@ class AnnotatedAggregateMetaModelFactoryTest {
                 getHandler(inspector, message);
         final Optional<CommandMessageHandlingMember> unwrap =
                 messageHandlingMember.unwrap(CommandMessageHandlingMember.class);
-        assertNotNull(unwrap);
-        assertTrue(unwrap.isPresent());
+        assertThat(unwrap).isNotNull();
+        assertThat(unwrap).isPresent();
         final CommandMessageHandlingMember commandMessageHandlingMember = unwrap.get();
-        assertTrue(commandMessageHandlingMember.isFactoryHandler());
+        assertThat(commandMessageHandlingMember.isFactoryHandler()).isTrue();
     }
 
 
@@ -118,40 +120,40 @@ class AnnotatedAggregateMetaModelFactoryTest {
         SomeRecursiveEntity root = new SomeRecursiveEntity(LinkedList::new, null, rootId);
 
         // Assert root: it should not have any children (yet)
-        assertEquals(0, root.children.size());
+        assertThat(root.children.size()).isZero();
 
         // Publish an event that is picked up by root. It should have 1 child afterwards.
         inspector.publish(asEventMessage(new CreateChild(rootId, childId1)), root);
-        assertEquals(1, root.children.size());
+        assertThat(root.children.size()).isOne();
 
         // Assert child1: it should not have any children (yet)
         SomeRecursiveEntity child1 = root.getChild(childId1);
-        assertNotNull(child1);
-        assertEquals(0, child1.children.size());
+        assertThat(child1).isNotNull();
+        assertThat(child1.children.size()).isZero();
 
         // Publish 2 events that are picked up by child1. It should have 2 children afterwards.
         inspector.publish(asEventMessage(new CreateChild(childId1, childId2)), root);
         inspector.publish(asEventMessage(new CreateChild(childId1, childId3)), root);
-        assertEquals(2, child1.children.size());
+        assertThat(child1.children.size()).isEqualTo(2);
 
         // Assert child2: it should not have any children
         SomeRecursiveEntity child2 = child1.getChild(childId2);
-        assertNotNull(child2);
-        assertEquals(0, child2.children.size());
+        assertThat(child2).isNotNull();
+        assertThat(child2.children.size()).isZero();
 
         // Assert child3: it should not have any children
         SomeRecursiveEntity child3 = child1.getChild(childId3);
-        assertNotNull(child3);
-        assertEquals(0, child3.children.size());
+        assertThat(child3).isNotNull();
+        assertThat(child3.children.size()).isZero();
 
         // Publish an event that is picked up by child3. It should have 1 child afterwards.
         inspector.publish(asEventMessage(new CreateChild(childId3, childId4)), root);
-        assertEquals(1, child3.children.size());
+        assertThat(child3.children.size()).isOne();
 
         // Assert child4: it should not have any children
         SomeRecursiveEntity child4 = child3.getChild(childId4);
-        assertNotNull(child4);
-        assertEquals(0, child4.children.size());
+        assertThat(child4).isNotNull();
+        assertThat(child4.children.size()).isZero();
     }
 
     @Test
@@ -198,7 +200,7 @@ class AnnotatedAggregateMetaModelFactoryTest {
         SomeRecursiveEntity child1 = root.getChild(childId1);
 
         // Assert child1: it should have 1 child
-        assertEquals(1, child1.children.size());
+        assertThat(child1.children.size()).isOne();
 
         // Now move child3 up one level so it is a child of child1.
         // The resulting hierarchy will look as follows:
@@ -209,7 +211,7 @@ class AnnotatedAggregateMetaModelFactoryTest {
 
         // Note that if the inspector does not use copy-iterators this will throw an ConcurrentModificationException.
         inspector.publish(asEventMessage(new MoveChildUp(childId2, childId3)), root);
-        assertEquals(2, child1.children.size());
+        assertThat(child1.children.size()).isEqualTo(2);
     }
 
     @Test
@@ -221,7 +223,7 @@ class AnnotatedAggregateMetaModelFactoryTest {
 
         inspector.publish(new GenericEventMessage<>(payload), new SomeSubclass());
 
-        assertEquals(2L, payload.get());
+        assertThat(payload.get()).isEqualTo(2L);
     }
 
     @Test
@@ -232,17 +234,15 @@ class AnnotatedAggregateMetaModelFactoryTest {
         GenericCommandMessage<?> message = new GenericCommandMessage<>(BigDecimal.ONE);
         SomeSubclass target = new SomeSubclass();
         MessageHandlingMember<? super SomeSubclass> handler = getHandler(inspector, message);
-        assertEquals("1", handler.handle(message, target));
+        assertThat(handler.handle(message, target)).isEqualTo("1");
     }
 
     @Test
     void methodIdentifierWithMethodParameters() {
-        assertThrows(AggregateModellingException.class,
-                () -> AnnotatedAggregateMetaModelFactory
-                        .inspectAggregate(SomeIllegalAnnotatedIdMethodClass.class));
-        assertThrows(AggregateModellingException.class,
-                () -> AnnotatedAggregateMetaModelFactory
-                        .inspectAggregate(SomeIllegalAnnotatedPersistenceIdMethodClass.class));
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory
+                .inspectAggregate(SomeIllegalAnnotatedIdMethodClass.class)).isInstanceOf(AggregateModellingException.class);
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory
+                .inspectAggregate(SomeIllegalAnnotatedPersistenceIdMethodClass.class)).isInstanceOf(AggregateModellingException.class);
     }
 
     @Test
@@ -250,9 +250,9 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<SomeDifferentDoubleIdAnnotatedHandler> inspector =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(SomeDifferentDoubleIdAnnotatedHandler.class);
 
-        assertEquals("SomeDifferentDoubleIdAnnotatedHandler", inspector.type());
-        assertEquals("id", inspector.getIdentifier(new SomeDifferentDoubleIdAnnotatedHandler()));
-        assertEquals("id", inspector.routingKey());
+        assertThat(inspector.type()).isEqualTo("SomeDifferentDoubleIdAnnotatedHandler");
+        assertThat(inspector.getIdentifier(new SomeDifferentDoubleIdAnnotatedHandler())).isEqualTo("id");
+        assertThat(inspector.routingKey()).isEqualTo("id");
     }
 
     @Test
@@ -260,9 +260,9 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<SomeAnnotatedHandlers> inspector =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(SomeAnnotatedHandlers.class);
 
-        assertEquals("SomeAnnotatedHandlers", inspector.type());
-        assertEquals("id", inspector.getIdentifier(new SomeAnnotatedHandlers()));
-        assertEquals("id", inspector.routingKey());
+        assertThat(inspector.type()).isEqualTo("SomeAnnotatedHandlers");
+        assertThat(inspector.getIdentifier(new SomeAnnotatedHandlers())).isEqualTo("id");
+        assertThat(inspector.routingKey()).isEqualTo("id");
     }
 
     @Test
@@ -270,9 +270,9 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<SomeGetterIdAnnotatedHandlers> inspector =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(SomeGetterIdAnnotatedHandlers.class);
 
-        assertEquals("SomeGetterIdAnnotatedHandlers", inspector.type());
-        assertEquals("id", inspector.getIdentifier(new SomeGetterIdAnnotatedHandlers()));
-        assertEquals("id", inspector.routingKey());
+        assertThat(inspector.type()).isEqualTo("SomeGetterIdAnnotatedHandlers");
+        assertThat(inspector.getIdentifier(new SomeGetterIdAnnotatedHandlers())).isEqualTo("id");
+        assertThat(inspector.routingKey()).isEqualTo("id");
     }
 
     @Test
@@ -280,9 +280,9 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<SomeMethodIdAnnotatedHandlers> inspector =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(SomeMethodIdAnnotatedHandlers.class);
 
-        assertEquals("SomeMethodIdAnnotatedHandlers", inspector.type());
-        assertEquals("id", inspector.getIdentifier(new SomeMethodIdAnnotatedHandlers()));
-        assertEquals("calculatedId", inspector.routingKey());
+        assertThat(inspector.type()).isEqualTo("SomeMethodIdAnnotatedHandlers");
+        assertThat(inspector.getIdentifier(new SomeMethodIdAnnotatedHandlers())).isEqualTo("id");
+        assertThat(inspector.routingKey()).isEqualTo("calculatedId");
     }
 
     @Test
@@ -290,8 +290,8 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<JavaxPersistenceAnnotatedHandlers> inspector =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(JavaxPersistenceAnnotatedHandlers.class);
 
-        assertEquals("id", inspector.getIdentifier(new JavaxPersistenceAnnotatedHandlers()));
-        assertEquals("id", inspector.routingKey());
+        assertThat(inspector.getIdentifier(new JavaxPersistenceAnnotatedHandlers())).isEqualTo("id");
+        assertThat(inspector.routingKey()).isEqualTo("id");
     }
 
     @Test
@@ -299,8 +299,8 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<JavaxPersistenceGetterAnnotatedHandlers> inspector =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(JavaxPersistenceGetterAnnotatedHandlers.class);
 
-        assertEquals("id", inspector.getIdentifier(new JavaxPersistenceGetterAnnotatedHandlers()));
-        assertEquals("id", inspector.routingKey());
+        assertThat(inspector.getIdentifier(new JavaxPersistenceGetterAnnotatedHandlers())).isEqualTo("id");
+        assertThat(inspector.routingKey()).isEqualTo("id");
     }
 
     @Test
@@ -308,8 +308,8 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<JavaxPersistenceMethodIdAnnotatedHandlers> inspector =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(JavaxPersistenceMethodIdAnnotatedHandlers.class);
 
-        assertEquals("id", inspector.getIdentifier(new JavaxPersistenceMethodIdAnnotatedHandlers()));
-        assertEquals("calculatedId", inspector.routingKey());
+        assertThat(inspector.getIdentifier(new JavaxPersistenceMethodIdAnnotatedHandlers())).isEqualTo("id");
+        assertThat(inspector.routingKey()).isEqualTo("calculatedId");
     }
 
     @Test
@@ -317,8 +317,8 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<SomeSubclass> inspector =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(SomeSubclass.class);
 
-        assertEquals("SomeOtherName", inspector.type());
-        assertEquals("id", inspector.getIdentifier(new SomeSubclass()));
+        assertThat(inspector.type()).isEqualTo("SomeOtherName");
+        assertThat(inspector.getIdentifier(new SomeSubclass())).isEqualTo("id");
     }
 
     @Test
@@ -326,8 +326,8 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<SomeGetterIdSubclass> inspector =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(SomeGetterIdSubclass.class);
 
-        assertEquals("SomeOtherGetterName", inspector.type());
-        assertEquals("id", inspector.getIdentifier(new SomeGetterIdSubclass()));
+        assertThat(inspector.type()).isEqualTo("SomeOtherGetterName");
+        assertThat(inspector.getIdentifier(new SomeGetterIdSubclass())).isEqualTo("id");
     }
 
     @Test
@@ -349,52 +349,44 @@ class AnnotatedAggregateMetaModelFactoryTest {
             task1.join();
             task2.join();
 
-            assertEquals(2, counter.get(), "Concurrency issue detected after " + i + " attempts.");
+            assertThat(counter.get()).as("Concurrency issue detected after " + i + " attempts.").isEqualTo(2);
         }
     }
 
     @Test
     void illegalFactoryMethodThrowsExceptionClass() {
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> AnnotatedAggregateMetaModelFactory
-                        .inspectAggregate(SomeIllegalAnnotatedFactoryMethodClass.class));
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory
+                .inspectAggregate(SomeIllegalAnnotatedFactoryMethodClass.class))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void typedAggregateIdentifier() {
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TypedIdentifierAggregate.class)
-        );
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TypedIdentifierAggregate.class))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void getterTypedAggregateIdentifier() {
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(GetterTypedIdentifierAggregate.class)
-        );
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory
+                .inspectAggregate(GetterTypedIdentifierAggregate.class))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void illegalDoubleIdentifiers() {
-        assertThrows(SophonConfigurationException.class, () ->
-                AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalDoubleIdFieldsAnnotatedAggregate.class)
-        );
-        assertThrows(SophonConfigurationException.class, () ->
-                AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalDoubleIdMixedAnnotatedAggregate.class)
-        );
-        assertThrows(SophonConfigurationException.class, () ->
-                AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalDoubleIdMethodsAnnotatedAggregate.class)
-        );
+        assertThatThrownBy(() ->
+                AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalDoubleIdFieldsAnnotatedAggregate.class)).isInstanceOf(SophonConfigurationException.class);
+        assertThatThrownBy(() ->
+                AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalDoubleIdMixedAnnotatedAggregate.class)).isInstanceOf(SophonConfigurationException.class);
+        assertThatThrownBy(() ->
+                AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalDoubleIdMethodsAnnotatedAggregate.class)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void voidMethodIdentifier() {
-        assertThrows(SophonConfigurationException.class, () ->
-                AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalVoidIdMethodAnnotatedAggregate.class)
-        );
+        assertThatThrownBy(() ->
+                AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalVoidIdMethodAnnotatedAggregate.class)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -402,7 +394,7 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<AggregateWithAggregateVersionField> testSubject =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(AggregateWithAggregateVersionField.class);
 
-        assertEquals(42, testSubject.getVersion(new AggregateWithAggregateVersionField()));
+        assertThat(testSubject.getVersion(new AggregateWithAggregateVersionField())).isEqualTo(42);
     }
 
     @Test
@@ -410,14 +402,14 @@ class AnnotatedAggregateMetaModelFactoryTest {
         AggregateModel<AggregateWithAggregateVersionMethod> testSubject =
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(AggregateWithAggregateVersionMethod.class);
 
-        assertEquals(9001, testSubject.getVersion(new AggregateWithAggregateVersionMethod()));
+        assertThat(testSubject.getVersion(new AggregateWithAggregateVersionMethod())).isEqualTo(9001);
     }
 
     @Test
     void illegalDoubleAggregateVersions() {
-        assertThrows(AggregateModellingException.class, () ->
-                AnnotatedAggregateMetaModelFactory.inspectAggregate(IllegalAggregateWithSeveralAggregateVersions.class)
-        );
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory
+                .inspectAggregate(IllegalAggregateWithSeveralAggregateVersions.class))
+                .isInstanceOf(AggregateModellingException.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -805,9 +797,9 @@ class AnnotatedAggregateMetaModelFactoryTest {
         public void handle(MoveChildUp event) {
             if (Objects.equals(this.entityId, event.parentId)) {
                 SomeRecursiveEntity child = getChild(event.childId);
-                assertNotNull(child);
-                assertTrue(this.children.remove(child));
-                assertTrue(parent.children.add(child));
+                assertThat(child).isNotNull();
+                assertThat(this.children.remove(child)).isTrue();
+                assertThat(parent.children.add(child)).isTrue();
             }
         }
     }

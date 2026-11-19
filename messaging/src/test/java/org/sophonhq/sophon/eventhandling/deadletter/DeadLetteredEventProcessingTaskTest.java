@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventhandling.deadletter;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.common.transaction.Transaction;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -88,7 +89,7 @@ class DeadLetteredEventProcessingTaskTest {
 
         EnqueueDecision<EventMessage<?>> result = testSubject.process(testLetter);
 
-        assertEquals(DoNotEnqueue.class, result.getClass());
+        assertThat(result.getClass()).isEqualTo(DoNotEnqueue.class);
         verify(transactionManager).startTransaction();
         verify(eventHandlerOne).handle(TEST_EVENT);
         verify(eventHandlerTwo).handle(TEST_EVENT);
@@ -107,7 +108,7 @@ class DeadLetteredEventProcessingTaskTest {
 
         EnqueueDecision<EventMessage<?>> result = testSubject.process(testLetter);
 
-        assertEquals(TEST_DECISION, result);
+        assertThat(result).isEqualTo(TEST_DECISION);
         verify(transactionManager).startTransaction();
         verify(eventHandlerOne).handle(TEST_EVENT);
         verify(eventHandlerTwo).handle(TEST_EVENT);
@@ -131,8 +132,8 @@ class DeadLetteredEventProcessingTaskTest {
 
         EnqueueDecision<EventMessage<?>> result = testSubject.process(testLetter);
 
-        assertFalse(result.shouldEnqueue());
-        assertTrue(invoked.get());
+        assertThat(result.shouldEnqueue()).isFalse();
+        assertThat(invoked.get()).isTrue();
         verify(transactionManager).startTransaction();
         verify(eventHandlerOne).handle(TEST_EVENT);
         verify(eventHandlerTwo).handle(TEST_EVENT);

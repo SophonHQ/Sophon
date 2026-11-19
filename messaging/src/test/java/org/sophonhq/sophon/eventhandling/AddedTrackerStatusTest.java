@@ -17,11 +17,11 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.OptionalLong;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -39,7 +39,7 @@ class AddedTrackerStatusTest {
 
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
-        assertEquals(expectedSegment, testSubject.getSegment());
+        assertThat(testSubject.getSegment()).isEqualTo(expectedSegment);
     }
 
     @Test
@@ -51,7 +51,7 @@ class AddedTrackerStatusTest {
 
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
-        assertEquals(expectedIsCaughtUp, testSubject.isCaughtUp());
+        assertThat(testSubject.isCaughtUp()).isEqualTo(expectedIsCaughtUp);
     }
 
     @Test
@@ -63,7 +63,7 @@ class AddedTrackerStatusTest {
 
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
-        assertEquals(expectedIsReplaying, testSubject.isReplaying());
+        assertThat(testSubject.isReplaying()).isEqualTo(expectedIsReplaying);
     }
 
     @Test
@@ -75,7 +75,7 @@ class AddedTrackerStatusTest {
 
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
-        assertEquals(expectedIsMerging, testSubject.isMerging());
+        assertThat(testSubject.isMerging()).isEqualTo(expectedIsMerging);
     }
 
     @Test
@@ -86,7 +86,7 @@ class AddedTrackerStatusTest {
 
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
-        assertEquals(expectedTrackingToken, testSubject.getTrackingToken());
+        assertThat(testSubject.getTrackingToken()).isEqualTo(expectedTrackingToken);
     }
 
     @Test
@@ -98,7 +98,7 @@ class AddedTrackerStatusTest {
 
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
-        assertEquals(expectedIsErrorState, testSubject.isErrorState());
+        assertThat(testSubject.isErrorState()).isEqualTo(expectedIsErrorState);
     }
 
     @Test
@@ -109,7 +109,7 @@ class AddedTrackerStatusTest {
 
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
-        assertEquals(expectedException, testSubject.getError());
+        assertThat(testSubject.getError()).isEqualTo(expectedException);
     }
 
     @Test
@@ -121,8 +121,8 @@ class AddedTrackerStatusTest {
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
         OptionalLong result = testSubject.getCurrentPosition();
-        assertTrue(result.isPresent());
-        assertEquals(expectedCurrentPosition, result.getAsLong());
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result).hasValue(expectedCurrentPosition);
     }
 
     @Test
@@ -134,8 +134,8 @@ class AddedTrackerStatusTest {
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
         OptionalLong result = testSubject.getResetPosition();
-        assertTrue(result.isPresent());
-        assertEquals(expectedResetPosition, result.getAsLong());
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result).hasValue(expectedResetPosition);
     }
 
     @Test
@@ -147,21 +147,21 @@ class AddedTrackerStatusTest {
         AddedTrackerStatus testSubject = new AddedTrackerStatus(delegate);
 
         OptionalLong result = testSubject.mergeCompletedPosition();
-        assertTrue(result.isPresent());
-        assertEquals(expectedMergeCompletedPosition, result.getAsLong());
+        assertThat(result.isPresent()).isTrue();
+        assertThat(result).hasValue(expectedMergeCompletedPosition);
     }
 
     @Test
     void trackerAdded() {
         AddedTrackerStatus testSubject = new AddedTrackerStatus(mock(EventTrackerStatus.class));
 
-        assertTrue(testSubject.trackerAdded());
+        assertThat(testSubject.trackerAdded()).isTrue();
     }
 
     @Test
     void trackerRemoved() {
         AddedTrackerStatus testSubject = new AddedTrackerStatus(mock(EventTrackerStatus.class));
 
-        assertFalse(testSubject.trackerRemoved());
+        assertThat(testSubject.trackerRemoved()).isFalse();
     }
 }

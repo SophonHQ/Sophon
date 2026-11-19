@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -65,11 +65,11 @@ class GenericMessageTest {
 
     @Test
     void correlationDataAddedToNewMessage() {
-        assertEquals(correlationData, new HashMap<>(new GenericMessage<>(new Object()).getMetaData()));
+        assertThat(new HashMap<>(new GenericMessage<>(new Object()).getMetaData())).isEqualTo(correlationData);
 
         MetaData newMetaData = MetaData.from(Collections.singletonMap("whatever", new Object()));
-        assertEquals(newMetaData.mergedWith(correlationData),
-                     new GenericMessage<>(new Object(), newMetaData).getMetaData());
+        assertThat(new GenericMessage<>(new Object(), newMetaData).getMetaData())
+                .isEqualTo(newMetaData.mergedWith(correlationData));
     }
 
     @Test
@@ -84,13 +84,13 @@ class GenericMessageTest {
         SerializedObject<String> serializedPayload = message.serializePayload(jacksonSerializer, String.class);
         SerializedObject<String> serializedMetaData = message.serializeMetaData(jacksonSerializer, String.class);
 
-        assertEquals("\"payload\"", serializedPayload.getData());
+        assertThat(serializedPayload.getData()).isEqualTo("\"payload\"");
 
 
         ObjectMapper objectMapper = jacksonSerializer.getObjectMapper();
         Map<String, String> actualMetaData = objectMapper.readValue(serializedMetaData.getData(), Map.class);
 
-        assertTrue(actualMetaData.entrySet().containsAll(metaDataMap.entrySet()));
+        assertThat(actualMetaData.entrySet()).containsAll(metaDataMap.entrySet());
     }
 
     @Test
@@ -99,7 +99,7 @@ class GenericMessageTest {
 
         Message<?> result = GenericMessage.asMessage(testMessage);
 
-        assertEquals(testMessage, result);
+        assertThat(result).isEqualTo(testMessage);
     }
 
     @Test
@@ -108,8 +108,8 @@ class GenericMessageTest {
 
         Message<?> result = GenericMessage.asMessage(testPayload);
 
-        assertNotEquals(testPayload, result);
-        assertEquals(testPayload, result.getPayload());
+        assertThat(result).isNotEqualTo(testPayload);
+        assertThat(result.getPayload()).isEqualTo(testPayload);
     }
 
     @Test
@@ -121,6 +121,6 @@ class GenericMessageTest {
 
         Message<?> result = GenericMessage.asMessage(exception);
 
-        assertNotNull(result);
+        assertThat(result).isNotNull();
     }
 }

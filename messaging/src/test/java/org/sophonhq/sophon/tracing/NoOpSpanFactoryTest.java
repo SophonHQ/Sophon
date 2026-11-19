@@ -17,10 +17,10 @@
 
 package org.sophonhq.sophon.tracing;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * The {@link NoOpSpanFactory} is not supposed to do anything, but should still provide basic requirements such as
@@ -31,49 +31,49 @@ class NoOpSpanFactoryTest {
     @Test
     void createRootTraceReturnsNoOpSpan() {
         Span trace = NoOpSpanFactory.INSTANCE.createRootTrace(() -> "Trace");
-        assertTrue(trace instanceof NoOpSpanFactory.NoOpSpan);
+        assertThat(trace).isInstanceOf(NoOpSpanFactory.NoOpSpan.class);
     }
 
     @Test
     void createHandlerSpanReturnsNoOpSpan() {
         Span trace = NoOpSpanFactory.INSTANCE.createHandlerSpan(() -> "Trace", new GenericEventMessage<>("payload"), true);
-        assertTrue(trace instanceof NoOpSpanFactory.NoOpSpan);
+        assertThat(trace).isInstanceOf(NoOpSpanFactory.NoOpSpan.class);
     }
 
     @Test
     void createDispatchSpanReturnsNoOpSpan() {
         Span trace = NoOpSpanFactory.INSTANCE.createDispatchSpan(() -> "Trace", new GenericEventMessage<>("payload"));
-        assertTrue(trace instanceof NoOpSpanFactory.NoOpSpan);
+        assertThat(trace).isInstanceOf(NoOpSpanFactory.NoOpSpan.class);
     }
 
     @Test
     void createInternalSpanWithMessageReturnsNoOpSpan() {
         Span trace = NoOpSpanFactory.INSTANCE.createInternalSpan(() -> "Trace", new GenericEventMessage<>("payload"));
-        assertTrue(trace instanceof NoOpSpanFactory.NoOpSpan);
+        assertThat(trace).isInstanceOf(NoOpSpanFactory.NoOpSpan.class);
     }
 
     @Test
     void createInternalSpanWithoutMessageReturnsNoOpSpan() {
         Span trace = NoOpSpanFactory.INSTANCE.createInternalSpan(() -> "Trace");
-        assertTrue(trace instanceof NoOpSpanFactory.NoOpSpan);
+        assertThat(trace).isInstanceOf(NoOpSpanFactory.NoOpSpan.class);
     }
 
     @Test
     void propagateContextReturnsOriginal() {
         GenericEventMessage<String> message = new GenericEventMessage<>("payload");
         GenericEventMessage<String> result = NoOpSpanFactory.INSTANCE.propagateContext(message);
-        assertSame(message, result);
+        assertThat(result).isSameAs(message);
     }
 
     @Test
     void noOpSpanReturnsSelfOnStart() {
         NoOpSpanFactory.NoOpSpan noOpSpan = new NoOpSpanFactory.NoOpSpan();
-        assertSame(noOpSpan, noOpSpan.start());
+        assertThat(noOpSpan.start()).isSameAs(noOpSpan);
     }
 
     @Test
     void noOpSpanReturnsSelfOnRecordException() {
         NoOpSpanFactory.NoOpSpan noOpSpan = new NoOpSpanFactory.NoOpSpan();
-        assertSame(noOpSpan, noOpSpan.recordException(new RuntimeException("")));
+        assertThat(noOpSpan.recordException(new RuntimeException(""))).isSameAs(noOpSpan);
     }
 }

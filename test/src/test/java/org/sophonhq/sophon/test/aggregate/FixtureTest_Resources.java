@@ -26,8 +26,8 @@ import org.sophonhq.sophon.eventsourcing.EventSourcingHandler;
 
 import java.util.concurrent.Executor;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
@@ -97,7 +97,7 @@ class FixtureTest_Resources {
 
         @EventSourcingHandler
         void handle(MyEvent event, Executor resource) {
-            assertNotNull(resource);
+            assertThat(resource).isNotNull();
             this.id = event.getAggregateIdentifier().toString();
         }
 

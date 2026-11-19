@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventsourcing.snapshotting;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventData;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -27,7 +27,7 @@ import org.sophonhq.sophon.serialization.Revision;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.json.JacksonSerializer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating that {@link RevisionSnapshotFilter} behaves identically regardless of the {@link Serializer}
@@ -74,9 +74,10 @@ class RevisionSnapshotFilterSerializerTest {
 
         DomainEventData<?> snapshot = snapshotUsing(serializer);
 
-        assertEquals(STORED_REVISION, snapshot.getPayload().getType().getRevision(),
-                     "Revision must be available as metadata regardless of the serializer");
-        assertFalse(testSubject.allow(snapshot));
+        assertThat(snapshot.getPayload().getType().getRevision())
+                .as("Revision must be available as metadata regardless of the serializer")
+                .isEqualTo(STORED_REVISION);
+        assertThat(testSubject.allow(snapshot)).isFalse();
     }
 
     private void assertMatchingSnapshotAllowed(Serializer serializer) {
@@ -86,7 +87,7 @@ class RevisionSnapshotFilterSerializerTest {
                                       .revision(STORED_REVISION)
                                       .build();
 
-        assertTrue(testSubject.allow(snapshotUsing(serializer)));
+        assertThat(testSubject.allow(snapshotUsing(serializer))).isTrue();
     }
 
     private DomainEventData<byte[]> snapshotUsing(Serializer serializer) {

@@ -20,7 +20,7 @@ package org.sophonhq.sophon.common.property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.fail;
 
 public class BeanPropertyAccessStrategyTest extends
         AbstractPropertyAccessStrategyTest<BeanPropertyAccessStrategyTest.TestMessage> {

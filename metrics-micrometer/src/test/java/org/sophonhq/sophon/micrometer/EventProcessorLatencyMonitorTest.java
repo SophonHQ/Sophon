@@ -21,7 +21,8 @@ import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
@@ -31,7 +32,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -73,7 +75,7 @@ class EventProcessorLatencyMonitorTest {
         callbacks.get(firstEventMessage).reportSuccess();
 
         Gauge latencyGauge = Objects.requireNonNull(meterRegistry.find(METER_NAME_PREFIX + ".latency").gauge());
-        assertTrue(latencyGauge.value() >= 1000);
+        assertThat(latencyGauge.value()).isGreaterThanOrEqualTo(1000);
     }
 
     @Test
@@ -96,12 +98,12 @@ class EventProcessorLatencyMonitorTest {
                 .onMessagesIngested(Arrays.asList(firstEventMessage, secondEventMessage));
         callbacks.get(firstEventMessage).reportSuccess();
 
-        assertEquals(2, meterRegistry.find(METER_NAME_PREFIX + ".latency").gauges().size());
+        assertThat(meterRegistry.find(METER_NAME_PREFIX + ".latency").gauges()).hasSize(2);
 
         Gauge latencyGauge = Objects.requireNonNull(meterRegistry.find(METER_NAME_PREFIX + ".latency")
                                                                  .tags("payloadType", Integer.class.getSimpleName())
                                                                  .gauge());
-        assertTrue(latencyGauge.value() >= 1000);
+        assertThat(latencyGauge.value()).isGreaterThanOrEqualTo(1000);
     }
 
     @Test
@@ -125,50 +127,51 @@ class EventProcessorLatencyMonitorTest {
         callbacks.get(firstEventMessage).reportFailure(null);
 
         Gauge latencyGauge = Objects.requireNonNull(meterRegistry.find(METER_NAME_PREFIX + ".latency").gauge());
-        assertTrue(latencyGauge.value() >= 1000);
+        assertThat(latencyGauge.value()).isGreaterThanOrEqualTo(1000);
     }
 
     @Test
     void buildWithNullMeterNamePrefixThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.meterNamePrefix(null));
+        assertThatThrownBy(() -> testSubject.meterNamePrefix(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyMeterNamePrefixThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.meterNamePrefix(""));
+        assertThatThrownBy(() -> testSubject.meterNamePrefix("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithoutMeterNamePrefixThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject =
                 EventProcessorLatencyMonitor.builder().meterRegistry(meterRegistry);
-        assertThrows(SophonConfigurationException.class, testSubject::build);
+        assertThatThrownBy(testSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullMeterRegistryThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.meterRegistry(null));
+        assertThatThrownBy(() -> testSubject.meterRegistry(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithoutMeterRegistryThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject =
                 EventProcessorLatencyMonitor.builder().meterNamePrefix(METER_NAME_PREFIX);
-        assertThrows(SophonConfigurationException.class, testSubject::build);
+        assertThatThrownBy(testSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullClockThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.clock(null));
+        assertThatThrownBy(() -> testSubject.clock(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullTagsBuilderThrowsSophonConfigurationException() {
         EventProcessorLatencyMonitor.Builder testSubject = EventProcessorLatencyMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.tagsBuilder(null));
+        assertThatThrownBy(() -> testSubject.tagsBuilder(null)).isInstanceOf(SophonConfigurationException.class);
     }
 }

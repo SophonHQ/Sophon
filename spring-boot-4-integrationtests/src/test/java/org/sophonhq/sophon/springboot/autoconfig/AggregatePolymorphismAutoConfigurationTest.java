@@ -51,7 +51,7 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.sophonhq.sophon.common.StringUtils.lowerCaseFirstCharacterOf;
 
 /**
@@ -167,10 +167,10 @@ class AggregatePolymorphismAutoConfigurationTest {
                                   assertThat(firstDogEvent.getPayloadType()).isEqualTo(DogCreatedEvent.class);
                                   assertThat(firstDogEvent.getType()).isEqualTo(Dog.class.getSimpleName());
 
-                                  assertDoesNotThrow(
+                                  assertThatNoException().isThrownBy(
                                           () -> commandGateway.sendAndWait(new RenameAnimalCommand(catId, "Wokkel"))
                                   );
-                                  assertDoesNotThrow(
+                                  assertThatNoException().isThrownBy(
                                           () -> commandGateway.sendAndWait(new RenameAnimalCommand(dogId, "Medor"))
                                   );
                               });
@@ -213,10 +213,10 @@ class AggregatePolymorphismAutoConfigurationTest {
                                   assertThat(firstDogEvent.getPayloadType()).isEqualTo(Dog.class);
                                   assertThat(firstDogEvent.getType()).isEqualTo(expectedAggregateType);
 
-                                  assertDoesNotThrow(
+                                  assertThatNoException().isThrownBy(
                                           () -> commandGateway.sendAndWait(new RenameAnimalCommand(catId, "Wokkel"))
                                   );
-                                  assertDoesNotThrow(
+                                  assertThatNoException().isThrownBy(
                                           () -> commandGateway.sendAndWait(new RenameAnimalCommand(dogId, "Medor"))
                                   );
                               });

@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.springboot;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.config.ConfigurerModule;
 import org.sophonhq.sophon.config.EventProcessingConfiguration;
 import org.sophonhq.sophon.config.ProcessingGroup;
@@ -57,8 +58,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Integration test for the {@link PooledStreamingEventProcessor}. Tests, for example, that all events from an
@@ -83,7 +84,7 @@ class PooledStreamingEventProcessorIntegrationTest {
             Optional<PooledStreamingEventProcessor> optionalProcessor =
                     processingConfig.eventProcessor("upcaster-test", PooledStreamingEventProcessor.class);
 
-            assertTrue(optionalProcessor.isPresent());
+            assertThat(optionalProcessor).isPresent();
             PooledStreamingEventProcessor processor = optionalProcessor.get();
             processor.shutDown();
 
@@ -96,7 +97,7 @@ class PooledStreamingEventProcessorIntegrationTest {
             UpcasterTestEventHandlingComponent eventHandlingComponent =
                     context.getBean(UpcasterTestEventHandlingComponent.class);
 
-            assertNotNull(eventHandlingComponent);
+            assertThat(eventHandlingComponent).isNotNull();
             await().atMost(Duration.ofMillis(500))
                    .until(() -> eventHandlingComponent.getOriginalEventCounter().get() == 0);
             await().atMost(Duration.ofMillis(500))
@@ -113,7 +114,7 @@ class PooledStreamingEventProcessorIntegrationTest {
             Optional<PooledStreamingEventProcessor> optionalProcessor =
                     processingConfig.eventProcessor("once-test", PooledStreamingEventProcessor.class);
 
-            assertTrue(optionalProcessor.isPresent());
+            assertThat(optionalProcessor).isPresent();
             PooledStreamingEventProcessor processor = optionalProcessor.get();
             processor.shutDown();
 
@@ -141,15 +142,15 @@ class PooledStreamingEventProcessorIntegrationTest {
 
             HandlingOnceEventHandlingComponent eventHandlingComponent =
                     context.getBean(HandlingOnceEventHandlingComponent.class);
-            assertNotNull(eventHandlingComponent);
+            assertThat(eventHandlingComponent).isNotNull();
 
             CountDownLatch errorLatch = context.getBean(CountDownLatch.class);
-            assertNotNull(errorLatch);
+            assertThat(errorLatch).isNotNull();
 
-            assertTrue(errorLatch.await(10, TimeUnit.SECONDS));
+            assertThat(errorLatch.await(10, TimeUnit.SECONDS)).isTrue();
             processor.shutDown();
 
-            assertFalse(eventHandlingComponent.hasHandledEventsMoreThanOnce());
+            assertThat(eventHandlingComponent.hasHandledEventsMoreThanOnce()).isFalse();
         });
     }
 

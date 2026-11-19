@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.spring.saga;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.SimpleCommandBus;
 import org.sophonhq.sophon.eventhandling.EventBus;
@@ -29,7 +30,8 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Allard Buijze
@@ -48,15 +50,16 @@ public class SpringResourceInjectorTest {
     void injectSaga() {
         InjectableSaga injectableSaga = new InjectableSaga();
         testSubject.injectResources(injectableSaga);
-        assertNotNull(injectableSaga.getCommandBus());
-        assertNull(injectableSaga.getNonAnnotatedCommandBus());
-        assertNull(injectableSaga.getEventBus());
+        assertThat(injectableSaga.getCommandBus()).isNotNull();
+        assertThat(injectableSaga.getNonAnnotatedCommandBus()).isNull();
+        assertThat(injectableSaga.getEventBus()).isNull();
     }
 
     @Test
     void resourcesNotAvailable() {
         ProblematicInjectableSaga injectableSaga = new ProblematicInjectableSaga();
-        assertThrows(BeanCreationException.class, () -> testSubject.injectResources(injectableSaga));
+        assertThatThrownBy(() -> testSubject.injectResources(injectableSaga))
+                .isInstanceOf(BeanCreationException.class);
     }
 
     public static class InjectableSaga {

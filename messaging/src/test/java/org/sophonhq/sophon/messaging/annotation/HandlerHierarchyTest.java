@@ -17,14 +17,14 @@
 
 package org.sophonhq.sophon.messaging.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventHandler;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests sorting of handlers using {@link HandlerComparator}. Event types have complex hierarchical inheritance.
@@ -90,6 +90,6 @@ class HandlerHierarchyTest {
                                                                 eHandler);
 
         handlers.sort(HandlerComparator.instance());
-        assertTrue(handlers.indexOf(gHandler) < handlers.indexOf(eHandler));
+        assertThat(handlers.indexOf(gHandler)).isLessThan(handlers.indexOf(eHandler));
     }
 }

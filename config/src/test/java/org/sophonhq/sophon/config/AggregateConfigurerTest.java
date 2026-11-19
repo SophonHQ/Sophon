@@ -20,7 +20,8 @@ package org.sophonhq.sophon.config;
 import com.thoughtworks.xstream.XStream;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.LockModeType;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.distributed.DistributedCommandBus;
@@ -65,7 +66,8 @@ import org.sophonhq.sophon.tracing.TestSpanFactory;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.config.utils.TestSerializer.xStreamSerializer;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
@@ -123,7 +125,7 @@ public class AggregateConfigurerTest {
 
         Repository<TestAggregate> resultRepository = testSubject.repository();
 
-        assertEquals(expectedRepository, resultRepository);
+        assertThat(resultRepository).isEqualTo(expectedRepository);
         //noinspection unchecked
         verify(disruptorCommandBus).createRepository(
                 eq(testEventStore), isA(GenericAggregateFactory.class), eq(NoSnapshotTriggerDefinition.INSTANCE),
@@ -147,7 +149,7 @@ public class AggregateConfigurerTest {
 
         Repository<TestAggregate> resultRepository = testSubject.repository();
 
-        assertEquals(expectedRepository, resultRepository);
+        assertThat(resultRepository).isEqualTo(expectedRepository);
         //noinspection unchecked
         verify(disruptorCommandBus).createRepository(
                 eq(testEventStore), isA(GenericAggregateFactory.class), eq(NoSnapshotTriggerDefinition.INSTANCE),
@@ -172,9 +174,9 @@ public class AggregateConfigurerTest {
         String result1 = commandGateway.sendAndWait(new DoSomethingCommand(aggregateAId));
         String result2 = commandGateway.sendAndWait(new DoSomethingCommand(aggregateBId));
         String result3 = commandGateway.sendAndWait(new BSpecificCommand(aggregateBId));
-        assertEquals("A123", result1);
-        assertEquals("B456", result2);
-        assertEquals("bSpecific456", result3);
+        assertThat(result1).isEqualTo("A123");
+        assertThat(result2).isEqualTo("B456");
+        assertThat(result3).isEqualTo("bSpecific456");
 
         configuration.shutdown();
     }
@@ -185,7 +187,7 @@ public class AggregateConfigurerTest {
 
         testSubject.configureAggregateFactory(configuration -> expectedAggregateFactory);
 
-        assertEquals(expectedAggregateFactory, testSubject.aggregateFactory());
+        assertThat(testSubject.aggregateFactory()).isEqualTo(expectedAggregateFactory);
     }
 
     @Test
@@ -194,7 +196,7 @@ public class AggregateConfigurerTest {
 
         testSubject.configureSnapshotFilter(configuration -> testFilter);
 
-        assertEquals(testFilter, testSubject.snapshotFilter());
+        assertThat(testSubject.snapshotFilter()).isEqualTo(testFilter);
     }
 
     @Test
@@ -211,8 +213,8 @@ public class AggregateConfigurerTest {
 
         SnapshotFilter result = revisionAggregateConfigurerTestSubject.snapshotFilter();
 
-        assertTrue(result instanceof RevisionSnapshotFilter);
-        assertTrue(result.allow(testDomainEventData));
+        assertThat(result).isInstanceOf(RevisionSnapshotFilter.class);
+        assertThat(result.allow(testDomainEventData)).isTrue();
     }
 
     @Test
@@ -229,7 +231,8 @@ public class AggregateConfigurerTest {
 
         undefinedDeclaredAggregateTypeTestSubject.initialize(mockConfiguration);
 
-        assertThrows(SophonConfigurationException.class, undefinedDeclaredAggregateTypeTestSubject::snapshotFilter);
+        assertThatThrownBy(undefinedDeclaredAggregateTypeTestSubject::snapshotFilter)
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -390,7 +393,7 @@ public class AggregateConfigurerTest {
 
         Long result = config.commandGateway().sendAndWait(new LoadLongIdentifiedAggregateCommand(42L));
 
-        assertEquals(42L, result);
+        assertThat(result).isEqualTo(42L);
         verify(entityManager).find(LongIdentifiedAggregate.class, 42L, LockModeType.PESSIMISTIC_WRITE);
 
         config.shutdown();
@@ -414,7 +417,7 @@ public class AggregateConfigurerTest {
 
         Long result = config.commandGateway().sendAndWait(new LoadLongIdentifiedAggregateCommand(42L));
 
-        assertEquals(42L, result);
+        assertThat(result).isEqualTo(42L);
         verify(entityManager).find(LongIdentifiedAggregate.class, 42L, LockModeType.PESSIMISTIC_WRITE);
 
         config.shutdown();
@@ -436,7 +439,7 @@ public class AggregateConfigurerTest {
 
         Long result = config.commandGateway().sendAndWait(new LoadLongIdentifiedAggregateCommand(42L));
 
-        assertEquals(42L, result);
+        assertThat(result).isEqualTo(42L);
         verify(entityManager).find(LongIdentifiedAggregate.class, "42", LockModeType.PESSIMISTIC_WRITE);
 
         config.shutdown();
@@ -456,8 +459,8 @@ public class AggregateConfigurerTest {
 
         SnapshotFilter result = revisionAggregateConfigurerTestSubject.snapshotFilter();
 
-        assertTrue(result instanceof RevisionSnapshotFilter);
-        assertTrue(result.allow(testDomainEventData));
+        assertThat(result).isInstanceOf(RevisionSnapshotFilter.class);
+        assertThat(result.allow(testDomainEventData)).isTrue();
     }
 
     @Test
@@ -479,8 +482,8 @@ public class AggregateConfigurerTest {
 
         SnapshotFilter result = revisionAggregateConfigurerTestSubject.snapshotFilter();
 
-        assertTrue(result instanceof RevisionSnapshotFilter);
-        assertFalse(result.allow(testDomainEventData));
+        assertThat(result).isInstanceOf(RevisionSnapshotFilter.class);
+        assertThat(result.allow(testDomainEventData)).isFalse();
     }
 
     @Test
@@ -502,11 +505,11 @@ public class AggregateConfigurerTest {
                                                     .start();
 
         CreationPolicyAggregateFactory<A> resultFactory = testAggregateConfigurer.creationPolicyAggregateFactory();
-        assertEquals(testFactory, resultFactory);
+        assertThat(resultFactory).isEqualTo(testFactory);
 
         testConfig.commandGateway()
                   .sendAndWait(new AlwaysCreationPolicyCommand("some-id"));
-        assertTrue(counter.get());
+        assertThat(counter.get()).isTrue();
     }
 
     private static class TestAggregate {

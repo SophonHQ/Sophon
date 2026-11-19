@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.serialization;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.MetaData;
 
@@ -25,7 +26,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 
 /**
@@ -57,13 +59,13 @@ class SerializedMessageTest {
         SerializedMessage<Object> testSubject =
                 new SerializedMessage<>(eventId, serializedPayload, serializedMetaData, serializer);
 
-        assertEquals(Object.class, testSubject.getPayloadType());
-        assertFalse(testSubject.isPayloadDeserialized());
-        assertEquals(Object.class, testSubject.getPayload().getClass());
-        assertTrue(testSubject.isPayloadDeserialized());
-        assertFalse(testSubject.isMetaDataDeserialized());
-        assertSame(MetaData.emptyInstance(), testSubject.getMetaData());
-        assertTrue(testSubject.isMetaDataDeserialized());
+        assertThat(testSubject.getPayloadType()).isEqualTo(Object.class);
+        assertThat(testSubject.isPayloadDeserialized()).isFalse();
+        assertThat(testSubject.getPayload().getClass()).isEqualTo(Object.class);
+        assertThat(testSubject.isPayloadDeserialized()).isTrue();
+        assertThat(testSubject.isMetaDataDeserialized()).isFalse();
+        assertThat(testSubject.getMetaData()).isSameAs(MetaData.emptyInstance());
+        assertThat(testSubject.isMetaDataDeserialized()).isTrue();
     }
 
     @Test
@@ -79,8 +81,8 @@ class SerializedMessageTest {
         Message<Object> resultTwo =
                 testSubject.withMetaData(MetaData.from(Collections.singletonMap("key", (Object) "otherValue")));
 
-        assertEquals(0, resultOne.getMetaData().size());
-        assertEquals(1, resultTwo.getMetaData().size());
+        assertThat(resultOne.getMetaData().size()).isZero();
+        assertThat(resultTwo.getMetaData().size()).isOne();
     }
 
     @Test
@@ -93,13 +95,13 @@ class SerializedMessageTest {
                 new SerializedMessage<>(eventId, serializedPayload, serializedMetaData, serializer);
 
         Message<Object> resultOne = testSubject.andMetaData(MetaData.emptyInstance());
-        assertEquals(1, resultOne.getMetaData().size());
-        assertEquals("value", resultOne.getMetaData().get("key"));
+        assertThat(resultOne.getMetaData().size()).isOne();
+        assertThat(resultOne.getMetaData()).containsEntry("key", "value");
 
         Message<Object> resultTwo =
                 testSubject.andMetaData(MetaData.from(Collections.singletonMap("key", (Object) "otherValue")));
-        assertEquals(1, resultTwo.getMetaData().size());
-        assertEquals("otherValue", resultTwo.getMetaData().get("key"));
+        assertThat(resultTwo.getMetaData().size()).isOne();
+        assertThat(resultTwo.getMetaData()).containsEntry("key", "otherValue");
     }
 
     @Test
@@ -108,7 +110,7 @@ class SerializedMessageTest {
                 new SerializedMessage<>(eventId, serializedPayload, serializedMetaData, serializer);
 
         SerializedObject<byte[]> result = testSubject.serializePayload(serializer, byte[].class);
-        assertArrayEquals("serializedPayload".getBytes(StandardCharsets.UTF_8), result.getData());
+        assertThat(result.getData()).containsExactly("serializedPayload".getBytes(StandardCharsets.UTF_8));
         // this call is allowed
         verify(serializer, atLeast(0)).classForType(isA(SerializedType.class));
         verify(serializer, atLeast(0)).getConverter();
@@ -121,7 +123,7 @@ class SerializedMessageTest {
                 new SerializedMessage<>(eventId, serializedPayload, serializedMetaData, serializer);
 
         SerializedObject<byte[]> result = testSubject.serializeMetaData(serializer, byte[].class);
-        assertArrayEquals("serializedMetaData".getBytes(StandardCharsets.UTF_8), result.getData());
+        assertThat(result.getData()).containsExactly("serializedMetaData".getBytes(StandardCharsets.UTF_8));
         // this call is allowed
         verify(serializer, atLeast(0)).classForType(isA(SerializedType.class));
         verify(serializer, atLeast(0)).getConverter();
@@ -137,9 +139,11 @@ class SerializedMessageTest {
         SerializedMessage<Object> testSubject =
                 new SerializedMessage<>(eventId, serializedPayload, serializedMetaData, serializer);
 
-        SerializationException result = assertThrows(SerializationException.class, testSubject::getPayload);
-        assertEquals("Error while deserializing payload of message " + eventId, result.getMessage());
-        assertSame(serializationException, result.getCause());
+        SerializationException result = assertThatExceptionOfType(SerializationException.class)
+                .isThrownBy(testSubject::getPayload)
+                .actual();
+        assertThat(result.getMessage()).isEqualTo("Error while deserializing payload of message " + eventId);
+        assertThat(result.getCause()).isSameAs(serializationException);
     }
 
     @Test
@@ -151,8 +155,10 @@ class SerializedMessageTest {
         SerializedMessage<Object> testSubject =
                 new SerializedMessage<>(eventId, serializedPayload, serializedMetaData, serializer);
 
-        SerializationException result = assertThrows(SerializationException.class, testSubject::getMetaData);
-        assertEquals("Error while deserializing meta data of message " + eventId, result.getMessage());
-        assertSame(serializationException, result.getCause());
+        SerializationException result = assertThatExceptionOfType(SerializationException.class)
+                .isThrownBy(testSubject::getMetaData)
+                .actual();
+        assertThat(result.getMessage()).isEqualTo("Error while deserializing meta data of message " + eventId);
+        assertThat(result.getCause()).isSameAs(serializationException);
     }
 }

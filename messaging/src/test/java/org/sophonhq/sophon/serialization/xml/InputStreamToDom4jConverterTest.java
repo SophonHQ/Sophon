@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -44,6 +44,6 @@ class InputStreamToDom4jConverterTest {
         InputStream inputStream = new ByteArrayInputStream(bytes);
         Document actual = testSubject.convert(inputStream);
 
-        assertEquals("parent", actual.getRootElement().getName());
+        assertThat(actual.getRootElement().getName()).isEqualTo("parent");
     }
 }

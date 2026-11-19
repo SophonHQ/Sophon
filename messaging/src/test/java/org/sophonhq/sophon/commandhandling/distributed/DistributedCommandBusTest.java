@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.commandhandling.distributed;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.junit.jupiter.*;
@@ -44,8 +45,9 @@ import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
 import static org.sophonhq.sophon.commandhandling.distributed.DistributedCommandBus.INITIAL_LOAD_FACTOR;
@@ -188,9 +190,9 @@ class DistributedCommandBusTest {
         ArgumentCaptor<CommandResultMessage<Object>> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(callback).onResult(any(), commandResultMessageCaptor.capture());
-        assertTrue(commandResultMessageCaptor.getValue().isExceptional());
-        assertEquals(NoHandlerForCommandException.class,
-                     commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isTrue();
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass())
+                .isEqualTo(NoHandlerForCommandException.class);
         spanFactory.verifySpanHasException("CommandBus.dispatchDistributedCommand", NoHandlerForCommandException.class);
     }
 
@@ -210,8 +212,8 @@ class DistributedCommandBusTest {
         ArgumentCaptor<CommandResultMessage<Object>> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(mockCallback).onResult(eq(testCommandMessage), commandResultMessageCaptor.capture());
-        assertFalse(commandResultMessageCaptor.getValue().isExceptional());
-        assertNull(commandResultMessageCaptor.getValue().getPayload());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isFalse();
+        assertThat(commandResultMessageCaptor.getValue().getPayload()).isNull();
     }
 
     @Test
@@ -231,9 +233,9 @@ class DistributedCommandBusTest {
         ArgumentCaptor<CommandResultMessage<Object>> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(mockCallback).onResult(eq(testCommandMessage), commandResultMessageCaptor.capture());
-        assertTrue(commandResultMessageCaptor.getValue().isExceptional());
-        assertEquals(NoHandlerForCommandException.class,
-                     commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isTrue();
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass())
+                .isEqualTo(NoHandlerForCommandException.class);
         spanFactory.verifySpanHasException("CommandBus.dispatchDistributedCommand", RuntimeException.class);
     }
 
@@ -253,7 +255,7 @@ class DistributedCommandBusTest {
         ArgumentCaptor<CommandResultMessage<Object>> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(mockCallback).onResult(eq(testCommandMessage), commandResultMessageCaptor.capture());
-        assertEquals(Exception.class, commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass()).isEqualTo(Exception.class);
     }
 
     @Test
@@ -263,7 +265,7 @@ class DistributedCommandBusTest {
 
         CommandBus resultLocalSegment = testSubject.localSegment();
 
-        assertEquals(expectedLocalSegment, resultLocalSegment);
+        assertThat(resultLocalSegment).isEqualTo(expectedLocalSegment);
     }
 
     @Test
@@ -280,7 +282,7 @@ class DistributedCommandBusTest {
 
     @Test
     void loadFactorDefault() {
-        assertEquals(INITIAL_LOAD_FACTOR, testSubject.getLoadFactor());
+        assertThat(testSubject.getLoadFactor()).isEqualTo(INITIAL_LOAD_FACTOR);
     }
 
     @Test
@@ -289,13 +291,14 @@ class DistributedCommandBusTest {
 
         testSubject.updateLoadFactor(expectedLoadFactor);
 
-        assertEquals(expectedLoadFactor, testSubject.getLoadFactor());
+        assertThat(testSubject.getLoadFactor()).isEqualTo(expectedLoadFactor);
     }
 
     @Test
     void shouldThrowWithNullDefaultCommandCallback() {
         DistributedCommandBus.Builder builder = DistributedCommandBus.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.defaultCommandCallback(null));
+        assertThatThrownBy(() -> builder.defaultCommandCallback(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     private static class StubCommandBusConnector implements CommandBusConnector {

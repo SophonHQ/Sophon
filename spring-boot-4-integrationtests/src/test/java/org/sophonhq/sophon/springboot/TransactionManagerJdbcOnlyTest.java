@@ -16,7 +16,7 @@
 
 package org.sophonhq.sophon.springboot;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
 import org.sophonhq.sophon.spring.messaging.unitofwork.SpringTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = TransactionManagerJdbcOnlyTest.class)
 @EnableAutoConfiguration(
@@ -43,7 +43,7 @@ class TransactionManagerJdbcOnlyTest {
 
     @Test
     void sophonTransactionManagerWrapsSpringsTransactionManager() {
-        assertNotNull(context.getBean(PlatformTransactionManager.class));
-        assertInstanceOf(SpringTransactionManager.class, context.getBean(TransactionManager.class));
+        assertThat(context.getBean(PlatformTransactionManager.class)).isNotNull();
+        assertThat(context.getBean(TransactionManager.class)).isInstanceOf(SpringTransactionManager.class);
     }
 }

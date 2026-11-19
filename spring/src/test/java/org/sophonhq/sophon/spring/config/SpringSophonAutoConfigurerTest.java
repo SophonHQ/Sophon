@@ -117,11 +117,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.test.StepVerifier;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -221,30 +218,32 @@ public class SpringSophonAutoConfigurerTest {
 
     @Test
     void contextWiresMainComponents() {
-        assertNotNull(sophonConfig);
-        assertNotNull(sophonConfig.eventBus());
-        assertNotNull(eventBus);
-        assertNotNull(eventStore);
-        assertNotNull(commandBus);
-        assertNotNull(eventProcessingConfigurer);
-        assertNotNull(eventProcessingConfiguration);
-        assertEquals(eventProcessingConfiguration, sophonConfig.eventProcessingConfiguration());
-        assertTrue(eventBus instanceof EventStore, "Expected Sophon to have configured an EventStore");
-        assertTrue(commandBus instanceof AsynchronousCommandBus, "Expected provided CommandBus implementation");
-        assertNotNull(sophonConfig.repository(Context.MyAggregate.class));
-        assertNotNull(tagsConfiguration);
-        assertEquals(tagsConfiguration, sophonConfig.tags());
-        assertNotNull(sophonConfig.eventScheduler());
-        assertNotNull(quartzEventScheduler);
+        assertThat(sophonConfig).isNotNull();
+        assertThat(sophonConfig.eventBus()).isNotNull();
+        assertThat(eventBus).isNotNull();
+        assertThat(eventStore).isNotNull();
+        assertThat(commandBus).isNotNull();
+        assertThat(eventProcessingConfigurer).isNotNull();
+        assertThat(eventProcessingConfiguration).isNotNull();
+        assertThat(sophonConfig.eventProcessingConfiguration()).isEqualTo(eventProcessingConfiguration);
+        assertThat(eventBus).as("Expected Sophon to have configured an EventStore").isInstanceOf(EventStore.class);
+        assertThat(commandBus)
+                .as("Expected provided CommandBus implementation")
+                .isInstanceOf(AsynchronousCommandBus.class);
+        assertThat(sophonConfig.repository(Context.MyAggregate.class)).isNotNull();
+        assertThat(tagsConfiguration).isNotNull();
+        assertThat(sophonConfig.tags()).isEqualTo(tagsConfiguration);
+        assertThat(sophonConfig.eventScheduler()).isNotNull();
+        assertThat(quartzEventScheduler).isNotNull();
     }
 
     @Test
     void testEventHandlerIsRegistered() {
         eventBus.publish(asEventMessage("Testing 123"));
 
-        assertNotNull(myEventHandler.eventBus, "Expected EventBus to be wired");
-        assertTrue(myEventHandler.received.contains("Testing 123"));
-        assertTrue(myOtherEventHandler.received.contains("Testing 123"));
+        assertThat(myEventHandler.eventBus).as("Expected EventBus to be wired").isNotNull();
+        assertThat(myEventHandler.received).contains("Testing 123");
+        assertThat(myOtherEventHandler.received).contains("Testing 123");
     }
 
     @Test
@@ -256,10 +255,10 @@ public class SpringSophonAutoConfigurerTest {
         });
         eventBus.publish(asEventMessage(new SomeEvent("id")));
 
-        assertTrue(Context.MySaga.events.contains("id"));
-        assertEquals(1, customSagaStore.findSagas(Context.MySaga.class, new AssociationValue("id", "id")).size());
-        assertEquals(0, sagaStore.findSagas(Context.MySaga.class, new AssociationValue("id", "id")).size());
-        assertEquals(1, counter.get());
+        assertThat(Context.MySaga.events).contains("id");
+        assertThat(customSagaStore.findSagas(Context.MySaga.class, new AssociationValue("id", "id"))).hasSize(1);
+        assertThat(sagaStore.findSagas(Context.MySaga.class, new AssociationValue("id", "id"))).isEmpty();
+        assertThat(counter.get()).isOne();
     }
 
     @Test
@@ -274,7 +273,7 @@ public class SpringSophonAutoConfigurerTest {
         callback.getResult(1, TimeUnit.SECONDS);
 
         Context.MyCommandHandler ch = applicationContext.getBean(Context.MyCommandHandler.class);
-        assertTrue(ch.getCommands().contains("test"));
+        assertThat(ch.getCommands()).contains("test");
         verify(primaryCommandTargetResolver, timeout(500)).resolveTarget(any());
     }
 
@@ -297,8 +296,8 @@ public class SpringSophonAutoConfigurerTest {
     void testListenerInvocationErrorHandler() {
         eventBus.publish(asEventMessage("Testing 123"));
 
-        assertNotNull(myEventHandler.eventBus, "Expected EventBus to be wired");
-        assertFalse(myListenerInvocationErrorHandler.received.isEmpty());
+        assertThat(myEventHandler.eventBus).as("Expected EventBus to be wired").isNotNull();
+        assertThat(myListenerInvocationErrorHandler.received).isNotEmpty();
     }
 
     @Test
@@ -306,9 +305,9 @@ public class SpringSophonAutoConfigurerTest {
         eventBus.publish(asEventMessage(new SomeEvent("id")));
         eventBus.publish(asEventMessage(new SomeEventWhichHandlingFails("id")));
 
-        assertTrue(Context.MySaga.events.containsAll(Arrays.asList("id", "id")));
-        assertEquals(1, myListenerInvocationErrorHandler.received.size());
-        assertEquals("Ooops! I failed.", myListenerInvocationErrorHandler.received.get(0).getMessage());
+        assertThat(Context.MySaga.events).containsAll(Arrays.asList("id", "id"));
+        assertThat(myListenerInvocationErrorHandler.received).hasSize(1);
+        assertThat(myListenerInvocationErrorHandler.received.get(0).getMessage()).isEqualTo("Ooops! I failed.");
     }
 
     @Test
@@ -336,37 +335,32 @@ public class SpringSophonAutoConfigurerTest {
         MultiHandlerEnhancerDefinition handlerEnhancerDefinition =
                 (MultiHandlerEnhancerDefinition) handlerDefinition.getHandlerEnhancerDefinition();
 
-        assertEquals(
-                AnnotatedMessageHandlingMemberDefinition.class, handlerDefinition.getDelegates().get(0).getClass()
-        );
-        assertEquals(
-                Context.HandlerDefinitionWithInjectedResource.class, handlerDefinition.getDelegates().get(1).getClass()
-        );
-        assertEquals(MyHandlerDefinition.class, handlerDefinition.getDelegates().get(2).getClass());
-        assertEquals(MyHandlerDefinition.class, handlerDefinition.getDelegates().get(3).getClass());
+        assertThat(handlerDefinition.getDelegates().get(0).getClass())
+                .isEqualTo(AnnotatedMessageHandlingMemberDefinition.class);
+        assertThat(handlerDefinition.getDelegates().get(1).getClass())
+                .isEqualTo(Context.HandlerDefinitionWithInjectedResource.class);
+        assertThat(handlerDefinition.getDelegates().get(2).getClass()).isEqualTo(MyHandlerDefinition.class);
+        assertThat(handlerDefinition.getDelegates().get(3).getClass()).isEqualTo(MyHandlerDefinition.class);
 
         Set<Class<?>> enhancerClasses = handlerEnhancerDefinition.getDelegates()
                                                                  .stream()
                                                                  .map(HandlerEnhancerDefinition::getClass)
                                                                  .collect(Collectors.toSet());
 
-        assertEquals(
-                Sets.newSet(
-                        SagaMethodMessageHandlerDefinition.class,
-                        MethodCommandHandlerInterceptorDefinition.class,
-                        MethodCommandHandlerDefinition.class,
-                        MethodCommandHandlerDefinition.class,
-                        MethodQueryMessageHandlerDefinition.class,
-                        ReplayAwareMessageHandlerWrapper.class,
-                        DeadlineMethodMessageHandlerDefinition.class,
-                        MethodCreationPolicyDefinition.class,
-                        MethodCreationPolicyDefinition.class,
-                        MyHandlerEnhancerDefinition.class,
-                        MessageHandlerInterceptorDefinition.class,
-                        EndSagaMessageHandlerDefinition.class
-                ),
-                enhancerClasses
-        );
+        assertThat(enhancerClasses).isEqualTo(Sets.newSet(
+                SagaMethodMessageHandlerDefinition.class,
+                MethodCommandHandlerInterceptorDefinition.class,
+                MethodCommandHandlerDefinition.class,
+                MethodCommandHandlerDefinition.class,
+                MethodQueryMessageHandlerDefinition.class,
+                ReplayAwareMessageHandlerWrapper.class,
+                DeadlineMethodMessageHandlerDefinition.class,
+                MethodCreationPolicyDefinition.class,
+                MethodCreationPolicyDefinition.class,
+                MyHandlerEnhancerDefinition.class,
+                MessageHandlerInterceptorDefinition.class,
+                EndSagaMessageHandlerDefinition.class
+        ));
     }
 
     @SuppressWarnings("unchecked")
@@ -382,10 +376,9 @@ public class SpringSophonAutoConfigurerTest {
         FutureCallback<Object, Object> callback1 = new FutureCallback<>();
         commandBus.dispatch(asCommandMessage(new Context.CreateMyCachedAggregateCommand("id")), callback1);
         callback1.getResult();
-        assertNotNull(sophonConfig.repository(Context.MyCachedAggregate.class));
-        assertEquals(
-                CachingEventSourcingRepository.class, sophonConfig.repository(Context.MyCachedAggregate.class).getClass()
-        );
+        assertThat(sophonConfig.repository(Context.MyCachedAggregate.class)).isNotNull();
+        assertThat(sophonConfig.repository(Context.MyCachedAggregate.class).getClass())
+                .isEqualTo(CachingEventSourcingRepository.class);
     }
 
     @Test
@@ -518,13 +511,13 @@ public class SpringSophonAutoConfigurerTest {
 
             @CommandHandler
             public void handle(Long command, MyEventHandler beanInjection) {
-                assertNotNull(beanInjection);
+                assertThat(beanInjection).isNotNull();
                 apply(command);
             }
 
             @EventSourcingHandler
             public void on(Long event, MyEventHandler beanInjection) {
-                assertNotNull(beanInjection);
+                assertThat(beanInjection).isNotNull();
                 this.id = Long.toString(event);
             }
 
@@ -651,7 +644,7 @@ public class SpringSophonAutoConfigurerTest {
             @StartSaga
             @SagaEventHandler(associationProperty = "id")
             public void handle(SomeEvent event, MyEventHandler beanInjection) {
-                assertNotNull(beanInjection);
+                assertThat(beanInjection).isNotNull();
                 events.add(event.getId());
             }
 
@@ -676,8 +669,8 @@ public class SpringSophonAutoConfigurerTest {
 
             @EventHandler
             public void handle(String event, MyOtherEventHandler beanInjectionCheck) {
-                assertNotNull(eventBus);
-                assertNotNull(beanInjectionCheck);
+                assertThat(eventBus).isNotNull();
+                assertThat(beanInjectionCheck).isNotNull();
                 received.add(event);
                 queryUpdateEmitter.emit(String.class, "sophonCR"::equals, event);
                 queryUpdateEmitter.complete(String.class, "sophonCR"::equals);
@@ -700,7 +693,7 @@ public class SpringSophonAutoConfigurerTest {
 
             @EventHandler
             public void handle(String event, MyEventHandler beanInjection) {
-                assertNotNull(beanInjection);
+                assertThat(beanInjection).isNotNull();
                 received.add(event);
             }
         }
@@ -754,7 +747,7 @@ public class SpringSophonAutoConfigurerTest {
             public <T> Optional<MessageHandlingMember<T>> createHandler(@NonNull Class<T> declaringType,
                                                                         @NonNull Executable executable,
                                                                         @NonNull ParameterResolverFactory parameterResolverFactory) {
-                assertNotNull(commandBus);
+                assertThat(commandBus).isNotNull();
                 return Optional.empty();
             }
         }

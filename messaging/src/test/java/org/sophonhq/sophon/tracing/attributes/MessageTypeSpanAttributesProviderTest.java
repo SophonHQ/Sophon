@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.tracing.attributes;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.responsetypes.ResponseTypes;
@@ -26,7 +26,7 @@ import org.sophonhq.sophon.tracing.SpanAttributesProvider;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MessageTypeSpanAttributesProviderTest {
 
@@ -38,15 +38,17 @@ class MessageTypeSpanAttributesProviderTest {
                                                                  "myQueryName",
                                                                  ResponseTypes.instanceOf(String.class));
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
-        assertEquals(1, map.size());
-        assertEquals("GenericQueryMessage", map.get("sophon_message_type"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_message_type", "GenericQueryMessage");
     }
 
     @Test
     void correctTypeForCommandMessage() {
         Message<?> genericQueryMessage = new GenericCommandMessage<>("payload");
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
-        assertEquals(1, map.size());
-        assertEquals("GenericCommandMessage", map.get("sophon_message_type"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_message_type", "GenericCommandMessage");
     }
 }

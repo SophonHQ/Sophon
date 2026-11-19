@@ -33,7 +33,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Creates spans that record whether they were started, ended or ended in an exception. Useful for tracing logic
@@ -67,7 +67,7 @@ public class TestSpanFactory implements SpanFactory {
      * @param name Name of the span to verify.
      */
     public void verifyNotStarted(String name) {
-        assertFalse(findSpan(name, span -> span.started).isPresent(), () -> createErrorMessageForSpan(name));
+        assertThat(findSpan(name, span -> span.started)).as(() -> createErrorMessageForSpan(name)).isNotPresent();
     }
 
     /**
@@ -76,8 +76,9 @@ public class TestSpanFactory implements SpanFactory {
      * @param name Name of the span to verify.
      */
     public void verifySpanActive(String name) {
-        assertTrue(findSpan(name, span -> span.started && !span.ended).isPresent(),
-                   () -> createErrorMessageForSpan(name));
+        assertThat(findSpan(name, span -> span.started && !span.ended))
+                .as(() -> createErrorMessageForSpan(name))
+                .isPresent();
     }
 
     /**
@@ -87,8 +88,9 @@ public class TestSpanFactory implements SpanFactory {
      * @param message The exact message the span should have been created for.
      */
     public void verifySpanActive(String name, Message<?> message) {
-        assertTrue(findSpan(name, message, span -> span.started && !span.ended).isPresent(),
-                   () -> createErrorMessageForSpan(name));
+        assertThat(findSpan(name, message, span -> span.started && !span.ended))
+                .as(() -> createErrorMessageForSpan(name))
+                .isPresent();
     }
 
     /**
@@ -97,19 +99,22 @@ public class TestSpanFactory implements SpanFactory {
      * @param name Name of the span to verify.
      */
     public void verifySpanCompleted(String name) {
-        assertTrue(findSpan(name, span -> span.started && span.ended).isPresent(),
-                   () -> createErrorMessageForSpan(name));
+        assertThat(findSpan(name, span -> span.started && span.ended))
+                .as(() -> createErrorMessageForSpan(name))
+                .isPresent();
     }
 
     /**
      * Verifies that a Span has a certain attribute set on it.
-     * @param name Name of the span to verify.
-     * @param key The key of the attribute.
+     *
+     * @param name  Name of the span to verify.
+     * @param key   The key of the attribute.
      * @param value The value of the attribute.
      */
     public void verifySpanHasAttributeValue(String name, String key, String value) {
-        assertTrue(findSpan(name, span -> span.attributes.containsKey(key) && span.attributes.get(key).equals(value)).isPresent(),
-                   () -> createErrorMessageForSpan(name));
+        assertThat(findSpan(name, span -> span.attributes.containsKey(key) && span.attributes.get(key).equals(value)))
+                .as(() -> createErrorMessageForSpan(name))
+                .isPresent();
     }
 
     /**
@@ -119,8 +124,9 @@ public class TestSpanFactory implements SpanFactory {
      * @param message The exact message the span should have been created for.
      */
     public void verifySpanCompleted(String name, Message<?> message) {
-        assertTrue(findSpan(name, message, span -> span.started && span.ended).isPresent(),
-                   () -> createErrorMessageForSpan(name));
+        assertThat(findSpan(name, message, span -> span.started && span.ended))
+                .as(() -> createErrorMessageForSpan(name))
+                .isPresent();
     }
 
 
@@ -131,7 +137,7 @@ public class TestSpanFactory implements SpanFactory {
      * @param exceptionClass The type of exception
      */
     public void verifySpanHasException(String name, Class<?> exceptionClass) {
-        assertInstanceOf(exceptionClass, findSpan(name).map(s -> s.exception).orElse(null));
+        assertThat(findSpan(name).map(s -> s.exception).orElse(null)).isInstanceOf(exceptionClass);
     }
 
     /**
@@ -140,7 +146,7 @@ public class TestSpanFactory implements SpanFactory {
      * @param name Name of the span to verify.
      */
     public void verifyNoSpan(String name) {
-        assertFalse(findSpan(name).isPresent());
+        assertThat(findSpan(name)).isEmpty();
     }
 
     /**
@@ -150,11 +156,12 @@ public class TestSpanFactory implements SpanFactory {
      * @param message The exact message the span should have been propagated to.
      */
     public void verifySpanPropagated(String name, Message<?> message) {
-        assertTrue(createdSpans.stream()
+        assertThat(createdSpans.stream()
                                .anyMatch(s -> s.name.equals(name)
                                        && propagatedContexts.containsKey(message)
-                                       && propagatedContexts.get(message) == s),
-                   createErrorMessageForSpan(name));
+                                       && propagatedContexts.get(message) == s))
+                .as(createErrorMessageForSpan(name))
+                .isTrue();
     }
 
     /**
@@ -164,19 +171,11 @@ public class TestSpanFactory implements SpanFactory {
      * @see TestSpanType
      */
     public void verifySpanHasType(String name, TestSpanType type) {
-        assertEquals(type, findSpan(name).map(s -> s.type).orElse(null));
-    }
-
-    private void verifySpanExists(String name) {
-        assertTrue(findSpan(name).isPresent(), () -> createErrorMessageForSpan(name));
+        assertThat(findSpan(name).map(s -> s.type).orElse(null)).isEqualTo(type);
     }
 
     private Optional<TestSpan> findSpan(String name) {
         return findSpan(name, testSpan -> true);
-    }
-
-    private void verifySpanExists(String name, Predicate<TestSpan> filter) {
-        assertTrue(findSpan(name, filter).isPresent(), () -> createErrorMessageForSpan(name));
     }
 
     private Optional<TestSpan> findSpan(String name, Predicate<TestSpan> filter) {
@@ -287,8 +286,8 @@ public class TestSpanFactory implements SpanFactory {
         private boolean started;
         private boolean ended;
         private Throwable exception;
-        private AtomicInteger scopeCount = new AtomicInteger(-1);
-        private Map<String, String> attributes = new HashMap<>();
+        private final AtomicInteger scopeCount = new AtomicInteger(-1);
+        private final Map<String, String> attributes = new HashMap<>();
 
         public TestSpan(TestSpanType type, String name, Message<?> message) {
             this.type = type;
@@ -329,11 +328,11 @@ public class TestSpanFactory implements SpanFactory {
 
         @Override
         public void end() {
-            if(ended) {
+            if (ended) {
                 throw new IllegalStateException("Span already ended!");
             }
             ended = true;
-            if (scopes.size() > 0) {
+            if (!scopes.isEmpty()) {
                 throw new IllegalStateException("All scopes should be closed! Still have " + scopes.size() + " open!");
             }
             synchronized (activeSpan) {

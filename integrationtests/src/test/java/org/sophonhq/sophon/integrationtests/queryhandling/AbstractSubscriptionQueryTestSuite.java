@@ -58,7 +58,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.integrationtests.utils.AssertUtils.assertWithin;
 
 /**
@@ -68,6 +69,7 @@ import static org.sophonhq.sophon.integrationtests.utils.AssertUtils.assertWithi
  */
 @Timeout(30)
 public abstract class AbstractSubscriptionQueryTestSuite {
+
     private static final Duration TIMEOUT = Duration.ofSeconds(10);
     private static final String FOUND = "found";
     private static final String TEST_PAYLOAD = "sophonFrameworkCR";
@@ -105,11 +107,11 @@ public abstract class AbstractSubscriptionQueryTestSuite {
     public abstract QueryBus queryBus();
 
     /**
-     * Return the {@link QueryUpdateEmitter} used to test the {@link QueryBus#subscriptionQuery(SubscriptionQueryMessage)}
-     * functionality with
+     * Return the {@link QueryUpdateEmitter} used to test the
+     * {@link QueryBus#subscriptionQuery(SubscriptionQueryMessage)} functionality with
      *
-     * @return the {@link QueryUpdateEmitter} used to test the {@link QueryBus#subscriptionQuery(SubscriptionQueryMessage)}
-     * functionality with
+     * @return the {@link QueryUpdateEmitter} used to test the
+     * {@link QueryBus#subscriptionQuery(SubscriptionQueryMessage)} functionality with
      */
     public abstract QueryUpdateEmitter queryUpdateEmitter();
 
@@ -145,7 +147,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
 
 
         StepVerifier.create(result1.initialResult().map(Message::getPayload))
-                    .expectNext(Arrays.asList("Message1", "Message2", "Message3"))
+                    .expectNext(List.of("Message1", "Message2", "Message3"))
                     .expectComplete()
                     .verify(TIMEOUT);
         StepVerifier.create(result1.updates().map(Message::getPayload))
@@ -198,7 +200,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         String testQueryPayload = TEST_PAYLOAD;
         String testQueryName = "chatMessages";
         String testUpdate = "some-update";
-        List<String> expectedUpdates = Collections.singletonList(testUpdate);
+        List<String> expectedUpdates = List.of(testUpdate);
 
         // Sets given UnitOfWork as the current, active, started UnitOfWork
         DefaultUnitOfWork<?> unitOfWork =
@@ -220,12 +222,12 @@ public abstract class AbstractSubscriptionQueryTestSuite {
 
         List<String> updateList = new ArrayList<>();
         emittedUpdates.map(Message::getPayload).subscribe(updateList::add);
-        assertTrue(updateList.isEmpty());
+        assertThat(updateList).isEmpty();
 
         // Move the current UnitOfWork to the AFTER_COMMIT phase, triggering the emitter calls
         unitOfWork.commit();
 
-        assertEquals(expectedUpdates, updateList);
+        assertThat(updateList).containsExactlyElementsOf(expectedUpdates);
     }
 
     @Test
@@ -251,7 +253,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
 
         // then
         StepVerifier.create(result.initialResult().map(Message::getPayload))
-                    .expectNext(Arrays.asList("Message1", "Message2", "Message3"))
+                    .expectNext(List.of("Message1", "Message2", "Message3"))
                     .verifyComplete();
         StepVerifier.create(result.updates().map(Message::getPayload))
                     .expectNext("Update1")
@@ -284,7 +286,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
 
         // then
         StepVerifier.create(result.initialResult().map(Message::getPayload))
-                    .expectNext(Arrays.asList("Message1", "Message2", "Message3"))
+                    .expectNext(List.of("Message1", "Message2", "Message3"))
                     .verifyComplete();
         StepVerifier.create(result.updates().map(Message::getPayload))
                     .expectNext("Update1")
@@ -327,8 +329,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
 
         // then
-        assertEquals(Arrays.asList("Update1", "Error1"), query1Updates);
-        assertEquals(Arrays.asList("Update1", "Error2"), query2Updates);
+        assertThat(query1Updates).containsExactlyElementsOf(List.of("Update1", "Error1"));
+        assertThat(query2Updates).containsExactlyElementsOf(List.of("Update1", "Error2"));
     }
 
     @Test
@@ -336,7 +338,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         String testQueryPayload = TEST_PAYLOAD;
         String testQueryName = "chatMessages";
         String testUpdate = "some-update";
-        List<String> expectedUpdates = Collections.singletonList(testUpdate);
+        List<String> expectedUpdates = List.of(testUpdate);
 
         // Sets given UnitOfWork as the current, active, started UnitOfWork
         DefaultUnitOfWork<?> unitOfWork =
@@ -358,12 +360,12 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         Flux<SubscriptionQueryUpdateMessage<String>> emittedUpdates = result.updates();
         List<String> updateList = new ArrayList<>();
         emittedUpdates.map(Message::getPayload).subscribe(updateList::add);
-        assertTrue(updateList.isEmpty());
+        assertThat(updateList).isEmpty();
 
         // Move the current UnitOfWork to the AFTER_COMMIT phase, triggering the emitter calls
         unitOfWork.commit();
 
-        assertEquals(expectedUpdates, updateList);
+        assertThat(updateList).containsExactlyElementsOf(expectedUpdates);
         StepVerifier.create(emittedUpdates)
                     .expectNextMatches(updateMessage -> updateMessage.getPayload().equals(testUpdate))
                     .verifyError(RuntimeException.class);
@@ -390,7 +392,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
 
         // then
         StepVerifier.create(result.initialResult().map(Message::getPayload))
-                    .expectNext(Arrays.asList("Message1", "Message2", "Message3"))
+                    .expectNext(List.of("Message1", "Message2", "Message3"))
                     .verifyComplete();
         StepVerifier.create(result.updates().map(Message::getPayload))
                     .expectNext("Update1")
@@ -402,7 +404,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         String testQueryPayload = TEST_PAYLOAD;
         String testQueryName = "chatMessages";
         String testUpdate = "some-update";
-        List<String> expectedUpdates = Collections.singletonList(testUpdate);
+        List<String> expectedUpdates = List.of(testUpdate);
 
         // Sets given UnitOfWork as the current, active, started UnitOfWork
         DefaultUnitOfWork<?> unitOfWork =
@@ -424,11 +426,14 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         Flux<SubscriptionQueryUpdateMessage<String>> emittedUpdates = result.updates();
         List<String> updateList = new ArrayList<>();
         emittedUpdates.map(Message::getPayload).subscribe(updateList::add);
-        assertTrue(updateList.isEmpty());
+        assertThat(updateList).isEmpty();
 
         // Move the current UnitOfWork to the AFTER_COMMIT phase, triggering the emitter calls
         unitOfWork.commit();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(expectedUpdates, updateList));
+        assertWithin(
+                500, TimeUnit.MILLISECONDS,
+                () -> assertThat(updateList).containsExactlyElementsOf(expectedUpdates)
+        );
         StepVerifier.create(emittedUpdates)
                     .expectNextMatches(updateMessage -> updateMessage.getPayload().equals(testUpdate))
                     .verifyComplete();
@@ -476,8 +481,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         // then
         StepVerifier.create(result.initialResult())
                     .assertNext(m -> {
-                        Assertions.assertTrue(m.isExceptional());
-                        Assertions.assertEquals(chatQueryHandler.toBeThrown, m.exceptionResult());
+                        assertThat(m.isExceptional()).isTrue();
+                        assertThat(m.exceptionResult()).isEqualTo(chatQueryHandler.toBeThrown);
                     })
                     .expectComplete()
                     .verify(TIMEOUT);
@@ -515,40 +520,40 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update11");
         chatQueryHandler.emitter.complete(String.class, TEST_PAYLOAD::equals);
 
-        assertEquals(Arrays.asList("Message1", "Message2", "Message3"), initial1);
-        assertEquals(Arrays.asList("Message1", "Message2", "Message3"), initial2);
-        assertEquals(Arrays.asList("Update1",
-                                   "Update2",
-                                   "Update3",
-                                   "Update4",
-                                   "Update5",
-                                   "Update6",
-                                   "Update7",
-                                   "Update8",
-                                   "Update9",
-                                   "Update10",
-                                   "Update11"), update1);
-        assertEquals(Arrays.asList("Update1",
-                                   "Update2",
-                                   "Update3",
-                                   "Update4",
-                                   "Update5",
-                                   "Update6",
-                                   "Update7",
-                                   "Update8",
-                                   "Update9",
-                                   "Update10",
-                                   "Update11"), update2);
-        assertEquals(Arrays.asList("Update2",
-                                   "Update3",
-                                   "Update4",
-                                   "Update5",
-                                   "Update6",
-                                   "Update7",
-                                   "Update8",
-                                   "Update9",
-                                   "Update10",
-                                   "Update11"), update3);
+        assertThat(initial1).containsExactly("Message1", "Message2", "Message3");
+        assertThat(initial2).containsExactly("Message1", "Message2", "Message3");
+        assertThat(update1).containsExactly("Update1",
+                                            "Update2",
+                                            "Update3",
+                                            "Update4",
+                                            "Update5",
+                                            "Update6",
+                                            "Update7",
+                                            "Update8",
+                                            "Update9",
+                                            "Update10",
+                                            "Update11");
+        assertThat(update2).containsExactly("Update1",
+                                            "Update2",
+                                            "Update3",
+                                            "Update4",
+                                            "Update5",
+                                            "Update6",
+                                            "Update7",
+                                            "Update8",
+                                            "Update9",
+                                            "Update10",
+                                            "Update11");
+        assertThat(update3).containsExactly("Update2",
+                                            "Update3",
+                                            "Update4",
+                                            "Update5",
+                                            "Update6",
+                                            "Update7",
+                                            "Update8",
+                                            "Update9",
+                                            "Update10",
+                                            "Update11");
     }
 
     @Deprecated
@@ -585,40 +590,40 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update11");
         chatQueryHandler.emitter.complete(String.class, TEST_PAYLOAD::equals);
 
-        assertEquals(Arrays.asList("Message1", "Message2", "Message3"), initial1);
-        assertEquals(Arrays.asList("Message1", "Message2", "Message3"), initial2);
-        assertEquals(Arrays.asList("Update1",
-                                   "Update2",
-                                   "Update3",
-                                   "Update4",
-                                   "Update5",
-                                   "Update6",
-                                   "Update7",
-                                   "Update8",
-                                   "Update9",
-                                   "Update10",
-                                   "Update11"), update1);
-        assertEquals(Arrays.asList("Update1",
-                                   "Update2",
-                                   "Update3",
-                                   "Update4",
-                                   "Update5",
-                                   "Update6",
-                                   "Update7",
-                                   "Update8",
-                                   "Update9",
-                                   "Update10",
-                                   "Update11"), update2);
-        assertEquals(Arrays.asList("Update2",
-                                   "Update3",
-                                   "Update4",
-                                   "Update5",
-                                   "Update6",
-                                   "Update7",
-                                   "Update8",
-                                   "Update9",
-                                   "Update10",
-                                   "Update11"), update3);
+        assertThat(initial1).containsExactly("Message1", "Message2", "Message3");
+        assertThat(initial2).containsExactly("Message1", "Message2", "Message3");
+        assertThat(update1).containsExactly("Update1",
+                                            "Update2",
+                                            "Update3",
+                                            "Update4",
+                                            "Update5",
+                                            "Update6",
+                                            "Update7",
+                                            "Update8",
+                                            "Update9",
+                                            "Update10",
+                                            "Update11");
+        assertThat(update2).containsExactly("Update1",
+                                            "Update2",
+                                            "Update3",
+                                            "Update4",
+                                            "Update5",
+                                            "Update6",
+                                            "Update7",
+                                            "Update8",
+                                            "Update9",
+                                            "Update10",
+                                            "Update11");
+        assertThat(update3).containsExactly("Update2",
+                                            "Update3",
+                                            "Update4",
+                                            "Update5",
+                                            "Update6",
+                                            "Update7",
+                                            "Update8",
+                                            "Update9",
+                                            "Update10",
+                                            "Update11");
     }
 
     @Test
@@ -634,7 +639,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         // when
         queryBus.subscriptionQuery(queryMessage);
 
-        assertThrows(IllegalArgumentException.class, () -> queryBus.subscriptionQuery(queryMessage));
+        assertThatThrownBy(() -> queryBus.subscriptionQuery(queryMessage))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -656,10 +662,10 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.complete(String.class, TEST_PAYLOAD::equals);
 
         StepVerifier.create(result.updates())
-                .recordWith(LinkedList::new)
-                .thenConsumeWhile(x -> true)
-                .expectRecordedMatches(AbstractSubscriptionQueryTestSuite::assertRecorded)
-                .verifyComplete();
+                    .recordWith(LinkedList::new)
+                    .thenConsumeWhile(x -> true)
+                    .expectRecordedMatches(AbstractSubscriptionQueryTestSuite::assertRecorded)
+                    .verifyComplete();
     }
 
     private static boolean assertRecorded(Collection<SubscriptionQueryUpdateMessage<String>> elements) {
@@ -684,25 +690,23 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         );
 
         SubscriptionQueryResult<QueryResponseMessage<List<String>>, SubscriptionQueryUpdateMessage<String>> result =
-                queryBus.subscriptionQuery(queryMessage,
-                        100);
+                queryBus.subscriptionQuery(queryMessage, 100);
 
         Flux<SubscriptionQueryUpdateMessage<String>> test1 = result.updates().onBackpressureBuffer(100);
 
-        StepVerifier.create(test1, StepVerifierOptions.create()
-                .initialRequest(0))
-                .expectSubscription()
-                .then(() -> {
-                    for (int i = 0; i < 200; i++) {
-                        chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update" + i);
-                    }
-                    chatQueryHandler.emitter.complete(String.class, TEST_PAYLOAD::equals);
-                })
-                .expectNoEvent(Duration.ofMillis(100))
-                .thenRequest(100)
-                .expectNextCount(100)
-                .expectErrorMatches(Exceptions::isOverflow)
-                .verify(Duration.ofSeconds(5));
+        StepVerifier.create(test1, StepVerifierOptions.create().initialRequest(0))
+                    .expectSubscription()
+                    .then(() -> {
+                        for (int i = 0; i < 200; i++) {
+                            chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update" + i);
+                        }
+                        chatQueryHandler.emitter.complete(String.class, TEST_PAYLOAD::equals);
+                    })
+                    .expectNoEvent(Duration.ofMillis(100))
+                    .thenRequest(100)
+                    .expectNextCount(100)
+                    .expectErrorMatches(Exceptions::isOverflow)
+                    .verify(Duration.ofSeconds(5));
     }
 
     @Test
@@ -729,7 +733,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
     @Test
     void subscriptionQueryWithInterceptors() {
         // given
-        List<String> interceptedResponse = Arrays.asList("fakeReply1", "fakeReply2");
+        List<String> interceptedResponse = List.of("fakeReply1", "fakeReply2");
         queryBus.registerDispatchInterceptor(
                 messages -> (i, m) -> m.andMetaData(Collections.singletonMap("key", "value"))
         );
@@ -807,7 +811,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         // then
         Set<SubscriptionQueryMessage<?, ?, ?>> expectedSubscriptions =
                 new HashSet<>(Arrays.asList(queryMessage1, queryMessage2));
-        assertEquals(expectedSubscriptions, queryUpdateEmitter.activeSubscriptions());
+        assertThat(queryUpdateEmitter.activeSubscriptions()).isEqualTo(expectedSubscriptions);
     }
 
     @Test
@@ -835,8 +839,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
 
         // then
         latch.await(500, TimeUnit.MILLISECONDS);
-        assertEquals(Collections.singletonList("Initial"), initialResult);
-        assertEquals(Arrays.asList("Update1", "Update2"), updates);
+        assertThat(initialResult).containsExactly("Initial");
+        assertThat(updates).containsExactly("Update1", "Update2");
     }
 
     @Test
@@ -866,8 +870,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
 
         // then
         latch.await(500, TimeUnit.MILLISECONDS);
-        assertEquals(Collections.singletonList("Initial"), initialResult);
-        assertTrue(updates.isEmpty());
+        assertThat(initialResult).containsExactly("Initial");
+        assertThat(updates).isEmpty();
     }
 
     @Deprecated
@@ -894,10 +898,10 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
 
         // then
-        assertEquals(Arrays.asList("Message1", "Message2", "Message3"), initialResult);
-        assertEquals(Collections.singletonList("Update1"), updates);
+        assertThat(initialResult).containsExactly("Message1", "Message2", "Message3");
+        assertThat(updates).containsExactly("Update1");
 
-        assertTrue(queryUpdateEmitter.activeSubscriptions().isEmpty(), "Expected subscriptions to be cancelled");
+        assertThat(queryUpdateEmitter.activeSubscriptions()).as("Expected subscriptions to be cancelled").isEmpty();
     }
 
     @Deprecated
@@ -956,10 +960,10 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
 
         // then
-        assertEquals(Arrays.asList("Message1", "Message2", "Message3"), initialResult);
-        assertEquals(Collections.singletonList("Update1"), updates);
+        assertThat(initialResult).containsExactly("Message1", "Message2", "Message3");
+        assertThat(updates).containsExactly("Update1");
 
-        assertTrue(queryUpdateEmitter.activeSubscriptions().isEmpty(), "Expected subscriptions to be cancelled");
+        assertThat(queryUpdateEmitter.activeSubscriptions()).as("Expected subscriptions to be cancelled").isEmpty();
     }
 
     @Test
@@ -985,10 +989,10 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
 
         // then
-        assertEquals(Arrays.asList("Message1", "Message2", "Message3"), initialResult);
-        assertEquals(Collections.singletonList("Update1"), updates);
+        assertThat(initialResult).containsExactly("Message1", "Message2", "Message3");
+        assertThat(updates).containsExactly("Update1");
 
-        assertTrue(queryUpdateEmitter.activeSubscriptions().isEmpty(), "Expected subscriptions to be cancelled");
+        assertThat(queryUpdateEmitter.activeSubscriptions()).as("Expected subscriptions to be cancelled").isEmpty();
     }
 
     @Test
@@ -1004,7 +1008,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         // when
         List<String> initialResult = new ArrayList<>();
         List<String> updates = new ArrayList<>();
-        queryBus.subscriptionQuery(queryMessage,1)
+        queryBus.subscriptionQuery(queryMessage, 1)
                 .handle(initial -> {
                             // make sure the update is emitted before subscribing to updates
                             chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update1");
@@ -1017,10 +1021,10 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
 
         // then
-        assertEquals(Arrays.asList("Message1", "Message2", "Message3"), initialResult);
-        assertEquals(Collections.singletonList("Update1"), updates);
+        assertThat(initialResult).containsExactly("Message1", "Message2", "Message3");
+        assertThat(updates).containsExactly("Update1");
 
-        assertTrue(queryUpdateEmitter.activeSubscriptions().isEmpty(), "Expected subscriptions to be cancelled");
+        assertThat(queryUpdateEmitter.activeSubscriptions()).as("Expected subscriptions to be cancelled").isEmpty();
     }
 
     @Test
@@ -1043,8 +1047,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.complete(String.class, TEST_PAYLOAD::equals);
 
         // then
-        assertTrue(initialResult.isEmpty());
-        assertTrue(updates.isEmpty());
+        assertThat(initialResult).isEmpty();
+        assertThat(updates).isEmpty();
     }
 
     @Test
@@ -1066,8 +1070,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update1");
 
         // then
-        assertTrue(initialResult.isEmpty());
-        assertTrue(updates.isEmpty());
+        assertThat(initialResult).isEmpty();
+        assertThat(updates).isEmpty();
     }
 
     @Test
@@ -1075,9 +1079,9 @@ public abstract class AbstractSubscriptionQueryTestSuite {
             throws ExecutionException, InterruptedException {
         QueryGateway queryGateway = DefaultQueryGateway.builder().queryBus(queryBus).build();
 
-        assertNull(queryGateway.subscriptionQuery(new SomeQuery("not " + FOUND), String.class, String.class)
+        assertThat(queryGateway.subscriptionQuery(new SomeQuery("not " + FOUND), String.class, String.class)
                                .initialResult()
-                               .toFuture().get());
+                               .toFuture().get()).isNull();
     }
 
     @Test
@@ -1087,20 +1091,11 @@ public abstract class AbstractSubscriptionQueryTestSuite {
                                     .initialResult()
                                     .toFuture().get();
 
-        assertEquals(FOUND, result);
+        assertThat(result).isEqualTo(FOUND);
     }
 
-    private static class SomeQuery {
+    private record SomeQuery(String filter) {
 
-        private final String filter;
-
-        private SomeQuery(String filter) {
-            this.filter = filter;
-        }
-
-        public String getFilter() {
-            return filter;
-        }
     }
 
     @SuppressWarnings("unused")
@@ -1115,7 +1110,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
 
         @QueryHandler(queryName = "chatMessages")
         public List<String> chatMessages(String chatRoom) {
-            return Arrays.asList("Message1", "Message2", "Message3");
+            return List.of("Message1", "Message2", "Message3");
         }
 
         @QueryHandler(queryName = "numberOfMessages")
@@ -1149,7 +1144,7 @@ public abstract class AbstractSubscriptionQueryTestSuite {
 
         @QueryHandler
         public String someQueryHandler(SomeQuery query) {
-            return FOUND.equals(query.getFilter()) ? FOUND : null;
+            return FOUND.equals(query.filter()) ? FOUND : null;
         }
     }
 }

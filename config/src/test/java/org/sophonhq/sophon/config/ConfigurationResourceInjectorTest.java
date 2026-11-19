@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
 import org.sophonhq.sophon.eventsourcing.eventstore.EventStore;
@@ -25,7 +26,7 @@ import org.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorag
 
 import javax.inject.Inject;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConfigurationResourceInjectorTest {
 
@@ -45,10 +46,10 @@ public class ConfigurationResourceInjectorTest {
         Saga saga = new Saga();
         testSubject.injectResources(saga);
 
-        assertSame(configuration.commandBus(), saga.commandBus);
-        assertSame(configuration.commandGateway(), saga.commandGateway);
-        assertSame(configuration.eventStore(), saga.eventStore);
-        assertNull(saga.inexistent);
+        assertThat(saga.commandBus).isSameAs(configuration.commandBus());
+        assertThat(saga.commandGateway).isSameAs(configuration.commandGateway());
+        assertThat(saga.eventStore).isSameAs(configuration.eventStore());
+        assertThat(saga.inexistent).isNull();
     }
 
     public static class Saga {

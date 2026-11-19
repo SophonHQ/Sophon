@@ -29,15 +29,18 @@ import org.sophonhq.sophon.modelling.command.Repository;
 import org.sophonhq.sophon.modelling.command.legacyjpa.GenericJpaRepository;
 import org.sophonhq.sophon.spring.stereotype.Aggregate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
@@ -50,7 +53,7 @@ class AutoWiredStateStoredAggregateTest {
 
     @Test
     void aggregateIsWiredUsingStateStorage() {
-        assertEquals(GenericJpaRepository.class, myAggregateRepository.getClass());
+        assertThat(myAggregateRepository.getClass()).isEqualTo(GenericJpaRepository.class);
     }
 
     @Import(SpringSophonAutoConfigurer.ImportSelector.class)

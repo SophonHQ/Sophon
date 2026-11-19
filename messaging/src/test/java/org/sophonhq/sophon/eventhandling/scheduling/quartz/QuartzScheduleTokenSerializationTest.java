@@ -23,7 +23,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests serialization capabilities of {@link QuartzScheduleToken}.
@@ -40,6 +40,6 @@ class QuartzScheduleTokenSerializationTest {
     @ParameterizedTest
     void tokenShouldBeSerializable(TestSerializer serializer) {
         QuartzScheduleToken tokenToTest = new QuartzScheduleToken("jobIdentifier", "groupIdentifier");
-        assertEquals(tokenToTest, serializer.serializeDeserialize(tokenToTest));
+        assertThat(serializer.serializeDeserialize(tokenToTest)).isEqualTo(tokenToTest);
     }
 }

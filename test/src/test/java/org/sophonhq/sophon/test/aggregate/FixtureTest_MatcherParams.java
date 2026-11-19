@@ -19,7 +19,8 @@ package org.sophonhq.sophon.test.aggregate;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -30,7 +31,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.test.matchers.Matchers.matches;
 import static org.sophonhq.sophon.test.matchers.Matchers.*;
@@ -93,17 +95,17 @@ class FixtureTest_MatcherParams {
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
 
-        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
+        SophonAssertionError e = assertThatExceptionOfType(SophonAssertionError.class).isThrownBy(() ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new StrangeCommand("aggregateId"))
                         .expectResultMessageMatching(new DoesMatch<>())
-        );
+        ).actual();
         String resultMessage = e.getMessage();
-        assertTrue(
-                resultMessage.contains("but got <exception of type [StrangeCommandReceivedException]>"), resultMessage
-        );
+        assertThat(resultMessage)
+                .as(resultMessage)
+                .contains("but got <exception of type [StrangeCommandReceivedException]>");
     }
 
     @Test
@@ -113,18 +115,17 @@ class FixtureTest_MatcherParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
+        SophonAssertionError e = assertThatExceptionOfType(SophonAssertionError.class).isThrownBy(() ->
                 fixture.registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new TestCommand("aggregateId"))
                         .expectException(new DoesMatch<>())
-        );
+        ).actual();
         String resultMessage = e.getMessage();
-        assertTrue(
-                resultMessage.contains("The command handler returned normally, but an exception was expected"),
-                resultMessage
-        );
-        assertTrue(resultMessage.contains("<anything>,\n but got <null>"), resultMessage);
+        assertThat(resultMessage)
+                .as(resultMessage)
+                .contains("The command handler returned normally, but an exception was expected");
+        assertThat(resultMessage).as(resultMessage).contains("<anything>,\n but got <null>");
     }
 
     @Test
@@ -134,18 +135,17 @@ class FixtureTest_MatcherParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
+        SophonAssertionError e = assertThatExceptionOfType(SophonAssertionError.class).isThrownBy(() ->
                 fixture.registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new TestCommand("aggregateId"))
                         .expectResultMessageMatching(new DoesNotMatch<>())
-        );
+        ).actual();
         String resultMessage = e.getMessage();
-        assertTrue(
-                resultMessage.contains("<something you can never give me>,\n"
-                                               + " but got <GenericCommandResultMessage{payload={null}"),
-                resultMessage
-        );
+        assertThat(resultMessage)
+                .as(resultMessage)
+                .contains("<something you can never give me>,\n"
+                                  + " but got <GenericCommandResultMessage{payload={null}");
     }
 
     @Test
@@ -155,18 +155,17 @@ class FixtureTest_MatcherParams {
                                             new MyEvent("aggregateId", 3));
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
-        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
+        SophonAssertionError e = assertThatExceptionOfType(SophonAssertionError.class).isThrownBy(() ->
                 fixture.registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new StrangeCommand("aggregateId"))
                         .expectException(new DoesNotMatch<>())
-        );
+        ).actual();
         String resultMessage = e.getMessage();
-        assertTrue(
-                resultMessage.contains("<something you can never give me>,\n"
-                                               + " but got <exception of type [StrangeCommandReceivedException]>"),
-                resultMessage
-        );
+        assertThat(resultMessage)
+                .as(resultMessage)
+                .contains("<something you can never give me>,\n"
+                                  + " but got <exception of type [StrangeCommandReceivedException]>");
     }
 
     @Test
@@ -177,16 +176,16 @@ class FixtureTest_MatcherParams {
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
 
-        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
+        SophonAssertionError e = assertThatExceptionOfType(SophonAssertionError.class).isThrownBy(() ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new StrangeCommand("aggregateId"))
                         .expectEvents(new DoesMatch<List<? extends EventMessage>>())
-        );
-        assertTrue(e.getMessage().contains("The published events do not match the expected events"));
-        assertTrue(e.getMessage().contains("FixtureTest_MatcherParams$DoesMatch <|> "));
-        assertTrue(e.getMessage().contains("probable cause"));
+        ).actual();
+        assertThat(e.getMessage()).contains("The published events do not match the expected events");
+        assertThat(e.getMessage()).contains("FixtureTest_MatcherParams$DoesMatch <|> ");
+        assertThat(e.getMessage()).contains("probable cause");
     }
 
     @Test
@@ -204,9 +203,9 @@ class FixtureTest_MatcherParams {
         final ArgumentCaptor<CommandMessage> captor = ArgumentCaptor.forClass(CommandMessage.class);
         verify(mockCommandHandler).handle(captor.capture());
         List<CommandMessage> dispatched = captor.getAllValues();
-        assertEquals(1, dispatched.size());
-        assertEquals(1, dispatched.get(0).getMetaData().size());
-        assertEquals("value", dispatched.get(0).getMetaData().get("meta"));
+        assertThat(dispatched).hasSize(1);
+        assertThat(dispatched.get(0).getMetaData().size()).isOne();
+        assertThat(dispatched.get(0).getMetaData()).containsEntry("meta", "value");
     }
 
     @Test
@@ -217,14 +216,16 @@ class FixtureTest_MatcherParams {
         MyCommandHandler commandHandler = new MyCommandHandler(fixture.getRepository(),
                                                                fixture.getEventBus());
 
-        SophonAssertionError e = assertThrows(SophonAssertionError.class, () ->
+        SophonAssertionError e = assertThatExceptionOfType(SophonAssertionError.class).isThrownBy(() ->
                 fixture
                         .registerAnnotatedCommandHandler(commandHandler)
                         .given(givenEvents)
                         .when(new TestCommand("aggregateId"))
                         .expectEventsMatching(new DoesNotMatch<>())
-        );
-        assertTrue(e.getMessage().contains("something you can never give me"), "Wrong message: " + e.getMessage());
+        ).actual();
+        assertThat(e.getMessage())
+                .as("Wrong message: " + e.getMessage())
+                .contains("something you can never give me");
     }
 
     private static class DoesMatch<T> extends BaseMatcher<T> {

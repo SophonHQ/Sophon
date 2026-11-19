@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -43,6 +43,6 @@ class InputStreamToByteArrayConverterTest {
         InputStream inputStream = new ByteArrayInputStream(bytes);
         byte[] actual = testSubject.convert(inputStream);
 
-        assertArrayEquals(bytes, actual);
+        assertThat(actual).containsExactly(bytes);
     }
 }

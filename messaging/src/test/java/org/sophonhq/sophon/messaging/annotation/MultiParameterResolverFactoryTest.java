@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.messaging.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.common.Priority;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -29,7 +30,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -68,7 +69,7 @@ class MultiParameterResolverFactoryTest {
     void resolversQueriedInOrderProvided() throws Exception {
         Method equals = getClass().getMethod("equals", Object.class);
         ParameterResolver factory = testSubject.createInstance(equals, equals.getParameters(), 0);
-        assertFalse(factory.matches(null));
+        assertThat(factory.matches(null)).isFalse();
 
         InOrder inOrder = inOrder(mockFactory1, mockFactory2, mockResolver1, mockResolver2);
         inOrder.verify(mockFactory1).createInstance(ArgumentMatchers.any(Executable.class),
@@ -95,8 +96,8 @@ class MultiParameterResolverFactoryTest {
         when(mockResolver2.resolveParameterValue(message)).thenReturn("Resolved");
 
         ParameterResolver factory = testSubject.createInstance(equals, equals.getParameters(), 0);
-        assertTrue(factory.matches(message));
-        assertEquals("Resolved", factory.resolveParameterValue(message));
+        assertThat(factory.matches(message)).isTrue();
+        assertThat(factory.resolveParameterValue(message)).isEqualTo("Resolved");
 
         verify(mockResolver1, never()).resolveParameterValue(any(Message.class));
     }
@@ -109,7 +110,7 @@ class MultiParameterResolverFactoryTest {
                                                             new MultiParameterResolverFactory(lowPrio, mockFactory2),
                                                             new MultiParameterResolverFactory(highPrio));
 
-        assertEquals(Arrays.asList(highPrio, mockFactory1, mockFactory2, lowPrio), testSubject.getDelegates());
+        assertThat(testSubject.getDelegates()).isEqualTo(Arrays.asList(highPrio, mockFactory1, mockFactory2, lowPrio));
     }
 
     @Priority(Priority.LOW)

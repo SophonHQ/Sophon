@@ -19,11 +19,13 @@ package org.sophonhq.sophon.common.caching;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link EhCacheAdapter}.
@@ -57,17 +59,17 @@ class EhCacheAdapterTest {
         testSubject.put("three", new Object());
         testSubject.put("four", new Object());
 
-        assertTrue(testSubject.containsKey("one"));
-        assertTrue(testSubject.containsKey("two"));
-        assertTrue(testSubject.containsKey("three"));
-        assertTrue(testSubject.containsKey("four"));
+        assertThat(testSubject.containsKey("one")).isTrue();
+        assertThat(testSubject.containsKey("two")).isTrue();
+        assertThat(testSubject.containsKey("three")).isTrue();
+        assertThat(testSubject.containsKey("four")).isTrue();
 
         testSubject.removeAll();
 
-        assertFalse(testSubject.containsKey("one"));
-        assertFalse(testSubject.containsKey("two"));
-        assertFalse(testSubject.containsKey("three"));
-        assertFalse(testSubject.containsKey("four"));
+        assertThat(testSubject.containsKey("one")).isFalse();
+        assertThat(testSubject.containsKey("two")).isFalse();
+        assertThat(testSubject.containsKey("three")).isFalse();
+        assertThat(testSubject.containsKey("four")).isFalse();
     }
 
     @Test
@@ -79,7 +81,7 @@ class EhCacheAdapterTest {
             return v;
         });
 
-        assertFalse(invoked.get());
+        assertThat(invoked.get()).isFalse();
     }
 
     @Test
@@ -94,6 +96,6 @@ class EhCacheAdapterTest {
             return v;
         });
 
-        assertTrue(invoked.get());
+        assertThat(invoked.get()).isTrue();
     }
 }

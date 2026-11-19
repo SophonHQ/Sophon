@@ -20,18 +20,20 @@ package org.sophonhq.sophon.micrometer.reservoir;
 import io.micrometer.core.instrument.Clock;
 import org.junit.jupiter.api.*;
 
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
  * Adapted from com.codahale.metrics.SlidingTimeWindowReservoirTest from io.dropwizard.metrics:metrics-core:3.1.2
  */
 class SlidingTimeWindowReservoirTest {
+
     private final Clock clock = mock(Clock.class);
-    private final SlidingTimeWindowReservoir reservoir = new SlidingTimeWindowReservoir(10, TimeUnit.NANOSECONDS, clock);
+    private final SlidingTimeWindowReservoir reservoir = new SlidingTimeWindowReservoir(10,
+                                                                                        TimeUnit.NANOSECONDS,
+                                                                                        clock);
 
     @Test
     void storesMeasurementsWithDuplicateTicks() {
@@ -40,7 +42,7 @@ class SlidingTimeWindowReservoirTest {
         reservoir.update(1L);
         reservoir.update(2L);
 
-        assertEquals(Arrays.asList(1L, 2L), reservoir.getMeasurements());
+        assertThat(reservoir.getMeasurements()).containsExactly(1L, 2L);
     }
 
     @Test
@@ -60,6 +62,6 @@ class SlidingTimeWindowReservoirTest {
         when(clock.monotonicTime()).thenReturn(20L);
         reservoir.update(5L);
 
-        assertEquals(Arrays.asList(4L, 5L), reservoir.getMeasurements());
+        assertThat(reservoir.getMeasurements()).containsExactly(4L, 5L);
     }
 }

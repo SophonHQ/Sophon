@@ -21,9 +21,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.markDeleted;
 
@@ -42,7 +41,7 @@ class StubAggregateLifecycleTest {
 
     @Test
     void lifecycleIsNotRegisteredAutomatically() {
-        assertThrows(IllegalStateException.class, () -> apply("test"));
+        assertThatThrownBy(() -> apply("test")).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -50,7 +49,7 @@ class StubAggregateLifecycleTest {
         testSubject.activate();
         testSubject.close();
 
-        assertThrows(IllegalStateException.class, () -> apply("test"));
+        assertThatThrownBy(() -> apply("test")).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -58,9 +57,9 @@ class StubAggregateLifecycleTest {
         testSubject.activate();
         apply("test");
 
-        assertEquals(1, testSubject.getAppliedEvents().size());
-        assertEquals("test", testSubject.getAppliedEventPayloads().get(0));
-        assertEquals("test", testSubject.getAppliedEvents().get(0).getPayload());
+        assertThat(testSubject.getAppliedEvents()).hasSize(1);
+        assertThat(testSubject.getAppliedEventPayloads().get(0)).isEqualTo("test");
+        assertThat(testSubject.getAppliedEvents().get(0).getPayload()).isEqualTo("test");
     }
 
     @Test
@@ -68,7 +67,7 @@ class StubAggregateLifecycleTest {
         testSubject.activate();
         markDeleted();
 
-        assertEquals(0, testSubject.getAppliedEvents().size());
-        assertTrue(testSubject.isMarkedDeleted());
+        assertThat(testSubject.getAppliedEvents()).hasSize(0);
+        assertThat(testSubject.isMarkedDeleted()).isTrue();
     }
 }

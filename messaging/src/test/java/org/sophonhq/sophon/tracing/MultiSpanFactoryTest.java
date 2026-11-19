@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.tracing;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.Message;
@@ -25,7 +25,7 @@ import org.sophonhq.sophon.messaging.Message;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class MultiSpanFactoryTest {
@@ -112,6 +112,6 @@ class MultiSpanFactoryTest {
         when(spanFactory2.propagateContext(modifiedFirst)).thenReturn(modifiedSecond);
 
         Message result = multiSpanFactory.propagateContext(original);
-        assertSame(result, modifiedSecond);
+        assertThat(result).isSameAs(modifiedSecond);
     }
 }

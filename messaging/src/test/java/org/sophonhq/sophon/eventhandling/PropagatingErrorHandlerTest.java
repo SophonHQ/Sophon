@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.utils.MockException;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PropagatingErrorHandlerTest {
 
@@ -32,21 +32,21 @@ class PropagatingErrorHandlerTest {
     void handleErrorRethrowsOriginalWhenError() throws Exception {
         ErrorContext context = new ErrorContext("test", new MockError(), Collections.emptyList());
 
-        assertThrows(MockError.class, () -> testSubject.handleError(context));
+        assertThatThrownBy(() -> testSubject.handleError(context)).isInstanceOf(MockError.class);
     }
 
     @Test
     void handleErrorRethrowsOriginalWhenException() throws Exception {
         ErrorContext context = new ErrorContext("test", new MockException(), Collections.emptyList());
 
-        assertThrows(MockException.class, () -> testSubject.handleError(context));
+        assertThatThrownBy(() -> testSubject.handleError(context)).isInstanceOf(MockException.class);
     }
 
     @Test
     void handleErrorWrapsOriginalWhenThrowable() throws Exception {
         ErrorContext context = new ErrorContext("test", new Throwable("Unknown"), Collections.emptyList());
 
-        assertThrows(EventProcessingException.class, () -> testSubject.handleError(context));
+        assertThatThrownBy(() -> testSubject.handleError(context)).isInstanceOf(EventProcessingException.class);
     }
 
     private static class MockError extends Error {

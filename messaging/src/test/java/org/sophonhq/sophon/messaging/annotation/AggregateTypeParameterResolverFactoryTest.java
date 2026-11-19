@@ -26,7 +26,7 @@ import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AggregateTypeParameterResolverFactoryTest {
 
@@ -65,8 +65,8 @@ class AggregateTypeParameterResolverFactoryTest {
         ParameterResolver<String> resolver =
                 testSubject.createInstance(aggregateTypeMethod, aggregateTypeMethod.getParameters(), 0);
         final DomainEventMessage<Object> eventMessage = new GenericDomainEventMessage("aggregateType", "id", 0L, "payload");
-        assertTrue(resolver.matches(eventMessage));
-        assertEquals(eventMessage.getType(), resolver.resolveParameterValue(eventMessage));
+        assertThat(resolver.matches(eventMessage)).isTrue();
+        assertThat(resolver.resolveParameterValue(eventMessage)).isEqualTo(eventMessage.getType());
     }
 
     @Test
@@ -74,20 +74,20 @@ class AggregateTypeParameterResolverFactoryTest {
         ParameterResolver<String> resolver =
                 testSubject.createInstance(aggregateTypeMethod, aggregateTypeMethod.getParameters(), 0);
         EventMessage<Object> eventMessage = GenericEventMessage.asEventMessage("test");
-        assertFalse(resolver.matches(eventMessage));
+        assertThat(resolver.matches(eventMessage)).isFalse();
     }
 
     @Test
     void ignoredWhenNotAnnotated() {
         ParameterResolver<String> resolver =
                 testSubject.createInstance(nonAnnotatedMethod, nonAnnotatedMethod.getParameters(), 0);
-        assertNull(resolver);
+        assertThat(resolver).isNull();
     }
 
     @Test
     void ignoredWhenWrongType() {
         ParameterResolver<String> resolver =
                 testSubject.createInstance(integerMethod, integerMethod.getParameters(), 0);
-        assertNull(resolver);
+        assertThat(resolver).isNull();
     }
 }

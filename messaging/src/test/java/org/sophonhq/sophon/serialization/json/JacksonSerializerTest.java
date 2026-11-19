@@ -37,7 +37,8 @@ import java.util.Objects;
 
 import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.mockito.Mockito.*;
 
 /**
@@ -64,11 +65,11 @@ class JacksonSerializerTest {
 
     @Test
     void canSerializeToByteArrayStringInputStreamJsonNodeAndObjectNode() {
-        assertTrue(testSubject.canSerializeTo(byte[].class));
-        assertTrue(testSubject.canSerializeTo(String.class));
-        assertTrue(testSubject.canSerializeTo(InputStream.class));
-        assertTrue(testSubject.canSerializeTo(JsonNode.class));
-        assertTrue(testSubject.canSerializeTo(ObjectNode.class));
+        assertThat(testSubject.canSerializeTo(byte[].class)).isTrue();
+        assertThat(testSubject.canSerializeTo(String.class)).isTrue();
+        assertThat(testSubject.canSerializeTo(InputStream.class)).isTrue();
+        assertThat(testSubject.canSerializeTo(JsonNode.class)).isTrue();
+        assertThat(testSubject.canSerializeTo(ObjectNode.class)).isTrue();
     }
 
     @Test
@@ -79,8 +80,8 @@ class JacksonSerializerTest {
         SerializedObject<String> serialized = testSubject.serialize(toSerialize, String.class);
 
         SimpleSerializableType actual = testSubject.deserialize(serialized);
-        assertEquals(toSerialize.getValue(), actual.getValue());
-        assertEquals(toSerialize.getNested().getValue(), actual.getNested().getValue());
+        assertThat(actual.getValue()).isEqualTo(toSerialize.getValue());
+        assertThat(actual.getNested().getValue()).isEqualTo(toSerialize.getNested().getValue());
     }
 
     @Test
@@ -92,9 +93,9 @@ class JacksonSerializerTest {
                 testSubject.serialize(new SimpleSerializableType[]{toSerialize}, String.class);
 
         SimpleSerializableType[] actual = testSubject.deserialize(serialized);
-        assertEquals(1, actual.length);
-        assertEquals(toSerialize.getValue(), actual[0].getValue());
-        assertEquals(toSerialize.getNested().getValue(), actual[0].getNested().getValue());
+        assertThat(actual).hasSize(1);
+        assertThat(actual[0].getValue()).isEqualTo(toSerialize.getValue());
+        assertThat(actual[0].getNested().getValue()).isEqualTo(toSerialize.getNested().getValue());
     }
 
     @Test
@@ -106,9 +107,9 @@ class JacksonSerializerTest {
         SerializedObject<String> serialized = testSubject.serialize(singletonList(toSerialize), String.class);
 
         List<SimpleSerializableType> actual = testSubject.deserialize(serialized);
-        assertEquals(1, actual.size());
-        assertEquals(toSerialize.getValue(), actual.get(0).getValue());
-        assertEquals(toSerialize.getNested().getValue(), actual.get(0).getNested().getValue());
+        assertThat(actual).hasSize(1);
+        assertThat(actual.get(0).getValue()).isEqualTo(toSerialize.getValue());
+        assertThat(actual.get(0).getNested().getValue()).isEqualTo(toSerialize.getNested().getValue());
     }
 
     @Test
@@ -120,8 +121,8 @@ class JacksonSerializerTest {
 
         SimpleSerializableType actual = testSubject.deserialize(serialized);
 
-        assertEquals(toSerialize.getValue(), actual.getValue());
-        assertEquals(toSerialize.getNested().getValue(), actual.getNested().getValue());
+        assertThat(actual.getValue()).isEqualTo(toSerialize.getValue());
+        assertThat(actual.getNested().getValue()).isEqualTo(toSerialize.getNested().getValue());
     }
 
     @Test
@@ -136,14 +137,14 @@ class JacksonSerializerTest {
                                                                              "someUnknownType",
                                                                              "42.1"));
 
-        assertTrue(actual instanceof UnknownSerializedType);
+        assertThat(actual).isInstanceOf(UnknownSerializedType.class);
         UnknownSerializedType actualUnknown = ((UnknownSerializedType) actual);
 
-        assertTrue(actualUnknown.supportsFormat(JsonNode.class));
+        assertThat(actualUnknown.supportsFormat(JsonNode.class)).isTrue();
         JsonNode actualJson = actualUnknown.readData(JsonNode.class);
 
-        assertEquals("first", actualJson.get("value").asText());
-        assertEquals("nested", actualJson.path("nested").path("value").asText());
+        assertThat(actualJson.get("value").asText()).isEqualTo("first");
+        assertThat(actualJson.path("nested").path("value").asText()).isEqualTo("nested");
     }
 
     @Test
@@ -157,7 +158,7 @@ class JacksonSerializerTest {
 
         for (int i = 0; i < 10; i++) {
             Class<?> actual = testSubject.classForType(testObject.getType());
-            assertEquals(UnknownSerializedType.class, actual);
+            assertThat(actual).isEqualTo(UnknownSerializedType.class);
         }
 
         verify(spiedMapper, times(1)).getTypeFactory();
@@ -175,7 +176,7 @@ class JacksonSerializerTest {
 
         for (int i = 0; i < 10; i++) {
             Class<?> actual = testSubject.classForType(testObject.getType());
-            assertEquals(UnknownSerializedType.class, actual);
+            assertThat(actual).isEqualTo(UnknownSerializedType.class);
         }
 
         verify(spiedMapper, times(10)).getTypeFactory();
@@ -189,8 +190,8 @@ class JacksonSerializerTest {
         SerializedObject<JsonNode> serialized = testSubject.serialize(toSerialize, JsonNode.class);
         SimpleSerializableType actual = testSubject.deserialize(serialized);
 
-        assertEquals(toSerialize.getValue(), actual.getValue());
-        assertEquals(toSerialize.getNested().getValue(), actual.getNested().getValue());
+        assertThat(actual.getValue()).isEqualTo(toSerialize.getValue());
+        assertThat(actual.getNested().getValue()).isEqualTo(toSerialize.getNested().getValue());
     }
 
     @Test
@@ -209,12 +210,12 @@ class JacksonSerializerTest {
                 testSubject.serialize(new SimpleSerializableType("test"), byte[].class);
         SimpleSerializableType actual = testSubject.deserialize(serialized);
 
-        assertNotNull(actual);
+        assertThat(actual).isNotNull();
         verify(objectMapper).readerFor(SimpleSerializableType.class);
         verify(objectMapper).writer();
         verify(revisionResolver).revisionOf(SimpleSerializableType.class);
         verify(converter, times(4)).registerConverter(isA(ContentTypeConverter.class));
-        assertSame(objectMapper, testSubject.getObjectMapper());
+        assertThat(testSubject.getObjectMapper()).isSameAs(objectMapper);
     }
 
     @Test
@@ -231,8 +232,8 @@ class JacksonSerializerTest {
                 testSubject.serialize(new SimpleSerializableType("test"), byte[].class);
         SimpleSerializableType actual = testSubject.deserialize(serialized);
 
-        assertNotNull(actual);
-        assertTrue(testSubject.getConverter() instanceof ChainingConverter);
+        assertThat(actual).isNotNull();
+        assertThat(testSubject.getConverter()).isInstanceOf(ChainingConverter.class);
         verify(objectMapper).readerFor(SimpleSerializableType.class);
         verify(objectMapper).writer();
         verify(revisionResolver).revisionOf(SimpleSerializableType.class);
@@ -250,8 +251,8 @@ class JacksonSerializerTest {
                 testSubject.serialize(new SimpleSerializableType("test"), byte[].class);
         SimpleSerializableType actual = testSubject.deserialize(serialized);
 
-        assertNotNull(actual);
-        assertTrue(testSubject.getConverter() instanceof ChainingConverter);
+        assertThat(actual).isNotNull();
+        assertThat(testSubject.getConverter()).isInstanceOf(ChainingConverter.class);
         verify(objectMapper).readerFor(SimpleSerializableType.class);
         verify(objectMapper).writer();
     }
@@ -264,9 +265,9 @@ class JacksonSerializerTest {
                 testSubject.serialize(MetaData.from(singletonMap("test", "test")), byte[].class);
         MetaData actual = testSubject.deserialize(serialized);
 
-        assertNotNull(actual);
-        assertEquals("test", actual.get("test"));
-        assertEquals(1, actual.size());
+        assertThat(actual).isNotNull();
+        assertThat(actual).containsEntry("test", "test");
+        assertThat(actual.size()).isOne();
     }
 
     @Test
@@ -278,7 +279,7 @@ class JacksonSerializerTest {
         SerializedObject<byte[]> serialized = testSubject.serialize(metaData, byte[].class);
         MetaData actual = testSubject.deserialize(serialized);
 
-        assertEquals(metaData, actual);
+        assertThat(actual).isEqualTo(metaData);
     }
 
     /**
@@ -302,7 +303,7 @@ class JacksonSerializerTest {
 
         List<ComplexObject> deserializedResult = testSubject.deserialize(serializedResult);
 
-        assertEquals(objectToSerialize, deserializedResult);
+        assertThat(deserializedResult).isEqualTo(objectToSerialize);
     }
 
     @Test
@@ -311,16 +312,16 @@ class JacksonSerializerTest {
         SimpleSerializedObject<byte[]> serializedNullString = new SimpleSerializedObject<>(
                 serializedNull.getData(), byte[].class, testSubject.typeForClass(String.class)
         );
-        assertNull(testSubject.deserialize(serializedNull));
-        assertNull(testSubject.deserialize(serializedNullString));
+        assertThatObject(testSubject.deserialize(serializedNull)).isNull();
+        assertThatObject(testSubject.deserialize(serializedNullString)).isNull();
     }
 
     @Test
     void deserializeEmptyBytes() {
-        assertEquals(Void.class, testSubject.classForType(SerializedType.emptyType()));
-        assertNull(testSubject.deserialize(
+        assertThat(testSubject.classForType(SerializedType.emptyType())).isEqualTo(Void.class);
+        assertThatObject(testSubject.deserialize(
                 new SimpleSerializedObject<>(new byte[0], byte[].class, SerializedType.emptyType())
-        ));
+        )).isNull();
     }
 
     @Test
@@ -335,9 +336,9 @@ class JacksonSerializerTest {
         ComplexObject actual = testSubject.deserialize(
                 new SimpleSerializedObject<>(arrayNode, JsonNode.class, serialized.getType())
         );
-        assertEquals("one", actual.getValue1());
-        assertEquals("two", actual.getValue2());
-        assertEquals(3, actual.getValue3());
+        assertThat(actual.getValue1()).isEqualTo("one");
+        assertThat(actual.getValue2()).isEqualTo("two");
+        assertThat(actual.getValue3()).isEqualTo(3);
     }
 
     @Test
@@ -348,8 +349,8 @@ class JacksonSerializerTest {
         SerializedObject<ObjectNode> serialized = testSubject.serialize(toSerialize, ObjectNode.class);
         SimpleSerializableType actual = testSubject.deserialize(serialized);
 
-        assertEquals(toSerialize.getValue(), actual.getValue());
-        assertEquals(toSerialize.getNested().getValue(), actual.getNested().getValue());
+        assertThat(actual.getValue()).isEqualTo(toSerialize.getValue());
+        assertThat(actual.getNested().getValue()).isEqualTo(toSerialize.getNested().getValue());
     }
 
     @Test
@@ -363,8 +364,8 @@ class JacksonSerializerTest {
 
         RevisionResolver result = customTestSubject.getRevisionResolver();
 
-        assertEquals(expectedRevisionResolver, result);
-        assertEquals(expectedRevision, result.revisionOf(String.class));
+        assertThat(result).isEqualTo(expectedRevisionResolver);
+        assertThat(result.revisionOf(String.class)).isEqualTo(expectedRevision);
     }
 
     public static class ComplexObject {

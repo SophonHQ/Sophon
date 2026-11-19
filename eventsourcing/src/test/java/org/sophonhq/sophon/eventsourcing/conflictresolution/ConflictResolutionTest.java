@@ -29,7 +29,7 @@ import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
 class ConflictResolutionTest {
@@ -54,23 +54,23 @@ class ConflictResolutionTest {
 
     @Test
     void factoryMethod() {
-        assertNotNull(subject.createInstance(method, method.getParameters(), 1));
-        assertNull(subject.createInstance(method, method.getParameters(), 0));
+        assertThat(subject.createInstance(method, method.getParameters(), 1)).isNotNull();
+        assertThat(subject.createInstance(method, method.getParameters(), 0)).isNull();
     }
 
     @Test
     void resolve() {
         ConflictResolution.initialize(conflictResolver);
-        assertFalse(subject.matches(GenericEventMessage.asEventMessage("testEvent")));
-        assertTrue(subject.matches(commandMessage));
-        assertSame(conflictResolver, ConflictResolution.getConflictResolver());
-        assertSame(conflictResolver, subject.resolveParameterValue(commandMessage));
+        assertThat(subject.matches(GenericEventMessage.asEventMessage("testEvent"))).isFalse();
+        assertThat(subject.matches(commandMessage)).isTrue();
+        assertThat(ConflictResolution.getConflictResolver()).isSameAs(conflictResolver);
+        assertThat(subject.resolveParameterValue(commandMessage)).isSameAs(conflictResolver);
     }
 
     @Test
     void resolveWithoutInitializationReturnsNoConflictsResolver() {
-        assertTrue(subject.matches(commandMessage));
-        assertSame(NoConflictResolver.INSTANCE, subject.resolveParameterValue(commandMessage));
+        assertThat(subject.matches(commandMessage)).isTrue();
+        assertThat(subject.resolveParameterValue(commandMessage)).isSameAs(NoConflictResolver.INSTANCE);
     }
 
     @SuppressWarnings("unused") //used in set up

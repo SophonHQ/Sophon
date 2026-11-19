@@ -34,10 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 /**
@@ -65,14 +63,14 @@ class AnnotationEventHandlerAdapterTest {
     void invokeResetHandler() {
         testSubject.prepareReset();
 
-        assertTrue(annotatedEventListener.invocations.contains("reset"));
+        assertThat(annotatedEventListener.invocations).contains("reset");
     }
 
     @Test
     void invokeResetHandlerWithResetContext() {
         testSubject.prepareReset("resetContext");
 
-        assertTrue(annotatedEventListener.invocations.contains("resetWithContext"));
+        assertThat(annotatedEventListener.invocations).contains("resetWithContext");
     }
 
     @Test
@@ -81,7 +79,7 @@ class AnnotationEventHandlerAdapterTest {
         testSubject = new AnnotationEventHandlerAdapter(annotatedEventListener, parameterResolverFactory);
 
         testSubject.handle(asEventMessage("count"));
-        assertEquals(3, annotatedEventListener.invocations.stream().filter("count"::equals).count());
+        assertThat(annotatedEventListener.invocations.stream().filter("count"::equals).count()).isEqualTo(3);
     }
 
     @Test
@@ -96,10 +94,10 @@ class AnnotationEventHandlerAdapterTest {
             testSubject.handle(testEventMessage);
             fail("Expected exception");
         } catch (Exception e) {
-            assertEquals(RuntimeException.class, e.getClass());
-            assertEquals(IllegalArgumentException.class, e.getCause().getClass());
-            assertEquals("testing", e.getCause().getMessage());
-            assertEquals("value", e.getMessage());
+            assertThat(e.getClass()).isEqualTo(RuntimeException.class);
+            assertThat(e.getCause().getClass()).isEqualTo(IllegalArgumentException.class);
+            assertThat(e.getCause().getMessage()).isEqualTo("testing");
+            assertThat(e.getMessage()).isEqualTo("value");
         }
     }
 
@@ -115,8 +113,8 @@ class AnnotationEventHandlerAdapterTest {
             testSubject.handle(testEventMessage);
             fail("Expected exception");
         } catch (Exception e) {
-            assertEquals(IllegalArgumentException.class, e.getClass());
-            assertEquals("testing", e.getMessage());
+            assertThat(e.getClass()).isEqualTo(IllegalArgumentException.class);
+            assertThat(e.getMessage()).isEqualTo("testing");
         }
     }
 
@@ -125,9 +123,9 @@ class AnnotationEventHandlerAdapterTest {
         SomeResetHandlerWithContext annotatedEventListener = new SomeResetHandlerWithContext();
         testSubject = new AnnotationEventHandlerAdapter(annotatedEventListener, parameterResolverFactory);
 
-        assertTrue(testSubject.canHandleType(Long.class));
-        assertFalse(testSubject.canHandleType(String.class));
-        assertFalse(testSubject.canHandleType(Integer.class));
+        assertThat(testSubject.canHandleType(Long.class)).isTrue();
+        assertThat(testSubject.canHandleType(String.class)).isFalse();
+        assertThat(testSubject.canHandleType(Integer.class)).isFalse();
     }
 
     @Test
@@ -135,7 +133,7 @@ class AnnotationEventHandlerAdapterTest {
         SingleReplayBlockingHandler handler = new SingleReplayBlockingHandler();
         testSubject = new AnnotationEventHandlerAdapter(handler, parameterResolverFactory);
 
-        assertTrue(testSubject.supportsReset());
+        assertThat(testSubject.supportsReset()).isTrue();
     }
 
     @Test
@@ -143,7 +141,7 @@ class AnnotationEventHandlerAdapterTest {
         ReplayBlockedOnClassLevelHandler handler = new ReplayBlockedOnClassLevelHandler();
         testSubject = new AnnotationEventHandlerAdapter(handler, parameterResolverFactory);
 
-        assertFalse(testSubject.supportsReset());
+        assertThat(testSubject.supportsReset()).isFalse();
     }
 
     @Test
@@ -151,7 +149,7 @@ class AnnotationEventHandlerAdapterTest {
         ReplayBlockedOnClassLevelWithReplayCapableHandler handler = new ReplayBlockedOnClassLevelWithReplayCapableHandler();
         testSubject = new AnnotationEventHandlerAdapter(handler, parameterResolverFactory);
 
-        assertTrue(testSubject.supportsReset());
+        assertThat(testSubject.supportsReset()).isTrue();
     }
 
 

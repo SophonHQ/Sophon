@@ -17,13 +17,15 @@
 
 package org.sophonhq.sophon.commandhandling.distributed;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.commandhandling.RoutingKey;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -43,22 +45,22 @@ class AnnotationRoutingStrategyTest {
     @Test
     void getRoutingKeyFromField() {
         CommandMessage<SomeFieldAnnotatedCommand> testCommand = new GenericCommandMessage<>(new SomeFieldAnnotatedCommand());
-        assertEquals("Target", testSubject.getRoutingKey(testCommand));
+        assertThat(testSubject.getRoutingKey(testCommand)).isEqualTo("Target");
 
         CommandMessage<SomeOtherFieldAnnotatedCommand> otherTestCommand =
                 new GenericCommandMessage<>(new SomeOtherFieldAnnotatedCommand());
-        assertEquals("Target", testSubject.getRoutingKey(otherTestCommand));
+        assertThat(testSubject.getRoutingKey(otherTestCommand)).isEqualTo("Target");
     }
 
     @Test
     void getRoutingKeyFromMethod() {
         CommandMessage<SomeMethodAnnotatedCommand> testCommand =
                 new GenericCommandMessage<>(new SomeMethodAnnotatedCommand());
-        assertEquals("Target", testSubject.getRoutingKey(testCommand));
+        assertThat(testSubject.getRoutingKey(testCommand)).isEqualTo("Target");
 
         CommandMessage<SomeOtherMethodAnnotatedCommand> otherTestCommand =
                 new GenericCommandMessage<>(new SomeOtherMethodAnnotatedCommand());
-        assertEquals("Target", testSubject.getRoutingKey(otherTestCommand));
+        assertThat(testSubject.getRoutingKey(otherTestCommand)).isEqualTo("Target");
     }
 
     @Test
@@ -71,7 +73,8 @@ class AnnotationRoutingStrategyTest {
         CommandMessage<SomeNullMethodAnnotatedCommand> testCommand =
                 new GenericCommandMessage<>(new SomeNullMethodAnnotatedCommand());
 
-        assertThrows(CommandDispatchException.class, () -> errorFallbackRoutingStrategy.getRoutingKey(testCommand));
+        assertThatThrownBy(() -> errorFallbackRoutingStrategy.getRoutingKey(testCommand))
+                .isInstanceOf(CommandDispatchException.class);
     }
 
     @Test
@@ -84,7 +87,8 @@ class AnnotationRoutingStrategyTest {
         CommandMessage<SomeNullMethodAnnotatedCommand> testCommand =
                 new GenericCommandMessage<>(new SomeNullMethodAnnotatedCommand());
 
-        assertThrows(CommandDispatchException.class, () -> errorFallbackRoutingStrategy.getRoutingKey(testCommand));
+        assertThatThrownBy(() -> errorFallbackRoutingStrategy.getRoutingKey(testCommand))
+                .isInstanceOf(CommandDispatchException.class);
     }
 
     @Test
@@ -99,7 +103,7 @@ class AnnotationRoutingStrategyTest {
         CommandMessage<SomeFieldAnnotatedCommand> testCommand =
                 new GenericCommandMessage<>(new SomeFieldAnnotatedCommand());
 
-        assertEquals("Target", testSubjectWithMockedFallbackStrategy.getRoutingKey(testCommand));
+        assertThat(testSubjectWithMockedFallbackStrategy.getRoutingKey(testCommand)).isEqualTo("Target");
         verifyNoInteractions(fallbackRoutingStrategy);
     }
 
@@ -117,20 +121,22 @@ class AnnotationRoutingStrategyTest {
         CommandMessage<SomeCommandWithoutTheRoutingAnnotation> testCommand =
                 new GenericCommandMessage<>(new SomeCommandWithoutTheRoutingAnnotation("target"));
 
-        assertEquals(expectedRoutingKey, testSubjectWithMockedFallbackStrategy.getRoutingKey(testCommand));
+        assertThat(testSubjectWithMockedFallbackStrategy.getRoutingKey(testCommand)).isEqualTo(expectedRoutingKey);
         verify(fallbackRoutingStrategy).getRoutingKey(testCommand);
     }
 
     @Test
     void buildAnnotationRoutingStrategyFailsForNullFallbackRoutingStrategy() {
         AnnotationRoutingStrategy.Builder builderTestSubject = AnnotationRoutingStrategy.builder();
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.fallbackRoutingStrategy(null));
+        assertThatThrownBy(() -> builderTestSubject.fallbackRoutingStrategy(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildAnnotationRoutingStrategyFailsForNullAnnotationType() {
         AnnotationRoutingStrategy.Builder builderTestSubject = AnnotationRoutingStrategy.builder();
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.annotationType(null));
+        assertThatThrownBy(() -> builderTestSubject.annotationType(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     public static class SomeFieldAnnotatedCommand {

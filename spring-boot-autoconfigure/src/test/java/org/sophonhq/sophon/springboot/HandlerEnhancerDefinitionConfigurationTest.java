@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.springboot;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.config.ProcessingGroup;
 import org.sophonhq.sophon.eventhandling.EventHandler;
 import org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
@@ -31,7 +32,6 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class verifying a {@link HandlerEnhancerDefinition} configurations. For example, that a {@code
@@ -56,7 +56,7 @@ class HandlerEnhancerDefinitionConfigurationTest {
                     assertThat(context).hasSingleBean(CustomHandlerEnhancerDefinition.class);
                     assertThat(context).hasSingleBean(MyEventHandlingComponent.class);
 
-                    assertTrue(VERIFY_ENHANCER.get());
+                    assertThat(VERIFY_ENHANCER.get()).isTrue();
                 });
     }
 
@@ -67,7 +67,7 @@ class HandlerEnhancerDefinitionConfigurationTest {
                 .run(context -> {
                     assertThat(context).hasSingleBean(CustomHandlerEnhancerDefinition.class);
 
-                    assertFalse(VERIFY_ENHANCER.get());
+                    assertThat(VERIFY_ENHANCER.get()).isFalse();
                 });
     }
 

@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.modelling.command.inspection;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.modelling.command.AggregateMember;
@@ -25,7 +25,7 @@ import org.sophonhq.sophon.modelling.command.AggregateMember;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the use the {@link AnnotatedAggregateMetaModelFactory} using the {@link
@@ -38,26 +38,20 @@ class AnnotatedAggregateAggregateMemberMetaModelFactoryTest {
 
     @Test
     void interfaceAggregateMemberThrowsSophonConfigurationException() {
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TestAggregate.class)
-        );
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TestAggregate.class))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void interfaceAggregateMemberCollectionThrowsSophonConfigurationException() {
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TestCollectionAggregate.class)
-        );
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TestCollectionAggregate.class))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void interfaceAggregateMemberMapThrowsSophonConfigurationException() {
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TestMapAggregate.class)
-        );
+        assertThatThrownBy(() -> AnnotatedAggregateMetaModelFactory.inspectAggregate(TestMapAggregate.class))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @SuppressWarnings("unused")

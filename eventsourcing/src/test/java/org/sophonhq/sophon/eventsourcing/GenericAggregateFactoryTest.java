@@ -25,7 +25,7 @@ import org.sophonhq.sophon.eventsourcing.utils.StubAggregate;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author Allard Buijze
@@ -34,7 +34,8 @@ class GenericAggregateFactoryTest {
 
     @Test
     void initializeRepository_NoSuitableConstructor() {
-        assertThrows(IncompatibleAggregateException.class, () -> new GenericAggregateFactory<>(UnsuitableAggregate.class));
+        assertThatThrownBy(() -> new GenericAggregateFactory<>(UnsuitableAggregate.class))
+                .isInstanceOf(IncompatibleAggregateException.class);
     }
 
     @Test
@@ -55,7 +56,7 @@ class GenericAggregateFactoryTest {
         DomainEventMessage<StubAggregate> snapshotMessage = new GenericDomainEventMessage<>("type", aggregate.getIdentifier(),
                                                                                             2, aggregate);
         GenericAggregateFactory<StubAggregate> factory = new GenericAggregateFactory<>(StubAggregate.class);
-        assertSame(aggregate, factory.createAggregateRoot(aggregate.getIdentifier(), snapshotMessage));
+        assertThat(factory.createAggregateRoot(aggregate.getIdentifier(), snapshotMessage)).isSameAs(aggregate);
     }
 
     /**
@@ -68,7 +69,7 @@ class GenericAggregateFactoryTest {
                 aggregate.getIdentifier(),
                 2, aggregate);
         AggregateFactory<StubAggregate> factory = new RogueAggregateFactory(StubAggregate.class);
-        assertSame(aggregate, factory.createAggregateRoot(aggregate.getIdentifier(), snapshotMessage));
+        assertThat(factory.createAggregateRoot(aggregate.getIdentifier(), snapshotMessage)).isSameAs(aggregate);
     }
 
     private static class UnsuitableAggregate {

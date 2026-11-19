@@ -20,7 +20,8 @@ package org.sophonhq.sophon.messaging.interceptors;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.apache.logging.slf4j.Log4jLogger;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.sophonhq.sophon.messaging.GenericMessage;
 import org.sophonhq.sophon.messaging.InterceptorChain;
@@ -31,9 +32,8 @@ import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.AdditionalMatchers.*;
-import static org.mockito.Mockito.eq;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -72,7 +72,7 @@ class LoggingInterceptorTest {
         field.setAccessible(true);
         org.slf4j.Logger logger = (org.slf4j.Logger) field.get(testSubject);
 
-        assertEquals("my.custom.logger", logger.getName());
+        assertThat(logger.getName()).isEqualTo("my.custom.logger");
     }
 
     @Test

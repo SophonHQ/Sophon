@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.modelling.saga;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -33,7 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.modelling.saga.SagaLifecycle.removeAssociationWith;
 
@@ -65,22 +67,21 @@ class AnnotatedSagaTest {
         testSubject.handle(new GenericEventMessage<>(new RegularEvent("wrongId")));
         testSubject.handle(new GenericEventMessage<>(new Object()));
 
-        assertEquals(1, testSaga.invocationCount);
+        assertThat(testSaga.invocationCount).isOne();
     }
 
     @Test
     void invokeSagaAssociationPropertyNotExistingInPayload() {
         AnnotationSagaMetaModelFactory testSubject = new AnnotationSagaMetaModelFactory();
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> testSubject.modelOf(SagaAssociationPropertyNotExistingInPayload.class)
-        );
+        assertThatThrownBy(() -> testSubject.modelOf(SagaAssociationPropertyNotExistingInPayload.class))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void invokeSagaAssociationPropertyEmpty() {
         AnnotationSagaMetaModelFactory testSubject = new AnnotationSagaMetaModelFactory();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.modelOf(SagaAssociationPropertyEmpty.class));
+        assertThatThrownBy(() -> testSubject.modelOf(SagaAssociationPropertyEmpty.class))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -91,15 +92,14 @@ class AnnotatedSagaTest {
         testSubject.handle(new GenericEventMessage<>(new EventWithoutProperties(), new MetaData(metaData)));
         testSubject.handle(new GenericEventMessage<>(new EventWithoutProperties()));
 
-        assertEquals(1, testSaga.invocationCount);
+        assertThat(testSaga.invocationCount).isOne();
     }
 
     @Test
     void invokeSagaResolverWithoutNoArgConstructor() {
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> new AnnotationSagaMetaModelFactory().modelOf(SagaUsingResolverWithoutNoArgConstructor.class)
-        );
+        assertThatThrownBy(() -> new AnnotationSagaMetaModelFactory()
+                .modelOf(SagaUsingResolverWithoutNoArgConstructor.class))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -109,8 +109,8 @@ class AnnotatedSagaTest {
         testSubject.handle(new GenericEventMessage<>(new Object()));
         testSubject.handle(new GenericEventMessage<>(new SagaEndEvent("id")));
 
-        assertEquals(2, testSaga.invocationCount);
-        assertFalse(testSubject.isActive());
+        assertThat(testSaga.invocationCount).isEqualTo(2);
+        assertThat(testSubject.isActive()).isFalse();
     }
 
     @Test
@@ -127,8 +127,8 @@ class AnnotatedSagaTest {
         testSubject.handle(new GenericEventMessage<>(new Object()));
         testSubject.handle(new GenericEventMessage<>(new SagaEndEvent("id")));
 
-        assertEquals(2, testSaga.invocationCount);
-        assertFalse(testSubject.isActive());
+        assertThat(testSaga.invocationCount).isEqualTo(2);
+        assertThat(testSubject.isActive()).isFalse();
     }
 
     @Test
@@ -138,22 +138,23 @@ class AnnotatedSagaTest {
         testSubject.handle(new GenericEventMessage<>(new Object()));
         testSubject.handle(new GenericEventMessage<>(new SagaEndEvent("id")));
 
-        assertEquals(2, testSaga.invocationCount);
-        assertFalse(testSubject.isActive());
+        assertThat(testSaga.invocationCount).isEqualTo(2);
+        assertThat(testSubject.isActive()).isFalse();
     }
 
     @Test
     void prepareResetThrowsResetNotSupportedException() {
         AnnotatedSaga<StubAnnotatedSaga> spiedTestSubject = spy(testSubject);
 
-        assertThrows(ResetNotSupportedException.class, spiedTestSubject::prepareReset);
+        assertThatThrownBy(spiedTestSubject::prepareReset).isInstanceOf(ResetNotSupportedException.class);
 
         verify(spiedTestSubject).prepareReset(null);
     }
 
     @Test
     void prepareResetWithResetContextThrowsResetNotSupportedException() {
-        assertThrows(ResetNotSupportedException.class, () -> testSubject.prepareReset("some-reset-context"));
+        assertThatThrownBy(() -> testSubject.prepareReset("some-reset-context"))
+                .isInstanceOf(ResetNotSupportedException.class);
     }
 
     @Test
@@ -161,16 +162,16 @@ class AnnotatedSagaTest {
         testSubject.doAssociateWith(new AssociationValue("propertyName", "id"));
         testSubject.execute(() -> {
             Set<AssociationValue> associationValues = SagaLifecycle.associationValues();
-            assertEquals(1, associationValues.size());
-            assertTrue(associationValues.contains(new AssociationValue("propertyName", "id")));
+            assertThat(associationValues).hasSize(1);
+            assertThat(associationValues).contains(new AssociationValue("propertyName", "id"));
         });
 
         testSubject.doAssociateWith(new AssociationValue("someOtherProperty", "3"));
         testSubject.execute(() -> {
             Set<AssociationValue> associationValues = SagaLifecycle.associationValues();
-            assertEquals(2, associationValues.size());
-            assertTrue(associationValues.contains(new AssociationValue("propertyName", "id")));
-            assertTrue(associationValues.contains(new AssociationValue("someOtherProperty", "3")));
+            assertThat(associationValues).hasSize(2);
+            assertThat(associationValues).contains(new AssociationValue("propertyName", "id"));
+            assertThat(associationValues).contains(new AssociationValue("someOtherProperty", "3"));
         });
     }
 

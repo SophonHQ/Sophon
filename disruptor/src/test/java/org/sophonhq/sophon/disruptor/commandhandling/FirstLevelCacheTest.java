@@ -17,13 +17,14 @@
 
 package org.sophonhq.sophon.disruptor.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventsourcing.EventSourcedAggregate;
 
 import java.util.stream.IntStream;
 
 import static java.lang.Thread.sleep;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class FirstLevelCacheTest {
@@ -43,7 +44,7 @@ class FirstLevelCacheTest {
     void shouldPut() {
         testSubject.put("key", cacheable);
 
-        assertEquals(1, testSubject.size());
+        assertThat(testSubject.size()).isOne();
     }
 
     @Test
@@ -51,7 +52,7 @@ class FirstLevelCacheTest {
         testSubject.put("key", cacheable);
         EventSourcedAggregate<MyAggregate> cached = testSubject.get("key");
 
-        assertSame(cached, cacheable);
+        assertThat(cacheable).isSameAs(cached);
     }
 
     @Test
@@ -59,8 +60,8 @@ class FirstLevelCacheTest {
         testSubject.put("key", cacheable);
         EventSourcedAggregate<MyAggregate> cached = testSubject.remove("key");
 
-        assertSame(cached, cacheable);
-        assertEquals(0, testSubject.size());
+        assertThat(cacheable).isSameAs(cached);
+        assertThat(testSubject.size()).isZero();
     }
 
     @Test
@@ -80,7 +81,7 @@ class FirstLevelCacheTest {
             sleep(50);
             i++;
         }
-        assertEquals(0, customTestSubject.size());
+        assertThat(customTestSubject.size()).isZero();
     }
 
     static class MyAggregate {
