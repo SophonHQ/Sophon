@@ -20,31 +20,37 @@ package org.sophonhq.sophon.queryhandling.registration;
 import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.queryhandling.QuerySubscription;
 
-import java.util.Collections;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class FailingDuplicateQueryHandlerResolverTest {
+
     private final FailingDuplicateQueryHandlerResolver resolver = FailingDuplicateQueryHandlerResolver.instance();
 
-    private final class MyQuery {}
-    private final class MyResponse {}
+    private final class MyQuery {
+
+    }
+
+    private final class MyResponse {
+
+    }
 
     @Test
     void throwsErrorOnDuplicateRegistration() {
-        QuerySubscription existingHandler = mockSubscription();
-        QuerySubscription addedHandler = mockSubscription();
+        QuerySubscription<?> existingHandler = mockSubscription();
+        QuerySubscription<?> addedHandler = mockSubscription();
 
-        Assertions.assertThrows(DuplicateQueryHandlerSubscriptionException.class, () -> {
-            resolver.resolve("com.example.MyQuery",
-                             MyQuery.class,
-                             Collections.singletonList(existingHandler),
-                             addedHandler);
-        });
+        assertThatThrownBy(() -> resolver.resolve("com.example.MyQuery",
+                                                  MyQuery.class,
+                                                  List.of(existingHandler),
+                                                  addedHandler))
+                .isInstanceOf(DuplicateQueryHandlerSubscriptionException.class);
     }
 
-    private QuerySubscription mockSubscription() {
-        QuerySubscription mock = mock(QuerySubscription.class);
+    private QuerySubscription<?> mockSubscription() {
+        QuerySubscription<?> mock = mock(QuerySubscription.class);
         when(mock.getQueryHandler()).thenReturn(message -> null);
         when(mock.getResponseType()).thenReturn(MyResponse.class);
         return mock;

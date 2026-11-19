@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.util.LinkedList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class WrappedCommandCallbackTest {
 
@@ -37,8 +37,8 @@ class WrappedCommandCallbackTest {
         wrappedCallback.onResult(Mockito.mock(CommandMessage.class), Mockito.mock(CommandResultMessage.class));
 
         // Assert two was called first, since that is the delegate
-        assertEquals("two", calls.get(0));
-        assertEquals("one", calls.get(1));
+        assertThat(calls.get(0)).isEqualTo("two");
+        assertThat(calls.get(1)).isEqualTo("one");
     }
 
     @Test
@@ -47,6 +47,6 @@ class WrappedCommandCallbackTest {
         CommandCallback<Object, Object> wrappedWithNull = original.wrap(null);
 
 
-        assertSame(original, wrappedWithNull);
+        assertThat(wrappedWithNull).isSameAs(original);
     }
 }

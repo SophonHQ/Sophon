@@ -19,30 +19,32 @@ package org.sophonhq.sophon.common.property;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 class DirectPropertyAccessStrategyTest {
 
 	@Test
 	void getValue() {
 		final Property<TestMessage> actualProperty = getProperty(regularPropertyName());
-		assertNotNull(actualProperty);
-		assertNotNull(actualProperty.<String>getValue(propertyHoldingInstance()));
+		assertThat(actualProperty).isNotNull();
+		assertThat(actualProperty.<String>getValue(propertyHoldingInstance())).isNotNull();
 	}
 
 	@Test
 	void getValue_BogusProperty() {
-		assertNull(getProperty(unknownPropertyName()));
+		assertThat(getProperty(unknownPropertyName())).isNull();
 	}
 
 	@Test
 	void getValue_NullForPrivateProperty() {
-		assertNull(getProperty(privatePropertyName()));
+		assertThat(getProperty(privatePropertyName())).isNull();
 	}
 
 	@Test
 	void overriddenPropertyValue() {
-		assertEquals("realValue", getProperty(overriddenPropertyName()).getValue(propertyHoldingInstance()));
+		assertThatObject(getProperty(overriddenPropertyName()).getValue(propertyHoldingInstance()))
+				.isEqualTo("realValue");
 	}
 
 	private String overriddenPropertyName() {

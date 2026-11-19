@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.modelling.saga;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.modelling.OnlyAcceptConstructorPropertiesAnnotation;
 import org.sophonhq.sophon.modelling.utils.TestSerializer;
 import org.sophonhq.sophon.serialization.SerializedObject;
@@ -30,7 +31,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests serialization capabilities of {@link SagaScopeDescriptor}.
@@ -60,8 +61,8 @@ class SagaScopeDescriptorSerializationTest {
         SagaScopeDescriptor result = (SagaScopeDescriptor) objectInputStream.readObject();
         objectInputStream.close();
 
-        assertEquals(expectedType, result.getType());
-        assertEquals(expectedIdentifier, result.getIdentifier());
+        assertThat(result.getType()).isEqualTo(expectedType);
+        assertThat(result.getIdentifier()).isEqualTo(expectedIdentifier);
     }
 
     @Test
@@ -72,8 +73,8 @@ class SagaScopeDescriptorSerializationTest {
         SerializedObject<String> serializedObject = xStreamSerializer.serialize(testSubject, String.class);
         SagaScopeDescriptor result = xStreamSerializer.deserialize(serializedObject);
 
-        assertEquals(expectedType, result.getType());
-        assertEquals(expectedIdentifier, result.getIdentifier());
+        assertThat(result.getType()).isEqualTo(expectedType);
+        assertThat(result.getIdentifier()).isEqualTo(expectedIdentifier);
     }
 
     @Test
@@ -83,8 +84,8 @@ class SagaScopeDescriptorSerializationTest {
         SerializedObject<String> serializedObject = jacksonSerializer.serialize(testSubject, String.class);
         SagaScopeDescriptor result = jacksonSerializer.deserialize(serializedObject);
 
-        assertEquals(expectedType, result.getType());
-        assertEquals(expectedIdentifier, result.getIdentifier());
+        assertThat(result.getType()).isEqualTo(expectedType);
+        assertThat(result.getIdentifier()).isEqualTo(expectedIdentifier);
     }
 
     @Test
@@ -95,7 +96,7 @@ class SagaScopeDescriptorSerializationTest {
         SerializedObject<String> serializedObject = jacksonSerializer.serialize(testSubject, String.class);
         SagaScopeDescriptor result = jacksonSerializer.deserialize(serializedObject);
 
-        assertEquals(expectedType, result.getType());
-        assertEquals(expectedIdentifier, result.getIdentifier());
+        assertThat(result.getType()).isEqualTo(expectedType);
+        assertThat(result.getIdentifier()).isEqualTo(expectedIdentifier);
     }
 }

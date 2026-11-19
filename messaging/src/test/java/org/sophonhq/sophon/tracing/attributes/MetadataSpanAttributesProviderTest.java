@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.tracing.attributes;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.tracing.SpanAttributesProvider;
@@ -25,7 +25,7 @@ import org.sophonhq.sophon.tracing.SpanAttributesProvider;
 import java.util.Map;
 
 import static java.util.Collections.singletonMap;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MetadataSpanAttributesProviderTest {
 
@@ -38,9 +38,10 @@ class MetadataSpanAttributesProviderTest {
                 .andMetaData(singletonMap("myNumberKey", 2))
                 .andMetaData(singletonMap("someOtherKey_2", "someValue"));
         Map<String, String> map = provider.provideForMessage(message);
-        assertEquals(3, map.size());
-        assertEquals("valueOne", map.get("sophon_metadata_myKeyOne"));
-        assertEquals("2", map.get("sophon_metadata_myNumberKey"));
-        assertEquals("someValue", map.get("sophon_metadata_someOtherKey_2"));
+        assertThat(map)
+                .hasSize(3)
+                .containsEntry("sophon_metadata_myKeyOne", "valueOne")
+                .containsEntry("sophon_metadata_myNumberKey", "2")
+                .containsEntry("sophon_metadata_someOtherKey_2", "someValue");
     }
 }

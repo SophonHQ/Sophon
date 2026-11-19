@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.junit.jupiter.*;
@@ -26,7 +26,9 @@ import org.sophonhq.sophon.common.SophonConfigurationException;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Validates the internals of the {@link MessageHandlerRegistrar}.
@@ -44,7 +46,7 @@ class MessageHandlerRegistrarTest {
                 () -> config, c -> null, (c, msgHandler) -> TEST_REGISTRATION_IMPLEMENTATION
         );
 
-        assertThrows(SophonConfigurationException.class, testSubject::start);
+        assertThatThrownBy(testSubject::start).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -62,8 +64,8 @@ class MessageHandlerRegistrarTest {
 
         testSubject.start();
 
-        assertTrue(isCreated.get());
-        assertTrue(isRegistered.get());
+        assertThat(isCreated.get()).isTrue();
+        assertThat(isRegistered.get()).isTrue();
     }
 
     @Test
@@ -81,7 +83,7 @@ class MessageHandlerRegistrarTest {
 
         testSubject.shutdown();
 
-        assertTrue(isCanceled.get());
+        assertThat(isCanceled.get()).isTrue();
     }
 
     @Test
@@ -97,8 +99,8 @@ class MessageHandlerRegistrarTest {
                 }
         );
 
-        assertDoesNotThrow(testSubject::shutdown);
-        assertFalse(isCanceled.get());
+        assertThatNoException().isThrownBy(testSubject::shutdown);
+        assertThat(isCanceled.get()).isFalse();
     }
 
     private static class SomeMessageHandler {

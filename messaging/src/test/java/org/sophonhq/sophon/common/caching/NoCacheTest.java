@@ -24,8 +24,8 @@ import javax.cache.CacheException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -38,12 +38,12 @@ class NoCacheTest {
         // this is pretty stupid, but we're testing that it does absolutely nothing
         NoCache cache = NoCache.INSTANCE;
         Registration registration = cache.registerCacheEntryListener(mock(Cache.EntryListener.class));
-        assertFalse(cache.containsKey(new Object()));
-        assertNull(cache.get(new Object()));
+        assertThat(cache.containsKey(new Object())).isFalse();
+        assertThatObject(cache.get(new Object())).isNull();
         cache.put(new Object(), new Object());
         Map<Object, Object> map = new HashMap<>();
         map.put(new Object(), new Object());
-        assertFalse(cache.remove(new Object()));
+        assertThat(cache.remove(new Object())).isFalse();
         registration.cancel();
     }
 }

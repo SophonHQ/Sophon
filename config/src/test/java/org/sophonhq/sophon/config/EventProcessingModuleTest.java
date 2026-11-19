@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.config;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.junit.jupiter.*;
@@ -85,7 +86,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.common.ReflectionUtils.getFieldValue;
 import static org.sophonhq.sophon.utils.AssertUtils.assertWithin;
@@ -141,12 +144,12 @@ class EventProcessingModuleTest {
                   .registerEventHandler(c -> annotatedBeanSubclass);
         Configuration configuration = configurer.start();
 
-        assertEquals(3, configuration.eventProcessingConfiguration().eventProcessors().size());
-        assertTrue(processors.get("java.util.concurrent").getEventHandlers().contains("concurrent"));
-        assertTrue(processors.get("java.util.concurrent").getEventHandlers().contains(map));
-        assertTrue(processors.get("java.lang").getEventHandlers().contains(""));
-        assertTrue(processors.get("processingGroup").getEventHandlers().contains(annotatedBean));
-        assertTrue(processors.get("processingGroup").getEventHandlers().contains(annotatedBeanSubclass));
+        assertThat(configuration.eventProcessingConfiguration().eventProcessors()).hasSize(3);
+        assertThat(processors.get("java.util.concurrent").getEventHandlers().contains("concurrent")).isTrue();
+        assertThat(processors.get("java.util.concurrent").getEventHandlers().contains(map)).isTrue();
+        assertThat(processors.get("java.lang").getEventHandlers().contains("")).isTrue();
+        assertThat(processors.get("processingGroup").getEventHandlers().contains(annotatedBean)).isTrue();
+        assertThat(processors.get("processingGroup").getEventHandlers().contains(annotatedBeanSubclass)).isTrue();
     }
 
     @Test
@@ -172,12 +175,12 @@ class EventProcessingModuleTest {
                   .registerEventHandler(c -> annotatedBeanSubclass);
         Configuration configuration = configurer.start();
 
-        assertEquals(3, configuration.eventProcessingConfiguration().eventProcessors().size());
-        assertTrue(processors.get("java.lang").getEventHandlers().contains("concurrent"));
-        assertTrue(processors.get("special").getEventHandlers().contains(map));
-        assertTrue(processors.get("java.lang").getEventHandlers().contains(""));
-        assertTrue(processors.get("processingGroup").getEventHandlers().contains(annotatedBean));
-        assertTrue(processors.get("processingGroup").getEventHandlers().contains(annotatedBeanSubclass));
+        assertThat(configuration.eventProcessingConfiguration().eventProcessors()).hasSize(3);
+        assertThat(processors.get("java.lang").getEventHandlers().contains("concurrent")).isTrue();
+        assertThat(processors.get("special").getEventHandlers().contains(map)).isTrue();
+        assertThat(processors.get("java.lang").getEventHandlers().contains("")).isTrue();
+        assertThat(processors.get("processingGroup").getEventHandlers().contains(annotatedBean)).isTrue();
+        assertThat(processors.get("processingGroup").getEventHandlers().contains(annotatedBeanSubclass)).isTrue();
     }
 
     @Test
@@ -190,14 +193,14 @@ class EventProcessingModuleTest {
 
         EventProcessingConfiguration processingConfig = configuration.eventProcessingConfiguration();
 
-        assertTrue(processingConfig.eventProcessor("subscribing").isPresent());
-        assertTrue(processingConfig.eventProcessor("subscribing")
+        assertThat(processingConfig.eventProcessor("subscribing")).isPresent();
+        assertThat(processingConfig.eventProcessor("subscribing")
                                    .map(p -> p instanceof SubscribingEventProcessor)
-                                   .orElse(false));
-        assertTrue(processingConfig.eventProcessor("tracking").isPresent());
-        assertTrue(processingConfig.eventProcessor("tracking")
+                                   .orElse(false)).isTrue();
+        assertThat(processingConfig.eventProcessor("tracking")).isPresent();
+        assertThat(processingConfig.eventProcessor("tracking")
                                    .map(p -> p instanceof SubscribingEventProcessor)
-                                   .orElse(false));
+                                   .orElse(false)).isTrue();
     }
 
     @Test
@@ -208,7 +211,7 @@ class EventProcessingModuleTest {
                                                                           .registerEventHandler(c -> new TrackingEventHandler())
                                                                           .registerTrackingEventProcessor("tracking"));
 
-        assertThrows(LifecycleHandlerInvocationException.class, configurer::start);
+        assertThatThrownBy(configurer::start).isInstanceOf(LifecycleHandlerInvocationException.class);
     }
 
     @Test
@@ -231,16 +234,16 @@ class EventProcessingModuleTest {
                   .registerEventHandler(c -> map); // --> java.util.concurrent
         Configuration configuration = configurer.start();
 
-        assertEquals(3, configuration.eventProcessingConfiguration().eventProcessors().size());
-        assertTrue(processors.get("java.util.concurrent2").getEventHandlers().contains("concurrent"));
-        assertTrue(processors.get("java.util.concurrent2").getHandlerInterceptors().iterator()
-                             .next() instanceof CorrelationDataInterceptor);
-        assertTrue(processors.get("java.util.concurrent").getEventHandlers().contains(map));
-        assertTrue(processors.get("java.util.concurrent").getHandlerInterceptors().iterator()
-                             .next() instanceof CorrelationDataInterceptor);
-        assertTrue(processors.get("java.lang").getEventHandlers().contains(""));
-        assertTrue(processors.get("java.lang").getHandlerInterceptors().iterator()
-                             .next() instanceof CorrelationDataInterceptor);
+        assertThat(configuration.eventProcessingConfiguration().eventProcessors()).hasSize(3);
+        assertThat(processors.get("java.util.concurrent2").getEventHandlers().contains("concurrent")).isTrue();
+        assertThat(processors.get("java.util.concurrent2").getHandlerInterceptors().iterator()
+                             .next()).isInstanceOf(CorrelationDataInterceptor.class);
+        assertThat(processors.get("java.util.concurrent").getEventHandlers().contains(map)).isTrue();
+        assertThat(processors.get("java.util.concurrent").getHandlerInterceptors().iterator()
+                             .next()).isInstanceOf(CorrelationDataInterceptor.class);
+        assertThat(processors.get("java.lang").getEventHandlers().contains("")).isTrue();
+        assertThat(processors.get("java.lang").getHandlerInterceptors().iterator()
+                             .next()).isInstanceOf(CorrelationDataInterceptor.class);
     }
 
     @Test
@@ -261,10 +264,10 @@ class EventProcessingModuleTest {
                   .registerEventHandler(c -> annotatedBean); // --> processingGroup
         configurer.start();
 
-        assertEquals(3, processors.size());
-        assertTrue(processors.get("default").getEventHandlers().contains(object));
-        assertTrue(processors.get("java.util.concurrent").getEventHandlers().contains("concurrent"));
-        assertTrue(processors.get("processingGroup").getEventHandlers().contains(annotatedBean));
+        assertThat(processors).hasSize(3);
+        assertThat(processors.get("default").getEventHandlers().contains(object)).isTrue();
+        assertThat(processors.get("java.util.concurrent").getEventHandlers().contains("concurrent")).isTrue();
+        assertThat(processors.get("processingGroup").getEventHandlers().contains(annotatedBean)).isTrue();
     }
 
     @Test
@@ -281,15 +284,15 @@ class EventProcessingModuleTest {
         EventProcessingConfiguration configuration = configurer.start()
                                                                .eventProcessingConfiguration();
 
-        assertEquals("myGroup", configuration.sagaProcessingGroup(String.class));
-        assertEquals("obj", configuration.sagaProcessingGroup(Object.class));
-        assertEquals("ConcurrentMapCustomProcessor", configuration.sagaProcessingGroup(ConcurrentMap.class));
+        assertThat(configuration.sagaProcessingGroup(String.class)).isEqualTo("myGroup");
+        assertThat(configuration.sagaProcessingGroup(Object.class)).isEqualTo("obj");
+        assertThat(configuration.sagaProcessingGroup(ConcurrentMap.class)).isEqualTo("ConcurrentMapCustomProcessor");
 
-        assertEquals(4, configuration.eventProcessors().size());
-        assertTrue(configuration.eventProcessor("myGroup").isPresent());
-        assertTrue(configuration.eventProcessor("obj").isPresent());
-        assertTrue(configuration.eventProcessor("java.util").isPresent());
-        assertTrue(configuration.eventProcessor("ConcurrentMapCustomProcessor").isPresent());
+        assertThat(configuration.eventProcessors()).hasSize(4);
+        assertThat(configuration.eventProcessor("myGroup")).isPresent();
+        assertThat(configuration.eventProcessor("obj")).isPresent();
+        assertThat(configuration.eventProcessor("java.util")).isPresent();
+        assertThat(configuration.eventProcessor("ConcurrentMapCustomProcessor")).isPresent();
     }
 
     @Test
@@ -303,14 +306,14 @@ class EventProcessingModuleTest {
         EventProcessingConfiguration configuration = configurer.start()
                                                                .eventProcessingConfiguration();
 
-        assertEquals("myGroup", configuration.sagaProcessingGroup(String.class));
-        assertEquals("myGroup", configuration.sagaProcessingGroup(Object.class));
-        assertEquals("ConcurrentMapProcessor", configuration.sagaProcessingGroup(ConcurrentMap.class));
+        assertThat(configuration.sagaProcessingGroup(String.class)).isEqualTo("myGroup");
+        assertThat(configuration.sagaProcessingGroup(Object.class)).isEqualTo("myGroup");
+        assertThat(configuration.sagaProcessingGroup(ConcurrentMap.class)).isEqualTo("ConcurrentMapProcessor");
 
-        assertEquals(3, configuration.eventProcessors().size());
-        assertTrue(configuration.eventProcessor("myGroup").isPresent());
-        assertTrue(configuration.eventProcessor("java.util").isPresent());
-        assertTrue(configuration.eventProcessor("ConcurrentMapProcessor").isPresent());
+        assertThat(configuration.eventProcessors()).hasSize(3);
+        assertThat(configuration.eventProcessor("myGroup")).isPresent();
+        assertThat(configuration.eventProcessor("java.util")).isPresent();
+        assertThat(configuration.eventProcessor("ConcurrentMapProcessor")).isPresent();
     }
 
     @Test
@@ -330,12 +333,12 @@ class EventProcessingModuleTest {
 
         Optional<AbstractEventProcessor> defaultProcessorOptional =
                 config.eventProcessingConfiguration().eventProcessor("default", AbstractEventProcessor.class);
-        assertTrue(defaultProcessorOptional.isPresent());
+        assertThat(defaultProcessorOptional).isPresent();
         AbstractEventProcessor defaultProcessor = defaultProcessorOptional.get();
 
         Optional<AbstractEventProcessor> specialProcessorOptional =
                 config.eventProcessingConfiguration().eventProcessor("special", AbstractEventProcessor.class);
-        assertTrue(specialProcessorOptional.isPresent());
+        assertThat(specialProcessorOptional).isPresent();
         AbstractEventProcessor specialProcessor = specialProcessorOptional.get();
 
         MultiEventHandlerInvoker defaultInvoker =
@@ -343,10 +346,10 @@ class EventProcessingModuleTest {
         MultiEventHandlerInvoker specialInvoker =
                 getFieldValue(AbstractEventProcessor.class.getDeclaredField("eventHandlerInvoker"), specialProcessor);
 
-        assertEquals(sequentialPolicy,
-                     ((SimpleEventHandlerInvoker) defaultInvoker.delegates().get(0)).getSequencingPolicy());
-        assertEquals(fullConcurrencyPolicy,
-                     ((SimpleEventHandlerInvoker) specialInvoker.delegates().get(0)).getSequencingPolicy());
+        assertThat(((SimpleEventHandlerInvoker) defaultInvoker.delegates().get(0)).getSequencingPolicy())
+                .isEqualTo(sequentialPolicy);
+        assertThat(((SimpleEventHandlerInvoker) specialInvoker.delegates().get(0)).getSequencingPolicy())
+                .isEqualTo(fullConcurrencyPolicy);
     }
 
     @Test
@@ -366,8 +369,8 @@ class EventProcessingModuleTest {
 
         Map<String, EventProcessor> processorMap = config.eventProcessingConfiguration().eventProcessors();
 
-        processorMap.forEach((c, processor) -> assertInstanceOf(SubscribingEventProcessor.class, processor));
-        assertEquals(2, processorMap.size());
+        processorMap.forEach((c, processor) -> assertThat(processor).isInstanceOf(SubscribingEventProcessor.class));
+        assertThat(processorMap).hasSize(2);
         verify(mockBuilder, times(2)).build(anyString());
     }
 
@@ -388,8 +391,8 @@ class EventProcessingModuleTest {
         // CorrelationDataInterceptor is automatically configured
         Optional<EventProcessor> defaultProcessor = config.eventProcessingConfiguration()
                                                           .eventProcessor("default");
-        assertTrue(defaultProcessor.isPresent());
-        assertEquals(3, defaultProcessor.get().getHandlerInterceptors().size());
+        assertThat(defaultProcessor).isPresent();
+        assertThat(defaultProcessor.get().getHandlerInterceptors()).hasSize(3);
     }
 
     @Test
@@ -407,9 +410,9 @@ class EventProcessingModuleTest {
         try {
             config.eventBus().publish(new GenericEventMessage<Object>("test"));
 
-            assertEquals(1, subscribingMonitor.getMessages().size());
-            assertTrue(trackingMonitor.await(10, TimeUnit.SECONDS));
-            assertTrue(tokenStoreInvocation.await(10, TimeUnit.SECONDS));
+            assertThat(subscribingMonitor.getMessages()).hasSize(1);
+            assertThat(trackingMonitor.await(10, TimeUnit.SECONDS)).isTrue();
+            assertThat(tokenStoreInvocation.await(10, TimeUnit.SECONDS)).isTrue();
         } finally {
             config.shutdown();
         }
@@ -453,10 +456,10 @@ class EventProcessingModuleTest {
         //noinspection Duplicates
         try {
             config.eventBus().publish(errorThrowingEventMessage);
-            assertTrue(tokenStoreInvocation.await(10, TimeUnit.SECONDS));
+            assertThat(tokenStoreInvocation.await(10, TimeUnit.SECONDS)).isTrue();
 
-            assertTrue(errorHandler.await(10, TimeUnit.SECONDS));
-            assertEquals(expectedListenerInvocationErrorHandlerCalls, errorHandler.getErrorCounter());
+            assertThat(errorHandler.await(10, TimeUnit.SECONDS)).isTrue();
+            assertThat(errorHandler.getErrorCounter()).isEqualTo(expectedListenerInvocationErrorHandlerCalls);
         } finally {
             config.shutdown();
         }
@@ -482,11 +485,11 @@ class EventProcessingModuleTest {
         try {
             config.eventBus().publish(errorThrowingEventMessage);
 
-            assertEquals(expectedErrorHandlerCalls, subscribingErrorHandler.getErrorCounter());
+            assertThat(subscribingErrorHandler.getErrorCounter()).isEqualTo(expectedErrorHandlerCalls);
 
-            assertTrue(tokenStoreInvocation.await(10, TimeUnit.SECONDS));
-            assertTrue(trackingErrorHandler.await(10, TimeUnit.SECONDS));
-            assertEquals(expectedErrorHandlerCalls, trackingErrorHandler.getErrorCounter());
+            assertThat(tokenStoreInvocation.await(10, TimeUnit.SECONDS)).isTrue();
+            assertThat(trackingErrorHandler.await(10, TimeUnit.SECONDS)).isTrue();
+            assertThat(trackingErrorHandler.getErrorCounter()).isEqualTo(expectedErrorHandlerCalls);
         } finally {
             config.shutdown();
         }
@@ -510,10 +513,10 @@ class EventProcessingModuleTest {
         //noinspection Duplicates
         try {
             config.eventBus().publish(failingEventMessage);
-            assertTrue(tokenStoreInvocation.await(10, TimeUnit.SECONDS));
+            assertThat(tokenStoreInvocation.await(10, TimeUnit.SECONDS)).isTrue();
 
-            assertTrue(errorHandler.await(10, TimeUnit.SECONDS));
-            assertEquals(expectedErrorHandlerCalls, errorHandler.getErrorCounter());
+            assertThat(errorHandler.await(10, TimeUnit.SECONDS)).isTrue();
+            assertThat(errorHandler.getErrorCounter()).isEqualTo(expectedErrorHandlerCalls);
         } finally {
             config.shutdown();
         }
@@ -528,8 +531,8 @@ class EventProcessingModuleTest {
         Configuration config = configurer.start();
         Optional<TrackingEventProcessor> processor = config.eventProcessingConfiguration()
                                                            .eventProcessor("tracking", TrackingEventProcessor.class);
-        assertTrue(processor.isPresent());
-        assertEquals(eventStoreOne, processor.get().getMessageSource());
+        assertThat(processor).isPresent();
+        assertThat(processor.get().getMessageSource()).isEqualTo(eventStoreOne);
     }
 
     @Test
@@ -542,8 +545,8 @@ class EventProcessingModuleTest {
         Configuration config = configurer.start();
         Optional<TrackingEventProcessor> processor = config.eventProcessingConfiguration()
                                                            .eventProcessor("tracking", TrackingEventProcessor.class);
-        assertTrue(processor.isPresent());
-        assertEquals(eventStoreTwo, processor.get().getMessageSource());
+        assertThat(processor).isPresent();
+        assertThat(processor.get().getMessageSource()).isEqualTo(eventStoreTwo);
     }
 
     @Test
@@ -555,8 +558,8 @@ class EventProcessingModuleTest {
         Configuration config = configurer.start();
         Optional<SubscribingEventProcessor> processor = config.eventProcessingConfiguration()
                                                               .eventProcessor("subscribing");
-        assertTrue(processor.isPresent());
-        assertEquals(eventStoreOne, processor.get().getMessageSource());
+        assertThat(processor).isPresent();
+        assertThat(processor.get().getMessageSource()).isEqualTo(eventStoreOne);
     }
 
     @Test
@@ -569,8 +572,8 @@ class EventProcessingModuleTest {
         Configuration config = configurer.start();
         Optional<SubscribingEventProcessor> processor = config.eventProcessingConfiguration()
                                                               .eventProcessor("subscribing");
-        assertTrue(processor.isPresent());
-        assertEquals(eventStoreTwo, processor.get().getMessageSource());
+        assertThat(processor).isPresent();
+        assertThat(processor.get().getMessageSource()).isEqualTo(eventStoreTwo);
     }
 
 
@@ -595,11 +598,11 @@ class EventProcessingModuleTest {
         try {
             config.eventBus().publish(failingEventMessage);
 
-            assertEquals(expectedErrorHandlerCalls, subscribingErrorHandler.getErrorCounter());
+            assertThat(subscribingErrorHandler.getErrorCounter()).isEqualTo(expectedErrorHandlerCalls);
 
-            assertTrue(tokenStoreInvocation.await(10, TimeUnit.SECONDS));
-            assertTrue(trackingErrorHandler.await(10, TimeUnit.SECONDS));
-            assertEquals(expectedErrorHandlerCalls, trackingErrorHandler.getErrorCounter());
+            assertThat(tokenStoreInvocation.await(10, TimeUnit.SECONDS)).isTrue();
+            assertThat(trackingErrorHandler.await(10, TimeUnit.SECONDS)).isTrue();
+            assertThat(trackingErrorHandler.getErrorCounter()).isEqualTo(expectedErrorHandlerCalls);
         } finally {
             config.shutdown();
         }
@@ -608,7 +611,7 @@ class EventProcessingModuleTest {
     @Test
     void packageOfObject() {
         String expectedPackageName = EventProcessingModule.class.getPackage().getName();
-        assertEquals(expectedPackageName, EventProcessingModule.packageOfObject(this));
+        assertThat(EventProcessingModule.packageOfObject(this)).isEqualTo(expectedPackageName);
     }
 
     @Test
@@ -627,19 +630,19 @@ class EventProcessingModuleTest {
 
         Optional<TrackingEventProcessor> resultTrackingTep =
                 config.eventProcessingConfiguration().eventProcessor("tracking", TrackingEventProcessor.class);
-        assertTrue(resultTrackingTep.isPresent());
+        assertThat(resultTrackingTep).isPresent();
         TrackingEventProcessor trackingTep = resultTrackingTep.get();
         int trackingTepSegmentsSize =
                 getFieldValue(TrackingEventProcessor.class.getDeclaredField("segmentsSize"), trackingTep);
-        assertEquals(4, trackingTepSegmentsSize);
+        assertThat(trackingTepSegmentsSize).isEqualTo(4);
 
         Optional<TrackingEventProcessor> resultDefaultTep =
                 config.eventProcessingConfiguration().eventProcessor("default", TrackingEventProcessor.class);
-        assertTrue(resultDefaultTep.isPresent());
+        assertThat(resultDefaultTep).isPresent();
         TrackingEventProcessor defaultTep = resultDefaultTep.get();
         int defaultTepSegmentsSize =
                 getFieldValue(TrackingEventProcessor.class.getDeclaredField("segmentsSize"), defaultTep);
-        assertEquals(4, defaultTepSegmentsSize);
+        assertThat(defaultTepSegmentsSize).isEqualTo(4);
     }
 
     @Test
@@ -658,19 +661,19 @@ class EventProcessingModuleTest {
 
         Optional<TrackingEventProcessor> resultTrackingTep =
                 config.eventProcessingConfiguration().eventProcessor("tracking", TrackingEventProcessor.class);
-        assertTrue(resultTrackingTep.isPresent());
+        assertThat(resultTrackingTep).isPresent();
         TrackingEventProcessor trackingTep = resultTrackingTep.get();
         int trackingTepSegmentsSize =
                 getFieldValue(TrackingEventProcessor.class.getDeclaredField("segmentsSize"), trackingTep);
-        assertEquals(4, trackingTepSegmentsSize);
+        assertThat(trackingTepSegmentsSize).isEqualTo(4);
 
         Optional<TrackingEventProcessor> resultDefaultTep =
                 config.eventProcessingConfiguration().eventProcessor("default", TrackingEventProcessor.class);
-        assertTrue(resultDefaultTep.isPresent());
+        assertThat(resultDefaultTep).isPresent();
         TrackingEventProcessor defaultTep = resultDefaultTep.get();
         int defaultTepSegmentsSize =
                 getFieldValue(TrackingEventProcessor.class.getDeclaredField("segmentsSize"), defaultTep);
-        assertEquals(1, defaultTepSegmentsSize);
+        assertThat(defaultTepSegmentsSize).isOne();
     }
 
     @Test
@@ -684,10 +687,10 @@ class EventProcessingModuleTest {
 
         Optional<TrackingEventProcessor> resultTep =
                 config.eventProcessingConfiguration().eventProcessor("ObjectProcessor", TrackingEventProcessor.class);
-        assertTrue(resultTep.isPresent());
+        assertThat(resultTep).isPresent();
         TrackingEventProcessor tep = resultTep.get();
         int tepSegmentsSize = getFieldValue(TrackingEventProcessor.class.getDeclaredField("segmentsSize"), tep);
-        assertEquals(1, tepSegmentsSize);
+        assertThat(tepSegmentsSize).isOne();
 
         Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> tepInitialTokenBuilder =
                 getFieldValue(TrackingEventProcessor.class.getDeclaredField("initialTrackingTokenBuilder"), tep);
@@ -709,16 +712,16 @@ class EventProcessingModuleTest {
         Optional<TrackingEventProcessor> resultTep = config.eventProcessingConfiguration().eventProcessor(
                 "custom-processor", TrackingEventProcessor.class
         );
-        assertTrue(resultTep.isPresent());
+        assertThat(resultTep).isPresent();
         TrackingEventProcessor tep = resultTep.get();
         int tepSegmentsSize = getFieldValue(TrackingEventProcessor.class.getDeclaredField("segmentsSize"), tep);
-        assertEquals(1, tepSegmentsSize);
+        assertThat(tepSegmentsSize).isOne();
 
         Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> tepInitialTokenBuilder =
                 getFieldValue(TrackingEventProcessor.class.getDeclaredField("initialTrackingTokenBuilder"), tep);
         TrackingToken actualInitialToken = tepInitialTokenBuilder.apply(eventStoreTwo);
         // In absence of the default Saga Config, the stream starts at the tail
-        assertEquals(0, actualInitialToken.position().orElse(-1));
+        assertThat(actualInitialToken.position().orElse(-1)).isZero();
         // to create the default replay token, we need to retrieve the head token
         verify(eventStoreTwo).createHeadToken();
     }
@@ -735,16 +738,16 @@ class EventProcessingModuleTest {
 
         Optional<TrackingEventProcessor> resultTep =
                 config.eventProcessingConfiguration().eventProcessor("ObjectProcessor", TrackingEventProcessor.class);
-        assertTrue(resultTep.isPresent());
+        assertThat(resultTep).isPresent();
         TrackingEventProcessor tep = resultTep.get();
         int tepSegmentsSize = getFieldValue(TrackingEventProcessor.class.getDeclaredField("segmentsSize"), tep);
-        assertEquals(3, tepSegmentsSize);
+        assertThat(tepSegmentsSize).isEqualTo(3);
 
         Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> tepInitialTokenBuilder =
                 getFieldValue(TrackingEventProcessor.class.getDeclaredField("initialTrackingTokenBuilder"), tep);
         TrackingToken initialToken = tepInitialTokenBuilder.apply(eventStoreTwo);
         // In absence of the default Saga Config, the stream starts at the tail
-        assertEquals(0, initialToken.position().orElse(-1));
+        assertThat(initialToken.position().orElse(-1)).isZero();
         // to create the default replay token, we need to retrieve the head token
         verify(eventStoreTwo).createHeadToken();
     }
@@ -763,16 +766,16 @@ class EventProcessingModuleTest {
 
         Optional<TrackingEventProcessor> resultTep =
                 config.eventProcessingConfiguration().eventProcessor("ObjectProcessor", TrackingEventProcessor.class);
-        assertTrue(resultTep.isPresent());
+        assertThat(resultTep).isPresent();
         TrackingEventProcessor tep = resultTep.get();
         int tepSegmentsSize = getFieldValue(TrackingEventProcessor.class.getDeclaredField("segmentsSize"), tep);
-        assertEquals(4, tepSegmentsSize);
+        assertThat(tepSegmentsSize).isEqualTo(4);
 
         Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> tepInitialTokenBuilder =
                 getFieldValue(TrackingEventProcessor.class.getDeclaredField("initialTrackingTokenBuilder"), tep);
         TrackingToken actualInitialToken = tepInitialTokenBuilder.apply(eventStoreTwo);
         // In absence of the default Saga Config, the stream starts at the tail
-        assertEquals(0, actualInitialToken.position().orElse(-1));
+        assertThat(actualInitialToken.position().orElse(-1)).isZero();
         // to create the default replay token, we need to retrieve the head token
         verify(eventStoreTwo).createHeadToken();
     }
@@ -791,16 +794,16 @@ class EventProcessingModuleTest {
 
         Optional<TrackingEventProcessor> resultTep =
                 config.eventProcessingConfiguration().eventProcessor("ObjectProcessor", TrackingEventProcessor.class);
-        assertTrue(resultTep.isPresent());
+        assertThat(resultTep).isPresent();
         TrackingEventProcessor tep = resultTep.get();
         int tepSegmentsSize = getFieldValue(TrackingEventProcessor.class.getDeclaredField("segmentsSize"), tep);
-        assertEquals(4, tepSegmentsSize);
+        assertThat(tepSegmentsSize).isEqualTo(4);
 
         Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> tepInitialTokenBuilder =
                 getFieldValue(TrackingEventProcessor.class.getDeclaredField("initialTrackingTokenBuilder"), tep);
         TrackingToken actualInitialToken = tepInitialTokenBuilder.apply(eventStoreTwo);
         // In absence of the default Saga Config, the stream starts at the tail
-        assertEquals(0, actualInitialToken.position().orElse(-1));
+        assertThat(actualInitialToken.position().orElse(-1)).isZero();
         // to create the default replay token, we need to retrieve the head token
         verify(eventStoreTwo).createHeadToken();
     }
@@ -817,12 +820,12 @@ class EventProcessingModuleTest {
         Optional<PooledStreamingEventProcessor> resultPsep =
                 config.eventProcessingConfiguration()
                       .eventProcessor("ObjectProcessor", PooledStreamingEventProcessor.class);
-        assertTrue(resultPsep.isPresent());
+        assertThat(resultPsep).isPresent();
 
         PooledStreamingEventProcessor psep = resultPsep.get();
         long tokenClaimInterval =
                 getFieldValue(PooledStreamingEventProcessor.class.getDeclaredField("tokenClaimInterval"), psep);
-        assertEquals(5000L, tokenClaimInterval);
+        assertThat(tokenClaimInterval).isEqualTo(5000L);
 
         Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialToken =
                 getFieldValue(PooledStreamingEventProcessor.class.getDeclaredField("initialToken"), psep);
@@ -844,18 +847,18 @@ class EventProcessingModuleTest {
         Optional<PooledStreamingEventProcessor> resultPsep =
                 config.eventProcessingConfiguration()
                       .eventProcessor("custom-processor", PooledStreamingEventProcessor.class);
-        assertTrue(resultPsep.isPresent());
+        assertThat(resultPsep).isPresent();
 
         PooledStreamingEventProcessor psep = resultPsep.get();
         long tokenClaimInterval =
                 getFieldValue(PooledStreamingEventProcessor.class.getDeclaredField("tokenClaimInterval"), psep);
-        assertEquals(5000L, tokenClaimInterval);
+        assertThat(tokenClaimInterval).isEqualTo(5000L);
 
         Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialToken =
                 getFieldValue(PooledStreamingEventProcessor.class.getDeclaredField("initialToken"), psep);
         TrackingToken actualInitialToken = initialToken.apply(eventStoreTwo);
         // In absence of the default Saga Config, the stream starts at the tail
-        assertEquals(0, actualInitialToken.position().orElse(-1));
+        assertThat(actualInitialToken.position().orElse(-1)).isZero();
         // to create the default replay token, we need to retrieve the head token
         verify(eventStoreTwo).createHeadToken();
     }
@@ -873,7 +876,7 @@ class EventProcessingModuleTest {
         Optional<PooledStreamingEventProcessor> resultPsep =
                 config.eventProcessingConfiguration()
                       .eventProcessor("ObjectProcessor", PooledStreamingEventProcessor.class);
-        assertTrue(resultPsep.isPresent());
+        assertThat(resultPsep).isPresent();
 
         PooledStreamingEventProcessor psep = resultPsep.get();
 
@@ -881,7 +884,7 @@ class EventProcessingModuleTest {
                 getFieldValue(PooledStreamingEventProcessor.class.getDeclaredField("initialToken"), psep);
         TrackingToken actualInitialToken = initialToken.apply(eventStoreTwo);
         // In absence of the default Saga Config, the stream starts at the tail
-        assertEquals(0, actualInitialToken.position().orElse(-1));
+        assertThat(actualInitialToken.position().orElse(-1)).isZero();
         // to create the default replay token, we need to retrieve the head token
         verify(eventStoreTwo).createHeadToken();
     }
@@ -901,7 +904,7 @@ class EventProcessingModuleTest {
         Optional<PooledStreamingEventProcessor> resultPsep =
                 config.eventProcessingConfiguration()
                       .eventProcessor("ObjectProcessor", PooledStreamingEventProcessor.class);
-        assertTrue(resultPsep.isPresent());
+        assertThat(resultPsep).isPresent();
 
         PooledStreamingEventProcessor psep = resultPsep.get();
 
@@ -910,7 +913,7 @@ class EventProcessingModuleTest {
 
         TrackingToken actualInitialToken = initialToken.apply(eventStoreTwo);
         // In absence of the default Saga Config, the stream starts at the tail
-        assertEquals(0, actualInitialToken.position().orElse(-1));
+        assertThat(actualInitialToken.position().orElse(-1)).isZero();
         // to create the default replay token, we need to retrieve the head token
         verify(eventStoreTwo).createHeadToken();
     }
@@ -929,14 +932,14 @@ class EventProcessingModuleTest {
         Optional<PooledStreamingEventProcessor> resultPsep =
                 config.eventProcessingConfiguration()
                       .eventProcessor("ObjectProcessor", PooledStreamingEventProcessor.class);
-        assertTrue(resultPsep.isPresent());
+        assertThat(resultPsep).isPresent();
 
         PooledStreamingEventProcessor psep = resultPsep.get();
         Function<StreamableMessageSource<TrackedEventMessage<?>>, TrackingToken> initialToken =
                 getFieldValue(PooledStreamingEventProcessor.class.getDeclaredField("initialToken"), psep);
         TrackingToken actualInitialToken = initialToken.apply(eventStoreTwo);
         // In absence of the default Saga Config, the stream starts at the tail
-        assertEquals(0, actualInitialToken.position().orElse(-1));
+        assertThat(actualInitialToken.position().orElse(-1)).isZero();
         // to create the default replay token, we need to retrieve the head token
         verify(eventStoreTwo).createHeadToken();
     }
@@ -955,11 +958,11 @@ class EventProcessingModuleTest {
         Optional<PooledStreamingEventProcessor> resultPooledPsep =
                 config.eventProcessingConfiguration()
                       .eventProcessor("pooled-streaming", PooledStreamingEventProcessor.class);
-        assertTrue(resultPooledPsep.isPresent());
+        assertThat(resultPooledPsep).isPresent();
 
         Optional<PooledStreamingEventProcessor> resultDefaultPsep =
                 config.eventProcessingConfiguration().eventProcessor("default", PooledStreamingEventProcessor.class);
-        assertTrue(resultDefaultPsep.isPresent());
+        assertThat(resultDefaultPsep).isPresent();
     }
 
     @Test
@@ -969,7 +972,7 @@ class EventProcessingModuleTest {
         configurer.eventProcessing()
                   .registerPooledStreamingEventProcessor(testName)
                   .registerEventHandler(config -> new PooledStreamingEventHandler());
-        assertThrows(LifecycleHandlerInvocationException.class, () -> configurer.start());
+        assertThatThrownBy(() -> configurer.start()).isInstanceOf(LifecycleHandlerInvocationException.class);
     }
 
     @Test
@@ -993,18 +996,17 @@ class EventProcessingModuleTest {
                 config.eventProcessingConfiguration()
                       .eventProcessor(testName, PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         PooledStreamingEventProcessor result = optionalResult.get();
-        assertEquals(testName, result.getName());
-        assertEquals(
-                RollbackConfigurationType.ANY_THROWABLE,
-                getField(AbstractEventProcessor.class, "rollbackConfiguration", result)
-        );
-        assertEquals(PropagatingErrorHandler.INSTANCE, getField(AbstractEventProcessor.class, "errorHandler", result));
-        assertEquals(testTokenStore, getField("tokenStore", result));
-        assertEquals(NoTransactionManager.INSTANCE, getField("transactionManager", result));
-        assertEquals(config.getComponent(EventProcessorSpanFactory.class),
-                     getField(AbstractEventProcessor.class, "spanFactory", result));
+        assertThat(result.getName()).isEqualTo(testName);
+        assertThatObject(getField(AbstractEventProcessor.class, "rollbackConfiguration", result))
+                .isEqualTo(RollbackConfigurationType.ANY_THROWABLE);
+        assertThatObject(getField(AbstractEventProcessor.class, "errorHandler", result))
+                .isEqualTo(PropagatingErrorHandler.INSTANCE);
+        assertThatObject(getField("tokenStore", result)).isEqualTo(testTokenStore);
+        assertThatObject(getField("transactionManager", result)).isEqualTo(NoTransactionManager.INSTANCE);
+        assertThatObject(getField(AbstractEventProcessor.class, "spanFactory", result))
+                .isEqualTo(config.getComponent(EventProcessorSpanFactory.class));
     }
 
     @Test
@@ -1025,17 +1027,16 @@ class EventProcessingModuleTest {
                 config.eventProcessingConfiguration()
                       .eventProcessor(testName, PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         PooledStreamingEventProcessor result = optionalResult.get();
-        assertEquals(testName, result.getName());
-        assertEquals(
-                RollbackConfigurationType.ANY_THROWABLE,
-                getField(AbstractEventProcessor.class, "rollbackConfiguration", result)
-        );
-        assertEquals(PropagatingErrorHandler.INSTANCE, getField(AbstractEventProcessor.class, "errorHandler", result));
-        assertEquals(eventStoreOne, getField("messageSource", result));
-        assertEquals(testTokenStore, getField("tokenStore", result));
-        assertEquals(NoTransactionManager.INSTANCE, getField("transactionManager", result));
+        assertThat(result.getName()).isEqualTo(testName);
+        assertThatObject(getField(AbstractEventProcessor.class, "rollbackConfiguration", result))
+                .isEqualTo(RollbackConfigurationType.ANY_THROWABLE);
+        assertThatObject(getField(AbstractEventProcessor.class, "errorHandler", result))
+                .isEqualTo(PropagatingErrorHandler.INSTANCE);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
+        assertThatObject(getField("tokenStore", result)).isEqualTo(testTokenStore);
+        assertThatObject(getField("transactionManager", result)).isEqualTo(NoTransactionManager.INSTANCE);
     }
 
     @Test
@@ -1056,10 +1057,10 @@ class EventProcessingModuleTest {
                 config.eventProcessingConfiguration()
                       .eventProcessor(testName, PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         PooledStreamingEventProcessor result = optionalResult.get();
-        assertEquals(testCapacity, result.maxCapacity());
-        assertEquals(eventStoreOne, getField("messageSource", result));
+        assertThat(result.maxCapacity()).isEqualTo(testCapacity);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
     }
 
     @Test
@@ -1084,18 +1085,18 @@ class EventProcessingModuleTest {
                 config.eventProcessingConfiguration()
                       .eventProcessor(testName, PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         PooledStreamingEventProcessor result = optionalResult.get();
-        assertEquals(testCapacity, result.maxCapacity());
-        assertEquals(eventStoreOne, getField("messageSource", result));
+        assertThat(result.maxCapacity()).isEqualTo(testCapacity);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
 
         optionalResult = config.eventProcessingConfiguration()
                                .eventProcessor("default", PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         result = optionalResult.get();
-        assertEquals(testCapacity, result.maxCapacity());
-        assertEquals(eventStoreOne, getField("messageSource", result));
+        assertThat(result.maxCapacity()).isEqualTo(testCapacity);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
     }
 
     @Test
@@ -1117,18 +1118,18 @@ class EventProcessingModuleTest {
                 config.eventProcessingConfiguration()
                       .eventProcessor(testName, PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         PooledStreamingEventProcessor result = optionalResult.get();
-        assertEquals(testCapacity, result.maxCapacity());
-        assertEquals(eventStoreOne, getField("messageSource", result));
+        assertThat(result.maxCapacity()).isEqualTo(testCapacity);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
 
         optionalResult = config.eventProcessingConfiguration()
                                .eventProcessor("default", PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         result = optionalResult.get();
-        assertEquals(testCapacity, result.maxCapacity());
-        assertEquals(eventStoreOne, getField("messageSource", result));
+        assertThat(result.maxCapacity()).isEqualTo(testCapacity);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
     }
 
     @Test
@@ -1153,18 +1154,18 @@ class EventProcessingModuleTest {
                 config.eventProcessingConfiguration()
                       .eventProcessor(testName, PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         PooledStreamingEventProcessor result = optionalResult.get();
-        assertEquals(testCapacity, result.maxCapacity());
-        assertEquals(eventStoreOne, getField("messageSource", result));
+        assertThat(result.maxCapacity()).isEqualTo(testCapacity);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
 
         optionalResult = config.eventProcessingConfiguration()
                                .eventProcessor("default", PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         result = optionalResult.get();
-        assertEquals(Short.MAX_VALUE, result.maxCapacity());
-        assertEquals(eventStoreOne, getField("messageSource", result));
+        assertThat(result.maxCapacity()).isEqualTo(Short.MAX_VALUE);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
     }
 
     @Test
@@ -1190,10 +1191,10 @@ class EventProcessingModuleTest {
                 config.eventProcessingConfiguration()
                       .eventProcessor(testName, PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         PooledStreamingEventProcessor result = optionalResult.get();
-        assertEquals(testCapacity, result.maxCapacity());
-        assertEquals(eventStoreOne, getField("messageSource", result));
+        assertThat(result.maxCapacity()).isEqualTo(testCapacity);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
     }
 
     @Test
@@ -1223,11 +1224,11 @@ class EventProcessingModuleTest {
                 config.eventProcessingConfiguration()
                       .eventProcessor(testName, PooledStreamingEventProcessor.class);
 
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         PooledStreamingEventProcessor result = optionalResult.get();
-        assertEquals(testCapacity, result.maxCapacity());
-        assertEquals(eventStoreOne, getField("messageSource", result));
-        assertEquals(100, (int) getField("batchSize", result));
+        assertThat(result.maxCapacity()).isEqualTo(testCapacity);
+        assertThatObject(getField("messageSource", result)).isEqualTo(eventStoreOne);
+        assertThat((int) getField("batchSize", result)).isEqualTo(100);
     }
 
     @Test
@@ -1247,7 +1248,7 @@ class EventProcessingModuleTest {
 
         try {
             config.eventBus().publish(testEvent);
-            assertTrue(transactionCommitted.await(10, TimeUnit.SECONDS));
+            assertThat(transactionCommitted.await(10, TimeUnit.SECONDS)).isTrue();
         } finally {
             config.shutdown();
         }
@@ -1272,7 +1273,7 @@ class EventProcessingModuleTest {
 
         try {
             config.eventBus().publish(testEvent);
-            assertTrue(transactionCommitted.await(10, TimeUnit.SECONDS));
+            assertThat(transactionCommitted.await(10, TimeUnit.SECONDS)).isTrue();
         } finally {
             config.shutdown();
         }
@@ -1295,33 +1296,34 @@ class EventProcessingModuleTest {
 
         Optional<EnqueuePolicy<EventMessage<?>>> optionalPolicy = config.eventProcessingConfiguration()
                                                                         .deadLetterPolicy(processingGroup);
-        assertTrue(optionalPolicy.isPresent());
+        assertThat(optionalPolicy).isPresent();
         EnqueuePolicy<EventMessage<?>> expectedPolicy = optionalPolicy.get();
 
         Optional<SequencedDeadLetterQueue<EventMessage<?>>> configuredDlq =
                 config.eventProcessingConfiguration().deadLetterQueue(processingGroup);
-        assertTrue(configuredDlq.isPresent());
-        assertEquals(deadLetterQueue, configuredDlq.get());
+        assertThat(configuredDlq).isPresent();
+        assertThat(configuredDlq.get()).isEqualTo(deadLetterQueue);
 
         Optional<PooledStreamingEventProcessor> optionalProcessor =
                 config.eventProcessingConfiguration()
                       .eventProcessor(processingGroup, PooledStreamingEventProcessor.class);
-        assertTrue(optionalProcessor.isPresent());
+        assertThat(optionalProcessor).isPresent();
         PooledStreamingEventProcessor resultProcessor = optionalProcessor.get();
 
         EventHandlerInvoker resultInvoker =
                 getField(AbstractEventProcessor.class, "eventHandlerInvoker", resultProcessor);
-        assertEquals(MultiEventHandlerInvoker.class, resultInvoker.getClass());
+        assertThat(resultInvoker.getClass()).isEqualTo(MultiEventHandlerInvoker.class);
 
         MultiEventHandlerInvoker resultMultiInvoker = ((MultiEventHandlerInvoker) resultInvoker);
         List<EventHandlerInvoker> delegates = getField("delegates", resultMultiInvoker);
-        assertFalse(delegates.isEmpty());
+        assertThat(delegates).isNotEmpty();
         DeadLetteringEventHandlerInvoker resultDeadLetteringInvoker =
                 ((DeadLetteringEventHandlerInvoker) delegates.get(0));
 
-        assertEquals(deadLetterQueue, getField("queue", resultDeadLetteringInvoker));
-        assertEquals(expectedPolicy, getField("enqueuePolicy", resultDeadLetteringInvoker));
-        assertEquals(NoTransactionManager.INSTANCE, getField("transactionManager", resultDeadLetteringInvoker));
+        assertThatObject(getField("queue", resultDeadLetteringInvoker)).isEqualTo(deadLetterQueue);
+        assertThatObject(getField("enqueuePolicy", resultDeadLetteringInvoker)).isEqualTo(expectedPolicy);
+        assertThatObject(getField("transactionManager", resultDeadLetteringInvoker))
+                .isEqualTo(NoTransactionManager.INSTANCE);
     }
 
     @Test
@@ -1341,32 +1343,32 @@ class EventProcessingModuleTest {
 
         Optional<EnqueuePolicy<EventMessage<?>>> optionalPolicy = config.eventProcessingConfiguration()
                                                                         .deadLetterPolicy(processingGroup);
-        assertTrue(optionalPolicy.isPresent());
+        assertThat(optionalPolicy).isPresent();
         EnqueuePolicy<EventMessage<?>> resultPolicy = optionalPolicy.get();
-        assertEquals(expectedPolicy, resultPolicy);
+        assertThat(resultPolicy).isEqualTo(expectedPolicy);
 
         Optional<SequencedDeadLetterQueue<EventMessage<?>>> configuredDlq =
                 config.eventProcessingConfiguration().deadLetterQueue(processingGroup);
-        assertTrue(configuredDlq.isPresent());
-        assertEquals(deadLetterQueue, configuredDlq.get());
+        assertThat(configuredDlq).isPresent();
+        assertThat(configuredDlq.get()).isEqualTo(deadLetterQueue);
 
         Optional<PooledStreamingEventProcessor> optionalProcessor =
                 config.eventProcessingConfiguration()
                       .eventProcessor(processingGroup, PooledStreamingEventProcessor.class);
-        assertTrue(optionalProcessor.isPresent());
+        assertThat(optionalProcessor).isPresent();
         PooledStreamingEventProcessor resultProcessor = optionalProcessor.get();
 
         EventHandlerInvoker resultInvoker =
                 getField(AbstractEventProcessor.class, "eventHandlerInvoker", resultProcessor);
-        assertEquals(MultiEventHandlerInvoker.class, resultInvoker.getClass());
+        assertThat(resultInvoker.getClass()).isEqualTo(MultiEventHandlerInvoker.class);
 
         MultiEventHandlerInvoker resultMultiInvoker = ((MultiEventHandlerInvoker) resultInvoker);
         List<EventHandlerInvoker> delegates = getField("delegates", resultMultiInvoker);
-        assertFalse(delegates.isEmpty());
+        assertThat(delegates).isNotEmpty();
         DeadLetteringEventHandlerInvoker resultDeadLetteringInvoker =
                 ((DeadLetteringEventHandlerInvoker) delegates.get(0));
 
-        assertEquals(expectedPolicy, getField("enqueuePolicy", resultDeadLetteringInvoker));
+        assertThatObject(getField("enqueuePolicy", resultDeadLetteringInvoker)).isEqualTo(expectedPolicy);
     }
 
     @Test
@@ -1388,34 +1390,34 @@ class EventProcessingModuleTest {
 
         Optional<EnqueuePolicy<EventMessage<?>>> optionalPolicy = config.eventProcessingConfiguration()
                                                                         .deadLetterPolicy(processingGroup);
-        assertTrue(optionalPolicy.isPresent());
+        assertThat(optionalPolicy).isPresent();
         EnqueuePolicy<EventMessage<?>> resultPolicy = optionalPolicy.get();
-        assertEquals(expectedPolicy, resultPolicy);
-        assertNotEquals(unexpectedPolicy, resultPolicy);
+        assertThat(resultPolicy).isEqualTo(expectedPolicy);
+        assertThat(resultPolicy).isNotEqualTo(unexpectedPolicy);
 
         Optional<SequencedDeadLetterQueue<EventMessage<?>>> configuredDlq =
                 config.eventProcessingConfiguration().deadLetterQueue(processingGroup);
-        assertTrue(configuredDlq.isPresent());
-        assertEquals(deadLetterQueue, configuredDlq.get());
+        assertThat(configuredDlq).isPresent();
+        assertThat(configuredDlq.get()).isEqualTo(deadLetterQueue);
 
         Optional<PooledStreamingEventProcessor> optionalProcessor =
                 config.eventProcessingConfiguration()
                       .eventProcessor(processingGroup, PooledStreamingEventProcessor.class);
-        assertTrue(optionalProcessor.isPresent());
+        assertThat(optionalProcessor).isPresent();
         PooledStreamingEventProcessor resultProcessor = optionalProcessor.get();
 
         EventHandlerInvoker resultInvoker =
                 getField(AbstractEventProcessor.class, "eventHandlerInvoker", resultProcessor);
-        assertEquals(MultiEventHandlerInvoker.class, resultInvoker.getClass());
+        assertThat(resultInvoker.getClass()).isEqualTo(MultiEventHandlerInvoker.class);
 
         MultiEventHandlerInvoker resultMultiInvoker = ((MultiEventHandlerInvoker) resultInvoker);
         List<EventHandlerInvoker> delegates = getField("delegates", resultMultiInvoker);
-        assertFalse(delegates.isEmpty());
+        assertThat(delegates).isNotEmpty();
         DeadLetteringEventHandlerInvoker resultDeadLetteringInvoker =
                 ((DeadLetteringEventHandlerInvoker) delegates.get(0));
 
-        assertEquals(expectedPolicy, getField("enqueuePolicy", resultDeadLetteringInvoker));
-        assertNotEquals(unexpectedPolicy, getField("enqueuePolicy", resultDeadLetteringInvoker));
+        assertThatObject(getField("enqueuePolicy", resultDeadLetteringInvoker)).isEqualTo(expectedPolicy);
+        assertThatObject(getField("enqueuePolicy", resultDeadLetteringInvoker)).isNotEqualTo(unexpectedPolicy);
     }
 
     @Test
@@ -1437,26 +1439,26 @@ class EventProcessingModuleTest {
 
         Optional<SequencedDeadLetterQueue<EventMessage<?>>> configuredDlq =
                 config.eventProcessingConfiguration().deadLetterQueue(processingGroup);
-        assertTrue(configuredDlq.isPresent());
-        assertEquals(deadLetterQueue, configuredDlq.get());
+        assertThat(configuredDlq).isPresent();
+        assertThat(configuredDlq.get()).isEqualTo(deadLetterQueue);
 
         Optional<PooledStreamingEventProcessor> optionalProcessor =
                 config.eventProcessingConfiguration()
                       .eventProcessor(processingGroup, PooledStreamingEventProcessor.class);
-        assertTrue(optionalProcessor.isPresent());
+        assertThat(optionalProcessor).isPresent();
         PooledStreamingEventProcessor resultProcessor = optionalProcessor.get();
 
         EventHandlerInvoker resultInvoker =
                 getField(AbstractEventProcessor.class, "eventHandlerInvoker", resultProcessor);
-        assertEquals(MultiEventHandlerInvoker.class, resultInvoker.getClass());
+        assertThat(resultInvoker.getClass()).isEqualTo(MultiEventHandlerInvoker.class);
 
         MultiEventHandlerInvoker resultMultiInvoker = ((MultiEventHandlerInvoker) resultInvoker);
         List<EventHandlerInvoker> delegates = getField("delegates", resultMultiInvoker);
-        assertFalse(delegates.isEmpty());
+        assertThat(delegates).isNotEmpty();
         DeadLetteringEventHandlerInvoker resultDeadLetteringInvoker =
                 ((DeadLetteringEventHandlerInvoker) delegates.get(0));
 
-        assertTrue((Boolean) getField("allowReset", resultDeadLetteringInvoker));
+        assertThat((Boolean) getField("allowReset", resultDeadLetteringInvoker)).isTrue();
     }
 
     @Test
@@ -1480,18 +1482,18 @@ class EventProcessingModuleTest {
 
         Optional<SequencedDeadLetterQueue<EventMessage<?>>> configuredDlq =
                 eventProcessingConfig.deadLetterQueue(processingGroup);
-        assertTrue(configuredDlq.isPresent());
-        assertEquals(deadLetterQueue, configuredDlq.get());
+        assertThat(configuredDlq).isPresent();
+        assertThat(configuredDlq.get()).isEqualTo(deadLetterQueue);
 
         Optional<PooledStreamingEventProcessor> optionalProcessor =
                 eventProcessingConfig.eventProcessor(processingGroup, PooledStreamingEventProcessor.class);
-        assertTrue(optionalProcessor.isPresent());
+        assertThat(optionalProcessor).isPresent();
 
         Optional<SequencedDeadLetterProcessor<EventMessage<?>>> optionalDeadLetterProcessor =
                 eventProcessingConfig.sequencedDeadLetterProcessor(processingGroup);
-        assertTrue(optionalDeadLetterProcessor.isPresent());
-        assertFalse(eventProcessingConfig.sequencedDeadLetterProcessor(otherProcessingGroup).isPresent());
-        assertFalse(eventProcessingConfig.sequencedDeadLetterProcessor("non-existing-group").isPresent());
+        assertThat(optionalDeadLetterProcessor).isPresent();
+        assertThat(eventProcessingConfig.sequencedDeadLetterProcessor(otherProcessingGroup)).isNotPresent();
+        assertThat(eventProcessingConfig.sequencedDeadLetterProcessor("non-existing-group")).isNotPresent();
     }
 
     @Test
@@ -1516,9 +1518,9 @@ class EventProcessingModuleTest {
 
         Optional<SequencedDeadLetterProcessor<EventMessage<?>>> optionalDeadLetterProcessor =
                 eventProcessingConfig.sequencedDeadLetterProcessor(processingGroup);
-        assertTrue(optionalDeadLetterProcessor.isPresent());
+        assertThat(optionalDeadLetterProcessor).isPresent();
         List<MessageHandlerInterceptor<?>> interceptors = getField("interceptors", optionalDeadLetterProcessor.get());
-        assertEquals(3, interceptors.size());
+        assertThat(interceptors).hasSize(3);
     }
 
     @Test
@@ -1537,33 +1539,34 @@ class EventProcessingModuleTest {
 
         Optional<EnqueuePolicy<EventMessage<?>>> optionalPolicy = config.eventProcessingConfiguration()
                                                                         .deadLetterPolicy(processingGroup);
-        assertTrue(optionalPolicy.isPresent());
+        assertThat(optionalPolicy).isPresent();
         EnqueuePolicy<EventMessage<?>> expectedPolicy = optionalPolicy.get();
 
         Optional<SequencedDeadLetterQueue<EventMessage<?>>> configuredDlq =
                 config.eventProcessingConfiguration().deadLetterQueue(processingGroup);
-        assertTrue(configuredDlq.isPresent());
-        assertEquals(deadLetterQueue, configuredDlq.get());
+        assertThat(configuredDlq).isPresent();
+        assertThat(configuredDlq.get()).isEqualTo(deadLetterQueue);
 
         Optional<PooledStreamingEventProcessor> optionalProcessor =
                 config.eventProcessingConfiguration()
                       .eventProcessor(processingGroup, PooledStreamingEventProcessor.class);
-        assertTrue(optionalProcessor.isPresent());
+        assertThat(optionalProcessor).isPresent();
         PooledStreamingEventProcessor resultProcessor = optionalProcessor.get();
 
         EventHandlerInvoker resultInvoker =
                 getField(AbstractEventProcessor.class, "eventHandlerInvoker", resultProcessor);
-        assertEquals(MultiEventHandlerInvoker.class, resultInvoker.getClass());
+        assertThat(resultInvoker.getClass()).isEqualTo(MultiEventHandlerInvoker.class);
 
         MultiEventHandlerInvoker resultMultiInvoker = ((MultiEventHandlerInvoker) resultInvoker);
         List<EventHandlerInvoker> delegates = getField("delegates", resultMultiInvoker);
-        assertFalse(delegates.isEmpty());
+        assertThat(delegates).isNotEmpty();
         DeadLetteringEventHandlerInvoker resultDeadLetteringInvoker =
                 ((DeadLetteringEventHandlerInvoker) delegates.get(0));
 
-        assertEquals(deadLetterQueue, getField("queue", resultDeadLetteringInvoker));
-        assertEquals(expectedPolicy, getField("enqueuePolicy", resultDeadLetteringInvoker));
-        assertEquals(NoTransactionManager.INSTANCE, getField("transactionManager", resultDeadLetteringInvoker));
+        assertThatObject(getField("queue", resultDeadLetteringInvoker)).isEqualTo(deadLetterQueue);
+        assertThatObject(getField("enqueuePolicy", resultDeadLetteringInvoker)).isEqualTo(expectedPolicy);
+        assertThatObject(getField("transactionManager", resultDeadLetteringInvoker))
+                .isEqualTo(NoTransactionManager.INSTANCE);
     }
 
     @Test
@@ -1584,8 +1587,8 @@ class EventProcessingModuleTest {
 
         Optional<SequencedDeadLetterQueue<EventMessage<?>>> configuredDlq =
                 config.eventProcessingConfiguration().deadLetterQueue(processingGroup);
-        assertTrue(configuredDlq.isPresent());
-        assertEquals(specificDeadLetterQueue, configuredDlq.get());
+        assertThat(configuredDlq).isPresent();
+        assertThat(configuredDlq.get()).isEqualTo(specificDeadLetterQueue);
     }
 
     private <O, R> R getField(String fieldName, O object) throws NoSuchFieldException, IllegalAccessException {

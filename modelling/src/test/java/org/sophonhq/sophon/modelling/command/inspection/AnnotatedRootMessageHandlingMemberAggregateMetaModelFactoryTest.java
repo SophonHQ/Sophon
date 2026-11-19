@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.modelling.command.inspection;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.*;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
@@ -36,7 +38,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -131,9 +133,9 @@ class AnnotatedRootMessageHandlingMemberAggregateMetaModelFactoryTest {
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(LeafAggregate.class);
 
         testSubject.publish(testAggregateEvent, testModel);
-        assertEquals(expectedNumberOfAggregateEventHandlerInvocations, aggregateEventHandlingCounter.get());
+        assertThat(aggregateEventHandlingCounter.get()).isEqualTo(expectedNumberOfAggregateEventHandlerInvocations);
         testSubject.publish(testMemberEvent, testModel);
-        assertEquals(expectedNumberOfMemberEventHandlerInvocations, memberEventHandlingCounter.get());
+        assertThat(memberEventHandlingCounter.get()).isEqualTo(expectedNumberOfMemberEventHandlerInvocations);
     }
 
     @Test
@@ -151,9 +153,9 @@ class AnnotatedRootMessageHandlingMemberAggregateMetaModelFactoryTest {
                 AnnotatedAggregateMetaModelFactory.inspectAggregate(RootAggregate.class, subtypes);
 
         testSubject.publish(testAggregateEvent, testModel);
-        assertEquals(expectedNumberOfAggregateEventHandlerInvocations, aggregateEventHandlingCounter.get());
+        assertThat(aggregateEventHandlingCounter.get()).isEqualTo(expectedNumberOfAggregateEventHandlerInvocations);
         testSubject.publish(testMemberEvent, testModel);
-        assertEquals(expectedNumberOfMemberEventHandlerInvocations, memberEventHandlingCounter.get());
+        assertThat(memberEventHandlingCounter.get()).isEqualTo(expectedNumberOfMemberEventHandlerInvocations);
     }
 
     @Test
@@ -169,7 +171,7 @@ class AnnotatedRootMessageHandlingMemberAggregateMetaModelFactoryTest {
                 AnnotatedAggregate.initialize(testAggregate, testModel, mock(EventBus.class));
 
         testSubject.handle(testMemberCommand);
-        assertTrue(memberCommandHandlingValidator.get());
+        assertThat(memberCommandHandlingValidator.get()).isTrue();
     }
 
     @Test
@@ -189,7 +191,7 @@ class AnnotatedRootMessageHandlingMemberAggregateMetaModelFactoryTest {
 
 
         testSubject.handle(testMemberCommand);
-        assertTrue(memberCommandHandlingValidator.get());
+        assertThat(memberCommandHandlingValidator.get()).isTrue();
     }
 
     @Test
@@ -207,7 +209,8 @@ class AnnotatedRootMessageHandlingMemberAggregateMetaModelFactoryTest {
                 AnnotatedAggregate.initialize(testAggregate, testModel, mock(EventBus.class));
 
         testSubject.handle(testMemberCommand);
-        assertEquals(expectedNumberOfMemberCommandInterceptorInvocations, memberCommandInterceptingCounter.get());
+        assertThat(memberCommandInterceptingCounter.get())
+                .isEqualTo(expectedNumberOfMemberCommandInterceptorInvocations);
     }
 
     @Test
@@ -227,7 +230,8 @@ class AnnotatedRootMessageHandlingMemberAggregateMetaModelFactoryTest {
 
 
         testSubject.handle(testMemberCommand);
-        assertEquals(expectedNumberOfMemberCommandInterceptorInvocations, memberCommandInterceptingCounter.get());
+        assertThat(memberCommandInterceptingCounter.get())
+                .isEqualTo(expectedNumberOfMemberCommandInterceptorInvocations);
     }
 
     @SuppressWarnings("unused")

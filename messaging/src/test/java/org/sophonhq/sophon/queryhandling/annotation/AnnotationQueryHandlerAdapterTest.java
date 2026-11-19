@@ -16,7 +16,8 @@
  */
 package org.sophonhq.sophon.queryhandling.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.Registration;
 import org.sophonhq.sophon.messaging.InterceptorChain;
 import org.sophonhq.sophon.messaging.MetaData;
@@ -37,7 +38,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -65,23 +67,19 @@ class AnnotationQueryHandlerAdapterTest {
         verify(queryBus, times(1)).subscribe(eq(String.class.getName()), eq(String.class), any());
         verify(queryBus, times(1)).subscribe(eq("Hello"), eq(String.class), any());
 
-        assertTrue(registration.cancel());
+        assertThat(registration.cancel()).isTrue();
     }
 
     @Test
     void subscribeFailsForHandlerWithInvalidParameters() {
-        assertThrows(
-                UnsupportedHandlerException.class,
-                () -> new AnnotationQueryHandlerAdapter<>(new MySecondQueryHandler())
-        );
+        assertThatThrownBy(() -> new AnnotationQueryHandlerAdapter<>(new MySecondQueryHandler()))
+                .isInstanceOf(UnsupportedHandlerException.class);
     }
 
     @Test
     void subscribeFailsForHandlerWithVoidReturnType() {
-        assertThrows(
-                UnsupportedHandlerException.class,
-                () -> new AnnotationQueryHandlerAdapter<>(new MyThirdQueryHandler())
-        );
+        assertThatThrownBy(() -> new AnnotationQueryHandlerAdapter<>(new MyThirdQueryHandler()))
+                .isInstanceOf(UnsupportedHandlerException.class);
     }
 
     @Test
@@ -91,7 +89,7 @@ class AnnotationQueryHandlerAdapterTest {
                 new GenericQueryMessage<>(testResponse, ResponseTypes.instanceOf(String.class));
         Object result = testSubject.handle(testQueryMessage);
 
-        assertEquals(testResponse, result);
+        assertThat(result).isEqualTo(testResponse);
     }
 
     @Test
@@ -99,7 +97,7 @@ class AnnotationQueryHandlerAdapterTest {
         QueryMessage<String, Integer> testQuery =
                 new GenericQueryMessage<>("hello", ResponseTypes.instanceOf(Integer.class));
 
-        assertThrows(MockException.class, () -> testSubject.handle(testQuery));
+        assertThatThrownBy(() -> testSubject.handle(testQuery)).isInstanceOf(MockException.class);
     }
 
     @Test
@@ -107,7 +105,7 @@ class AnnotationQueryHandlerAdapterTest {
         QueryMessage<String, String> testQuery =
                 new GenericQueryMessage<>("hello", "noEcho", ResponseTypes.instanceOf(String.class));
 
-        assertNull(testSubject.handle(testQuery));
+        assertThat(testSubject.handle(testQuery)).isNull();
     }
 
     @Test
@@ -115,7 +113,7 @@ class AnnotationQueryHandlerAdapterTest {
         QueryMessage<String, String> testQuery =
                 new GenericQueryMessage<>("hello", "Hello", ResponseTypes.instanceOf(String.class));
 
-        assertEquals("hello", testSubject.handle(testQuery));
+        assertThat(testSubject.handle(testQuery)).isEqualTo("hello");
     }
 
     @Test
@@ -127,7 +125,7 @@ class AnnotationQueryHandlerAdapterTest {
         //noinspection unchecked
         Collection<String> result = (Collection<String>) testSubject.handle(testQueryMessage);
 
-        assertEquals(testResponse, result.size());
+        assertThat(result).hasSize(testResponse);
     }
 
     @Test
@@ -135,7 +133,8 @@ class AnnotationQueryHandlerAdapterTest {
         QueryMessage<Long, List<String>> testQueryMessage =
                 new GenericQueryMessage<>(42L, ResponseTypes.multipleInstancesOf(String.class));
 
-        assertThrows(NoHandlerForQueryException.class, () -> testSubject.handle(testQueryMessage));
+        assertThatThrownBy(() -> testSubject.handle(testQueryMessage))
+                .isInstanceOf(NoHandlerForQueryException.class);
     }
 
     @Test
@@ -151,9 +150,9 @@ class AnnotationQueryHandlerAdapterTest {
 
         String result = (String) testSubject.handle(testQueryMessage);
 
-        assertEquals("Hi", result);
-        assertEquals(Collections.singletonList(testQueryMessage), withInterceptor);
-        assertEquals(Collections.singletonList(testQueryMessage), withoutInterceptor);
+        assertThat(result).isEqualTo("Hi");
+        assertThat(withInterceptor).isEqualTo(Collections.singletonList(testQueryMessage));
+        assertThat(withoutInterceptor).isEqualTo(Collections.singletonList(testQueryMessage));
     }
 
     @Test
@@ -163,8 +162,8 @@ class AnnotationQueryHandlerAdapterTest {
         QueryMessage<String, Long> testLongQuery =
                 new GenericQueryMessage<>("hello", ResponseTypes.instanceOf(Long.class));
 
-        assertTrue(testSubject.canHandle(testIntegerQuery));
-        assertFalse(testSubject.canHandle(testLongQuery));
+        assertThat(testSubject.canHandle(testIntegerQuery)).isTrue();
+        assertThat(testSubject.canHandle(testLongQuery)).isFalse();
     }
 
     @Test
@@ -179,12 +178,13 @@ class AnnotationQueryHandlerAdapterTest {
 
         Object result = testSubject.handle(testQueryMessage);
 
-        assertNull(result);
-        assertFalse(interceptedExceptions.isEmpty());
-        assertEquals(1, interceptedExceptions.size());
+        assertThat(result).isNull();
+        assertThat(interceptedExceptions)
+                .isNotEmpty()
+                .hasSize(1);
         Exception interceptedException = interceptedExceptions.get(0);
-        assertTrue(interceptedException instanceof RuntimeException);
-        assertEquals("Some exception", interceptedException.getMessage());
+        assertThat(interceptedException).isInstanceOf(RuntimeException.class);
+        assertThat(interceptedException.getMessage()).isEqualTo("Some exception");
     }
 
     @SuppressWarnings("unused")

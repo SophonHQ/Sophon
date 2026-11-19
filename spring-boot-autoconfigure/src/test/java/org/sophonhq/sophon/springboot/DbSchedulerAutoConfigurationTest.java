@@ -19,7 +19,7 @@ package org.sophonhq.sophon.springboot;
 
 import com.github.kagkarlsson.scheduler.Scheduler;
 import com.github.kagkarlsson.scheduler.task.Task;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.config.Configuration;
 import org.sophonhq.sophon.config.ConfigurationScopeAwareProvider;
 import org.sophonhq.sophon.deadline.DeadlineManager;
@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DbSchedulerAutoConfigurationTest {
 
@@ -53,12 +53,12 @@ class DbSchedulerAutoConfigurationTest {
                 .withUserConfiguration(DefaultContext.class)
                 .run(context -> {
                     EventScheduler eventScheduler = context.getBean(EventScheduler.class);
-                    assertNotNull(eventScheduler);
-                    assertTrue(eventScheduler instanceof DbSchedulerEventScheduler);
+                    assertThat(eventScheduler).isNotNull();
+                    assertThat(eventScheduler).isInstanceOf(DbSchedulerEventScheduler.class);
                     DeadlineManager deadlineManager = context.getBean(DeadlineManager.class);
-                    assertNotNull(deadlineManager);
-                    assertTrue(deadlineManager instanceof DbSchedulerDeadlineManager);
-                    assertEquals(2, context.getBeanNamesForType(Task.class).length);
+                    assertThat(deadlineManager).isNotNull();
+                    assertThat(deadlineManager).isInstanceOf(DbSchedulerDeadlineManager.class);
+                    assertThat(context.getBeanNamesForType(Task.class)).hasSize(2);
                 });
     }
 
@@ -68,16 +68,16 @@ class DbSchedulerAutoConfigurationTest {
                 .withUserConfiguration(HumanReadableContext.class)
                 .run(context -> {
                     EventScheduler eventScheduler = context.getBean(EventScheduler.class);
-                    assertNotNull(eventScheduler);
-                    assertTrue(eventScheduler instanceof DbSchedulerEventScheduler);
+                    assertThat(eventScheduler).isNotNull();
+                    assertThat(eventScheduler).isInstanceOf(DbSchedulerEventScheduler.class);
                     DeadlineManager deadlineManager = context.getBean(DeadlineManager.class);
-                    assertNotNull(deadlineManager);
-                    assertTrue(deadlineManager instanceof DbSchedulerDeadlineManager);
-                    assertEquals(2, context.getBeanNamesForType(Task.class).length);
+                    assertThat(deadlineManager).isNotNull();
+                    assertThat(deadlineManager).isInstanceOf(DbSchedulerDeadlineManager.class);
+                    assertThat(context.getBeanNamesForType(Task.class)).hasSize(2);
                     Class<?> dataclass = context.getBean("dbSchedulerEventDataTask", Task.class).getDataClass();
-                    assertEquals(DbSchedulerHumanReadableEventData.class, dataclass);
+                    assertThat(dataclass).isEqualTo(DbSchedulerHumanReadableEventData.class);
                     dataclass = context.getBean("dbSchedulerDeadlineDetailsTask", Task.class).getDataClass();
-                    assertEquals(DbSchedulerHumanReadableDeadlineDetails.class, dataclass);
+                    assertThat(dataclass).isEqualTo(DbSchedulerHumanReadableDeadlineDetails.class);
                 });
     }
 

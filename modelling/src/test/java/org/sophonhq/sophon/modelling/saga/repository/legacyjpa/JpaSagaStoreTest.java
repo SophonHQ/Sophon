@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.modelling.saga.repository.legacyjpa;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.Assert;
 import org.sophonhq.sophon.common.IdentifierFactory;
 import org.sophonhq.sophon.common.legacyjpa.EntityManagerProvider;
@@ -38,7 +40,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link JpaSagaStore}.
@@ -111,7 +113,7 @@ class JpaSagaStoreTest {
         entityManager.clear();
 
         long result = entityManager.createQuery("select count(*) from SagaEntry", Long.class).getSingleResult();
-        assertEquals(0L, result);
+        assertThat(result).isZero();
     }
 
 
@@ -124,8 +126,8 @@ class JpaSagaStoreTest {
         startUnitOfWork();
         unitOfWork.execute(() -> {
             Saga<StubSaga> loaded = repository.load(identifier);
-            assertEquals(identifier, loaded.getSagaIdentifier());
-            assertNotNull(entityManager.find(SagaEntry.class, identifier));
+            assertThat(loaded.getSagaIdentifier()).isEqualTo(identifier);
+            assertThat(entityManager.find(SagaEntry.class, identifier)).isNotNull();
         });
     }
 
@@ -141,16 +143,16 @@ class JpaSagaStoreTest {
         startUnitOfWork();
         unitOfWork.execute(() -> {
             Set<String> loaded = repository.find(new AssociationValue("key", "value"));
-            assertEquals(1, loaded.size());
+            assertThat(loaded).hasSize(1);
             Saga<StubSaga> loadedSaga = repository.load(loaded.iterator().next());
-            assertEquals(identifier, loadedSaga.getSagaIdentifier());
-            assertNotNull(entityManager.find(SagaEntry.class, identifier));
+            assertThat(loadedSaga.getSagaIdentifier()).isEqualTo(identifier);
+            assertThat(entityManager.find(SagaEntry.class, identifier)).isNotNull();
         });
     }
 
     @Test
     void loadSaga_NotFound() {
-        unitOfWork.execute(() -> assertNull(repository.load("123456")));
+        unitOfWork.execute(() -> assertThat(repository.load("123456")).isNull());
     }
 
 
@@ -172,7 +174,7 @@ class JpaSagaStoreTest {
         startUnitOfWork();
         Set<String> found = unitOfWork.executeWithResult(() -> repository.find(new AssociationValue("key", "value")))
                                       .getPayload();
-        assertEquals(0, found.size());
+        assertThat(found).isEmpty();
     }
 
     @Test
@@ -184,8 +186,8 @@ class JpaSagaStoreTest {
             return saga.getSagaIdentifier();
         }).getPayload();
         entityManager.clear();
-        assertFalse(entityManager.createQuery("SELECT ae FROM AssociationValueEntry ae WHERE ae.sagaId = :id")
-                                 .setParameter("id", identifier).getResultList().isEmpty());
+        assertThat(entityManager.createQuery("SELECT ae FROM AssociationValueEntry ae WHERE ae.sagaId = :id")
+                                .setParameter("id", identifier).getResultList()).isNotEmpty();
         startUnitOfWork();
         unitOfWork.execute(() -> {
             Saga<StubSaga> loaded = repository.load(identifier);
@@ -193,8 +195,8 @@ class JpaSagaStoreTest {
         });
         entityManager.clear();
 
-        assertNull(entityManager.find(SagaEntry.class, identifier));
-        assertTrue(entityManager.createQuery("SELECT ae FROM AssociationValueEntry ae WHERE ae.sagaId = :id")
-                                .setParameter("id", identifier).getResultList().isEmpty());
+        assertThat(entityManager.find(SagaEntry.class, identifier)).isNull();
+        assertThat(entityManager.createQuery("SELECT ae FROM AssociationValueEntry ae WHERE ae.sagaId = :id")
+                                .setParameter("id", identifier).getResultList()).isEmpty();
     }
 }

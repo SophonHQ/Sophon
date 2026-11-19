@@ -17,11 +17,14 @@
 
 package org.sophonhq.sophon.eventsourcing;
 
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.*;
-import org.mockito.*;
-import org.mockito.junit.jupiter.*;
-import org.mockito.quality.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.SimpleCommandBus;
 import org.sophonhq.sophon.common.SophonConfigurationException;
@@ -37,8 +40,8 @@ import org.sophonhq.sophon.modelling.command.inspection.AnnotatedAggregateMetaMo
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
@@ -110,8 +113,9 @@ class SpawningNewAggregateTest {
         ArgumentCaptor<EventMessage<?>> eventCaptor = ArgumentCaptor.forClass(EventMessage.class);
 
         verify(eventStore, times(2)).publish(eventCaptor.capture());
-        assertEquals(new Aggregate2CreatedEvent("aggregate2Id"), eventCaptor.getAllValues().get(0).getPayload());
-        assertEquals(new Aggregate1CreatedEvent("id"), eventCaptor.getAllValues().get(1).getPayload());
+        assertThat(eventCaptor.getAllValues().get(0).getPayload())
+                .isEqualTo(new Aggregate2CreatedEvent("aggregate2Id"));
+        assertThat(eventCaptor.getAllValues().get(1).getPayload()).isEqualTo(new Aggregate1CreatedEvent("id"));
     }
 
     @MockitoSettings(strictness = Strictness.LENIENT)
@@ -123,10 +127,9 @@ class SpawningNewAggregateTest {
                             (commandMessage, commandResultMessage) -> {
                                 if (commandResultMessage.isExceptional()) {
                                     Throwable cause = commandResultMessage.exceptionResult();
-                                    assertTrue(cause instanceof IllegalStateException);
-                                    assertEquals(
-                                            "There is no configured repository for org.sophonhq.sophon.eventsourcing.SpawningNewAggregateTest$Aggregate2",
-                                            cause.getMessage());
+                                    assertThat(cause).isInstanceOf(IllegalStateException.class);
+                                    assertThat(cause.getMessage()).isEqualTo(
+                                            "There is no configured repository for org.sophonhq.sophon.eventsourcing.SpawningNewAggregateTest$Aggregate2");
                                 } else {
                                     fail("Expected exception");
                                 }
@@ -141,10 +144,9 @@ class SpawningNewAggregateTest {
                             (commandMessage, commandResultMessage) -> {
                                 if (commandResultMessage.isExceptional()) {
                                     Throwable cause = commandResultMessage.exceptionResult();
-                                    assertTrue(cause instanceof SophonConfigurationException);
-                                    assertEquals(
-                                            "Since repository provider is not provided, we cannot spawn a new aggregate for org.sophonhq.sophon.eventsourcing.SpawningNewAggregateTest$Aggregate2",
-                                            cause.getMessage());
+                                    assertThat(cause).isInstanceOf(SophonConfigurationException.class);
+                                    assertThat(cause.getMessage()).isEqualTo(
+                                            "Since repository provider is not provided, we cannot spawn a new aggregate for org.sophonhq.sophon.eventsourcing.SpawningNewAggregateTest$Aggregate2");
                                 } else {
                                     fail("Expected exception");
                                 }

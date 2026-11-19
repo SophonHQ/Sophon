@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.springboot.legacyjpa;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.junit.jupiter.*;
 import org.sophonhq.sophon.common.legacyjpa.EntityManagerProvider;
@@ -33,7 +33,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -62,7 +62,7 @@ class JpaJavaxAutoConfigurationLazySagaStoreTest {
         verifyNoInteractions(entityManager);
 
         SagaStore<?> sagaStore = applicationContext.getBean(SagaStore.class);
-        assertTrue(sagaStore instanceof JpaSagaStore);
+        assertThat(sagaStore).isInstanceOf(JpaSagaStore.class);
 
         verify(entityManager).getEntityManagerFactory();
     }

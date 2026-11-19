@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.springboot;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.ReflectionUtils;
 import org.sophonhq.sophon.config.EventProcessingModule;
 import org.sophonhq.sophon.config.ProcessingGroup;
@@ -43,7 +43,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.sophonhq.sophon.common.ReflectionUtils.ensureAccessible;
 
 /**
@@ -66,16 +65,16 @@ class EventProcessorConfigurationTest {
                     EventProcessingModule eventProcessingConfig = context.getBean(EventProcessingModule.class);
 
                     Map<String, EventProcessor> processors = eventProcessingConfig.eventProcessors();
-                    assertEquals(3, processors.size());
+                    assertThat(processors).hasSize(3);
 
                     EventProcessor eventProcessor = processors.get("first");
-                    assertNotNull(eventProcessor);
-                    assertEquals(TrackingEventProcessor.class, eventProcessor.getClass());
+                    assertThat(eventProcessor).isNotNull();
+                    assertThat(eventProcessor.getClass()).isEqualTo(TrackingEventProcessor.class);
 
                     long tokenClaimInterval = ReflectionUtils.getFieldValue(
                             TrackingEventProcessor.class.getDeclaredField("tokenClaimInterval"), eventProcessor
                     );
-                    assertEquals(5000L, tokenClaimInterval, "Must be 5000 ms by default");
+                    assertThat(tokenClaimInterval).as("Must be 5000 ms by default").isEqualTo(5000L);
 
                     assertThat(context).hasSingleBean(SequencingPolicy.class);
                     //noinspection unchecked
@@ -90,7 +89,7 @@ class EventProcessorConfigurationTest {
                             SimpleEventHandlerInvoker.class.getDeclaredField("sequencingPolicy"),
                             simpleEventHandlerInvoker
                     );
-                    assertEquals(expectedPolicy, policy);
+                    assertThat(policy).isEqualTo(expectedPolicy);
                 });
     }
 
@@ -108,18 +107,18 @@ class EventProcessorConfigurationTest {
                     EventProcessingModule eventProcessingConfig = context.getBean(EventProcessingModule.class);
 
                     Map<String, EventProcessor> processors = eventProcessingConfig.eventProcessors();
-                    assertEquals(3, processors.size());
+                    assertThat(processors).hasSize(3);
 
                     EventProcessor eventProcessor = processors.get("non_default_token_claim_interval");
-                    assertNotNull(eventProcessor);
-                    assertEquals(TrackingEventProcessor.class, eventProcessor.getClass());
+                    assertThat(eventProcessor).isNotNull();
+                    assertThat(eventProcessor.getClass()).isEqualTo(TrackingEventProcessor.class);
                     long tokenClaimInterval = ReflectionUtils.getFieldValue(
                             TrackingEventProcessor.class.getDeclaredField("tokenClaimInterval"), eventProcessor
                     );
 
-                    assertEquals(60000000L,
-                                 tokenClaimInterval,
-                                 "It must be possible to override token claim interval via Spring Configuration");
+                    assertThat(tokenClaimInterval)
+                            .as("It must be possible to override token claim interval via Spring Configuration")
+                            .isEqualTo(60000000L);
                 });
     }
 
@@ -139,25 +138,25 @@ class EventProcessorConfigurationTest {
                     EventProcessingModule eventProcessingConfig = context.getBean(EventProcessingModule.class);
 
                     Map<String, EventProcessor> processors = eventProcessingConfig.eventProcessors();
-                    assertEquals(3, processors.size());
+                    assertThat(processors).hasSize(3);
 
                     EventProcessor defaultProcessor = processors.get("first");
-                    assertNotNull(defaultProcessor);
-                    assertEquals(TrackingEventProcessor.class, defaultProcessor.getClass());
+                    assertThat(defaultProcessor).isNotNull();
+                    assertThat(defaultProcessor.getClass()).isEqualTo(TrackingEventProcessor.class);
 
                     EventProcessor pooledProcessor = processors.get("second");
-                    assertNotNull(pooledProcessor);
-                    assertEquals(PooledStreamingEventProcessor.class, pooledProcessor.getClass());
+                    assertThat(pooledProcessor).isNotNull();
+                    assertThat(pooledProcessor.getClass()).isEqualTo(PooledStreamingEventProcessor.class);
 
                     long resultTokenClaimInterval = ReflectionUtils.getFieldValue(
                             PooledStreamingEventProcessor.class.getDeclaredField("tokenClaimInterval"), pooledProcessor
                     );
-                    assertEquals(60000000L, resultTokenClaimInterval);
+                    assertThat(resultTokenClaimInterval).isEqualTo(60000000L);
 
                     int resultBatchSize = ReflectionUtils.getFieldValue(
                             PooledStreamingEventProcessor.class.getDeclaredField("batchSize"), pooledProcessor
                     );
-                    assertEquals(1024, resultBatchSize);
+                    assertThat(resultBatchSize).isEqualTo(1024);
                 });
     }
 
@@ -172,8 +171,8 @@ class EventProcessorConfigurationTest {
                     assertThat(context).hasSingleBean(EventProcessingModule.class);
                     EventProcessingModule eventProcessingConfig = context.getBean(EventProcessingModule.class);
 
-                    assertTrue(eventProcessingConfig.deadLetterQueue("first").isPresent());
-                    assertFalse(eventProcessingConfig.deadLetterQueue("second").isPresent());
+                    assertThat(eventProcessingConfig.deadLetterQueue("first")).isPresent();
+                    assertThat(eventProcessingConfig.deadLetterQueue("second")).isNotPresent();
                 });
     }
 
@@ -192,27 +191,27 @@ class EventProcessorConfigurationTest {
 
                     Optional<EventProcessor> eventProcessor = eventProcessingConfig.eventProcessorByProcessingGroup(
                             "first");
-                    assertTrue(eventProcessor.isPresent());
+                    assertThat(eventProcessor).isPresent();
                     EventHandlerInvoker eventHandlerInvoker = ReflectionUtils.getFieldValue(
                             AbstractEventProcessor.class.getDeclaredField("eventHandlerInvoker"), eventProcessor.get()
                     );
-                    assertNotNull(eventHandlerInvoker);
+                    assertThat(eventHandlerInvoker).isNotNull();
                     List<EventHandlerInvoker> delegates = ReflectionUtils.getFieldValue(
                             MultiEventHandlerInvoker.class.getDeclaredField("delegates"), eventHandlerInvoker
                     );
-                    assertFalse(delegates.isEmpty());
+                    assertThat(delegates).isNotEmpty();
                     DeadLetteringEventHandlerInvoker deadLetteringInvoker =
                             ((DeadLetteringEventHandlerInvoker) delegates.get(0));
                     boolean cacheEnabled = ReflectionUtils.getFieldValue(
                             DeadLetteringEventHandlerInvoker.class.getDeclaredField("sequenceIdentifierCacheEnabled"),
                             deadLetteringInvoker
                     );
-                    assertTrue(cacheEnabled);
+                    assertThat(cacheEnabled).isTrue();
                     int cacheSize = ReflectionUtils.getFieldValue(
                             DeadLetteringEventHandlerInvoker.class.getDeclaredField("sequenceIdentifierCacheSize"),
                             deadLetteringInvoker
                     );
-                    assertEquals(10, cacheSize);
+                    assertThat(cacheSize).isEqualTo(10);
                 });
     }
 

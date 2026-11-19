@@ -32,8 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.any;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.test.matchers.Matchers.*;
 
@@ -119,13 +119,15 @@ class AnnotatedSagaTest {
         SagaTestFixture<StubSaga> fixture = new SagaTestFixture<>(StubSaga.class);
         fixture.registerResource(new NonTransientResource());
         fixture.givenNoPriorActivity();
-        AssertionError e = assertThrows(AssertionError.class, () ->
-                fixture.whenAggregate("id")
-                       .publishes(new TriggerSagaStartEvent("id"))
-                       .expectNoScheduledDeadlines());
-        assertTrue(e.getMessage().contains("StubSaga.nonTransientResource"),
-                   "Got unexpected error: " + e.getMessage());
-        assertTrue(e.getMessage().contains("transient"), "Got unexpected error: " + e.getMessage());
+        AssertionError e = assertThatExceptionOfType(AssertionError.class)
+                .isThrownBy(() -> fixture.whenAggregate("id")
+                                         .publishes(new TriggerSagaStartEvent("id"))
+                                         .expectNoScheduledDeadlines())
+                .actual();
+        assertThat(e.getMessage())
+                .as("Got unexpected error: " + e.getMessage())
+                .contains("StubSaga.nonTransientResource");
+        assertThat(e.getMessage()).as("Got unexpected error: " + e.getMessage()).contains("transient");
     }
 
     @Test
@@ -139,7 +141,7 @@ class AnnotatedSagaTest {
                .expectNoScheduledDeadlines();
     }
 
-    @Test// testing issue AXON-279
+    @Test
     void fixtureApi_PublishedEvent_NoHistoricActivity() {
         SagaTestFixture<StubSaga> fixture = new SagaTestFixture<>(StubSaga.class);
         fixture.givenNoPriorActivity()
@@ -374,7 +376,7 @@ class AnnotatedSagaTest {
 
         FixtureExecutionResult fixtureExecutionResult = fixture.givenNoPriorActivity().whenAggregate(identifier)
                                                                .publishes(new TriggerSagaStartEvent(identifier));
-        assertDoesNotThrow(fixtureExecutionResult::expectSuccessfulHandlerExecution);
+        assertThatNoException().isThrownBy(fixtureExecutionResult::expectSuccessfulHandlerExecution);
     }
 
     @Test
@@ -387,7 +389,8 @@ class AnnotatedSagaTest {
                 fixture.givenAPublished(new TriggerSagaStartEvent(identifier))
                        .whenAggregate(identifier)
                        .publishes(new TriggerExceptionWhileHandlingEvent(identifier));
-        assertThrows(SophonAssertionError.class, fixtureExecutionResult::expectSuccessfulHandlerExecution);
+        assertThatThrownBy(fixtureExecutionResult::expectSuccessfulHandlerExecution)
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test

@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.commandhandling.gateway;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
@@ -46,7 +47,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.GenericCommandResultMessage.asCommandResultMessage;
 
@@ -102,11 +105,11 @@ class DefaultCommandGatewayTest {
         verify(mockRetryScheduler, times(2)).scheduleRetry(isA(CommandMessage.class), isA(RuntimeException.class),
                                                            captor.capture(), isA(Runnable.class));
         verify(mockCommandBus, times(2)).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
-        assertTrue(actualResult.get().isExceptional());
-        assertTrue(actualResult.get().exceptionResult() instanceof RuntimeException);
-        assertEquals(1, captor.getAllValues().get(0).size());
-        assertEquals(2, captor.getValue().size());
-        assertEquals(2, ((Class<? extends Throwable>[]) captor.getValue().get(0)).length);
+        assertThat(actualResult.get().isExceptional()).isTrue();
+        assertThat(actualResult.get().exceptionResult()).isInstanceOf(RuntimeException.class);
+        assertThat(captor.getAllValues().get(0)).hasSize(1);
+        assertThat(captor.getValue()).hasSize(2);
+        assertThat((Class<? extends Throwable>[]) captor.getValue().get(0)).hasSize(2);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -132,11 +135,11 @@ class DefaultCommandGatewayTest {
         verify(mockRetryScheduler, times(2)).scheduleRetry(isA(CommandMessage.class), isA(RuntimeException.class),
                                                            captor.capture(), isA(Runnable.class));
         verify(mockCommandBus, times(2)).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
-        assertEquals(1, captor.getAllValues().get(0).size());
-        assertEquals(2, captor.getValue().size());
-        assertEquals(2, ((Class<? extends Throwable>[]) captor.getValue().get(0)).length);
-        assertTrue(future.isDone());
-        assertTrue(future.isCompletedExceptionally());
+        assertThat(captor.getAllValues().get(0)).hasSize(1);
+        assertThat(captor.getValue()).hasSize(2);
+        assertThat((Class<? extends Throwable>[]) captor.getValue().get(0)).hasSize(2);
+        assertThat(future.isDone()).isTrue();
+        assertThat(future.isCompletedExceptionally()).isTrue();
     }
 
     @SuppressWarnings({"unchecked"})
@@ -152,8 +155,8 @@ class DefaultCommandGatewayTest {
 
         CompletableFuture<?> future = testSubject.send("Command");
 
-        assertTrue(future.isDone());
-        assertEquals("returnValue", future.get());
+        assertThat(future.isDone()).isTrue();
+        assertThat(future.get()).isEqualTo("returnValue");
     }
 
     @Test
@@ -167,7 +170,7 @@ class DefaultCommandGatewayTest {
                                            .commandCallback((commandMessage, commandResultMessage) -> {
                                                customizedCallbackCalled.set(true);
                                                // The customized callback should be called before the final callback
-                                               assertFalse(finalCallbackCalled.get());
+                                               assertThat(finalCallbackCalled.get()).isFalse();
                                            })
                                            .build();
         doAnswer(invocation -> {
@@ -183,9 +186,9 @@ class DefaultCommandGatewayTest {
                                                      finalCallbackCalled.set(true);
                                                  });
 
-        assertTrue(future.isDone());
-        assertTrue(customizedCallbackCalled.get());
-        assertEquals("returnValue", future.get());
+        assertThat(future.isDone()).isTrue();
+        assertThat(customizedCallbackCalled.get()).isTrue();
+        assertThat(future.get()).isEqualTo("returnValue");
     }
 
 
@@ -207,7 +210,7 @@ class DefaultCommandGatewayTest {
         try {
             testSubject.sendAndWait("Command");
         } catch (RuntimeException rte) {
-            assertSame(failure, rte);
+            assertThat(rte).isSameAs(failure);
         }
 
         verify(mockCommandMessageTransformer).handle(isA(CommandMessage.class));
@@ -216,9 +219,9 @@ class DefaultCommandGatewayTest {
         verify(mockRetryScheduler, times(2)).scheduleRetry(isA(CommandMessage.class), isA(RuntimeException.class),
                                                            captor.capture(), isA(Runnable.class));
         verify(mockCommandBus, times(2)).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
-        assertEquals(1, captor.getAllValues().get(0).size());
-        assertEquals(2, captor.getValue().size());
-        assertEquals(2, ((Class<? extends Throwable>[]) captor.getValue().get(0)).length);
+        assertThat(captor.getAllValues().get(0)).hasSize(1);
+        assertThat(captor.getValue()).hasSize(2);
+        assertThat((Class<? extends Throwable>[]) captor.getValue().get(0)).hasSize(2);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -239,7 +242,7 @@ class DefaultCommandGatewayTest {
         try {
             testSubject.sendAndWait("Command", 1, TimeUnit.SECONDS);
         } catch (RuntimeException rte) {
-            assertSame(failure, rte);
+            assertThat(rte).isSameAs(failure);
         }
 
         verify(mockCommandMessageTransformer).handle(isA(CommandMessage.class));
@@ -248,9 +251,9 @@ class DefaultCommandGatewayTest {
         verify(mockRetryScheduler, times(2)).scheduleRetry(isA(CommandMessage.class), isA(RuntimeException.class),
                                                            captor.capture(), isA(Runnable.class));
         verify(mockCommandBus, times(2)).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
-        assertEquals(1, captor.getAllValues().get(0).size());
-        assertEquals(2, captor.getValue().size());
-        assertEquals(2, ((Class<? extends Throwable>[]) captor.getValue().get(0)).length);
+        assertThat(captor.getAllValues().get(0)).hasSize(1);
+        assertThat(captor.getValue()).hasSize(2);
+        assertThat((Class<? extends Throwable>[]) captor.getValue().get(0)).hasSize(2);
     }
 
     @SuppressWarnings("unchecked")
@@ -261,8 +264,8 @@ class DefaultCommandGatewayTest {
             return null;
         }).when(mockCommandBus).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
 
-        assertNull(testSubject.sendAndWait("Hello"));
-        assertTrue(Thread.interrupted(), "Interrupt flag should be set on thread");
+        assertThatObject(testSubject.sendAndWait("Hello")).isNull();
+        assertThat(Thread.interrupted()).as("Interrupt flag should be set on thread").isTrue();
         verify(mockCommandBus).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
     }
 
@@ -279,9 +282,9 @@ class DefaultCommandGatewayTest {
             testSubject.sendAndWait("Hello", 60, TimeUnit.SECONDS);
             fail("Expected interrupted exception");
         } catch (CommandExecutionException e) {
-            assertTrue(e.getCause() instanceof InterruptedException);
+            assertThat(e.getCause()).isInstanceOf(InterruptedException.class);
         }
-        assertTrue(Thread.interrupted(), "Interrupt flag should be set on thread");
+        assertThat(Thread.interrupted()).as("Interrupt flag should be set on thread").isTrue();
         verify(mockCommandBus).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
     }
 
@@ -289,10 +292,10 @@ class DefaultCommandGatewayTest {
     @Test
     void sendAndWaitWithTimeoutNullOnTimeout() {
         try {
-            assertNull(testSubject.sendAndWait("Hello", 10, TimeUnit.MILLISECONDS));
+            assertThatObject(testSubject.sendAndWait("Hello", 10, TimeUnit.MILLISECONDS)).isNull();
             fail("Expected interrupted exception");
         } catch (CommandExecutionException e) {
-            assertTrue(e.getCause() instanceof TimeoutException);
+            assertThat(e.getCause()).isInstanceOf(TimeoutException.class);
         }
         verify(mockCommandBus).dispatch(isA(CommandMessage.class), isA(CommandCallback.class));
     }
@@ -342,9 +345,9 @@ class DefaultCommandGatewayTest {
         }).when(mockCommandBus).dispatch(any(), any());
 
         CompletableFuture<String> actual = testSubject.send("command");
-        assertTrue(actual.isDone());
-        assertTrue(actual.isCompletedExceptionally());
-        assertEquals("Faking serialization problem", actual.exceptionally(Throwable::getMessage).get());
+        assertThat(actual.isDone()).isTrue();
+        assertThat(actual.isCompletedExceptionally()).isTrue();
+        assertThat(actual.exceptionally(Throwable::getMessage).get()).isEqualTo("Faking serialization problem");
     }
 
     @Test
@@ -370,8 +373,8 @@ class DefaultCommandGatewayTest {
         verify(mockCommandBus).dispatch(messageCaptor.capture(), isA(CommandCallback.class));
         CommandMessage<?> result = messageCaptor.getValue();
 
-        assertEquals(expectedPayload, result.getPayload());
-        assertEquals(expectedMetaData, result.getMetaData());
+        assertThat(result.getPayload()).isEqualTo(expectedPayload);
+        assertThat(result.getMetaData()).isEqualTo(expectedMetaData);
     }
 
     @Test
@@ -397,8 +400,8 @@ class DefaultCommandGatewayTest {
         verify(mockCommandBus).dispatch(messageCaptor.capture(), isA(CommandCallback.class));
         CommandMessage<?> result = messageCaptor.getValue();
 
-        assertEquals(expectedPayload, result.getPayload());
-        assertEquals(expectedMetaData, result.getMetaData());
+        assertThat(result.getPayload()).isEqualTo(expectedPayload);
+        assertThat(result.getMetaData()).isEqualTo(expectedMetaData);
     }
 
     @Test
@@ -424,8 +427,8 @@ class DefaultCommandGatewayTest {
         verify(mockCommandBus).dispatch(messageCaptor.capture(), isA(CommandCallback.class));
         CommandMessage<?> result = messageCaptor.getValue();
 
-        assertEquals(expectedPayload, result.getPayload());
-        assertEquals(expectedMetaData, result.getMetaData());
+        assertThat(result.getPayload()).isEqualTo(expectedPayload);
+        assertThat(result.getMetaData()).isEqualTo(expectedMetaData);
     }
 
     @Test
@@ -460,8 +463,8 @@ class DefaultCommandGatewayTest {
         verify(mockCommandBus).dispatch(messageCaptor.capture(), isA(CommandCallback.class));
         CommandMessage<?> result = messageCaptor.getValue();
 
-        assertEquals(expectedPayload, result.getPayload());
-        assertTrue(customizedCallbackIsCalled.get());
+        assertThat(result.getPayload()).isEqualTo(expectedPayload);
+        assertThat(customizedCallbackIsCalled.get()).isTrue();
     }
 
     private static class RescheduleCommand implements Answer<Boolean> {

@@ -44,7 +44,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 
 /**
@@ -77,9 +77,9 @@ public class DisruptorCommandBusBenchmark {
         eventStore.countDownLatch.await(5, TimeUnit.SECONDS);
         long end = System.currentTimeMillis();
         try {
-            assertEquals(COMMAND_COUNT,
-                         eventStore.readEvents(aggregateIdentifier).asStream().count(),
-                         "Seems that some events are not stored");
+            assertThat(eventStore.readEvents(aggregateIdentifier).asStream().count())
+                    .as("Seems that some events are not stored")
+                    .isEqualTo(COMMAND_COUNT);
             System.out.println("Did " + ((COMMAND_COUNT * 1000L) / (end - start)) + " commands per second");
         } finally {
             commandBus.stop();

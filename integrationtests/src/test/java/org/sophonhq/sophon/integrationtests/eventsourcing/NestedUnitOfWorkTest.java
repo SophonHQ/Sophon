@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 class NestedUnitOfWorkTest {
@@ -57,13 +57,14 @@ class NestedUnitOfWorkTest {
 
         config.shutdown();
 
-        assertEquals(asList("pre-rollback-first","pre-rollback-second",
-                            "post-rollback-first","post-rollback-second",
-                            "from-eventstore-first", "from-eventstore-second"),
-                     config.getComponent(List.class));
+        assertThat(config.getComponent(List.class))
+                .containsExactly("pre-rollback-first", "pre-rollback-second",
+                                 "post-rollback-first", "post-rollback-second",
+                                 "from-eventstore-first", "from-eventstore-second");
     }
 
     static class TestAggregate {
+
         @EntityId
         String id;
         List<String> items = new ArrayList<>();
@@ -98,6 +99,7 @@ class NestedUnitOfWorkTest {
     }
 
     static class Create {
+
         @TargetAggregateIdentifier
         String id;
 
@@ -107,6 +109,7 @@ class NestedUnitOfWorkTest {
     }
 
     static class Add {
+
         @TargetAggregateIdentifier
         String id;
         String item;
@@ -118,6 +121,7 @@ class NestedUnitOfWorkTest {
     }
 
     static class ShowItems {
+
         @TargetAggregateIdentifier
         String id;
         String message;
@@ -129,15 +133,19 @@ class NestedUnitOfWorkTest {
     }
 
     static class Test1 {
+
     }
 
     static class Test2 {
+
     }
 
     static class Oops {
+
     }
 
     static class Handler {
+
         @CommandHandler
         public void handle(Test1 cmd, CommandGateway gw) {
             gw.sendAndWait(new Add("1", "first"));
@@ -148,7 +156,7 @@ class NestedUnitOfWorkTest {
         public void handle(Test2 cmd, CommandGateway gw) {
             gw.sendAndWait(new Add("1", "second"));
             gw.sendAndWait(new ShowItems("1", "pre-rollback"));
-            assertThrows(RuntimeException.class, () -> gw.sendAndWait(new Oops()));
+            assertThatThrownBy(() -> gw.sendAndWait(new Oops())).isInstanceOf(RuntimeException.class);
             gw.sendAndWait(new ShowItems("1", "post-rollback"));
         }
 

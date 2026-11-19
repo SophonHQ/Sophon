@@ -17,7 +17,6 @@
 
 package org.sophonhq.sophon.tracing;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.messaging.Message;
@@ -27,6 +26,8 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Abstract class test for all intermediate factories that result in a {@link Span}. Contains facilities
@@ -52,7 +53,7 @@ public abstract class IntermediateSpanFactoryTest<BI, SI> {
 
     @Test
     void cannotSetNullSpanFactory() {
-        Assertions.assertThrows(SophonConfigurationException.class, () -> createBuilder(null));
+        assertThatThrownBy(() -> createBuilder(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     /**
@@ -172,16 +173,16 @@ public abstract class IntermediateSpanFactoryTest<BI, SI> {
             if (span instanceof TestSpanFactory.TestSpan) {
                 assertSpan((TestSpanFactory.TestSpan) span);
             } else {
-                Assertions.fail("Expected a TestSpan, but got " + span.getClass().getSimpleName());
+                fail("Expected a TestSpan, but got " + span.getClass().getSimpleName());
             }
         }
 
         private void assertSpan(TestSpanFactory.TestSpan span) {
-            Assertions.assertEquals(name, span.getName());
-            Assertions.assertEquals(type, span.getType());
-            attributes.forEach((key, value) -> Assertions.assertEquals(value, span.getAttribute(key)));
+            assertThat(span.getName()).isEqualTo(name);
+            assertThat(span.getType()).isEqualTo(type);
+            attributes.forEach((key, value) -> assertThat(span.getAttribute(key)).isEqualTo(value));
             if (message != null) {
-                Assertions.assertSame(message, span.getMessage());
+                assertThat(span.getMessage()).isSameAs(message);
             }
         }
     }
@@ -194,7 +195,7 @@ public abstract class IntermediateSpanFactoryTest<BI, SI> {
 
         @Override
         public void assertSpan(Span span) {
-            Assertions.assertSame(NoOpSpanFactory.NoOpSpan.INSTANCE, span);
+            assertThat(span).isSameAs(NoOpSpanFactory.NoOpSpan.INSTANCE);
         }
     }
 }

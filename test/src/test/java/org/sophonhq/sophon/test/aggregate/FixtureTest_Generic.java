@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.test.aggregate;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.eventsourcing.AggregateFactory;
@@ -29,7 +31,7 @@ import org.sophonhq.sophon.test.FixtureExecutionException;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -72,12 +74,13 @@ class FixtureTest_Generic {
 
     @Test
     void configurationOfRequiredCustomAggregateFactoryNotProvided_FailureOnGiven() {
-        assertThrows(IncompatibleAggregateException.class, () -> fixture.given(new MyEvent("id1", 1)));
+        assertThatThrownBy(() -> fixture.given(new MyEvent("id1", 1)))
+                .isInstanceOf(IncompatibleAggregateException.class);
     }
 
     @Test
     void configurationOfRequiredCustomAggregateFactoryNotProvided_FailureOnGetRepository() {
-        assertThrows(IncompatibleAggregateException.class, fixture::getRepository);
+        assertThatThrownBy(fixture::getRepository).isInstanceOf(IncompatibleAggregateException.class);
     }
 
     @Test
@@ -102,7 +105,8 @@ class FixtureTest_Generic {
     void injectResources_CommandHandlerAlreadyRegistered() {
         fixture.registerAggregateFactory(mockAggregateFactory);
         fixture.registerAnnotatedCommandHandler(new MyCommandHandler(fixture.getRepository(), fixture.getEventBus()));
-        assertThrows(FixtureExecutionException.class, () -> fixture.registerInjectableResource("I am injectable"));
+        assertThatThrownBy(() -> fixture.registerInjectableResource("I am injectable"))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
@@ -115,10 +119,10 @@ class FixtureTest_Generic {
 
         DomainEventStream events = fixture.getEventStore().readEvents("AggregateId");
         for (int t = 0; t < 3; t++) {
-            assertTrue(events.hasNext());
+            assertThat(events).hasNext();
             DomainEventMessage next = events.next();
-            assertEquals("AggregateId", next.getAggregateIdentifier());
-            assertEquals(t, next.getSequenceNumber());
+            assertThat(next.getAggregateIdentifier()).isEqualTo("AggregateId");
+            assertThat(next.getSequenceNumber()).isEqualTo(t);
         }
     }
 
@@ -128,28 +132,30 @@ class FixtureTest_Generic {
         fixture.registerAnnotatedCommandHandler(new MyCommandHandler(fixture.getRepository(), fixture.getEventBus()));
         TestExecutor exec = fixture.given(new MyEvent("AggregateId", 1));
 
-        AssertionError error = assertThrows(AssertionError.class, () -> exec.when(new TestCommand("OtherIdentifier")));
-        assertTrue(error.getMessage().contains("OtherIdentifier"), "Wrong message. Was: " + error.getMessage());
-        assertTrue(error.getMessage().contains("AggregateId"), "Wrong message. Was: " + error.getMessage());
+        AssertionError error = assertThatExceptionOfType(AssertionError.class)
+                .isThrownBy(() -> exec.when(new TestCommand("OtherIdentifier")))
+                .actual();
+        assertThat(error.getMessage()).as("Wrong message. Was: " + error.getMessage()).contains("OtherIdentifier");
+        assertThat(error.getMessage()).as("Wrong message. Was: " + error.getMessage()).contains("AggregateId");
     }
 
     @Test
     void fixtureGeneratesExceptionOnWrongEvents_DifferentAggregateIdentifiers() {
-        assertThrows(EventStoreException.class, () ->
+        assertThatThrownBy(() ->
                 fixture.getEventStore().publish(
                         new GenericDomainEventMessage<>("test", UUID.randomUUID().toString(), 0, new StubDomainEvent()),
                         new GenericDomainEventMessage<>("test", UUID.randomUUID().toString(), 0, new StubDomainEvent()))
-        );
+        ).isInstanceOf(EventStoreException.class);
     }
 
     @Test
     void fixtureGeneratesExceptionOnWrongEvents_WrongSequence() {
         String identifier = UUID.randomUUID().toString();
-        assertThrows(EventStoreException.class, () ->
+        assertThatThrownBy(() ->
                 fixture.getEventStore().publish(
                         new GenericDomainEventMessage<>("test", identifier, 0, new StubDomainEvent()),
                         new GenericDomainEventMessage<>("test", identifier, 2, new StubDomainEvent()))
-        );
+        ).isInstanceOf(EventStoreException.class);
     }
 
     private class StubDomainEvent {

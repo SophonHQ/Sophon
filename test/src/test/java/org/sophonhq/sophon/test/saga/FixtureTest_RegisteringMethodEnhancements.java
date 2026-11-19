@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.test.saga;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.annotation.HandlerDefinition;
@@ -34,7 +35,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.test.matchers.Matchers.listWithAnyOf;
 import static org.sophonhq.sophon.test.matchers.Matchers.predicate;
 
@@ -63,7 +64,7 @@ public class FixtureTest_RegisteringMethodEnhancements {
                    .whenPublishingA(new ParameterResolvedEvent(TEST_AGGREGATE_IDENTIFIER))
                    .expectDispatchedCommandsMatching(listWithAnyOf(predicate(commandMessage -> {
                        Object payload = commandMessage.getPayload();
-                       assertTrue(payload instanceof ResolveParameterCommand);
+                       assertThat(payload).isInstanceOf(ResolveParameterCommand.class);
                        AtomicBoolean assertion = ((ResolveParameterCommand) payload).getAssertion();
                        return assertion.get();
                    })));
@@ -89,7 +90,7 @@ public class FixtureTest_RegisteringMethodEnhancements {
                    .whenPublishingA(new TriggerSagaStartEvent(TEST_AGGREGATE_IDENTIFIER))
                    .expectScheduledEventOfType(Duration.ofMinutes(10), TimerTriggeredEvent.class);
 
-        assertTrue(handlerDefinitionReached.get());
+        assertThat(handlerDefinitionReached.get()).isTrue();
     }
 
     @Test
@@ -101,7 +102,7 @@ public class FixtureTest_RegisteringMethodEnhancements {
                    .whenPublishingA(new TriggerSagaStartEvent(TEST_AGGREGATE_IDENTIFIER))
                    .expectScheduledEventOfType(Duration.ofMinutes(10), TimerTriggeredEvent.class);
 
-        assertTrue(handlerEnhancerReached.get());
+        assertThat(handlerEnhancerReached.get()).isTrue();
     }
 
     private static class TestParameterResolverFactory

@@ -17,14 +17,16 @@
 
 package org.sophonhq.sophon.test.utils;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.messaging.MessageHandler;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * @author Allard Buijze
@@ -46,13 +48,14 @@ class RecordingCommandBusTest {
                                  if (commandResultMessage.isExceptional()) {
                                      fail("Didn't expect handling to fail");
                                  }
-                                 assertNull(commandResultMessage.getPayload(),
-                                         "Expected default callback behavior to invoke onResult(null)");
+                                 assertThat(commandResultMessage.getPayload())
+                                         .as("Expected default callback behavior to invoke onResult(null)")
+                                         .isNull();
                              });
         List<CommandMessage<?>> actual = testSubject.getDispatchedCommands();
-        assertEquals(2, actual.size());
-        assertEquals("First", actual.get(0).getPayload());
-        assertEquals("Second", actual.get(1).getPayload());
+        assertThat(actual).hasSize(2);
+        assertThat(actual.get(0).getPayload()).isEqualTo("First");
+        assertThat(actual.get(1).getPayload()).isEqualTo("Second");
     }
 
     @Test
@@ -64,12 +67,12 @@ class RecordingCommandBusTest {
                                  if (commandResultMessage.isExceptional()) {
                                     fail("Didn't expect handling to fail");
                                  }
-                                 assertEquals("callbackResult", commandResultMessage.getPayload());
+                                 assertThat(commandResultMessage.getPayload()).isEqualTo("callbackResult");
                              });
         List<CommandMessage<?>> actual = testSubject.getDispatchedCommands();
-        assertEquals(2, actual.size());
-        assertEquals("First", actual.get(0).getPayload());
-        assertEquals("Second", actual.get(1).getPayload());
+        assertThat(actual).hasSize(2);
+        assertThat(actual.get(0).getPayload()).isEqualTo("First");
+        assertThat(actual.get(1).getPayload()).isEqualTo("Second");
     }
 
     @Test
@@ -79,7 +82,7 @@ class RecordingCommandBusTest {
             return null;
         };
         testSubject.subscribe(String.class.getName(), handler);
-        assertTrue(testSubject.isSubscribed(handler));
-        assertTrue(testSubject.isSubscribed(String.class.getName(), handler));
+        assertThat(testSubject.isSubscribed(handler)).isTrue();
+        assertThat(testSubject.isSubscribed(String.class.getName(), handler)).isTrue();
     }
 }

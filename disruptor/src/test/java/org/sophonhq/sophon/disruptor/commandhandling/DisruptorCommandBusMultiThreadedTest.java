@@ -20,7 +20,9 @@ package org.sophonhq.sophon.disruptor.commandhandling;
 import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.mockito.stubbing.*;
 import org.sophonhq.sophon.commandhandling.CommandCallback;
@@ -57,7 +59,7 @@ import java.util.stream.Stream;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -119,20 +121,20 @@ class DisruptorCommandBusMultiThreadedTest {
 
         testSubject.stop();
         // only the commands executed after the failed ones will cause a readEvents() to occur
-        assertEquals(10, inMemoryEventStore.loadCounter.get());
-        assertEquals(20, garbageCollectionPrevention.size());
-        assertEquals((COMMAND_COUNT * AGGREGATE_COUNT) + (2 * AGGREGATE_COUNT),
-                     inMemoryEventStore.storedEventCounter.get());
+        assertThat(inMemoryEventStore.loadCounter.get()).isEqualTo(10);
+        assertThat(garbageCollectionPrevention).hasSize(20);
+        assertThat(inMemoryEventStore.storedEventCounter.get())
+                .isEqualTo((COMMAND_COUNT * AGGREGATE_COUNT) + (2 * AGGREGATE_COUNT));
         //noinspection unchecked
         ArgumentCaptor<CommandResultMessage<Object>> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(mockCallback, times(1010)).onResult(any(), commandResultMessageCaptor.capture());
-        assertEquals(10, commandResultMessageCaptor.getAllValues()
-                                                   .stream()
-                                                   .filter(ResultMessage::isExceptional)
-                                                   .map(ResultMessage::exceptionResult)
-                                                   .filter(e -> e instanceof MockException)
-                                                   .count());
+        assertThat(commandResultMessageCaptor.getAllValues()
+                                             .stream()
+                                             .filter(ResultMessage::isExceptional)
+                                             .map(ResultMessage::exceptionResult)
+                                             .filter(e -> e instanceof MockException)
+                                             .count()).isEqualTo(10);
     }
 
     private Answer<Object> trackCreateAndLoad(Map<Object, Object> garbageCollectionPrevention) {

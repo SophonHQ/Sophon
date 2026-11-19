@@ -17,13 +17,13 @@
 
 package org.sophonhq.sophon.messaging;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link SimpleHandlerAttributes}.
@@ -39,7 +39,7 @@ class SimpleHandlerAttributesTest {
     void constructEmptyHandlerAttributes() {
         SimpleHandlerAttributes testSubject = new SimpleHandlerAttributes(Collections.emptyMap());
 
-        assertTrue(testSubject.isEmpty());
+        assertThat(testSubject.isEmpty()).isTrue();
     }
 
     @Test
@@ -49,9 +49,9 @@ class SimpleHandlerAttributesTest {
 
         SimpleHandlerAttributes testSubject = new SimpleHandlerAttributes(testAttributes);
 
-        assertFalse(testSubject.isEmpty());
-        assertTrue(testSubject.contains(ATTRIBUTE_KEY));
-        assertEquals(testAttributes, testSubject.getAll());
+        assertThat(testSubject.isEmpty()).isFalse();
+        assertThat(testSubject.contains(ATTRIBUTE_KEY)).isTrue();
+        assertThat(testSubject.getAll()).containsExactlyInAnyOrderEntriesOf(testAttributes);
     }
 
     @Test
@@ -61,7 +61,7 @@ class SimpleHandlerAttributesTest {
 
         SimpleHandlerAttributes testSubject = new SimpleHandlerAttributes(testAttributes);
 
-        assertEquals(ATTRIBUTE, (int) testSubject.get(ATTRIBUTE_KEY));
+        assertThat((int) testSubject.get(ATTRIBUTE_KEY)).isEqualTo(ATTRIBUTE);
     }
 
     @Test
@@ -71,7 +71,7 @@ class SimpleHandlerAttributesTest {
 
         SimpleHandlerAttributes testSubject = new SimpleHandlerAttributes(expectedAttributes);
 
-        assertEquals(expectedAttributes, testSubject.getAll());
+        assertThat(testSubject.getAll()).containsExactlyInAnyOrderEntriesOf(expectedAttributes);
     }
 
     @Test
@@ -81,8 +81,8 @@ class SimpleHandlerAttributesTest {
 
         SimpleHandlerAttributes testSubject = new SimpleHandlerAttributes(expectedAttributes);
 
-        assertTrue(testSubject.contains(ATTRIBUTE_KEY));
-        assertFalse(testSubject.contains("some-other-handler"));
+        assertThat(testSubject.contains(ATTRIBUTE_KEY)).isTrue();
+        assertThat(testSubject.contains("some-other-handler")).isFalse();
     }
 
     @Test
@@ -101,7 +101,7 @@ class SimpleHandlerAttributesTest {
 
         HandlerAttributes result = testSubject.mergedWith(testOther);
 
-        assertEquals(expectedAttributes, result.getAll());
+        assertThat(result.getAll()).containsExactlyInAnyOrderEntriesOf(expectedAttributes);
     }
 
     @Test
@@ -111,7 +111,7 @@ class SimpleHandlerAttributesTest {
 
         SimpleHandlerAttributes testSubject = new SimpleHandlerAttributes(testAttributes);
 
-        assertEquals(testSubject, testSubject.mergedWith(new SimpleHandlerAttributes(Collections.emptyMap())));
+        assertThat(testSubject.mergedWith(new SimpleHandlerAttributes(Collections.emptyMap()))).isEqualTo(testSubject);
     }
 
     @Test
@@ -124,6 +124,6 @@ class SimpleHandlerAttributesTest {
 
         SimpleHandlerAttributes testSubject = new SimpleHandlerAttributes(Collections.emptyMap());
 
-        assertEquals(expected, testSubject.mergedWith(testOther));
+        assertThat(testSubject.mergedWith(testOther)).isEqualTo(expected);
     }
 }

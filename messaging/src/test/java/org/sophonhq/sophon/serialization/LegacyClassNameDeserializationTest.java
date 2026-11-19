@@ -39,7 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
 
 /**
  * Test class validating that serializers configured to translate legacy class names read data written with Axon
@@ -83,7 +84,7 @@ class LegacyClassNameDeserializationTest {
     void deserializesDataWrittenWithAxonFrameworkClassNames(String serializerName, Serializer serializer, Object object) {
         SerializedObject<byte[]> legacy = withLegacyClassNames(serializer.serialize(object, byte[].class));
 
-        assertEquals(object, serializer.deserialize(legacy));
+        assertThatObject(serializer.deserialize(legacy)).isEqualTo(object);
     }
 
     @MethodSource("serializedObjects")
@@ -92,13 +93,13 @@ class LegacyClassNameDeserializationTest {
         SerializedType legacyType = new SimpleSerializedType(object.getClass().getName().replace(PACKAGE, LEGACY_PACKAGE),
                                                              null);
 
-        assertEquals(object.getClass(), serializer.classForType(legacyType));
+        assertThat(serializer.classForType(legacyType)).isEqualTo(object.getClass());
     }
 
     @MethodSource("serializedObjects")
     @ParameterizedTest(name = "[{index}] {0}: {2}")
     void leavesDataWithSophonClassNamesUnchanged(String serializerName, Serializer serializer, Object object) {
-        assertEquals(object, serializer.deserialize(serializer.serialize(object, byte[].class)));
+        assertThatObject(serializer.deserialize(serializer.serialize(object, byte[].class))).isEqualTo(object);
     }
 
     private static SerializedObject<byte[]> withLegacyClassNames(SerializedObject<byte[]> serialized) {

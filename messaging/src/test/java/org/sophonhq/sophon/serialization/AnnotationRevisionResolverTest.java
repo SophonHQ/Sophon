@@ -20,8 +20,7 @@ package org.sophonhq.sophon.serialization;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -37,12 +36,12 @@ class AnnotationRevisionResolverTest {
 
     @Test
     void revisionOfAnnotatedClass() {
-        assertEquals("2.3-TEST", testSubject.revisionOf(WithAnnotation.class));
+        assertThat(testSubject.revisionOf(WithAnnotation.class)).isEqualTo("2.3-TEST");
     }
 
     @Test
     void revisionOfNonAnnotatedClass() {
-        assertNull(testSubject.revisionOf(WithoutAnnotation.class));
+        assertThat(testSubject.revisionOf(WithoutAnnotation.class)).isNull();
     }
 
     @Revision("2.3-TEST")

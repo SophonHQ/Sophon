@@ -17,14 +17,16 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.utils.EventTestUtils.createEvent;
 import static org.sophonhq.sophon.utils.EventTestUtils.createEvents;
@@ -102,7 +104,8 @@ class SimpleEventHandlerInvokerTest {
     void buildWithNullEventHandlersListThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         //noinspection ConstantConditions
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.eventHandlers((List<?>) null));
+        assertThatThrownBy(() -> builderTestSubject.eventHandlers((List<?>) null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -110,42 +113,47 @@ class SimpleEventHandlerInvokerTest {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         List<Object> testEventHandlers = Collections.emptyList();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.eventHandlers(testEventHandlers));
+        assertThatThrownBy(() -> builderTestSubject.eventHandlers(testEventHandlers))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithoutEventHandlersListThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
 
-        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullParameterResolverFactoryThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         //noinspection ConstantConditions
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.parameterResolverFactory(null));
+        assertThatThrownBy(() -> builderTestSubject.parameterResolverFactory(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullHandlerDefinitionThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         //noinspection ConstantConditions
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.handlerDefinition(null));
+        assertThatThrownBy(() -> builderTestSubject.handlerDefinition(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullListenerInvocationErrorHandlerThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         //noinspection ConstantConditions
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.listenerInvocationErrorHandler(null));
+        assertThatThrownBy(() -> builderTestSubject.listenerInvocationErrorHandler(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullSequencingPolicyThrowsSophonConfigurationException() {
         SimpleEventHandlerInvoker.Builder<?> builderTestSubject = SimpleEventHandlerInvoker.builder();
         //noinspection ConstantConditions
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.sequencingPolicy(null));
+        assertThatThrownBy(() -> builderTestSubject.sequencingPolicy(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -153,7 +161,7 @@ class SimpleEventHandlerInvokerTest {
         doReturn(true).when(mockHandler1).supportsReset();
         doReturn(false).when(mockHandler2).supportsReset();
 
-        assertTrue(testSubject.supportsReset());
+        assertThat(testSubject.supportsReset()).isTrue();
     }
 
     @Test
@@ -161,6 +169,6 @@ class SimpleEventHandlerInvokerTest {
         doReturn(false).when(mockHandler1).supportsReset();
         doReturn(false).when(mockHandler2).supportsReset();
 
-        assertFalse(testSubject.supportsReset());
+        assertThat(testSubject.supportsReset()).isFalse();
     }
 }

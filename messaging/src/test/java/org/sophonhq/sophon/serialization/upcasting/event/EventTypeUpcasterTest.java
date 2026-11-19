@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.serialization.upcasting.event;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 import org.sophonhq.sophon.common.SophonConfigurationException;
@@ -32,7 +32,8 @@ import org.sophonhq.sophon.serialization.xml.XStreamSerializer;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 /**
@@ -64,47 +65,41 @@ class EventTypeUpcasterTest {
 
     @Test
     void upcasterBuilderFailsForNullExpectedPayloadTypeClass() {
-        assertThrows(
-                SophonConfigurationException.class, () -> EventTypeUpcaster.from((Class<?>) null, EXPECTED_REVISION)
-        );
+        assertThatThrownBy(() -> EventTypeUpcaster.from((Class<?>) null, EXPECTED_REVISION))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void upcasterBuilderFailsForNullExpectedPayloadType() {
-        assertThrows(
-                SophonConfigurationException.class, () -> EventTypeUpcaster.from((String) null, EXPECTED_REVISION)
-        );
+        assertThatThrownBy(() -> EventTypeUpcaster.from((String) null, EXPECTED_REVISION))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void upcasterBuilderFailsForEmptyExpectedPayloadType() {
-        assertThrows(
-                SophonConfigurationException.class, () -> EventTypeUpcaster.from("", EXPECTED_REVISION)
-        );
+        assertThatThrownBy(() -> EventTypeUpcaster.from("", EXPECTED_REVISION))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void upcasterBuilderFailsForNullUpcastedPayloadTypeClass() {
         EventTypeUpcaster.Builder testSubject = EventTypeUpcaster.from(EXPECTED_PAYLOAD_TYPE, EXPECTED_REVISION);
-        assertThrows(
-                SophonConfigurationException.class, () -> testSubject.to((Class<?>) null, UPCASTED_REVISION)
-        );
+        assertThatThrownBy(() -> testSubject.to((Class<?>) null, UPCASTED_REVISION))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void upcasterBuilderFailsForNullUpcastedPayloadType() {
         EventTypeUpcaster.Builder testSubject = EventTypeUpcaster.from(EXPECTED_PAYLOAD_TYPE, EXPECTED_REVISION);
-        assertThrows(
-                SophonConfigurationException.class, () -> testSubject.to((String) null, UPCASTED_REVISION)
-        );
+        assertThatThrownBy(() -> testSubject.to((String) null, UPCASTED_REVISION))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void upcasterBuilderFailsForEmptyUpcastedPayloadType() {
         EventTypeUpcaster.Builder testSubject = EventTypeUpcaster.from(EXPECTED_PAYLOAD_TYPE, EXPECTED_REVISION);
-        assertThrows(
-                SophonConfigurationException.class, () -> testSubject.to("", UPCASTED_REVISION)
-        );
+        assertThatThrownBy(() -> testSubject.to("", UPCASTED_REVISION))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @ParameterizedTest
@@ -113,7 +108,7 @@ class EventTypeUpcasterTest {
         EventData<?> testEventData = new TestEventEntry(EXPECTED_PAYLOAD_TYPE, EXPECTED_REVISION, serializer);
         IntermediateEventRepresentation testRepresentation = new InitialEventRepresentation(testEventData, serializer);
 
-        assertTrue(testSubject.canUpcast(testRepresentation));
+        assertThat(testSubject.canUpcast(testRepresentation)).isTrue();
     }
 
     @ParameterizedTest
@@ -123,7 +118,7 @@ class EventTypeUpcasterTest {
                 new TestEventEntry("some-non-matching-payload-type", EXPECTED_REVISION, serializer);
         IntermediateEventRepresentation testRepresentation = new InitialEventRepresentation(testEventData, serializer);
 
-        assertFalse(testSubject.canUpcast(testRepresentation));
+        assertThat(testSubject.canUpcast(testRepresentation)).isFalse();
     }
 
     @ParameterizedTest
@@ -133,19 +128,19 @@ class EventTypeUpcasterTest {
                 new TestEventEntry(EXPECTED_PAYLOAD_TYPE, "some-non-matching-revision", serializer);
         IntermediateEventRepresentation testRepresentation = new InitialEventRepresentation(testEventData, serializer);
 
-        assertFalse(testSubject.canUpcast(testRepresentation));
+        assertThat(testSubject.canUpcast(testRepresentation)).isFalse();
     }
 
     @Test
     void isExpectedPayloadType() {
-        assertTrue(testSubject.isExpectedPayloadType(EXPECTED_PAYLOAD_TYPE));
-        assertFalse(testSubject.isExpectedPayloadType(UPCASTED_PAYLOAD_TYPE));
+        assertThat(testSubject.isExpectedPayloadType(EXPECTED_PAYLOAD_TYPE)).isTrue();
+        assertThat(testSubject.isExpectedPayloadType(UPCASTED_PAYLOAD_TYPE)).isFalse();
     }
 
     @Test
     void isExpectedRevision() {
-        assertTrue(testSubject.isExpectedRevision(EXPECTED_REVISION));
-        assertFalse(testSubject.isExpectedRevision(UPCASTED_REVISION));
+        assertThat(testSubject.isExpectedRevision(EXPECTED_REVISION)).isTrue();
+        assertThat(testSubject.isExpectedRevision(UPCASTED_REVISION)).isFalse();
     }
 
     @ParameterizedTest
@@ -156,8 +151,8 @@ class EventTypeUpcasterTest {
 
         IntermediateEventRepresentation result = testSubject.doUpcast(testRepresentation);
         SerializedType resultType = result.getType();
-        assertEquals(UPCASTED_PAYLOAD_TYPE, resultType.getName());
-        assertEquals(UPCASTED_REVISION, resultType.getRevision());
+        assertThat(resultType.getName()).isEqualTo(UPCASTED_PAYLOAD_TYPE);
+        assertThat(resultType.getRevision()).isEqualTo(UPCASTED_REVISION);
     }
 
     @ParameterizedTest
@@ -176,13 +171,13 @@ class EventTypeUpcasterTest {
 
         Object deserialize = serializer.deserialize(result.getData());
 
-        assertEquals(RenamedTestEvent.class, deserialize.getClass());
+        assertThat(deserialize.getClass()).isEqualTo(RenamedTestEvent.class);
     }
 
     @Test
     void upcastedType() {
         SerializedType expectedType = new SimpleSerializedType(UPCASTED_PAYLOAD_TYPE, UPCASTED_REVISION);
-        assertEquals(expectedType, testSubject.upcastedType());
+        assertThat(testSubject.upcastedType()).isEqualTo(expectedType);
     }
 
     /**

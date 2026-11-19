@@ -18,7 +18,9 @@
 package org.sophonhq.sophon.modelling.saga.repository.jdbc;
 
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.modelling.saga.AssociationValue;
 import org.sophonhq.sophon.modelling.saga.AssociationValues;
 import org.sophonhq.sophon.modelling.saga.AssociationValuesImpl;
@@ -31,7 +33,7 @@ import java.sql.SQLException;
 import java.util.Set;
 
 import static java.util.Collections.singleton;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link JdbcSagaStore}.
@@ -75,14 +77,14 @@ class JdbcSagaStoreTest {
         testSubject.updateSaga(StubSaga.class, "123", saga, new AssociationValuesImpl(associationValues));
 
         SagaStore.Entry<StubSaga> entry = testSubject.loadSaga(StubSaga.class, "123");
-        assertNotNull(entry);
-        assertNotNull(entry.saga());
-        assertEquals(associationValues, entry.associationValues());
+        assertThat(entry).isNotNull();
+        assertThat(entry.saga()).isNotNull();
+        assertThat(entry.associationValues()).isEqualTo(associationValues);
     }
 
     @Test
     void loadSaga_NotFound() {
-        assertNull(testSubject.loadSaga(StubSaga.class, "123456"));
+        assertThat(testSubject.loadSaga(StubSaga.class, "123456")).isNull();
     }
 
     @Test
@@ -101,13 +103,13 @@ class JdbcSagaStoreTest {
         associationsValues.commit();
 
         Set<String> actual = testSubject.findSagas(StubSaga.class, new AssociationValue("key", "value"));
-        assertEquals(singleton("123"), actual);
+        assertThat(actual).isEqualTo(singleton("123"));
     }
 
     @Test
     void updateSagaWhenDeleted() {
         AssociationValues associationsValues = new AssociationValuesImpl(singleton(new AssociationValue("key", "value")));
         testSubject.updateSaga(StubSaga.class, "123456", new StubSaga(), associationsValues);
-        assertNull(testSubject.loadSaga(StubSaga.class, "123456"));
+        assertThat(testSubject.loadSaga(StubSaga.class, "123456")).isNull();
     }
 }

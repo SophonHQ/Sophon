@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.common.jdbc;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.messaging.ExecutionException;
 import org.sophonhq.sophon.messaging.GenericResultMessage;
@@ -29,7 +31,7 @@ import org.sophonhq.sophon.messaging.unitofwork.ExecutionResult;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class UnitOfWorkAwareConnectionProviderWrapperTest {
@@ -57,14 +59,14 @@ class UnitOfWorkAwareConnectionProviderWrapperTest {
     @Test
     void connectionReturnedImmediatelyWhenNoActiveUnitOfWork() throws SQLException {
         Connection actual = testSubject.getConnection();
-        assertSame(actual, mockConnection);
+        assertThat(actual).isSameAs(mockConnection);
     }
 
     @Test
     void connectionIsWrappedWhenUnitOfWorkIsActive() throws SQLException {
         DefaultUnitOfWork<Message<?>> uow = DefaultUnitOfWork.startAndGet(null);
         Connection actual = testSubject.getConnection();
-        assertNotSame(actual, mockConnection);
+        assertThat(actual).isNotSameAs(mockConnection);
 
         actual.close();
 
@@ -133,8 +135,8 @@ class UnitOfWorkAwareConnectionProviderWrapperTest {
         try {
             uow.rollback();
         } catch (ExecutionException e) {
-            assertEquals(IllegalArgumentException.class, e.getCause().getClass());
-            assertEquals(SQLException.class, e.getSuppressed()[0].getClass());
+            assertThat(e.getCause().getClass()).isEqualTo(IllegalArgumentException.class);
+            assertThat(e.getSuppressed()[0].getClass()).isEqualTo(SQLException.class);
         }
     }
 
@@ -153,7 +155,7 @@ class UnitOfWorkAwareConnectionProviderWrapperTest {
 
         verify(mockConnectionProvider, times(1)).getConnection();
 
-        assertSame(actualOuter, actualInner);
+        assertThat(actualInner).isSameAs(actualOuter);
 
         actualInner.close();
         actualInner.commit();

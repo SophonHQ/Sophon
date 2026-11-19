@@ -16,9 +16,9 @@
 
 package org.sophonhq.sophon.serialization;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link LegacyClassNames}.
@@ -27,26 +27,26 @@ class LegacyClassNamesTest {
 
     @Test
     void translateMovesClassesToTheSophonPackage() {
-        assertEquals("org.sophonhq.sophon.eventhandling.GlobalSequenceTrackingToken",
-                     LegacyClassNames.translate("org.axonframework.eventhandling.GlobalSequenceTrackingToken"));
+        assertThat(LegacyClassNames.translate("org.axonframework.eventhandling.GlobalSequenceTrackingToken"))
+                .isEqualTo("org.sophonhq.sophon.eventhandling.GlobalSequenceTrackingToken");
     }
 
     @Test
     void translateRenamesClassesWhoseNameContainedAxon() {
-        assertEquals("org.sophonhq.sophon.common.SophonNonTransientException",
-                     LegacyClassNames.translate("org.axonframework.common.AxonNonTransientException"));
+        assertThat(LegacyClassNames.translate("org.axonframework.common.AxonNonTransientException"))
+                .isEqualTo("org.sophonhq.sophon.common.SophonNonTransientException");
     }
 
     @Test
     void translateKeepsNestedClassNames() {
-        assertEquals("org.sophonhq.sophon.eventhandling.tokenstore.AbstractTokenEntry$Inner",
-                     LegacyClassNames.translate("org.axonframework.eventhandling.tokenstore.AbstractTokenEntry$Inner"));
+        assertThat(LegacyClassNames.translate("org.axonframework.eventhandling.tokenstore.AbstractTokenEntry$Inner"))
+                .isEqualTo("org.sophonhq.sophon.eventhandling.tokenstore.AbstractTokenEntry$Inner");
     }
 
     @Test
     void translateLeavesOtherClassNamesUntouched() {
-        assertEquals("com.example.AxonOrder", LegacyClassNames.translate("com.example.AxonOrder"));
-        assertEquals("java.lang.String", LegacyClassNames.translate("java.lang.String"));
+        assertThat(LegacyClassNames.translate("com.example.AxonOrder")).isEqualTo("com.example.AxonOrder");
+        assertThat(LegacyClassNames.translate("java.lang.String")).isEqualTo("java.lang.String");
     }
 
     @Test
@@ -56,16 +56,16 @@ class LegacyClassNamesTest {
                 + "<payload>com.example.Order</payload>"
                 + "</org.axonframework.eventhandling.ReplayToken>";
 
-        assertEquals("<org.sophonhq.sophon.eventhandling.ReplayToken>"
-                             + "<tokenAtReset class=\"org.sophonhq.sophon.eventhandling.GlobalSequenceTrackingToken\"/>"
-                             + "<payload>com.example.Order</payload>"
-                             + "</org.sophonhq.sophon.eventhandling.ReplayToken>",
-                     LegacyClassNames.translateAll(xml));
+        assertThat(LegacyClassNames.translateAll(xml))
+                .isEqualTo("<org.sophonhq.sophon.eventhandling.ReplayToken>"
+                        + "<tokenAtReset class=\"org.sophonhq.sophon.eventhandling.GlobalSequenceTrackingToken\"/>"
+                        + "<payload>com.example.Order</payload>"
+                        + "</org.sophonhq.sophon.eventhandling.ReplayToken>");
     }
 
     @Test
     void translateAllReplacesClassNamesInArrayDescriptors() {
-        assertEquals("[Lorg.sophonhq.sophon.eventhandling.TrackingToken;",
-                     LegacyClassNames.translateAll("[Lorg.axonframework.eventhandling.TrackingToken;"));
+        assertThat(LegacyClassNames.translateAll("[Lorg.axonframework.eventhandling.TrackingToken;"))
+                .isEqualTo("[Lorg.sophonhq.sophon.eventhandling.TrackingToken;");
     }
 }

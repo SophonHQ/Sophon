@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.commandhandling.distributed;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.common.SophonConfigurationException;
@@ -25,7 +26,8 @@ import org.sophonhq.sophon.messaging.MetaData;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -56,7 +58,7 @@ class MetaDataRoutingStrategyTest {
         MetaData testMetaData = MetaData.from(Collections.singletonMap(META_DATA_KEY, expectedRoutingKey));
         CommandMessage<String> testCommand = new GenericCommandMessage<>("some-payload", testMetaData);
 
-        assertEquals(expectedRoutingKey, testSubject.getRoutingKey(testCommand));
+        assertThat(testSubject.getRoutingKey(testCommand)).isEqualTo(expectedRoutingKey);
         verifyNoInteractions(fallbackRoutingStrategy);
     }
 
@@ -67,25 +69,28 @@ class MetaDataRoutingStrategyTest {
 
         CommandMessage<String> testCommand = new GenericCommandMessage<>("some-payload", MetaData.emptyInstance());
 
-        assertEquals(expectedRoutingKey, testSubject.getRoutingKey(testCommand));
+        assertThat(testSubject.getRoutingKey(testCommand)).isEqualTo(expectedRoutingKey);
         verify(fallbackRoutingStrategy).getRoutingKey(testCommand);
     }
 
     @Test
     void buildMetaDataRoutingStrategyFailsForNullFallbackRoutingStrategy() {
         MetaDataRoutingStrategy.Builder builderTestSubject = MetaDataRoutingStrategy.builder();
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.fallbackRoutingStrategy(null));
+        assertThatThrownBy(() -> builderTestSubject.fallbackRoutingStrategy(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildMetaDataRoutingStrategyFailsForNullMetaDataKey() {
         MetaDataRoutingStrategy.Builder builderTestSubject = MetaDataRoutingStrategy.builder();
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.metaDataKey(null));
+        assertThatThrownBy(() -> builderTestSubject.metaDataKey(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildMetaDataRoutingStrategyFailsForEmptyMetaDataKey() {
         MetaDataRoutingStrategy.Builder builderTestSubject = MetaDataRoutingStrategy.builder();
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.metaDataKey(""));
+        assertThatThrownBy(() -> builderTestSubject.metaDataKey(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 }

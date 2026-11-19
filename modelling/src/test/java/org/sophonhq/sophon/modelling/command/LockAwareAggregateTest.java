@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.modelling.command;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.lock.Lock;
 import org.sophonhq.sophon.messaging.GenericMessage;
 import org.sophonhq.sophon.messaging.Message;
@@ -25,7 +25,7 @@ import org.sophonhq.sophon.messaging.Message;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -50,14 +50,14 @@ class LockAwareAggregateTest {
 
     @Test
     void getWrappedAggregate() {
-        assertEquals(mockAggregate, testSubject.getWrappedAggregate());
+        assertThat(testSubject.getWrappedAggregate()).isEqualTo(mockAggregate);
     }
 
     @Test
     void isLockHeld() {
         when(mockLock.isHeld()).thenReturn(true);
 
-        assertTrue(testSubject.isLockHeld());
+        assertThat(testSubject.isLockHeld()).isTrue();
     }
 
     @Test
@@ -88,7 +88,7 @@ class LockAwareAggregateTest {
         testSubject.handle(testMessage);
 
         verify(mockAggregate).handle(testMessage);
-        assertTrue(lockSupplierInvoked.get());
+        assertThat(lockSupplierInvoked.get()).isTrue();
     }
 
     @Test
@@ -96,7 +96,7 @@ class LockAwareAggregateTest {
         testSubject.invoke(someField -> "some-return");
 
         verify(mockAggregate).invoke(any());
-        assertTrue(lockSupplierInvoked.get());
+        assertThat(lockSupplierInvoked.get()).isTrue();
     }
 
     @Test
@@ -105,7 +105,7 @@ class LockAwareAggregateTest {
         });
 
         verify(mockAggregate).execute(any());
-        assertTrue(lockSupplierInvoked.get());
+        assertThat(lockSupplierInvoked.get()).isTrue();
     }
 
     @Test

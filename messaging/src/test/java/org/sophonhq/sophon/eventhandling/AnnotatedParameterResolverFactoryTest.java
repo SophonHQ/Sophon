@@ -24,7 +24,7 @@ import org.sophonhq.sophon.messaging.annotation.ParameterResolver;
 import java.lang.reflect.Method;
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Mark Ingram
@@ -69,7 +69,9 @@ class AnnotatedParameterResolverFactoryTest {
     private static void testMethod(AbstractAnnotatedParameterResolverFactory<?, ?> factory, Method method, Class<?>[] expectedResolvers) {
         for (int param = 0; param < method.getParameterCount(); param++) {
             ParameterResolver<?> resolver = factory.createInstance(method, method.getParameters(), param);
-            assertEquals(expectedResolvers[param], resolver != null ? resolver.getClass() : null, "Result incorrect for param: " + param);
+            assertThat(resolver != null ? resolver.getClass() : null)
+                    .as("Result incorrect for param: " + param)
+                    .isEqualTo(expectedResolvers[param]);
         }
     }
 }

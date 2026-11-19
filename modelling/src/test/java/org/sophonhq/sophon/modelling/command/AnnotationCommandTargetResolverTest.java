@@ -28,9 +28,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 
 /**
@@ -47,8 +46,8 @@ class AnnotationCommandTargetResolverTest {
 
     @Test
     void resolveTarget_CommandWithoutAnnotations() {
-        assertThrows(IllegalArgumentException.class,
-                     () -> testSubject.resolveTarget(asCommandMessage("That won't work")));
+        assertThatThrownBy(() -> testSubject.resolveTarget(asCommandMessage("That won't work")))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -61,8 +60,8 @@ class AnnotationCommandTargetResolverTest {
             }
         }));
 
-        assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-        assertNull(actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isNull();
     }
 
     @Test
@@ -80,8 +79,8 @@ class AnnotationCommandTargetResolverTest {
             }
         }));
 
-        assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-        assertEquals((Long) 1L, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(1L);
     }
 
     @Test
@@ -99,8 +98,8 @@ class AnnotationCommandTargetResolverTest {
             }
         }));
 
-        assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-        assertEquals((Long) 1000230L, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(1000230L);
     }
 
     @Test
@@ -110,7 +109,7 @@ class AnnotationCommandTargetResolverTest {
             private void getIdentifier() {
             }
         });
-        assertThrows(IllegalArgumentException.class, () -> testSubject.resolveTarget(command));
+        assertThatThrownBy(() -> testSubject.resolveTarget(command)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -119,8 +118,8 @@ class AnnotationCommandTargetResolverTest {
         final Object version = 1L;
         VersionedAggregateIdentifier actual = testSubject.resolveTarget(
                 asCommandMessage(new FieldAnnotatedCommand(aggregateIdentifier, version)));
-        assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-        assertEquals(version, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(version);
     }
 
     @Test
@@ -129,8 +128,8 @@ class AnnotationCommandTargetResolverTest {
         final Object version = 1L;
         VersionedAggregateIdentifier actual = testSubject.resolveTarget(
                 asCommandMessage(new FieldAnnotatedCommand(aggregateIdentifier, version)));
-        assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-        assertEquals(version, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(version);
     }
 
     @Test
@@ -139,8 +138,8 @@ class AnnotationCommandTargetResolverTest {
         final Object version = 1L;
         VersionedAggregateIdentifier actual = testSubject.resolveTarget(
                 asCommandMessage(new FieldAnnotatedCommand(aggregateIdentifier, version)));
-        assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-        assertEquals(version, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(version);
     }
 
     @Test
@@ -149,8 +148,8 @@ class AnnotationCommandTargetResolverTest {
         final Object version = "1";
         VersionedAggregateIdentifier actual = testSubject.resolveTarget(
                 asCommandMessage(new FieldAnnotatedCommand(aggregateIdentifier, version)));
-        assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-        assertEquals((Long) 1L, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(1L);
     }
 
     @Test
@@ -158,7 +157,7 @@ class AnnotationCommandTargetResolverTest {
         final UUID aggregateIdentifier = UUID.randomUUID();
         final Object version = "abc";
         CommandMessage<Object> command = asCommandMessage(new FieldAnnotatedCommand(aggregateIdentifier, version));
-        assertThrows(IllegalArgumentException.class, () -> testSubject.resolveTarget(command));
+        assertThatThrownBy(() -> testSubject.resolveTarget(command)).isInstanceOf(IllegalArgumentException.class);
     }
 
 	@Test
@@ -177,8 +176,8 @@ class AnnotationCommandTargetResolverTest {
 				return version;
 			}
 		}));
-		assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-		assertEquals(version, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(version);
 	}
 
 	@Test
@@ -189,8 +188,8 @@ class AnnotationCommandTargetResolverTest {
 		VersionedAggregateIdentifier actual = testSubject.resolveTarget(
 				asCommandMessage(new FieldMetaAnnotatedCommand(aggregateIdentifier, version)));
 
-		assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-		assertEquals(version, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(version);
 	}
 
 	@Test
@@ -214,8 +213,8 @@ class AnnotationCommandTargetResolverTest {
 				return version;
 			}
 		}));
-		assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-		assertEquals(version, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(version);
 	}
 
 	@Test
@@ -231,8 +230,8 @@ class AnnotationCommandTargetResolverTest {
 		VersionedAggregateIdentifier actual = testSubject.resolveTarget(
 				asCommandMessage(new FieldCustomAnnotatedCommand(aggregateIdentifier, version)));
 
-		assertEquals(aggregateIdentifier.toString(), actual.getIdentifier());
-		assertEquals(version, actual.getVersion());
+        assertThat(actual.getIdentifier()).isEqualTo(aggregateIdentifier.toString());
+        assertThat(actual.getVersion()).isEqualTo(version);
 	}
 
     private static class FieldAnnotatedCommand {

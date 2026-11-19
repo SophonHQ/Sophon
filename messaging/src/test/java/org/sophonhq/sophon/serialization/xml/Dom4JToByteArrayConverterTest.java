@@ -22,7 +22,7 @@ import org.dom4j.DocumentFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -38,8 +38,8 @@ class Dom4JToByteArrayConverterTest {
 
     @Test
     void canConvert() {
-        assertEquals(Document.class, testSubject.expectedSourceType());
-        assertEquals(byte[].class, testSubject.targetType());
+        assertThat(testSubject.expectedSourceType()).isEqualTo(Document.class);
+        assertThat(testSubject.targetType()).isEqualTo(byte[].class);
     }
 
     @Test
@@ -50,9 +50,9 @@ class Dom4JToByteArrayConverterTest {
 
         byte[] actual = testSubject.convert(doc);
 
-        assertNotNull(actual);
+        assertThat(actual).isNotNull();
         String actualString = new String(actual);
 
-        assertTrue(actualString.contains("rootElement"), "Wrong output: " + actualString);
+        assertThat(actualString).as("Wrong output: " + actualString).contains("rootElement");
     }
 }

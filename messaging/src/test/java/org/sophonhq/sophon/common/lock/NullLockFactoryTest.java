@@ -17,9 +17,9 @@
 
 package org.sophonhq.sophon.common.lock;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link NullLockFactory}.
@@ -32,6 +32,6 @@ class NullLockFactoryTest {
     void obtainLockReturnsNoOpLockInstance() {
         LockFactory testSubject = NullLockFactory.INSTANCE;
 
-        assertEquals(NoOpLock.INSTANCE, testSubject.obtainLock(null));
+        assertThat(testSubject.obtainLock(null)).isEqualTo(NoOpLock.INSTANCE);
     }
 }

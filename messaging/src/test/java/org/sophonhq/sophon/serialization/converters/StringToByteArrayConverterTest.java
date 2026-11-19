@@ -22,8 +22,7 @@ import org.junit.jupiter.api.Test;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -33,8 +32,8 @@ class StringToByteArrayConverterTest {
     @Test
     void convert() throws UnsupportedEncodingException {
         StringToByteArrayConverter testSubject = new StringToByteArrayConverter();
-        assertEquals(String.class, testSubject.expectedSourceType());
-        assertEquals(byte[].class, testSubject.targetType());
-        assertArrayEquals("hello".getBytes(StandardCharsets.UTF_8), testSubject.convert("hello"));
+        assertThat(testSubject.expectedSourceType()).isEqualTo(String.class);
+        assertThat(testSubject.targetType()).isEqualTo(byte[].class);
+        assertThat(testSubject.convert("hello")).containsExactly("hello".getBytes(StandardCharsets.UTF_8));
     }
 }

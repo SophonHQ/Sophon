@@ -17,11 +17,11 @@
 
 package org.sophonhq.sophon.serialization.upcasting.event;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -37,7 +37,8 @@ class EventUpcasterChainTest {
                                                                        new SomeOtherEventUpcaster());
         IntermediateEventRepresentation mockRepresentation = mock(IntermediateEventRepresentation.class);
         //noinspection OptionalGetWithoutIsPresent
-        assertSame(mockRepresentation, eventUpcasterChain.upcast(Stream.of(mockRepresentation)).findFirst().get());
+        assertThat(eventUpcasterChain.upcast(Stream.of(mockRepresentation)).findFirst().get())
+                .isSameAs(mockRepresentation);
     }
 
     private static class SomeEventUpcaster extends SingleEventUpcaster {

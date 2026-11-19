@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventhandling.scheduling.dbscheduler;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 import org.sophonhq.sophon.eventhandling.scheduling.ScheduleToken;
@@ -26,7 +26,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 import java.util.Collection;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DbScheduledScheduleTokenTest {
 
@@ -36,9 +36,10 @@ class DbScheduledScheduleTokenTest {
         ScheduleToken one = new DbSchedulerScheduleToken(uuid);
         ScheduleToken other = new DbSchedulerScheduleToken(uuid);
 
-        assertEquals(one, other);
-        assertEquals(one.toString(), other.toString());
-        assertEquals(one.hashCode(), other.hashCode());
+        assertThat(other).isEqualTo(one);
+        assertThat(other)
+                .hasToString(one.toString())
+                .hasSameHashCodeAs(one);
     }
 
     @Test
@@ -46,16 +47,16 @@ class DbScheduledScheduleTokenTest {
         ScheduleToken one = new DbSchedulerScheduleToken(UUID.randomUUID().toString());
         ScheduleToken other = new DbSchedulerScheduleToken(UUID.randomUUID().toString());
 
-        assertNotEquals(one, other);
-        assertNotEquals(one.toString(), other.toString());
-        assertNotEquals(one.hashCode(), other.hashCode());
+        assertThat(other).isNotEqualTo(one);
+        assertThat(other.toString()).isNotEqualTo(one.toString());
+        assertThat(other.hashCode()).isNotEqualTo(one.hashCode());
     }
 
     @MethodSource("serializers")
     @ParameterizedTest
     void tokenShouldBeSerializable(TestSerializer serializer) {
         ScheduleToken tokenToTest = new DbSchedulerScheduleToken(UUID.randomUUID().toString());
-        assertEquals(tokenToTest, serializer.serializeDeserialize(tokenToTest));
+        assertThat(serializer.serializeDeserialize(tokenToTest)).isEqualTo(tokenToTest);
     }
 
     public static Collection<TestSerializer> serializers() {

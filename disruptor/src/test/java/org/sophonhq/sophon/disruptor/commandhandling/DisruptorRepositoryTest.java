@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.disruptor.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.gateway.DefaultCommandGateway;
@@ -31,8 +31,9 @@ import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
 import org.sophonhq.sophon.modelling.command.Repository;
 import org.sophonhq.sophon.modelling.command.TargetAggregateIdentifier;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 class DisruptorRepositoryTest {
@@ -64,7 +65,7 @@ class DisruptorRepositoryTest {
             repository.load(aggregateId);
             fail("Expected IllegalStateException");
         } catch (IllegalStateException e) {
-            assertTrue(e.getMessage().contains("DisruptorCommandBus"));
+            assertThat(e.getMessage()).contains("DisruptorCommandBus");
         } finally {
             uow.rollback();
         }

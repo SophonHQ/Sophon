@@ -17,12 +17,14 @@
 
 package org.sophonhq.sophon.eventhandling.async;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.messaging.MetaData;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link PropertySequencingPolicy}.
@@ -39,7 +41,7 @@ final class PropertySequencingPolicyTest {
                 .propertyExtractor(TestEvent::getId)
                 .build();
 
-        assertEquals("42", sequencingPolicy.getSequenceIdentifierFor(newStubDomainEvent(new TestEvent("42"))));
+        assertThat(sequencingPolicy.getSequenceIdentifierFor(newStubDomainEvent(new TestEvent("42")))).isEqualTo("42");
     }
 
     @Test
@@ -49,7 +51,7 @@ final class PropertySequencingPolicyTest {
                 .propertyName("Id")
                 .build();
 
-        assertEquals("42", sequencingPolicy.getSequenceIdentifierFor(newStubDomainEvent(new TestEvent("42"))));
+        assertThat(sequencingPolicy.getSequenceIdentifierFor(newStubDomainEvent(new TestEvent("42")))).isEqualTo("42");
     }
 
     @Test
@@ -59,8 +61,8 @@ final class PropertySequencingPolicyTest {
                 .propertyName("Id")
                 .build();
 
-        assertThrows(IllegalArgumentException.class,
-                     () -> sequencingPolicy.getSequenceIdentifierFor(newStubDomainEvent("42")));
+        assertThatThrownBy(() -> sequencingPolicy.getSequenceIdentifierFor(newStubDomainEvent("42")))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -71,7 +73,7 @@ final class PropertySequencingPolicyTest {
                 .fallbackSequencingPolicy(SequentialPerAggregatePolicy.instance())
                 .build();
 
-        assertEquals("A", sequencingPolicy.getSequenceIdentifierFor(newStubDomainEvent("42")));
+        assertThat(sequencingPolicy.getSequenceIdentifierFor(newStubDomainEvent("42"))).isEqualTo("A");
     }
 
     private DomainEventMessage<?> newStubDomainEvent(final Object payload) {

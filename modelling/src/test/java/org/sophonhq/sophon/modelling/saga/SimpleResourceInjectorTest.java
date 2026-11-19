@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.modelling.saga;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.modelling.utils.MockException;
 
@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import javax.inject.Inject;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -41,8 +41,8 @@ class SimpleResourceInjectorTest {
         final StubSaga saga = new StubSaga();
         testSubject.injectResources(saga);
 
-        assertNull(saga.getSomeWeirdResource());
-        assertSame(expectedFieldResource, saga.getSomeFieldResource());
+        assertThat(saga.getSomeWeirdResource()).isNull();
+        assertThat(saga.getSomeFieldResource()).isSameAs(expectedFieldResource);
     }
 
     @Test
@@ -52,8 +52,8 @@ class SimpleResourceInjectorTest {
         final StubSaga saga = new StubSaga();
         testSubject.injectResources(saga);
 
-        assertNull(saga.getSomeWeirdResource());
-        assertSame(expectedMethodResource, saga.getSomeMethodResource());
+        assertThat(saga.getSomeWeirdResource()).isNull();
+        assertThat(saga.getSomeMethodResource()).isSameAs(expectedMethodResource);
     }
 
     @Test
@@ -64,9 +64,9 @@ class SimpleResourceInjectorTest {
         final StubSaga saga = new StubSaga();
         testSubject.injectResources(saga);
 
-        assertNull(saga.getSomeWeirdResource());
-        assertSame(expectedFieldResource, saga.getSomeFieldResource());
-        assertSame(expectedMethodResource, saga.getSomeMethodResource());
+        assertThat(saga.getSomeWeirdResource()).isNull();
+        assertThat(saga.getSomeFieldResource()).isSameAs(expectedFieldResource);
+        assertThat(saga.getSomeMethodResource()).isSameAs(expectedMethodResource);
     }
 
     @Test
@@ -76,8 +76,8 @@ class SimpleResourceInjectorTest {
         final StubSaga saga = new StubSaga();
         testSubject.injectResources(saga);
 
-        assertNull(saga.getSomeWeirdResource());
-        assertSame(resource, saga.getSomeMethodResource());
+        assertThat(saga.getSomeWeirdResource()).isNull();
+        assertThat(saga.getSomeMethodResource()).isSameAs(resource);
     }
 
     private static class StubSaga implements Saga<StubSaga> {

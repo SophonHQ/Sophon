@@ -20,7 +20,9 @@ package org.sophonhq.sophon.springboot;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.jspecify.annotations.Nullable;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.common.stream.BlockingStream;
 import org.sophonhq.sophon.common.transaction.Transaction;
@@ -67,8 +69,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 /**
@@ -139,16 +141,20 @@ public class TrackingEventProcessorIntegrationTest {
         });
         eventProcessingModule.eventProcessors().values().forEach(EventProcessor::start);
 
-        assertFalse(countDownLatch1.await(1, TimeUnit.SECONDS));
+        assertThat(countDownLatch1.await(1, TimeUnit.SECONDS)).isFalse();
         publishEvent(UsedEvent.INSTANCE);
         publishEvent(UsedEvent.INSTANCE);
-        assertTrue(countDownLatch1.await(2, TimeUnit.SECONDS), "Expected all 4 events to have been delivered");
-        assertTrue(countDownLatch2.await(2, TimeUnit.SECONDS), "Expected all 4 events to have been delivered");
+        assertThat(countDownLatch1.await(2, TimeUnit.SECONDS))
+                .as("Expected all 4 events to have been delivered")
+                .isTrue();
+        assertThat(countDownLatch2.await(2, TimeUnit.SECONDS))
+                .as("Expected all 4 events to have been delivered")
+                .isTrue();
 
         eventProcessingModule.eventProcessors()
-                             .forEach((name, ep) -> assertFalse(
-                                     ep.isError(), "Processor ended with error"
-                             ));
+                             .forEach((name, ep) -> assertThat(ep.isError())
+                                     .as("Processor ended with error")
+                                     .isFalse());
     }
 
     @DirtiesContext
@@ -158,25 +164,25 @@ public class TrackingEventProcessorIntegrationTest {
 
         Optional<TrackingEventProcessor> optionalFirstTep =
                 eventProcessingModule.eventProcessor("first", TrackingEventProcessor.class);
-        assertTrue(optionalFirstTep.isPresent());
+        assertThat(optionalFirstTep).isPresent();
 
         TrackingEventProcessor firstTep = optionalFirstTep.get();
         firstTep.shutDown();
         firstTep.resetTokens();
         firstTep.start();
 
-        assertTrue(resetTriggered.get());
+        assertThat(resetTriggered.get()).isTrue();
 
         Optional<TrackingEventProcessor> optionalSecondTep =
                 eventProcessingModule.eventProcessor("second", TrackingEventProcessor.class);
-        assertTrue(optionalSecondTep.isPresent());
+        assertThat(optionalSecondTep).isPresent();
 
         TrackingEventProcessor secondTep = optionalSecondTep.get();
         secondTep.shutDown();
         secondTep.resetTokens(resetContext);
         secondTep.start();
 
-        assertEquals(resetContext, resetTriggeredWithContext.get());
+        assertThat(resetTriggeredWithContext.get()).isEqualTo(resetContext);
     }
 
     @DirtiesContext
@@ -189,8 +195,8 @@ public class TrackingEventProcessorIntegrationTest {
                                                           .map(TrackedEventMessage::getPayloadType)
                                                           .collect(Collectors.toSet());
 
-            assertFalse(ignoredClasses.contains(UsedEvent.class), "UsedEvent should not be ignored but is");
-            assertTrue(ignoredClasses.contains(UnusedEvent.class), "UnusedEvent should be ignored but isn't");
+            assertThat(ignoredClasses).as("UsedEvent should not be ignored but is").doesNotContain(UsedEvent.class);
+            assertThat(ignoredClasses).as("UnusedEvent should be ignored but isn't").contains(UnusedEvent.class);
         });
     }
 

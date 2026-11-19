@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.metrics;
 
 import com.codahale.metrics.ConsoleReporter;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -29,7 +30,7 @@ import org.sophonhq.sophon.monitoring.NoOpMessageMonitor;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 class GlobalMetricRegistryTest {
@@ -53,8 +54,9 @@ class GlobalMetricRegistryTest {
         ConsoleReporter.forRegistry(subject.getRegistry()).outputTo(new PrintStream(out)).build().report();
         String output = new String(out.toByteArray());
 
-        assertTrue(output.contains("test1"));
-        assertTrue(output.contains("test2"));
+        assertThat(output)
+                .contains("test1")
+                .contains("test2");
     }
 
     @Test
@@ -67,7 +69,7 @@ class GlobalMetricRegistryTest {
         ConsoleReporter.forRegistry(subject.getRegistry()).outputTo(new PrintStream(out)).build().report();
         String output = new String(out.toByteArray());
 
-        assertTrue(output.contains("eventBus"));
+        assertThat(output).contains("eventBus");
     }
 
     @Test
@@ -80,13 +82,13 @@ class GlobalMetricRegistryTest {
         ConsoleReporter.forRegistry(subject.getRegistry()).outputTo(new PrintStream(out)).build().report();
         String output = new String(out.toByteArray());
 
-        assertTrue(output.contains("commandBus"));
+        assertThat(output).contains("commandBus");
     }
 
     @Test
     void createMonitorForUnknownComponent() {
         MessageMonitor<? extends Message<?>> actual = subject.registerComponent(String.class, "test");
 
-        assertSame(NoOpMessageMonitor.instance(), actual);
+        assertThat(actual).isSameAs(NoOpMessageMonitor.instance());
     }
 }

@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.integrationtests.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.SimpleCommandBus;
 import org.sophonhq.sophon.commandhandling.callbacks.NoOpCallback;
@@ -34,6 +35,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 
@@ -70,8 +72,8 @@ class AggregateCreationFromCommandsTest {
 
         List<? extends DomainEventMessage<?>> events = eventStore.readEvents(aggregateId).asStream()
                                                                  .collect(Collectors.toList());
-        Assertions.assertEquals(1, events.size());
-        Assertions.assertEquals(aggregateId, events.get(0).getAggregateIdentifier());
+        assertThat(events.size()).isOne();
+        assertThat(events.get(0).getAggregateIdentifier()).isEqualTo(aggregateId);
     }
 
     @Test
@@ -84,8 +86,8 @@ class AggregateCreationFromCommandsTest {
 
         List<? extends DomainEventMessage<?>> events = eventStore.readEvents(aggregateId).asStream()
                                                                  .collect(Collectors.toList());
-        Assertions.assertEquals(1, events.size());
-        Assertions.assertEquals(aggregateId, events.get(0).getAggregateIdentifier());
+        assertThat(events.size()).isOne();
+        assertThat(events.get(0).getAggregateIdentifier()).isEqualTo(aggregateId);
     }
 
     @Test
@@ -99,8 +101,8 @@ class AggregateCreationFromCommandsTest {
 
         List<? extends DomainEventMessage<?>> events = eventStore.readEvents(aggregateId).asStream()
                                                                  .collect(Collectors.toList());
-        Assertions.assertEquals(1, events.size());
-        Assertions.assertEquals(aggregateId, events.get(0).getAggregateIdentifier());
+        assertThat(events.size()).isOne();
+        assertThat(events.get(0).getAggregateIdentifier()).isEqualTo(aggregateId);
     }
 
     @Test
@@ -113,9 +115,9 @@ class AggregateCreationFromCommandsTest {
 
         List<? extends DomainEventMessage<?>> events = eventStore.readEvents(aggregateId).asStream()
                                                                  .collect(Collectors.toList());
-        Assertions.assertEquals(1, events.size());
-        Assertions.assertEquals(aggregateId, events.get(0).getAggregateIdentifier());
-        Assertions.assertEquals(0, factoryInvocationCounter.get());
+        assertThat(events.size()).isOne();
+        assertThat(events.get(0).getAggregateIdentifier()).isEqualTo(aggregateId);
+        assertThat(factoryInvocationCounter.get()).isZero();
     }
 
     @Test
@@ -128,9 +130,9 @@ class AggregateCreationFromCommandsTest {
 
         List<? extends DomainEventMessage<?>> events = eventStore.readEvents(aggregateId).asStream()
                                                                  .collect(Collectors.toList());
-        Assertions.assertEquals(1, events.size());
-        Assertions.assertEquals(aggregateId, events.get(0).getAggregateIdentifier());
-        Assertions.assertEquals(1, factoryInvocationCounter.get());
+        assertThat(events.size()).isOne();
+        assertThat(events.get(0).getAggregateIdentifier()).isEqualTo(aggregateId);
+        assertThat(factoryInvocationCounter.get()).isOne();
     }
 
     @Test
@@ -144,9 +146,9 @@ class AggregateCreationFromCommandsTest {
 
         List<? extends DomainEventMessage<?>> events = eventStore.readEvents(aggregateId).asStream()
                                                                  .collect(Collectors.toList());
-        Assertions.assertEquals(1, events.size());
-        Assertions.assertEquals(aggregateId, events.get(0).getAggregateIdentifier());
-        Assertions.assertEquals(1, factoryInvocationCounter.get());
+        assertThat(events.size()).isOne();
+        assertThat(events.get(0).getAggregateIdentifier()).isEqualTo(aggregateId);
+        assertThat(factoryInvocationCounter.get()).isOne();
     }
 
     private void createAndRegisterDefaultCommandHandler() {

@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventhandling.async;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -26,7 +27,8 @@ import org.sophonhq.sophon.messaging.MetaData;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link MetaDataSequencingPolicy}.
@@ -46,7 +48,7 @@ public class MetaDataSequencingPolicyTest {
         DomainEventMessage<?> testEvent =
                 newStubDomainEvent("42", Collections.singletonMap("metaDataKey", "metaDataValue"));
 
-        assertEquals("metaDataValue", metaDataPolicy.getSequenceIdentifierFor(testEvent));
+        assertThat(metaDataPolicy.getSequenceIdentifierFor(testEvent)).isEqualTo("metaDataValue");
     }
 
     @Test
@@ -56,15 +58,15 @@ public class MetaDataSequencingPolicyTest {
                 .metaDataKey("metaDataKey")
                 .build();
 
-        assertNotNull(metaDataPolicy.getSequenceIdentifierFor(newStubDomainEvent("42")));
+        assertThat(metaDataPolicy.getSequenceIdentifierFor(newStubDomainEvent("42"))).isNotNull();
     }
 
     @Test
     void missingHardRequirementShouldThrowException() {
-        assertThrows(SophonConfigurationException.class,
-                     () -> MetaDataSequencingPolicy
-                             .builder()
-                             .build());
+        assertThatThrownBy(() -> MetaDataSequencingPolicy
+                .builder()
+                .build())
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     private DomainEventMessage<?> newStubDomainEvent(final Object payload, Map<String, String> metaData) {

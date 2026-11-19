@@ -23,7 +23,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests serialization capabilities of {@link InstanceResponseType}.
@@ -43,6 +43,7 @@ class InstanceResponseTypeSerializationTest extends AbstractResponseTypeTest<Abs
     @MethodSource("serializers")
     @ParameterizedTest
     void responseTypeShouldBeSerializable(TestSerializer serializer) {
-        assertEquals(testSubject.getExpectedResponseType(), serializer.serializeDeserialize(testSubject).getExpectedResponseType());
+        assertThat(serializer.serializeDeserialize(testSubject).getExpectedResponseType())
+                .isEqualTo(testSubject.getExpectedResponseType());
     }
 }

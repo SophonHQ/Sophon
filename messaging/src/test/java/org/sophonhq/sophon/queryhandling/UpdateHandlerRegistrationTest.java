@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.queryhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link UpdateHandlerRegistration}.
@@ -47,7 +47,7 @@ class UpdateHandlerRegistrationTest {
 
         testSubject.complete();
 
-        assertTrue(registrationInvocation.get());
-        assertTrue(completeInvocation.get());
+        assertThat(registrationInvocation.get()).isTrue();
+        assertThat(completeInvocation.get()).isTrue();
     }
 }

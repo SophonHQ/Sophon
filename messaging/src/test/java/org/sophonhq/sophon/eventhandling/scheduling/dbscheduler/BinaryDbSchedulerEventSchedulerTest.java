@@ -20,15 +20,15 @@ package org.sophonhq.sophon.eventhandling.scheduling.dbscheduler;
 import com.github.kagkarlsson.scheduler.task.Execution;
 import com.github.kagkarlsson.scheduler.task.Task;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.sophonhq.sophon.utils.DbSchedulerTestUtil.getScheduler;
 
 class BinaryDbSchedulerEventSchedulerTest extends AbstractDbSchedulerEventSchedulerTest {
@@ -58,8 +58,8 @@ class BinaryDbSchedulerEventSchedulerTest extends AbstractDbSchedulerEventSchedu
             await().atMost(Duration.ofSeconds(1L)).untilAsserted(
                     () -> {
                         List<Execution> failures = scheduler.getFailingExecutions(Duration.ofHours(1L));
-                        assertEquals(1, failures.size());
-                        assertNotNull(failures.get(0).lastFailure);
+                        assertThat(failures).hasSize(1);
+                        assertThat(failures.get(0).lastFailure).isNotNull();
                     }
             );
         } finally {

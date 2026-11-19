@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.annotation.ParameterResolver;
 
 import java.lang.annotation.ElementType;
@@ -29,7 +30,7 @@ import java.lang.reflect.Parameter;
 import java.time.Instant;
 import java.time.temporal.Temporal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -85,8 +86,8 @@ class TimestampParameterResolverFactoryTest {
                 testSubject.createInstance(instantMethod, instantMethod.getParameters(), 0);
 
         final EventMessage<Object> message = GenericEventMessage.asEventMessage("test");
-        assertTrue(resolver.matches(message));
-        assertEquals(message.getTimestamp(), resolver.resolveParameterValue(message));
+        assertThat(resolver.matches(message)).isTrue();
+        assertThat(resolver.resolveParameterValue(message)).isEqualTo(message.getTimestamp());
     }
 
     @Test
@@ -95,21 +96,21 @@ class TimestampParameterResolverFactoryTest {
                 testSubject.createInstance(temporalMethod, temporalMethod.getParameters(), 0);
 
         final EventMessage<Object> message = GenericEventMessage.asEventMessage("test");
-        assertTrue(resolver.matches(message));
-        assertEquals(message.getTimestamp(), resolver.resolveParameterValue(message));
+        assertThat(resolver.matches(message)).isTrue();
+        assertThat(resolver.resolveParameterValue(message)).isEqualTo(message.getTimestamp());
     }
 
     @Test
     void ignoredWhenNotAnnotated() {
         ParameterResolver resolver =
                 testSubject.createInstance(nonAnnotatedInstantMethod, nonAnnotatedInstantMethod.getParameters(), 0);
-        assertNull(resolver);
+        assertThat(resolver).isNull();
     }
 
     @Test
     void ignoredWhenWrongType() {
         ParameterResolver resolver = testSubject.createInstance(stringMethod, stringMethod.getParameters(), 0);
-        assertNull(resolver);
+        assertThat(resolver).isNull();
     }
 
     @Test
@@ -117,8 +118,8 @@ class TimestampParameterResolverFactoryTest {
         Parameter[] parameters = metaAnnotatedMethod.getParameters();
         ParameterResolver<?> resolver = testSubject.createInstance(metaAnnotatedMethod, parameters, 0);
         final EventMessage<Object> message = GenericEventMessage.asEventMessage("test");
-        assertTrue(resolver.matches(message), "Resolver should be a match for message " + message);
-        assertEquals(message.getTimestamp(), resolver.resolveParameterValue(message));
+        assertThat(resolver.matches(message)).as("Resolver should be a match for message " + message).isTrue();
+        assertThat(resolver.resolveParameterValue(message)).isEqualTo(message.getTimestamp());
     }
 
     @Retention(RetentionPolicy.RUNTIME)

@@ -19,7 +19,7 @@ package org.sophonhq.sophon.common;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Allard Buijze
@@ -33,7 +33,7 @@ class AssertTest {
 
     @Test
     void state_Fail() {
-        assertThrows(IllegalStateException.class, () -> Assert.state(false, () -> "Hello"));
+        assertThatThrownBy(() -> Assert.state(false, () -> "Hello")).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -43,6 +43,6 @@ class AssertTest {
 
     @Test
     void isTrue_Fail() {
-        assertThrows(IllegalArgumentException.class, () -> Assert.isTrue(false, () -> "Hello"));
+        assertThatThrownBy(() -> Assert.isTrue(false, () -> "Hello")).isInstanceOf(IllegalArgumentException.class);
     }
 }

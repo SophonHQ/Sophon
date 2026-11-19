@@ -17,15 +17,18 @@
 
 package org.sophonhq.sophon.serialization;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.MetaData;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -48,7 +51,7 @@ class SerializationAwareTest {
         ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
         Object read = ois.readObject();
 
-        assertEquals(GenericEventMessage.class, read.getClass());
+        assertThat(read.getClass()).isEqualTo(GenericEventMessage.class);
     }
 
     @Test
@@ -61,7 +64,7 @@ class SerializationAwareTest {
         when(serializer.serialize("payload", byte[].class)).thenReturn(serializedObject);
         SerializedObject<byte[]> actual1 = testSubject.serializePayload(serializer, byte[].class);
         SerializedObject<byte[]> actual2 = testSubject.serializePayload(serializer, byte[].class);
-        assertSame(actual1, actual2);
+        assertThat(actual2).isSameAs(actual1);
         verify(serializer, times(1)).serialize("payload", byte[].class);
         verify(serializer).getConverter();
         verifyNoMoreInteractions(serializer);
@@ -78,8 +81,8 @@ class SerializationAwareTest {
         SerializedObject<byte[]> actual1 = testSubject.serializePayload(serializer, byte[].class);
         SerializedObject<String> actual2 = testSubject.serializePayload(serializer, String.class);
 
-        assertNotSame(actual1, actual2);
-        assertEquals(String.class, actual2.getContentType());
+        assertThat(actual2).isNotSameAs(actual1);
+        assertThat(actual2.getContentType()).isEqualTo(String.class);
         verify(serializer, times(1)).serialize("payload", byte[].class);
         verify(serializer).getConverter();
         verifyNoMoreInteractions(serializer);
@@ -111,8 +114,8 @@ class SerializationAwareTest {
         SerializedObject<byte[]> actual1 = testSubject.serializeMetaData(serializer, byte[].class);
         SerializedObject<String> actual2 = testSubject.serializeMetaData(serializer, String.class);
 
-        assertNotSame(actual1, actual2);
-        assertEquals(String.class, actual2.getContentType());
+        assertThat(actual2).isNotSameAs(actual1);
+        assertThat(actual2.getContentType()).isEqualTo(String.class);
         verify(serializer, times(1)).serialize(isA(MetaData.class), eq(byte[].class));
         verify(serializer).getConverter();
         verifyNoMoreInteractions(serializer);

@@ -17,13 +17,13 @@
 
 package org.sophonhq.sophon.spring.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.config.Configuration;
 import org.sophonhq.sophon.modelling.command.Repository;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -39,6 +39,6 @@ class BeanHelperTest {
         Repository<?> actual = BeanHelper.repository(Random.class, configuration);
 
         verify(configuration).repository(Random.class);
-        assertSame(mockRepository, actual);
+        assertThat(actual).isSameAs(mockRepository);
     }
 }

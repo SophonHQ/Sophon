@@ -32,8 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class MetaDataDeserializerTest {
@@ -65,8 +64,8 @@ class MetaDataDeserializerTest {
         String serializedString = objectMapper.writeValueAsString(metaData);
 
         MetaData deserialized = objectMapper.readValue(serializedString, MetaData.class);
-        assertEquals("two", deserialized.get("one"));
-        assertEquals(serializedString, objectMapper.writeValueAsString(deserialized));
+        assertThat(deserialized).containsEntry("one", "two");
+        assertThat(objectMapper.writeValueAsString(deserialized)).isEqualTo(serializedString);
     }
 
     @MethodSource("objectMappers")
@@ -76,9 +75,9 @@ class MetaDataDeserializerTest {
         String emptySerializedString = objectMapper.writeValueAsString(metaData1);
 
         MetaData deserialized = objectMapper.readValue(emptySerializedString, MetaData.class);
-        assertTrue(deserialized.entrySet().isEmpty());
+        assertThat(deserialized).isEmpty();
 
-        assertEquals(emptySerializedString, objectMapper.writeValueAsString(deserialized));
+        assertThat(objectMapper.writeValueAsString(deserialized)).isEqualTo(emptySerializedString);
     }
 
     @MethodSource("objectMappers")
@@ -90,9 +89,9 @@ class MetaDataDeserializerTest {
         String serializedContainerString = objectMapper.writeValueAsString(container);
 
         Container deserialized = objectMapper.readValue(serializedContainerString, Container.class);
-        assertEquals("two", deserialized.b.get("one"));
+        assertThat(deserialized.b).containsEntry("one", "two");
 
-        assertEquals(serializedContainerString, objectMapper.writeValueAsString(deserialized));
+        assertThat(objectMapper.writeValueAsString(deserialized)).isEqualTo(serializedContainerString);
     }
 
     @MethodSource("objectMappers")
@@ -108,14 +107,14 @@ class MetaDataDeserializerTest {
 
         Container deserialized = objectMapper.readValue(serializedDataInDataString, Container.class);
         if (defaultTyping != null) {
-            assertEquals(((MetaData) deserialized.b.get("one")).get("one"), "two");
+            assertThat(((MetaData) deserialized.b.get("one")).get("one")).isEqualTo("two");
         }
         else {
             // as there is no typing information, Jackson can't know it's a MetaData entry
-            assertEquals(((Map) deserialized.b.get("one")).get("one"), "two");
+            assertThat(((Map) deserialized.b.get("one")).get("one")).isEqualTo("two");
         }
 
-        assertEquals(serializedDataInDataString, objectMapper.writeValueAsString(deserialized));
+        assertThat(objectMapper.writeValueAsString(deserialized)).isEqualTo(serializedDataInDataString);
     }
 
     public static class Container {

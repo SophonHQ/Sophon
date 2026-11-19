@@ -23,7 +23,7 @@ import org.sophonhq.sophon.messaging.annotation.ParameterResolver;
 
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class TrackingTokenParameterResolverFactoryTest {
 
@@ -38,17 +38,17 @@ class TrackingTokenParameterResolverFactoryTest {
 
     @Test
     void createInstance() {
-        assertNull(testSubject.createInstance(method, method.getParameters(), 0));
+        assertThat(testSubject.createInstance(method, method.getParameters(), 0)).isNull();
         ParameterResolver<?> resolver = testSubject.createInstance(method, method.getParameters(), 1);
 
-        assertNotNull(resolver);
+        assertThat(resolver).isNotNull();
         GenericEventMessage<String> message = new GenericEventMessage<>("test");
-        assertFalse(resolver.matches(message));
+        assertThat(resolver.matches(message)).isFalse();
         GlobalSequenceTrackingToken trackingToken = new GlobalSequenceTrackingToken(1L);
         GenericTrackedEventMessage<String> trackedEventMessage = new GenericTrackedEventMessage<>(trackingToken,
                                                                                        message);
-        assertTrue(resolver.matches(trackedEventMessage));
-        assertSame(trackingToken, resolver.resolveParameterValue(trackedEventMessage));
+        assertThat(resolver.matches(trackedEventMessage)).isTrue();
+        assertThat(resolver.resolveParameterValue(trackedEventMessage)).isSameAs(trackingToken);
     }
 
     @SuppressWarnings("unused")

@@ -25,7 +25,7 @@ import org.sophonhq.sophon.eventhandling.EventHandler;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DeadlineMethodMessageHandlerDefinitionTest {
 
@@ -42,16 +42,16 @@ class DeadlineMethodMessageHandlerDefinitionTest {
     void deadlineManagerIsEvaluatedBeforeGenericEventHandler() throws Exception {
         handlerAdapter.handle(new GenericDeadlineMessage<>("someDeadline", "test"));
 
-        assertThat("Deadline handler is invoked", listener.deadlineCounter.get() == 1);
-        assertThat("Event handler was not invoked", listener.eventCounter.get() == 0);
+        assertThat(listener.deadlineCounter.get() == 1).as("Deadline handler is invoked").isTrue();
+        assertThat(listener.eventCounter.get() == 0).as("Event handler was not invoked").isTrue();
     }
 
     @Test
     void namedDeadlineManagerIsEvaluatedBeforeGenericOne() throws Exception {
         handlerAdapter.handle(new GenericDeadlineMessage<>("specificDeadline", "test"));
 
-        assertThat("Generic Deadline handler was not invoked", listener.deadlineCounter.get() == 0);
-        assertThat("Specific Deadline handler was invoked", listener.specificDeadlineCounter.get() == 1);
+        assertThat(listener.deadlineCounter.get() == 0).as("Generic Deadline handler was not invoked").isTrue();
+        assertThat(listener.specificDeadlineCounter.get() == 1).as("Specific Deadline handler was invoked").isTrue();
     }
 
 

@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.springboot.util;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.springboot.util.XStreamSecurityTypeUtility.autoConfigBasePackages;
 
 /**
@@ -47,7 +47,7 @@ class XStreamSecurityTypeUtilityTest {
                                       .withConfiguration(AutoConfigurations.of(TestContext.class))
                                       .run(context -> {
                                           String[] result = autoConfigBasePackages(context.getSourceApplicationContext());
-                                          assertArrayEquals(expected, result);
+                                          assertThat(result).containsExactly(expected);
                                       });
     }
 

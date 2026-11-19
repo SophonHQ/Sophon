@@ -20,7 +20,8 @@ package org.sophonhq.sophon.serialization;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -51,33 +52,35 @@ class LazyDeserializingObjectTest {
     void lazilyDeserialized() {
         LazyDeserializingObject<Object> testSubject = new LazyDeserializingObject<>(mockObject, mockSerializer);
         verify(mockSerializer, never()).deserialize(any(SerializedObject.class));
-        assertEquals(String.class, testSubject.getType());
-        assertFalse(testSubject.isDeserialized());
+        assertThat(testSubject.getType()).isEqualTo(String.class);
+        assertThat(testSubject.isDeserialized()).isFalse();
         verify(mockSerializer, never()).deserialize(any(SerializedObject.class));
-        assertSame(mockDeserializedObject, testSubject.getObject());
-        assertTrue(testSubject.isDeserialized());
+        assertThat(testSubject.getObject()).isSameAs(mockDeserializedObject);
+        assertThat(testSubject.isDeserialized()).isTrue();
     }
 
     @Test
     void lazilyDeserialized_NullObject() {
-        assertThrows(Exception.class, () -> new LazyDeserializingObject<>(null, mockSerializer));
+        assertThatThrownBy(() -> new LazyDeserializingObject<>(null, mockSerializer))
+                .isInstanceOf(Exception.class);
     }
 
     @Test
     void lazilyDeserialized_NullSerializer() {
-        assertThrows(IllegalArgumentException.class, () -> new LazyDeserializingObject<>(mockObject, null));
+        assertThatThrownBy(() -> new LazyDeserializingObject<>(mockObject, null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void withProvidedDeserializedInstance() {
         LazyDeserializingObject<Object> testSubject = new LazyDeserializingObject<>(mockDeserializedObject);
-        assertEquals(mockDeserializedObject.getClass(), testSubject.getType());
-        assertSame(mockDeserializedObject, testSubject.getObject());
-        assertTrue(testSubject.isDeserialized());
+        assertThat(testSubject.getType()).isEqualTo(mockDeserializedObject.getClass());
+        assertThat(testSubject.getObject()).isSameAs(mockDeserializedObject);
+        assertThat(testSubject.isDeserialized()).isTrue();
     }
 
     @Test
     void withProvidedDeserializedNullInstance() {
-        assertThrows(IllegalArgumentException.class, () -> new LazyDeserializingObject<>(null));
+        assertThatThrownBy(() -> new LazyDeserializingObject<>(null)).isInstanceOf(IllegalArgumentException.class);
     }
 }

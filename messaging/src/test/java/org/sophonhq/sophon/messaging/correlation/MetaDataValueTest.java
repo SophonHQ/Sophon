@@ -27,7 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Allard Buijze
@@ -41,8 +42,9 @@ class MetaDataValueTest {
         MetaData metaData = new MetaData(metaDataValues);
         metaDataValues.put("second", "value");
 
-        assertEquals("value", metaData.get("first"));
-        assertFalse(metaData.containsKey("second"));
+        assertThat(metaData)
+                .containsEntry("first", "value")
+                .doesNotContainKey("second");
     }
 
     @Test
@@ -54,8 +56,9 @@ class MetaDataValueTest {
         metaDataValues.put("first", "other");
 
         MetaData newMetaData = metaData.mergedWith(metaDataValues);
-        assertEquals("other", newMetaData.get("first"));
-        assertEquals("value", newMetaData.get("second"));
+        assertThat(newMetaData)
+                .containsEntry("first", "other")
+                .containsEntry("second", "value");
     }
 
     @Test
@@ -66,7 +69,7 @@ class MetaDataValueTest {
         MetaData metaData = new MetaData(metaDataValues);
 
         MetaData newMetaData = metaData.withoutKeys(metaDataValues.keySet());
-        assertTrue(newMetaData.isEmpty());
+        assertThat(newMetaData).isEmpty();
     }
 
     @Test
@@ -78,17 +81,17 @@ class MetaDataValueTest {
         MetaData metaData2 = new MetaData(metaDataValues);
         MetaData metaData3 = new MetaData(metaDataValues);
 
-        assertEquals(metaData1, metaData1);
-        assertEquals(metaData2, metaData3);
-        assertNotEquals(metaData1, metaData2);
-        assertNotEquals(metaData1, metaData3);
-        assertNotEquals(metaData3, metaData1);
-        assertNotEquals(metaData1, new Object());
-        assertNotEquals(metaData1, null);
+        assertThat(metaData1).isEqualTo(metaData1);
+        assertThat(metaData2).isEqualTo(metaData3);
+        assertThat(metaData1).isNotEqualTo(metaData2);
+        assertThat(metaData1).isNotEqualTo(metaData3);
+        assertThat(metaData3).isNotEqualTo(metaData1);
+        assertThat(metaData1).isNotEqualTo(new Object());
+        assertThat(metaData1).isNotEqualTo(null);
 
         // Map requires that Maps are equal, even if their implementation is different
-        assertEquals(metaData2, metaDataValues);
-        assertEquals(metaDataValues, metaData2);
+        assertThat(metaData2).isEqualTo(metaDataValues);
+        assertThat(metaDataValues).isEqualTo(metaData2);
     }
 
     @Test
@@ -97,9 +100,9 @@ class MetaDataValueTest {
         MetaData metaData2 = MetaData.from(Collections.singletonMap("Key2", "Value"));
         MetaData emptyMetaData = MetaData.emptyInstance();
 
-        assertEquals(metaData1, serialize(metaData1));
-        assertEquals(metaData2, serialize(metaData2));
-        assertSame(emptyMetaData, serialize(emptyMetaData));
+        assertThat(serialize(metaData1)).isEqualTo(metaData1);
+        assertThat(serialize(metaData2)).isEqualTo(metaData2);
+        assertThat(serialize(emptyMetaData)).isSameAs(emptyMetaData);
     }
 
     private MetaData serialize(MetaData metaData1) throws IOException, ClassNotFoundException {
@@ -120,81 +123,85 @@ class MetaDataValueTest {
 
         MetaData result = MetaData.from(testMetaDataMap);
 
-        assertEquals("firstVal", result.get("firstKey"));
-        assertEquals("secondVal", result.get("secondKey"));
+        assertThat(result)
+                .containsEntry("firstKey", "firstVal")
+                .containsEntry("secondKey", "secondVal");
     }
 
     @Test
     void buildMetaDataThroughWith() {
         MetaData result = MetaData.with("key", "val");
 
-        assertEquals("val", result.get("key"));
+        assertThat(result).containsEntry("key", "val");
     }
 
     @Test
     void buildMetaDataThroughWithAnd() {
         MetaData result = MetaData.with("firstKey", "firstVal").and("secondKey", "secondVal");
 
-        assertEquals("firstVal", result.get("firstKey"));
-        assertEquals("secondVal", result.get("secondKey"));
+        assertThat(result)
+                .containsEntry("firstKey", "firstVal")
+                .containsEntry("secondKey", "secondVal");
     }
 
     @Test
     void buildMetaDataThroughAndIfNotPresentAddsNewValue() {
         MetaData result = MetaData.with("firstKey", "firstVal").andIfNotPresent("secondKey", () -> "secondVal");
 
-        assertEquals("firstVal", result.get("firstKey"));
-        assertEquals("secondVal", result.get("secondKey"));
+        assertThat(result)
+                .containsEntry("firstKey", "firstVal")
+                .containsEntry("secondKey", "secondVal");
     }
 
     @Test
     void buildMetaDataThroughAndIfNotPresentDoesntAddNewValue() {
         MetaData result = MetaData.with("firstKey", "firstVal").andIfNotPresent("firstKey", () -> "firstVal");
 
-        assertEquals("firstVal", result.get("firstKey"));
-        assertEquals(1, result.size());
+        assertThat(result).containsEntry("firstKey", "firstVal");
+        assertThat(result.size()).isOne();
     }
 
     @Test
     void metaDataModification_Clear() {
         MetaData metaData = new MetaData(Collections.emptyMap());
 
-        assertThrows(UnsupportedOperationException.class, metaData::clear);
+        assertThatThrownBy(metaData::clear).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void metaDataModification_Put() {
         MetaData metaData = new MetaData(Collections.emptyMap());
 
-        assertThrows(UnsupportedOperationException.class, () -> metaData.put("", ""));
+        assertThatThrownBy(() -> metaData.put("", "")).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void metaDataModification_Remove() {
         MetaData metaData = new MetaData(Collections.emptyMap());
 
-        assertThrows(UnsupportedOperationException.class, () -> metaData.remove(""));
+        assertThatThrownBy(() -> metaData.remove("")).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void metaDataModification_PutAll() {
         MetaData metaData = new MetaData(Collections.emptyMap());
 
-        assertThrows(UnsupportedOperationException.class, () -> metaData.putAll(Collections.emptyMap()));
+        assertThatThrownBy(() -> metaData.putAll(Collections.emptyMap()))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void metaDataModification_KeySet_Remove() {
         Set<String> keySet = new MetaData(Collections.emptyMap()).keySet();
 
-        assertThrows(UnsupportedOperationException.class, () -> keySet.remove("Hello"));
+        assertThatThrownBy(() -> keySet.remove("Hello")).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void metaDataModification_Values_Remove() {
         Collection<Object> values = new MetaData(Collections.emptyMap()).values();
 
-        assertThrows(UnsupportedOperationException.class, () -> values.remove("Hello"));
+        assertThatThrownBy(() -> values.remove("Hello")).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @SuppressWarnings({"SuspiciousMethodCalls"})
@@ -202,7 +209,7 @@ class MetaDataValueTest {
     void metaDataModification_EntrySet_Remove() {
         Set<Map.Entry<String,Object>> entrySet = new MetaData(Collections.emptyMap()).entrySet();
 
-        assertThrows(UnsupportedOperationException.class, () -> entrySet.remove("Hello"));
+        assertThatThrownBy(() -> entrySet.remove("Hello")).isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
@@ -214,8 +221,9 @@ class MetaDataValueTest {
 
         MetaData result = testMetaData.subset("secondKey", "fourthKey", "fifthKey");
 
-        assertEquals("secondValue", result.get("secondKey"));
-        assertEquals("fourthValue", result.get("fourthKey"));
-        assertNull(result.get("fifthKey"));
+        assertThat(result)
+                .containsEntry("secondKey", "secondValue")
+                .containsEntry("fourthKey", "fourthValue");
+        assertThat(result.get("fifthKey")).isNull();
     }
 }

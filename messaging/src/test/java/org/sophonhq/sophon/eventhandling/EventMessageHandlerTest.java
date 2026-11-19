@@ -17,9 +17,9 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -46,6 +46,7 @@ class EventMessageHandlerTest {
 
     @Test
     void prepareResetWithNonNullThrowsUnsupportedOperationException() {
-        assertThrows(UnsupportedOperationException.class, () -> testSubject.prepareReset("non-null"));
+        assertThatThrownBy(() -> testSubject.prepareReset("non-null"))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 }

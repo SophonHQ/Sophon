@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.messaging.unitofwork;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.common.transaction.Transaction;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
@@ -33,7 +35,8 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.messaging.GenericResultMessage.asResultMessage;
 
@@ -71,7 +74,7 @@ class AbstractUnitOfWorkTest {
 
     @AfterEach
     void tearDown() {
-        assertFalse(CurrentUnitOfWork.isStarted(), "A UnitOfWork was not properly cleared");
+        assertThat(CurrentUnitOfWork.isStarted()).as("A UnitOfWork was not properly cleared").isFalse();
     }
 
     @Test
@@ -88,10 +91,10 @@ class AbstractUnitOfWorkTest {
         subject.start();
         subject.commit();
 
-        assertTrue(prepareCommit.get());
-        assertTrue(commit.get());
-        assertTrue(afterCommit.get());
-        assertTrue(cleanup.get());
+        assertThat(prepareCommit.get()).isTrue();
+        assertThat(commit.get()).isTrue();
+        assertThat(afterCommit.get()).isTrue();
+        assertThat(cleanup.get()).isTrue();
     }
 
     @Test
@@ -103,7 +106,7 @@ class AbstractUnitOfWorkTest {
         inOrder.verify(subject).start();
         inOrder.verify(task).run();
         inOrder.verify(subject).commit();
-        assertFalse(subject.isActive());
+        assertThat(subject.isActive()).isFalse();
     }
 
     @Test
@@ -118,8 +121,8 @@ class AbstractUnitOfWorkTest {
             inOrder.verify(subject).start();
             inOrder.verify(task).run();
             inOrder.verify(subject).rollback(e);
-            assertNotNull(subject.getExecutionResult());
-            assertSame(mockException, subject.getExecutionResult().getExceptionResult());
+            assertThat(subject.getExecutionResult()).isNotNull();
+            assertThat(subject.getExecutionResult().getExceptionResult()).isSameAs(mockException);
             return;
         }
         throw new AssertionError();
@@ -135,10 +138,10 @@ class AbstractUnitOfWorkTest {
         inOrder.verify(subject).start();
         inOrder.verify(task).call();
         inOrder.verify(subject).commit();
-        assertFalse(subject.isActive());
-        assertSame(taskResult, result.getPayload());
-        assertNotNull(subject.getExecutionResult());
-        assertSame(taskResult, subject.getExecutionResult().getResult().getPayload());
+        assertThat(subject.isActive()).isFalse();
+        assertThat(result.getPayload()).isSameAs(taskResult);
+        assertThat(subject.getExecutionResult()).isNotNull();
+        assertThat(subject.getExecutionResult().getResult().getPayload()).isSameAs(taskResult);
     }
 
     @Test
@@ -147,7 +150,7 @@ class AbstractUnitOfWorkTest {
         Callable<ResultMessage<Object>> task = mock(Callable.class);
         when(task.call()).thenReturn(resultMessage);
         ResultMessage actualResultMessage = subject.executeWithResult(task);
-        assertSame(resultMessage, actualResultMessage);
+        assertThat(actualResultMessage).isSameAs(resultMessage);
     }
 
     @Test
@@ -197,7 +200,7 @@ class AbstractUnitOfWorkTest {
     void whenGettingCorrelationMetaThrows_thenCatchExceptions() {
         subject.registerCorrelationDataProvider(new ThrowingCorrelationDataProvider());
         MetaData correlationData = subject.getCorrelationData();
-        assertNotNull(correlationData);
+        assertThat(correlationData).isNotNull();
     }
 
     private static class PhaseTransition {

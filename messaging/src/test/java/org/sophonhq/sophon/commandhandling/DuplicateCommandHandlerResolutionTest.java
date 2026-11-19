@@ -17,10 +17,12 @@
 
 package org.sophonhq.sophon.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.MessageHandler;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -50,7 +52,7 @@ class DuplicateCommandHandlerResolutionTest {
 
         MessageHandler<? super CommandMessage<?>> result = testSubject.resolve("test", initialHandler, duplicateHandler);
 
-        assertEquals(duplicateHandler, result);
+        assertThat(result).isEqualTo(duplicateHandler);
     }
 
     @Test
@@ -59,7 +61,7 @@ class DuplicateCommandHandlerResolutionTest {
 
         MessageHandler<? super CommandMessage<?>> result = testSubject.resolve("test", initialHandler, duplicateHandler);
 
-        assertEquals(duplicateHandler, result);
+        assertThat(result).isEqualTo(duplicateHandler);
     }
 
     @Test
@@ -70,9 +72,9 @@ class DuplicateCommandHandlerResolutionTest {
             testSubject.resolve("testCommand", initialHandler, duplicateHandler);
             fail("Expected DuplicateCommandHandlerSubscriptionException");
         } catch (DuplicateCommandHandlerSubscriptionException e) {
-            assertTrue(e.getMessage().contains("[testCommand]"));
-            assertTrue(e.getMessage().contains("Handler2]"));
-            assertTrue(e.getMessage().contains("Handler1]"));
+            assertThat(e.getMessage()).contains("[testCommand]");
+            assertThat(e.getMessage()).contains("Handler2]");
+            assertThat(e.getMessage()).contains("Handler1]");
         }
     }
 

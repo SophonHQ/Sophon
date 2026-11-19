@@ -21,9 +21,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -47,17 +46,17 @@ class CurrentUnitOfWorkTest {
 
     @Test
     void getSession_NoCurrentSession() {
-        assertThrows(IllegalStateException.class, CurrentUnitOfWork::get);
+        assertThatThrownBy(CurrentUnitOfWork::get).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     void setSession() {
         UnitOfWork<?> mockUnitOfWork = mock(UnitOfWork.class);
         CurrentUnitOfWork.set(mockUnitOfWork);
-        assertSame(mockUnitOfWork, CurrentUnitOfWork.get());
+        assertThat(CurrentUnitOfWork.get()).isSameAs(mockUnitOfWork);
 
         CurrentUnitOfWork.clear(mockUnitOfWork);
-        assertFalse(CurrentUnitOfWork.isStarted());
+        assertThat(CurrentUnitOfWork.isStarted()).isFalse();
     }
 
     @Test

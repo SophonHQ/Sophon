@@ -17,13 +17,13 @@
 
 package org.sophonhq.sophon.queryhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link DefaultSubscriptionQueryResult}.
@@ -52,10 +52,10 @@ class DefaultSubscriptionQueryResultTest {
                            update -> updateConsumed.set(true),
                            error -> errorConsumed.set(true));
 
-        assertTrue(canceled.get());
-        assertFalse(initialResultConsumed.get());
-        assertFalse(updateConsumed.get());
-        assertTrue(errorConsumed.get());
+        assertThat(canceled.get()).isTrue();
+        assertThat(initialResultConsumed.get()).isFalse();
+        assertThat(updateConsumed.get()).isFalse();
+        assertThat(errorConsumed.get()).isTrue();
     }
 
     @Test
@@ -78,10 +78,10 @@ class DefaultSubscriptionQueryResultTest {
                            update -> updateConsumed.set(true),
                            error -> errorConsumed.set(true));
 
-        assertTrue(canceled.get());
-        assertTrue(initialResultConsumed.get());
-        assertFalse(updateConsumed.get());
-        assertTrue(errorConsumed.get());
+        assertThat(canceled.get()).isTrue();
+        assertThat(initialResultConsumed.get()).isTrue();
+        assertThat(updateConsumed.get()).isFalse();
+        assertThat(errorConsumed.get()).isTrue();
     }
 
     @Test
@@ -105,9 +105,9 @@ class DefaultSubscriptionQueryResultTest {
                            update -> updateConsumed.set(true),
                            error -> errorConsumed.set(true));
 
-        assertTrue(canceled.get());
-        assertFalse(updateConsumed.get());
-        assertTrue(errorConsumed.get());
+        assertThat(canceled.get()).isTrue();
+        assertThat(updateConsumed.get()).isFalse();
+        assertThat(errorConsumed.get()).isTrue();
     }
 
     @Test
@@ -131,8 +131,8 @@ class DefaultSubscriptionQueryResultTest {
                            },
                            error -> errorConsumed.set(true));
 
-        assertTrue(canceled.get());
-        assertTrue(initialResultConsumed.get());
-        assertTrue(errorConsumed.get());
+        assertThat(canceled.get()).isTrue();
+        assertThat(initialResultConsumed.get()).isTrue();
+        assertThat(errorConsumed.get()).isTrue();
     }
 }

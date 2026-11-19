@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.tracing.attributes;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.Message;
@@ -25,7 +25,7 @@ import org.sophonhq.sophon.tracing.SpanAttributesProvider;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AggregateIdentifierSpanAttributesProviderTest {
 
@@ -36,14 +36,15 @@ class AggregateIdentifierSpanAttributesProviderTest {
         Message<?> message = new GenericDomainEventMessage<>("MyType", "1729872981", 1, "payload");
 
         Map<String, String> map = provider.provideForMessage(message);
-        assertEquals(1, map.size());
-        assertEquals("1729872981", map.get("sophon_aggregate_identifier"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_aggregate_identifier", "1729872981");
     }
     @Test
     void genericEventMessage() {
         Message<?> message = new GenericEventMessage<>("payload");
 
         Map<String, String> map = provider.provideForMessage(message);
-        assertEquals(0, map.size());
+        assertThat(map).isEmpty();
     }
 }

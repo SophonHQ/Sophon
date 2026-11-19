@@ -22,8 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -39,12 +38,12 @@ class SerialVersionUIDRevisionResolverTest {
 
     @Test
     void revisionOfAnnotatedClass() {
-        assertEquals("7038084420164786502", testSubject.revisionOf(IsSerializable.class));
+        assertThat(testSubject.revisionOf(IsSerializable.class)).isEqualTo("7038084420164786502");
     }
 
     @Test
     void revisionOfNonAnnotatedClass() {
-        assertNull(testSubject.revisionOf(NotSerializable.class));
+        assertThat(testSubject.revisionOf(NotSerializable.class)).isNull();
     }
 
     private static class IsSerializable implements Serializable {

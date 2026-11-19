@@ -20,7 +20,7 @@ package org.sophonhq.sophon.springboot;
 import com.thoughtworks.xstream.XStream;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
@@ -45,7 +45,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -61,25 +61,25 @@ class SophonAutoConfigurationWithEventSerializerTest {
 
     @Test
     void contextInitialization() {
-        assertNotNull(applicationContext);
+        assertThat(applicationContext).isNotNull();
 
-        assertNotNull(applicationContext.getBean(CommandBus.class));
-        assertNotNull(applicationContext.getBean(EventBus.class));
-        assertNotNull(applicationContext.getBean(CommandGateway.class));
-        assertNotNull(applicationContext.getBean(EventGateway.class));
-        assertNotNull(applicationContext.getBean(Serializer.class));
+        assertThat(applicationContext.getBean(CommandBus.class)).isNotNull();
+        assertThat(applicationContext.getBean(EventBus.class)).isNotNull();
+        assertThat(applicationContext.getBean(CommandGateway.class)).isNotNull();
+        assertThat(applicationContext.getBean(EventGateway.class)).isNotNull();
+        assertThat(applicationContext.getBean(Serializer.class)).isNotNull();
         org.sophonhq.sophon.config.Configuration sophonConfiguration =
                 applicationContext.getBean(org.sophonhq.sophon.config.Configuration.class);
-        assertNotSame(sophonConfiguration.serializer(), sophonConfiguration.eventSerializer());
-        assertNotNull(applicationContext.getBean(TokenStore.class));
-        assertNotNull(applicationContext.getBean(JpaEventStorageEngine.class));
-        assertEquals(SQLErrorCodesResolver.class,
-                     applicationContext.getBean(PersistenceExceptionResolver.class).getClass());
-        assertNotNull(applicationContext.getBean(EntityManagerProvider.class));
-        assertNotNull(applicationContext.getBean(ConnectionProvider.class));
+        assertThat(sophonConfiguration.eventSerializer()).isNotSameAs(sophonConfiguration.serializer());
+        assertThat(applicationContext.getBean(TokenStore.class)).isNotNull();
+        assertThat(applicationContext.getBean(JpaEventStorageEngine.class)).isNotNull();
+        assertThat(applicationContext.getBean(PersistenceExceptionResolver.class).getClass())
+                .isEqualTo(SQLErrorCodesResolver.class);
+        assertThat(applicationContext.getBean(EntityManagerProvider.class)).isNotNull();
+        assertThat(applicationContext.getBean(ConnectionProvider.class)).isNotNull();
 
         // for some reason, this test picks up some entities used in other tests
-        assertEquals(7, entityManager.getEntityManagerFactory().getMetamodel().getEntities().size());
+        assertThat(entityManager.getEntityManagerFactory().getMetamodel().getEntities()).hasSize(7);
     }
 
     @Test
@@ -88,8 +88,8 @@ class SophonAutoConfigurationWithEventSerializerTest {
         final Serializer eventSerializer = applicationContext.getBean("myEventSerializer", Serializer.class);
         final JpaEventStorageEngine engine = applicationContext.getBean(JpaEventStorageEngine.class);
 
-        assertEquals(serializer, engine.getSnapshotSerializer());
-        assertEquals(eventSerializer, engine.getEventSerializer());
+        assertThat(engine.getSnapshotSerializer()).isEqualTo(serializer);
+        assertThat(engine.getEventSerializer()).isEqualTo(eventSerializer);
     }
 
     @org.springframework.context.annotation.Configuration

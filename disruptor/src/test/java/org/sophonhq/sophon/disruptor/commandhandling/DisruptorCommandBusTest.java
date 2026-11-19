@@ -20,7 +20,10 @@ package org.sophonhq.sophon.disruptor.commandhandling;
 import com.lmax.disruptor.SleepingWaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.mockito.*;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
@@ -88,7 +91,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 import static org.sophonhq.sophon.disruptor.commandhandling.utils.AssertUtils.assertWithin;
@@ -174,9 +179,9 @@ class DisruptorCommandBusTest {
         testSubject.dispatch(command, mockCallback);
 
         testSubject.stop();
-        assertFalse(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS));
+        assertThat(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS)).isFalse();
         customExecutor.shutdown();
-        assertTrue(customExecutor.awaitTermination(5, TimeUnit.SECONDS));
+        assertThat(customExecutor.awaitTermination(5, TimeUnit.SECONDS)).isTrue();
         InOrder inOrder = inOrder(mockDispatchInterceptor, mockHandlerInterceptor, mockPrepareCommitConsumer,
                                   mockAfterCommitConsumer, mockCleanUpConsumer, mockCallback);
         inOrder.verify(mockDispatchInterceptor).handle(isA(CommandMessage.class));
@@ -208,10 +213,10 @@ class DisruptorCommandBusTest {
         ArgumentCaptor<CommandResultMessage<?>> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(callback).onResult(any(), commandResultMessageCaptor.capture());
-        assertTrue(commandResultMessageCaptor.getValue().isExceptional());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isTrue();
         Throwable exceptionResult = commandResultMessageCaptor.getValue().exceptionResult();
-        assertEquals(NoHandlerForCommandException.class, exceptionResult.getClass());
-        assertTrue(exceptionResult.getMessage().contains(String.class.getSimpleName()));
+        assertThat(exceptionResult.getClass()).isEqualTo(NoHandlerForCommandException.class);
+        assertThat(exceptionResult.getMessage()).contains(String.class.getSimpleName());
     }
 
     @Test
@@ -242,9 +247,9 @@ class DisruptorCommandBusTest {
         testSubject.dispatch(command);
 
         testSubject.stop();
-        assertFalse(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS));
+        assertThat(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS)).isFalse();
         customExecutor.shutdown();
-        assertTrue(customExecutor.awaitTermination(5, TimeUnit.SECONDS));
+        assertThat(customExecutor.awaitTermination(5, TimeUnit.SECONDS)).isTrue();
 
         // invoked 3 times, 1 during initialization, and 2 for the executed commands
         InOrder inOrder = inOrder(snapshotTrigger);
@@ -277,9 +282,9 @@ class DisruptorCommandBusTest {
 
         dispatchCommands(mockInterceptor, customExecutor, asCommandMessage(new ErrorCommand(aggregateIdentifier)));
 
-        assertFalse(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS));
+        assertThat(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS)).isFalse();
         customExecutor.shutdown();
-        assertTrue(customExecutor.awaitTermination(5, TimeUnit.SECONDS));
+        assertThat(customExecutor.awaitTermination(5, TimeUnit.SECONDS)).isTrue();
 
         verify(mockTransactionManager, times(991)).startTransaction();
         verify(mockTransaction, times(991)).commit();
@@ -295,17 +300,17 @@ class DisruptorCommandBusTest {
         CommandCallback<Object, Object> mockCallback = dispatchCommands(
                 mockInterceptor, customExecutor, asCommandMessage(new ErrorCommand(aggregateIdentifier))
         );
-        assertFalse(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS));
+        assertThat(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS)).isFalse();
         customExecutor.shutdown();
-        assertTrue(customExecutor.awaitTermination(5, TimeUnit.SECONDS));
+        assertThat(customExecutor.awaitTermination(5, TimeUnit.SECONDS)).isTrue();
         //noinspection unchecked
         ArgumentCaptor<CommandResultMessage<Object>> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(mockCallback, times(1000)).onResult(any(), commandResultMessageCaptor.capture());
-        assertEquals(10, commandResultMessageCaptor.getAllValues()
-                                                   .stream()
-                                                   .filter(ResultMessage::isExceptional)
-                                                   .count());
+        assertThat(commandResultMessageCaptor.getAllValues()
+                                             .stream()
+                                             .filter(ResultMessage::isExceptional)
+                                             .count()).isEqualTo(10);
     }
 
     @Test
@@ -319,17 +324,17 @@ class DisruptorCommandBusTest {
                 mockInterceptor, customExecutor, asCommandMessage(new ErrorCommand(aggregateIdentifier))
         );
 
-        assertFalse(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS));
+        assertThat(customExecutor.awaitTermination(250, TimeUnit.MILLISECONDS)).isFalse();
         customExecutor.shutdown();
-        assertTrue(customExecutor.awaitTermination(5, TimeUnit.SECONDS));
+        assertThat(customExecutor.awaitTermination(5, TimeUnit.SECONDS)).isTrue();
         //noinspection unchecked
         ArgumentCaptor<CommandResultMessage<Object>> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(mockCallback, times(1000)).onResult(any(), commandResultMessageCaptor.capture());
-        assertEquals(10, commandResultMessageCaptor.getAllValues()
-                                                   .stream()
-                                                   .filter(ResultMessage::isExceptional)
-                                                   .count());
+        assertThat(commandResultMessageCaptor.getAllValues()
+                                             .stream()
+                                             .filter(ResultMessage::isExceptional)
+                                             .count()).isEqualTo(10);
     }
 
     private CommandCallback<Object, Object> dispatchCommands(
@@ -402,8 +407,8 @@ class DisruptorCommandBusTest {
         DomainEventMessage<?> lastEvent = eventStore.storedEvents.get(aggregateIdentifier);
 
         // we expect 2 events, 1 from aggregate constructor, one from doSomething method invocation
-        assertEquals(1, lastEvent.getSequenceNumber());
-        assertEquals(aggregateIdentifier, lastEvent.getAggregateIdentifier());
+        assertThat(lastEvent.getSequenceNumber()).isOne();
+        assertThat(lastEvent.getAggregateIdentifier()).isEqualTo(aggregateIdentifier);
     }
 
     @Test
@@ -431,8 +436,8 @@ class DisruptorCommandBusTest {
         DomainEventMessage<?> lastEvent = eventStore.storedEvents.get(aggregateIdentifier);
 
         // we expect 3 events, 1 from aggregate constructor, 2 from doSomething method invocation
-        assertEquals(2, lastEvent.getSequenceNumber());
-        assertEquals(aggregateIdentifier, lastEvent.getAggregateIdentifier());
+        assertThat(lastEvent.getSequenceNumber()).isEqualTo(2);
+        assertThat(lastEvent.getAggregateIdentifier()).isEqualTo(aggregateIdentifier);
     }
 
 
@@ -459,8 +464,8 @@ class DisruptorCommandBusTest {
         DomainEventMessage<?> lastEvent = eventStore.storedEvents.get(aggregateIdentifier);
 
         // we expect 2 events, 1 from aggregate constructor, one from doSomething method invocation
-        assertEquals(1, lastEvent.getSequenceNumber());
-        assertEquals(aggregateIdentifier, lastEvent.getAggregateIdentifier());
+        assertThat(lastEvent.getSequenceNumber()).isOne();
+        assertThat(lastEvent.getAggregateIdentifier()).isEqualTo(aggregateIdentifier);
     }
 
     @Test
@@ -483,7 +488,7 @@ class DisruptorCommandBusTest {
         testSubject.dispatch(asCommandMessage(new CreateCommand(aggregateIdentifier)), futureCallback);
         testSubject.stop();
 
-        assertEquals(COMMAND_RETURN_VALUE, futureCallback.getResult().getPayload());
+        assertThat(futureCallback.getResult().getPayload()).isEqualTo(COMMAND_RETURN_VALUE);
     }
 
     @Test
@@ -538,16 +543,16 @@ class DisruptorCommandBusTest {
 
         testSubject.stop();
 
-        assertEquals(8, successCounter.get());
-        assertEquals(3, failureCounter.get());
-        assertEquals(0, ignoredCounter.get());
+        assertThat(successCounter.get()).isEqualTo(8);
+        assertThat(failureCounter.get()).isEqualTo(3);
+        assertThat(ignoredCounter.get()).isZero();
         //noinspection unchecked
         ArgumentCaptor<CommandResultMessage<Object>> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(callback).onResult(any(), commandResultMessageCaptor.capture());
-        assertTrue(commandResultMessageCaptor.getValue().isExceptional());
-        assertEquals(NoHandlerForCommandException.class,
-                     commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isTrue();
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass())
+                .isEqualTo(NoHandlerForCommandException.class);
     }
 
     @Test
@@ -559,7 +564,8 @@ class DisruptorCommandBusTest {
         );
 
         testSubject.stop();
-        assertThrows(IllegalStateException.class, () -> testSubject.dispatch(asCommandMessage(new Object())));
+        assertThatThrownBy(() -> testSubject.dispatch(asCommandMessage(new Object())))
+                .isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -579,7 +585,7 @@ class DisruptorCommandBusTest {
         //noinspection ResultOfMethodCallIgnored
         eventStore.countDownLatch.await(5, TimeUnit.SECONDS);
 
-        assertEquals(0, eventStore.countDownLatch.getCount(), "Seems that some events are not stored");
+        assertThat(eventStore.countDownLatch.getCount()).as("Seems that some events are not stored").isZero();
     }
 
     @Test
@@ -589,9 +595,9 @@ class DisruptorCommandBusTest {
                 eventStore, new GenericAggregateFactory<>(StubAggregate.class), parameterResolverFactory
         );
 
-        assertTrue(testRepository.canResolve(new AggregateScopeDescriptor(
+        assertThat(testRepository.canResolve(new AggregateScopeDescriptor(
                 StubAggregate.class.getSimpleName(), aggregateIdentifier)
-        ));
+        )).isTrue();
     }
 
     @Test
@@ -601,7 +607,7 @@ class DisruptorCommandBusTest {
                 eventStore, new GenericAggregateFactory<>(StubAggregate.class), parameterResolverFactory
         );
 
-        assertFalse(testRepository.canResolve(new SagaScopeDescriptor("some-saga-type", aggregateIdentifier)));
+        assertThat(testRepository.canResolve(new SagaScopeDescriptor("some-saga-type", aggregateIdentifier))).isFalse();
     }
 
     @Test
@@ -611,9 +617,9 @@ class DisruptorCommandBusTest {
                 eventStore, new GenericAggregateFactory<>(StubAggregate.class), parameterResolverFactory
         );
 
-        assertFalse(testRepository.canResolve(new AggregateScopeDescriptor(
+        assertThat(testRepository.canResolve(new AggregateScopeDescriptor(
                 "other-non-matching-type", aggregateIdentifier
-        )));
+        ))).isFalse();
     }
 
     @Test
@@ -630,7 +636,7 @@ class DisruptorCommandBusTest {
 
         testRepository.send(testMsg, testDescriptor);
 
-        assertEquals(1, messageHandlingCounter.get());
+        assertThat(messageHandlingCounter.get()).isOne();
     }
 
     @Test
@@ -645,7 +651,8 @@ class DisruptorCommandBusTest {
                 eventStore, new GenericAggregateFactory<>(StubAggregate.class), parameterResolverFactory
         );
 
-        assertThrows(MessageHandlerInvocationException.class, () -> testRepository.send(testMsg, testDescriptor));
+        assertThatThrownBy(() -> testRepository.send(testMsg, testDescriptor))
+                .isInstanceOf(MessageHandlerInvocationException.class);
     }
 
     @Test
@@ -662,7 +669,7 @@ class DisruptorCommandBusTest {
 
         testRepository.send(testMsg, testDescriptor);
 
-        assertEquals(0, messageHandlingCounter.get());
+        assertThat(messageHandlingCounter.get()).isZero();
     }
 
     @Test
@@ -687,18 +694,18 @@ class DisruptorCommandBusTest {
         FutureCallback<Object, Object> callback = new FutureCallback<>();
         testSubject.dispatch(testMessage, callback);
 
-        assertTrue(callback.awaitCompletion(2, TimeUnit.SECONDS), "Expected command to complete");
+        assertThat(callback.awaitCompletion(2, TimeUnit.SECONDS)).as("Expected command to complete").isTrue();
         verify(initialHandler, never()).handle(testMessage);
         verify(duplicateHandler).handle(testMessage);
     }
 
     @Test
     void createRepository() {
-        assertDoesNotThrow(() -> testSubject.createRepository(
+        assertThatNoException().isThrownBy(() -> testSubject.createRepository(
                 eventStore, new GenericAggregateFactory<>(StubAggregate.class), (RepositoryProvider) null
         ));
 
-        assertDoesNotThrow(() -> testSubject.createRepository(
+        assertThatNoException().isThrownBy(() -> testSubject.createRepository(
                 eventStore, new GenericAggregateFactory<>(StubAggregate.class),
                 ClasspathParameterResolverFactory.forClass(StubAggregate.class),
                 ClasspathHandlerDefinition.forClass(StubAggregate.class), null
@@ -724,11 +731,11 @@ class DisruptorCommandBusTest {
 
         testSubject.dispatch(testCommand, (command, result) -> {
             invocationCounter.incrementAndGet();
-            assertFalse(result.isExceptional());
-            assertEquals("happy-now", result.getPayload());
+            assertThat(result.isExceptional()).isFalse();
+            assertThat(result.getPayload()).isEqualTo("happy-now");
         });
         assertWithin(500, TimeUnit.MILLISECONDS,
-                     () -> assertEquals(expectedNumberOfInvocations, invocationCounter.get()));
+                     () -> assertThat(invocationCounter.get()).isEqualTo(expectedNumberOfInvocations));
     }
 
     @Test
@@ -750,11 +757,11 @@ class DisruptorCommandBusTest {
 
         testSubject.dispatch(testCommand, (command, result) -> {
             invocationCounter.incrementAndGet();
-            assertTrue(result.isExceptional());
-            assertEquals(AggregateStateCorruptedException.class, result.exceptionResult().getClass());
+            assertThat(result.isExceptional()).isTrue();
+            assertThat(result.exceptionResult().getClass()).isEqualTo(AggregateStateCorruptedException.class);
         });
         assertWithin(50, TimeUnit.MILLISECONDS,
-                     () -> assertEquals(expectedNumberOfInvocations, invocationCounter.get()));
+                     () -> assertThat(invocationCounter.get()).isEqualTo(expectedNumberOfInvocations));
     }
 
     @Test
@@ -780,23 +787,26 @@ class DisruptorCommandBusTest {
 
         testSubject.dispatch(testCommand);
         assertWithin(50, TimeUnit.MILLISECONDS,
-                     () -> assertEquals(expectedNumberOfInvocations, invocationCounter.get()));
+                     () -> assertThat(invocationCounter.get()).isEqualTo(expectedNumberOfInvocations));
     }
 
     @Test
     void buildWithZeroOrNegativeCoolingDownPeriodThrowsSophonConfigurationException() {
         DisruptorCommandBus.Builder builderTestSubject = DisruptorCommandBus.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.coolingDownPeriod(0));
+        assertThatThrownBy(() -> builderTestSubject.coolingDownPeriod(0))
+                .isInstanceOf(SophonConfigurationException.class);
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.coolingDownPeriod(-1));
+        assertThatThrownBy(() -> builderTestSubject.coolingDownPeriod(-1))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullCommandTargetResolverThrowsSophonConfigurationException() {
         DisruptorCommandBus.Builder builderTestSubject = DisruptorCommandBus.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.commandTargetResolver(null));
+        assertThatThrownBy(() -> builderTestSubject.commandTargetResolver(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     private static class DeadlinePayload {

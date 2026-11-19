@@ -23,7 +23,9 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Id;
 import jakarta.persistence.Persistence;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerContext;
 import org.quartz.SchedulerException;
@@ -84,7 +86,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.config.AggregateConfigurer.defaultConfiguration;
 import static org.sophonhq.sophon.config.AggregateConfigurer.jpaMappedConfiguration;
@@ -125,13 +129,13 @@ class DefaultConfigurerTest {
 
         FutureCallback<Object, Object> callback = new FutureCallback<>();
         config.commandBus().dispatch(GenericCommandMessage.asCommandMessage("test"), callback);
-        assertEquals("test", callback.get().getPayload());
-        assertNotNull(config.repository(StubAggregate.class));
-        assertEquals(EventSourcingRepository.class, config.repository(StubAggregate.class).getClass());
+        assertThat(callback.get().getPayload()).isEqualTo("test");
+        assertThat(config.repository(StubAggregate.class)).isNotNull();
+        assertThat(config.repository(StubAggregate.class).getClass()).isEqualTo(EventSourcingRepository.class);
         // As discovered modules increase, the configuration module set grows accordingly.
         // In addition to the event sourcing configuration modules, the SophonTaskJanitorShutdownConfigurerModule
         // registers a late shutdown hook, which is represented as a module configuration.
-        assertEquals(2, config.getModules().size());
+        assertThat(config.getModules()).hasSize(2);
         assertExpectedModules(config, AggregateConfiguration.class);
     }
 
@@ -154,9 +158,8 @@ class DefaultConfigurerTest {
                                                      .orElseThrow(RuntimeException::new);
             assertRetryingWithin(
                     Duration.ofSeconds(5),
-                    () -> assertEquals(
-                            2, config.getComponent(TokenStore.class).fetchSegments(processor.getName()).length
-                    )
+                    () -> assertThat(config.getComponent(TokenStore.class).fetchSegments(processor.getName()))
+                            .hasSize(2)
             );
         } finally {
             config.shutdown();
@@ -183,9 +186,8 @@ class DefaultConfigurerTest {
                                                      .orElseThrow(RuntimeException::new);
             assertRetryingWithin(
                     Duration.ofSeconds(5),
-                    () -> assertEquals(
-                            2, config.getComponent(TokenStore.class).fetchSegments(processor.getName()).length
-                    )
+                    () -> assertThat(config.getComponent(TokenStore.class).fetchSegments(processor.getName()))
+                            .hasSize(2)
             );
         } finally {
             config.shutdown();
@@ -212,9 +214,9 @@ class DefaultConfigurerTest {
                                                  .eventProcessor(processorName, TrackingEventProcessor.class)
                                                  .orElseThrow(RuntimeException::new);
         try {
-            assertFalse(processor.isRunning());
+            assertThat(processor.isRunning()).isFalse();
         } finally {
-            assertDoesNotThrow(config::shutdown);
+            assertThatNoException().isThrownBy(config::shutdown);
         }
     }
 
@@ -237,9 +239,9 @@ class DefaultConfigurerTest {
             TrackingEventProcessor processor = config.eventProcessingConfiguration()
                                                      .eventProcessor(processorName, TrackingEventProcessor.class)
                                                      .orElseThrow(RuntimeException::new);
-            assertFalse(processor.isRunning());
+            assertThat(processor.isRunning()).isFalse();
             processor.start();
-            assertTrue(processor.isRunning());
+            assertThat(processor.isRunning()).isTrue();
         } finally {
             config.shutdown();
         }
@@ -280,8 +282,8 @@ class DefaultConfigurerTest {
 
         config.commandGateway().sendAndWait(GenericCommandMessage.asCommandMessage("test"));
         config.commandGateway().sendAndWait(new GenericCommandMessage<>(new GenericMessage<>("test"), "update"));
-        assertEquals(1, counter.get());
-        assertNotNull(config.repository(StubAggregate.class));
+        assertThat(counter.get()).isOne();
+        assertThat(config.repository(StubAggregate.class)).isNotNull();
     }
 
     @Test
@@ -309,9 +311,9 @@ class DefaultConfigurerTest {
         config.start();
         FutureCallback<Object, Object> callback = new FutureCallback<>();
         config.commandBus().dispatch(GenericCommandMessage.asCommandMessage("test"), callback);
-        assertEquals("test", callback.get().getPayload());
-        assertNotNull(config.repository(StubAggregate.class));
-        assertEquals(1, config.getModules().size());
+        assertThat(callback.get().getPayload()).isEqualTo("test");
+        assertThat(config.repository(StubAggregate.class)).isNotNull();
+        assertThat(config.getModules()).hasSize(1);
         assertExpectedModules(config, AggregateConfiguration.class);
 
         verify(transactionManager, times(2)).startTransaction();
@@ -337,9 +339,9 @@ class DefaultConfigurerTest {
         config.start();
         FutureCallback<Object, Object> callback = new FutureCallback<>();
         config.commandBus().dispatch(GenericCommandMessage.asCommandMessage("test"), callback);
-        assertEquals("test", callback.get().getPayload());
-        assertNotNull(config.repository(StubAggregate.class));
-        assertTrue(config.getModules().stream().anyMatch(m -> m instanceof AggregateConfiguration));
+        assertThat(callback.get().getPayload()).isEqualTo("test");
+        assertThat(config.repository(StubAggregate.class)).isNotNull();
+        assertThat(config.getModules().stream().anyMatch(m -> m instanceof AggregateConfiguration)).isTrue();
 
         verify(transactionManager, times(2)).startTransaction();
     }
@@ -359,7 +361,7 @@ class DefaultConfigurerTest {
                                  .configureAggregate(jpaMappedConfiguration(StubAggregate.class))
                                  .buildConfiguration();
 
-        assertThrows(LifecycleHandlerInvocationException.class, config::start);
+        assertThatThrownBy(config::start).isInstanceOf(LifecycleHandlerInvocationException.class);
     }
 
     @Test
@@ -391,9 +393,9 @@ class DefaultConfigurerTest {
         config.start();
         FutureCallback<Object, Object> callback = new FutureCallback<>();
         config.commandBus().dispatch(GenericCommandMessage.asCommandMessage("test"), callback);
-        assertEquals("test", callback.get().getPayload());
-        assertNotNull(config.repository(StubAggregate.class));
-        assertEquals(1, config.getModules().size());
+        assertThat(callback.get().getPayload()).isEqualTo("test");
+        assertThat(config.repository(StubAggregate.class)).isNotNull();
+        assertThat(config.getModules()).hasSize(1);
         assertExpectedModules(config, AggregateConfiguration.class);
 
         verify(transactionManager, times(2)).startTransaction();
@@ -416,9 +418,9 @@ class DefaultConfigurerTest {
 
         FutureCallback<Object, Object> callback = new FutureCallback<>();
         config.commandBus().dispatch(GenericCommandMessage.asCommandMessage("test"), callback);
-        assertEquals("test", callback.get().getPayload());
-        assertEquals(1, defaultMonitor.getMessages().size());
-        assertEquals(1, commandBusMonitor.getMessages().size());
+        assertThat(callback.get().getPayload()).isEqualTo("test");
+        assertThat(defaultMonitor.getMessages()).hasSize(1);
+        assertThat(commandBusMonitor.getMessages()).hasSize(1);
     }
 
     @Test
@@ -430,7 +432,7 @@ class DefaultConfigurerTest {
                                                 .start();
 
         // Includes the extra module configuration registered by SophonTaskJanitorShutdownConfigurerModule.
-        assertEquals(3, config.getModules().size());
+        assertThat(config.getModules()).hasSize(3);
         assertExpectedModules(config,
                               AggregateConfiguration.class,
                               AggregateConfiguration.class);
@@ -442,8 +444,8 @@ class DefaultConfigurerTest {
         Configuration configuration = DefaultConfigurer.defaultConfiguration()
                                                        .configureQueryUpdateEmitter(c -> queryUpdateEmitter)
                                                        .buildConfiguration();
-        assertEquals(queryUpdateEmitter, configuration.queryBus().queryUpdateEmitter());
-        assertEquals(queryUpdateEmitter, configuration.queryUpdateEmitter());
+        assertThat(configuration.queryBus().queryUpdateEmitter()).isEqualTo(queryUpdateEmitter);
+        assertThat(configuration.queryUpdateEmitter()).isEqualTo(queryUpdateEmitter);
     }
 
     @Test
@@ -460,9 +462,9 @@ class DefaultConfigurerTest {
 
         FutureCallback<Object, Object> callback = new FutureCallback<>();
         config.commandBus().dispatch(GenericCommandMessage.asCommandMessage("test"), callback);
-        assertEquals("test", callback.get().getPayload());
-        assertNotNull(config.repository(StubAggregate.class));
-        assertEquals(CachingEventSourcingRepository.class, config.repository(StubAggregate.class).getClass());
+        assertThat(callback.get().getPayload()).isEqualTo("test");
+        assertThat(config.repository(StubAggregate.class)).isNotNull();
+        assertThat(config.repository(StubAggregate.class).getClass()).isEqualTo(CachingEventSourcingRepository.class);
     }
 
     @Test
@@ -473,7 +475,7 @@ class DefaultConfigurerTest {
                                  .configureAggregate(StubAggregate.class)
                                  .buildConfiguration().snapshotter();
 
-        assertTrue(defaultSnapshotter instanceof AggregateSnapshotter);
+        assertThat(defaultSnapshotter).isInstanceOf(AggregateSnapshotter.class);
     }
 
     @Test
@@ -483,7 +485,7 @@ class DefaultConfigurerTest {
                                  .configureSerializer(configuration -> TestSerializer.xStreamSerializer())
                                  .buildConfiguration().snapshotter();
 
-        assertFalse(defaultSnapshotter instanceof AggregateSnapshotter);
+        assertThat(defaultSnapshotter).isNotInstanceOf(AggregateSnapshotter.class);
     }
 
     @Test
@@ -493,7 +495,7 @@ class DefaultConfigurerTest {
         AggregateConfigurer<StubAggregate> aggregateConfigurer = defaultConfiguration(StubAggregate.class)
                 .configureSnapshotTrigger(configuration -> {
                     Snapshotter resultSnapshotter = configuration.snapshotter();
-                    assertEquals(expectedSnapshotter, resultSnapshotter);
+            assertThat(resultSnapshotter).isEqualTo(expectedSnapshotter);
                     return new EventCountSnapshotTriggerDefinition(resultSnapshotter, 42);
                 });
 
@@ -504,8 +506,8 @@ class DefaultConfigurerTest {
                                                 .buildConfiguration();
         result.start();
 
-        assertEquals(expectedSnapshotter, result.snapshotter());
-        assertEquals(expectedSnapshotter, result.getComponent(Snapshotter.class));
+        assertThat(result.snapshotter()).isEqualTo(expectedSnapshotter);
+        assertThat(result.getComponent(Snapshotter.class)).isEqualTo(expectedSnapshotter);
     }
 
     @Test
@@ -535,9 +537,9 @@ class DefaultConfigurerTest {
 
         SnapshotFilter snapshotFilter = resultConfig.snapshotFilter();
         boolean result = snapshotFilter.allow(mock(DomainEventData.class));
-        assertFalse(result);
-        assertTrue(filteredFirst.get());
-        assertTrue(filteredSecond.get());
+        assertThat(result).isFalse();
+        assertThat(filteredFirst.get()).isTrue();
+        assertThat(filteredSecond.get()).isTrue();
     }
 
     @Test
@@ -585,8 +587,8 @@ class DefaultConfigurerTest {
         EventStore resultEventStore = resultConfig.eventStore();
         resultEventStore.readEvents("some-aggregate-id");
 
-        assertTrue(filteredFirst.get());
-        assertTrue(filteredSecond.get());
+        assertThat(filteredFirst.get()).isTrue();
+        assertThat(filteredSecond.get()).isTrue();
     }
 
     @Test
@@ -595,7 +597,7 @@ class DefaultConfigurerTest {
                                                   .buildConfiguration()
                                                   .deadlineManager();
 
-        assertTrue(result instanceof SimpleDeadlineManager);
+        assertThat(result).isInstanceOf(SimpleDeadlineManager.class);
     }
 
     @Test
@@ -615,7 +617,7 @@ class DefaultConfigurerTest {
                                  .buildConfiguration()
                                  .deadlineManager();
 
-        assertTrue(result instanceof QuartzDeadlineManager);
+        assertThat(result).isInstanceOf(QuartzDeadlineManager.class);
     }
 
     @Test
@@ -624,7 +626,7 @@ class DefaultConfigurerTest {
                                               .buildConfiguration()
                                               .spanFactory();
 
-        assertTrue(result instanceof NoOpSpanFactory);
+        assertThat(result).isInstanceOf(NoOpSpanFactory.class);
     }
 
     @Test
@@ -636,7 +638,7 @@ class DefaultConfigurerTest {
                                               .buildConfiguration()
                                               .spanFactory();
 
-        assertSame(custom, result);
+        assertThat(result).isSameAs(custom);
     }
 
     @Test
@@ -645,7 +647,7 @@ class DefaultConfigurerTest {
                                                      .buildConfiguration()
                                                      .scopeAwareProvider();
 
-        assertTrue(result instanceof ConfigurationScopeAwareProvider);
+        assertThat(result).isInstanceOf(ConfigurationScopeAwareProvider.class);
     }
 
     @Test
@@ -712,8 +714,8 @@ class DefaultConfigurerTest {
 
         result.upcast(mockStream);
 
-        assertTrue(firstUpcasterInvocation.get());
-        assertTrue(secondUpcasterInvocation.get());
+        assertThat(firstUpcasterInvocation.get()).isTrue();
+        assertThat(secondUpcasterInvocation.get()).isTrue();
         verifyNoInteractions(testUpcasterChain);
     }
 
@@ -725,7 +727,7 @@ class DefaultConfigurerTest {
                                                        .registerQueryHandler(c -> new Object())
                                                        .registerMessageHandler(c -> new Object())
                                                        .buildConfiguration();
-        assertDoesNotThrow(configuration::shutdown);
+        assertThatNoException().isThrownBy(configuration::shutdown);
     }
 
     @SuppressWarnings("unused")

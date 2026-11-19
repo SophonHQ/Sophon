@@ -21,7 +21,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.IdentifierFactory;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
@@ -40,7 +42,8 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 import java.time.Clock;
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<EventMessage<?>> {
@@ -121,14 +124,14 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
     protected void assertLetter(DeadLetter<? extends EventMessage<?>> expected,
                                 DeadLetter<? extends EventMessage<?>> actual) {
 
-        assertEquals(expected.message().getPayload(), actual.message().getPayload());
-        assertEquals(expected.message().getPayloadType(), actual.message().getPayloadType());
-        assertEquals(expected.message().getMetaData(), actual.message().getMetaData());
-        assertEquals(expected.message().getIdentifier(), actual.message().getIdentifier());
-        assertEquals(expected.cause(), actual.cause());
-        assertEquals(expected.enqueuedAt(), actual.enqueuedAt());
-        assertEquals(expected.lastTouched(), actual.lastTouched());
-        assertEquals(expected.diagnostics(), actual.diagnostics());
+        assertThat(actual.message().getPayload()).isEqualTo(expected.message().getPayload());
+        assertThat(actual.message().getPayloadType()).isEqualTo(expected.message().getPayloadType());
+        assertThat(actual.message().getMetaData()).isEqualTo(expected.message().getMetaData());
+        assertThat(actual.message().getIdentifier()).isEqualTo(expected.message().getIdentifier());
+        assertThat(actual.cause()).isEqualTo(expected.cause());
+        assertThat(actual.enqueuedAt()).isEqualTo(expected.enqueuedAt());
+        assertThat(actual.lastTouched()).isEqualTo(expected.lastTouched());
+        assertThat(actual.diagnostics()).isEqualTo(expected.diagnostics());
     }
 
     @Override
@@ -150,66 +153,70 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
     void buildWithNegativeMaxQueuesThrowsSophonConfigurationException() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject = JpaSequencedDeadLetterQueue.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequences(-1));
+        assertThatThrownBy(() -> builderTestSubject.maxSequences(-1))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithZeroMaxQueuesThrowsSophonConfigurationException() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject = JpaSequencedDeadLetterQueue.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequences(0));
+        assertThatThrownBy(() -> builderTestSubject.maxSequences(0))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNegativeMaxQueueSizeThrowsSophonConfigurationException() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject = JpaSequencedDeadLetterQueue.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(-1));
+        assertThatThrownBy(() -> builderTestSubject.maxSequenceSize(-1))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithZeroMaxQueueSizeThrowsSophonConfigurationException() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject = JpaSequencedDeadLetterQueue.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(0));
+        assertThatThrownBy(() -> builderTestSubject.maxSequenceSize(0))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void canNotSetNegativeQueryPageSize() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builder = JpaSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.queryPageSize(-1));
+        assertThatThrownBy(() -> builder.queryPageSize(-1)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void canNotSetZeroQueryPageSize() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builder = JpaSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.queryPageSize(0));
+        assertThatThrownBy(() -> builder.queryPageSize(0)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void cannotRequeueGenericDeadLetter() {
         SequencedDeadLetterQueue<EventMessage<?>> queue = buildTestSubject();
         DeadLetter<EventMessage<?>> letter = generateInitialLetter();
-        assertThrows(WrongDeadLetterTypeException.class, () -> queue.requeue(letter, d -> d));
+        assertThatThrownBy(() -> queue.requeue(letter, d -> d)).isInstanceOf(WrongDeadLetterTypeException.class);
     }
 
     @Test
     void cannotEvictGenericDeadLetter() {
         SequencedDeadLetterQueue<EventMessage<?>> queue = buildTestSubject();
         DeadLetter<EventMessage<?>> letter = generateInitialLetter();
-        assertThrows(WrongDeadLetterTypeException.class, () -> queue.evict(letter));
+        assertThatThrownBy(() -> queue.evict(letter)).isInstanceOf(WrongDeadLetterTypeException.class);
     }
 
     @Test
     void canNotSetProcessingGroupToEmpty() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builder = JpaSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.processingGroup(""));
+        assertThatThrownBy(() -> builder.processingGroup("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void canNotSetProcessingGroupToNull() {
         JpaSequencedDeadLetterQueue.Builder<EventMessage<?>> builder = JpaSequencedDeadLetterQueue.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.processingGroup(""));
+        assertThatThrownBy(() -> builder.processingGroup("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -219,7 +226,7 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
                 .transactionManager(transactionManager)
                 .entityManagerProvider(() -> entityManager)
                 .serializer(TestSerializer.JACKSON.getSerializer());
-        assertThrows(SophonConfigurationException.class, builder::build);
+        assertThatThrownBy(builder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -230,7 +237,7 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
                 .entityManagerProvider(() -> entityManager)
                 .serializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, builder::build);
+        assertThatThrownBy(builder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -241,11 +248,12 @@ class JpaSequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<Event
                 .transactionManager(transactionManager)
                 .serializer(TestSerializer.JACKSON.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, builder::build);
+        assertThatThrownBy(builder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void canNotAddNullConverterWhileBuilding() {
-        assertThrows(SophonConfigurationException.class, () -> JpaSequencedDeadLetterQueue.builder().addConverter(null));
+        assertThatThrownBy(() -> JpaSequencedDeadLetterQueue.builder().addConverter(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 }

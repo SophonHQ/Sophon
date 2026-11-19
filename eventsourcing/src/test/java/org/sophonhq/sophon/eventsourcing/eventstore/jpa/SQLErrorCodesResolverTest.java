@@ -30,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 /**
@@ -45,7 +46,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                                                                                                         new RuntimeException()));
 
-        assertFalse(isDuplicateKey);
+        assertThat(isDuplicateKey).isFalse();
     }
 
     @Test
@@ -59,7 +60,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                                                                                                         sqlException));
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
 
@@ -75,7 +76,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                                                                                                         sqlException));
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
     @Test
@@ -90,7 +91,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                 sqlException));
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
     @Test
@@ -105,7 +106,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                 sqlException));
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
     @Test
@@ -120,7 +121,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                 sqlException));
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
     @Test
@@ -134,7 +135,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                                                                                                         sqlException));
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
     @Test
@@ -152,13 +153,14 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                                                                                                         sqlException));
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
     @Test
     void initialization_UnknownProductName() throws Exception {
         DataSource dataSource = createMockDataSource("Some weird unknown DB type");
-        assertThrows(SophonConfigurationException.class, () -> new SQLErrorCodesResolver(dataSource));
+        assertThatThrownBy(() -> new SQLErrorCodesResolver(dataSource))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -175,7 +177,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                                                                                                         sqlException));
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
     @Test
@@ -192,7 +194,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                                                                                                         sqlException));
 
-        assertFalse(isDuplicateKey);
+        assertThat(isDuplicateKey).isFalse();
     }
 
     @Test
@@ -209,7 +211,7 @@ class SQLErrorCodesResolverTest {
         boolean isDuplicateKey = sqlErrorCodesResolver.isDuplicateKeyViolation(new PersistenceException("error",
                                                                                                         sqlException));
 
-        assertFalse(isDuplicateKey);
+        assertThat(isDuplicateKey).isFalse();
     }
 
     private DataSource createMockDataSource(String databaseProductName) throws SQLException {

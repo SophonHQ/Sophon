@@ -40,20 +40,19 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalLong;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.integrationtests.utils.EventTestUtils.createEvents;
 
@@ -115,9 +114,9 @@ class TrackingEventProcessorTest_MultiThreaded {
                       .pollDelay(Duration.ofMillis(50))
                       .until(() -> testSubject.activeProcessorThreads() == 2);
 
-        assertEquals(2, testSubject.processingStatus().size());
-        assertTrue(testSubject.processingStatus().containsKey(0));
-        assertTrue(testSubject.processingStatus().containsKey(1));
+        assertThat(testSubject.processingStatus()).hasSize(2);
+        assertThat(testSubject.processingStatus()).containsKey(0);
+        assertThat(testSubject.processingStatus()).containsKey(1);
 
         await("Segment Zero Caught Up").atMost(Duration.ofSeconds(1))
                                        .pollDelay(Duration.ofMillis(50))
@@ -141,7 +140,7 @@ class TrackingEventProcessorTest_MultiThreaded {
 
         int[] actual = tokenStore.fetchSegments(testSubject.getName());
         Arrays.sort(actual);
-        assertArrayEquals(new int[]{0, 1, 2, 3}, actual);
+        assertThat(actual).containsExactly(0, 1, 2, 3);
     }
 
     // Reproduce issue #508 (https://github.com/AxonFramework/AxonFramework/issues/508)
@@ -158,7 +157,7 @@ class TrackingEventProcessorTest_MultiThreaded {
 
         int[] actual = tokenStore.fetchSegments(testSubject.getName());
         Arrays.sort(actual);
-        assertArrayEquals(new int[]{0, 1, 2, 3, 4, 5}, actual);
+        assertThat(actual).containsExactly(0, 1, 2, 3, 4, 5);
     }
 
     @Test
@@ -174,9 +173,9 @@ class TrackingEventProcessorTest_MultiThreaded {
                       .pollDelay(Duration.ofMillis(50))
                       .until(() -> testSubject.activeProcessorThreads() == 2);
 
-        assertEquals(2, testSubject.processingStatus().size());
-        assertTrue(testSubject.processingStatus().containsKey(0));
-        assertTrue(testSubject.processingStatus().containsKey(1));
+        assertThat(testSubject.processingStatus()).hasSize(2);
+        assertThat(testSubject.processingStatus()).containsKey(0);
+        assertThat(testSubject.processingStatus()).containsKey(1);
 
         await("Segment Zero")
                 .atMost(Duration.ofMillis(500))
@@ -236,14 +235,14 @@ class TrackingEventProcessorTest_MultiThreaded {
         await("Start").atMost(Duration.ofSeconds(1))
                       .pollDelay(Duration.ofMillis(50))
                       .until(() -> testSubject.availableProcessorThreads() == 0);
-        assertEquals(new HashSet<>(asList(0, 1)), testSubject.processingStatus().keySet());
+        assertThat(testSubject.processingStatus().keySet()).isEqualTo(Set.of(0, 1));
 
         testSubject.releaseSegment(0);
 
         await("Post Release").atMost(Duration.ofSeconds(5))
                              .pollDelay(Duration.ofMillis(50))
                              .until(() -> testSubject.processingStatus().containsKey(2));
-        assertEquals(new HashSet<>(asList(2, 1)), testSubject.processingStatus().keySet());
+        assertThat(testSubject.processingStatus().keySet()).isEqualTo(Set.of(2, 1));
 
         await("Available Threads").atMost(Duration.ofSeconds(2))
                                   .pollDelay(Duration.ofMillis(50))
@@ -280,11 +279,11 @@ class TrackingEventProcessorTest_MultiThreaded {
         testSubject.start();
         eventBus.publish(createEvents(4));
 
-        assertTrue(
-                countDownLatch.await(5, SECONDS),
-                "Expected Handler to have received 2 out of 4 published events. Got " + acknowledgeByThread.eventCount()
-        );
-        assertEquals(2, acknowledgeByThread.eventCount());
+        assertThat(countDownLatch.await(5, SECONDS))
+                .as("Expected Handler to have received 2 out of 4 published events. Got "
+                            + acknowledgeByThread.eventCount())
+                .isTrue();
+        assertThat(acknowledgeByThread.eventCount()).isEqualTo(2);
     }
 
     @Test
@@ -298,9 +297,11 @@ class TrackingEventProcessorTest_MultiThreaded {
         }).when(mockHandler).handle(any());
         testSubject.start();
         eventBus.publish(createEvents(2));
-        assertTrue(countDownLatch.await(5, SECONDS), "Expected Handler to have received 2 published events");
+        assertThat(countDownLatch.await(5, SECONDS))
+                .as("Expected Handler to have received 2 published events")
+                .isTrue();
         acknowledgeByThread.assertEventsAckedByMultipleThreads();
-        assertEquals(2, acknowledgeByThread.eventCount());
+        assertThat(acknowledgeByThread.eventCount()).isEqualTo(2);
     }
 
     @Test
@@ -313,10 +314,12 @@ class TrackingEventProcessorTest_MultiThreaded {
         }));
         testSubject.start();
         eventBus.publish(createEvents(2));
-        assertTrue(countDownLatch.await(5, SECONDS), "Expected Unit of Work to have reached clean up phase");
+        assertThat(countDownLatch.await(5, SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase")
+                .isTrue();
         verify(tokenStore, atLeastOnce()).storeToken(any(), any(), anyInt());
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 0));
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 1));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isNotNull();
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 1)).isNotNull();
     }
 
     @Test
@@ -326,7 +329,7 @@ class TrackingEventProcessorTest_MultiThreaded {
         //noinspection resource
         TrackedEventMessage<?> firstEvent = eventBus.openStream(null).nextAvailable();
         tokenStore.storeToken(firstEvent.trackingToken(), testSubject.getName(), 0);
-        assertEquals(firstEvent.trackingToken(), tokenStore.fetchToken(testSubject.getName(), 0));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isEqualTo(firstEvent.trackingToken());
 
         final AcknowledgeByThread acknowledgeByThread = new AcknowledgeByThread();
         CountDownLatch countDownLatch = new CountDownLatch(9);
@@ -339,11 +342,12 @@ class TrackingEventProcessorTest_MultiThreaded {
         configureProcessor(TrackingEventProcessorConfiguration.forParallelProcessing(2));
         testSubject.start();
 
-        assertTrue(countDownLatch.await(60, SECONDS),
-                   "Expected 9 invocations on Event Handler by now, missing " + countDownLatch.getCount());
+        assertThat(countDownLatch.await(60, SECONDS))
+                .as("Expected 9 invocations on Event Handler by now, missing " + countDownLatch.getCount())
+                .isTrue();
 
         acknowledgeByThread.assertEventsAckedByMultipleThreads();
-        assertEquals(9, acknowledgeByThread.eventCount());
+        assertThat(acknowledgeByThread.eventCount()).isEqualTo(9);
     }
 
     @Test
@@ -363,8 +367,8 @@ class TrackingEventProcessorTest_MultiThreaded {
 
         eventBus.publish(events.subList(0, 2));
 
-        assertTrue(countDownLatch.await(5, SECONDS), "Expected 2 invocations on Event Handler by now");
-        assertEquals(2, acknowledgeByThread.eventCount());
+        assertThat(countDownLatch.await(5, SECONDS)).as("Expected 2 invocations on Event Handler by now").isTrue();
+        assertThat(acknowledgeByThread.eventCount()).isEqualTo(2);
 
         await("Segment Zero - Phase 1")
                 .atMost(Duration.ofSeconds(2))
@@ -397,11 +401,11 @@ class TrackingEventProcessorTest_MultiThreaded {
         }).when(mockHandler).handle(any());
 
         eventBus.publish(events.subList(2, 4));
-        assertEquals(2, countDownLatch2.getCount());
+        assertThat(countDownLatch2.getCount()).isEqualTo(2);
 
         testSubject.start();
-        assertTrue(countDownLatch2.await(5, SECONDS), "Expected 4 invocations on Event Handler by now");
-        assertEquals(4, acknowledgeByThread.eventCount());
+        assertThat(countDownLatch2.await(5, SECONDS)).as("Expected 4 invocations on Event Handler by now").isTrue();
+        assertThat(acknowledgeByThread.eventCount()).isEqualTo(4);
 
         GlobalSequenceTrackingToken expectedSubsequentToken = new GlobalSequenceTrackingToken(3);
         await("Segment Zero - Phase 2")
@@ -438,8 +442,8 @@ class TrackingEventProcessorTest_MultiThreaded {
                                             .transactionManager(NoTransactionManager.INSTANCE)
                                             .build();
         testSubject.start();
-        assertTrue(countDownLatch.await(10, SECONDS), "Expected 5 invocations on Event Handler by now");
-        assertEquals(5, acknowledgeByThread.eventCount());
+        assertThat(countDownLatch.await(10, SECONDS)).as("Expected 5 invocations on Event Handler by now").isTrue();
+        assertThat(acknowledgeByThread.eventCount()).isEqualTo(5);
         //noinspection resource
         verify(eventBus, times(2)).openStream(any());
     }
@@ -464,10 +468,12 @@ class TrackingEventProcessorTest_MultiThreaded {
         }));
         testSubject.start();
         eventBus.publish(events);
-        assertTrue(countDownLatch.await(5, SECONDS), "Expected Unit of Work to have reached clean up phase");
+        assertThat(countDownLatch.await(5, SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase")
+                .isTrue();
 
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 0));
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 1));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isNotNull();
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 1)).isNotNull();
     }
 
     @Test
@@ -496,7 +502,7 @@ class TrackingEventProcessorTest_MultiThreaded {
         }
 
         void assertEventsAckedByMultipleThreads() {
-            ackedEventsByThreadMap.values().forEach(l -> assertFalse(l.isEmpty()));
+            ackedEventsByThreadMap.values().forEach(l -> assertThat(l).isNotEmpty());
         }
 
         long eventCount() {

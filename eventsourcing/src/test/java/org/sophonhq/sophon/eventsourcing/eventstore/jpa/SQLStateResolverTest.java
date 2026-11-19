@@ -21,8 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Jochen Munz
@@ -35,7 +34,7 @@ class SQLStateResolverTest {
 
         boolean isDuplicateKey = resolver.isDuplicateKeyViolation(duplicateKeyException());
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
     @Test
@@ -44,7 +43,7 @@ class SQLStateResolverTest {
 
         boolean isDuplicateKey = resolver.isDuplicateKeyViolation(integrityContraintViolation());
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
     @Test
@@ -53,7 +52,7 @@ class SQLStateResolverTest {
 
         boolean isDuplicateKey = resolver.isDuplicateKeyViolation(duplicateKeyException());
 
-        assertTrue(isDuplicateKey);
+        assertThat(isDuplicateKey).isTrue();
     }
 
 
@@ -63,7 +62,9 @@ class SQLStateResolverTest {
 
         boolean isDuplicateKey = resolver.isDuplicateKeyViolation(integrityContraintViolation());
 
-        assertFalse(isDuplicateKey, "A general state code should not be matched by the explicitly configured resolver");
+        assertThat(isDuplicateKey)
+                .as("A general state code should not be matched by the explicitly configured resolver")
+                .isFalse();
     }
 
     private Exception integrityContraintViolation() {

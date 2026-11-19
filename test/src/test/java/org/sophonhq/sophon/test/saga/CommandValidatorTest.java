@@ -28,7 +28,7 @@ import org.sophonhq.sophon.test.utils.RecordingCommandBus;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -67,14 +67,16 @@ class CommandValidatorTest {
     void matchWithUnexpectedNullValue() {
         when(commandBus.getDispatchedCommands()).thenReturn(listOfOneCommandMessage(new SomeCommand(null)));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.assertDispatchedEqualTo(new SomeCommand("test")));
+        assertThatThrownBy(() -> testSubject.assertDispatchedEqualTo(new SomeCommand("test")))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
     void matchPrimitiveTypedCommands() {
         when(commandBus.getDispatchedCommands()).thenReturn(listOfOneCommandMessage("some-string"));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.assertDispatchedEqualTo("some-other-string"));
+        assertThatThrownBy(() -> testSubject.assertDispatchedEqualTo("some-other-string"))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     private List<CommandMessage<?>> emptyCommandMessageList() {

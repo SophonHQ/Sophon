@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.commandhandling.callbacks.NoOpCallback;
 import org.sophonhq.sophon.common.Registration;
@@ -36,7 +38,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 
@@ -74,7 +77,7 @@ class SimpleCommandBusTest {
                                                          .ifPresent(Throwable::printStackTrace);
                                      fail("Did not expect exception");
                                  }
-                                 assertEquals("Say hi!", commandResultMessage.getPayload().getPayload());
+                                 assertThat(commandResultMessage.getPayload().getPayload()).isEqualTo("Say hi!");
                              });
     }
 
@@ -110,8 +113,8 @@ class SimpleCommandBusTest {
         final AtomicReference<UnitOfWork<?>> unitOfWork = new AtomicReference<>();
         testSubject.subscribe(String.class.getName(), command -> {
             unitOfWork.set(CurrentUnitOfWork.get());
-            assertTrue(CurrentUnitOfWork.isStarted());
-            assertNotNull(CurrentUnitOfWork.get());
+            assertThat(CurrentUnitOfWork.isStarted()).isTrue();
+            assertThat(CurrentUnitOfWork.get()).isNotNull();
             return command;
         });
         testSubject.dispatch(asCommandMessage("Say hi!"),
@@ -121,11 +124,11 @@ class SimpleCommandBusTest {
                                                          .ifPresent(Throwable::printStackTrace);
                                      fail("Did not expect exception");
                                  }
-                                 assertEquals("Say hi!", commandResultMessage.getPayload().getPayload());
+                                 assertThat(commandResultMessage.getPayload().getPayload()).isEqualTo("Say hi!");
                              });
-        assertFalse(CurrentUnitOfWork.isStarted());
-        assertFalse(unitOfWork.get().isRolledBack());
-        assertFalse(unitOfWork.get().isActive());
+        assertThat(CurrentUnitOfWork.isStarted()).isFalse();
+        assertThat(unitOfWork.get().isRolledBack()).isFalse();
+        assertThat(unitOfWork.get().isActive()).isFalse();
     }
 
     @Test
@@ -147,20 +150,20 @@ class SimpleCommandBusTest {
         final AtomicReference<UnitOfWork<?>> unitOfWork = new AtomicReference<>();
         testSubject.subscribe(String.class.getName(), command -> {
             unitOfWork.set(CurrentUnitOfWork.get());
-            assertTrue(CurrentUnitOfWork.isStarted());
-            assertNotNull(CurrentUnitOfWork.get());
+            assertThat(CurrentUnitOfWork.isStarted()).isTrue();
+            assertThat(CurrentUnitOfWork.get()).isNotNull();
             throw new RuntimeException();
         });
         testSubject.dispatch(asCommandMessage("Say hi!"), (commandMessage, commandResultMessage) -> {
             if (commandResultMessage.isExceptional()) {
                 Throwable cause = commandResultMessage.exceptionResult();
-                assertEquals(RuntimeException.class, cause.getClass());
+                assertThat(cause.getClass()).isEqualTo(RuntimeException.class);
             } else {
                 fail("Expected exception");
             }
         });
-        assertFalse(CurrentUnitOfWork.isStarted());
-        assertTrue(unitOfWork.get().isRolledBack());
+        assertThat(CurrentUnitOfWork.isStarted()).isFalse();
+        assertThat(unitOfWork.get().isRolledBack()).isTrue();
     }
 
     @Test
@@ -175,13 +178,13 @@ class SimpleCommandBusTest {
         testSubject.dispatch(asCommandMessage("Say hi!"), (commandMessage, commandResultMessage) -> {
             if (commandResultMessage.isExceptional()) {
                 Throwable cause = commandResultMessage.exceptionResult();
-                assertEquals(Exception.class, cause.getClass());
+                assertThat(cause.getClass()).isEqualTo(Exception.class);
             } else {
                 fail("Expected exception");
             }
         });
-        assertTrue(!unitOfWork.get().isActive());
-        assertTrue(!unitOfWork.get().isRolledBack());
+        assertThat(unitOfWork.get().isActive()).isFalse();
+        assertThat(unitOfWork.get().isRolledBack()).isFalse();
     }
 
 
@@ -194,9 +197,9 @@ class SimpleCommandBusTest {
         ArgumentCaptor<CommandResultMessage> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(callback).onResult(eq(command), commandResultMessageCaptor.capture());
-        assertTrue(commandResultMessageCaptor.getValue().isExceptional());
-        assertEquals(NoHandlerForCommandException.class,
-                     commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isTrue();
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass())
+                .isEqualTo(NoHandlerForCommandException.class);
     }
 
     private CommandCallback createCallbackMock() {
@@ -217,9 +220,9 @@ class SimpleCommandBusTest {
         ArgumentCaptor<CommandResultMessage> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(callback).onResult(eq(command), commandResultMessageCaptor.capture());
-        assertTrue(commandResultMessageCaptor.getValue().isExceptional());
-        assertEquals(NoHandlerForCommandException.class,
-                     commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isTrue();
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass())
+                .isEqualTo(NoHandlerForCommandException.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -251,7 +254,7 @@ class SimpleCommandBusTest {
             // ignore
         }
 
-        assertTrue(countDownLatch.await(10, TimeUnit.SECONDS));
+        assertThat(countDownLatch.await(10, TimeUnit.SECONDS)).isTrue();
     }
 
     @SuppressWarnings({"unchecked"})
@@ -278,7 +281,7 @@ class SimpleCommandBusTest {
                                      Throwable cause = commandResultMessage.exceptionResult();
                                      throw new RuntimeException("Unexpected exception", cause);
                                  }
-                                 assertEquals("Hi there!", commandResultMessage.getPayload());
+                                 assertThat(commandResultMessage.getPayload()).isEqualTo("Hi there!");
                              });
 
         InOrder inOrder = inOrder(mockInterceptor1, mockInterceptor2, commandHandler);
@@ -313,7 +316,7 @@ class SimpleCommandBusTest {
                              (commandMessage, commandResultMessage) -> {
                                  if (commandResultMessage.isExceptional()) {
                                      Throwable cause = commandResultMessage.exceptionResult();
-                                     assertEquals("Faking failed command handling", cause.getMessage());
+                                     assertThat(cause.getMessage()).isEqualTo("Faking failed command handling");
                                  } else {
                                      fail("Expected exception to be thrown");
                                  }
@@ -346,7 +349,7 @@ class SimpleCommandBusTest {
                              (commandMessage, commandResultMessage) -> {
                                  if (commandResultMessage.isExceptional()) {
                                      Throwable cause = commandResultMessage.exceptionResult();
-                                     assertEquals("Mocking", cause.getMessage());
+                                     assertThat(cause.getMessage()).isEqualTo("Mocking");
                                  } else {
                                      fail("Expected exception to be propagated");
                                  }
@@ -368,9 +371,9 @@ class SimpleCommandBusTest {
             if (commandResultMessage.isExceptional()) {
                 fail("Command execution should be successful");
             }
-            assertEquals(command.getIdentifier(), commandResultMessage.getMetaData().get("traceId"));
-            assertEquals(command.getIdentifier(), commandResultMessage.getMetaData().get("correlationId"));
-            assertEquals(command.getPayload(), commandResultMessage.getPayload());
+            assertThat(commandResultMessage.getMetaData()).containsEntry("traceId", command.getIdentifier());
+            assertThat(commandResultMessage.getMetaData()).containsEntry("correlationId", command.getIdentifier());
+            assertThat(commandResultMessage.getPayload()).isEqualTo(command.getPayload());
         });
     }
 

@@ -23,7 +23,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests serialization capabilities of {@link GlobalSequenceTrackingToken}.
@@ -40,6 +40,6 @@ class GlobalSequenceTrackingTokenSerializationTest {
     @ParameterizedTest
     void tokenShouldBeSerializable(TestSerializer serializer) {
         GlobalSequenceTrackingToken token = new GlobalSequenceTrackingToken(Long.MAX_VALUE);
-        assertEquals(token, serializer.serializeDeserialize(token));
+        assertThat(serializer.serializeDeserialize(token)).isEqualTo(token);
     }
 }

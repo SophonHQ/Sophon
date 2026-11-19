@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.messaging.deadletter;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -31,7 +33,7 @@ import org.sophonhq.sophon.queryhandling.GenericQueryMessage;
 
 import java.lang.reflect.Method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link DeadLetterParameterResolverFactory} and
@@ -73,14 +75,14 @@ class DeadLetterParameterResolverFactoryTest {
 
     @Test
     void ignoredForNonDeadLetterParameterMethod() {
-        assertNull(testSubject.createInstance(nonDeadLetterParameterMethod,
+        assertThat(testSubject.createInstance(nonDeadLetterParameterMethod,
                                               nonDeadLetterParameterMethod.getParameters(),
-                                              0));
+                                              0)).isNull();
     }
 
     @Test
     void createsResolverForDeadLetterParameterContainingMethod() {
-        assertNotNull(testSubject.createInstance(deadLetterMethod, deadLetterMethod.getParameters(), 0));
+        assertThat(testSubject.createInstance(deadLetterMethod, deadLetterMethod.getParameters(), 0)).isNotNull();
     }
 
     @Test
@@ -88,9 +90,10 @@ class DeadLetterParameterResolverFactoryTest {
         ParameterResolver<DeadLetter<?>> resolver =
                 testSubject.createInstance(deadLetterMethod, deadLetterMethod.getParameters(), 0);
 
-        assertTrue(resolver.matches(GenericCommandMessage.asCommandMessage("some-command")));
-        assertTrue(resolver.matches(GenericEventMessage.asEventMessage("some-command")));
-        assertTrue(resolver.matches(new GenericQueryMessage<>("some-query", ResponseTypes.instanceOf(String.class))));
+        assertThat(resolver.matches(GenericCommandMessage.asCommandMessage("some-command"))).isTrue();
+        assertThat(resolver.matches(GenericEventMessage.asEventMessage("some-command"))).isTrue();
+        assertThat(resolver.matches(new GenericQueryMessage<>("some-query", ResponseTypes.instanceOf(String.class))))
+                .isTrue();
     }
 
     @Test
@@ -106,7 +109,7 @@ class DeadLetterParameterResolverFactoryTest {
                 testSubject.createInstance(deadLetterMethod, deadLetterMethod.getParameters(), 0);
 
         DeadLetter<?> result = resolver.resolveParameterValue(testMessage);
-        assertEquals(expected, result);
+        assertThat(result).isEqualTo(expected);
     }
 
     @Test
@@ -116,7 +119,7 @@ class DeadLetterParameterResolverFactoryTest {
         ParameterResolver<DeadLetter<?>> resolver =
                 testSubject.createInstance(deadLetterMethod, deadLetterMethod.getParameters(), 0);
 
-        assertNull(resolver.resolveParameterValue(testMessage));
+        assertThat(resolver.resolveParameterValue(testMessage)).isNull();
     }
 
     @Test
@@ -127,6 +130,6 @@ class DeadLetterParameterResolverFactoryTest {
         ParameterResolver<DeadLetter<?>> resolver =
                 testSubject.createInstance(deadLetterMethod, deadLetterMethod.getParameters(), 0);
 
-        assertNull(resolver.resolveParameterValue(testMessage));
+        assertThat(resolver.resolveParameterValue(testMessage)).isNull();
     }
 }

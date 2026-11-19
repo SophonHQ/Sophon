@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.queryhandling.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.annotation.AnnotatedMessageHandlingMemberDefinition;
 import org.sophonhq.sophon.messaging.annotation.ClasspathParameterResolverFactory;
 import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
@@ -30,7 +31,8 @@ import org.sophonhq.sophon.queryhandling.QueryHandler;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test whether the {@link MethodQueryMessageHandlerDefinition} correctly deals with return types, as well as for
@@ -53,46 +55,47 @@ class MethodQueryMessageHandlerDefinitionTest {
 
     @Test
     void voidNotAcceptedAsReturnType() {
-        assertThrows(UnsupportedHandlerException.class, () -> messageHandler("illegalQueryResponseType"));
+        assertThatThrownBy(() -> messageHandler("illegalQueryResponseType"))
+                .isInstanceOf(UnsupportedHandlerException.class);
     }
 
     @Test
     void futureResponseTypeUnwrapped() {
         QueryHandlingMember<?> handler = messageHandler("futureReturnType");
-        assertEquals(String.class, handler.getResultType());
+        assertThat(handler.getResultType()).isEqualTo(String.class);
     }
 
     @Test
     void optionalResponseTypeUnwrapped() throws Exception {
         QueryHandlingMember<MethodQueryMessageHandlerDefinitionTest> handler = messageHandler("optionalReturnType");
-        assertEquals(String.class, handler.getResultType());
+        assertThat(handler.getResultType()).isEqualTo(String.class);
 
         GenericQueryMessage<String, String> message =
                 new GenericQueryMessage<>("mock", ResponseTypes.instanceOf(String.class));
 
-        assertTrue(handler.canHandle(message));
+        assertThat(handler.canHandle(message)).isTrue();
 
         Object invocationResult = handler.handle(message, this);
-        assertNull(invocationResult);
+        assertThat(invocationResult).isNull();
     }
 
 
     @Test
     void unspecifiedOptionalResponseTypeUnwrapped() {
         QueryHandlingMember<?> handler = messageHandler("unspecifiedOptionalType");
-        assertEquals(Object.class, handler.getResultType());
+        assertThat(handler.getResultType()).isEqualTo(Object.class);
     }
 
     @Test
     void wildcardOptionalResponseTypeUnwrapped() {
         QueryHandlingMember<?> handler = messageHandler("wildcardOptionalType");
-        assertEquals(Object.class, handler.getResultType());
+        assertThat(handler.getResultType()).isEqualTo(Object.class);
     }
 
     @Test
     void upperBoundWildcardOptionalResponseTypeUnwrapped() {
         QueryHandlingMember<?> handler = messageHandler("upperBoundWildcardOptionalType");
-        assertEquals(CharSequence.class, handler.getResultType());
+        assertThat(handler.getResultType()).isEqualTo(CharSequence.class);
     }
 
     private <R> QueryHandlingMember<R> messageHandler(String methodName) {

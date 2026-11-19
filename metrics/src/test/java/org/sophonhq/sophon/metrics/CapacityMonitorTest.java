@@ -19,7 +19,7 @@ package org.sophonhq.sophon.metrics;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Metric;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
@@ -28,7 +28,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 @SuppressWarnings("unchecked")
@@ -44,7 +44,7 @@ class CapacityMonitorTest {
 
         Map<String, Metric> metricSet = testSubject.getMetrics();
         Gauge<Double> capacityGauge = (Gauge<Double>) metricSet.get("capacity");
-        assertEquals(1, capacityGauge.getValue(), 0);
+        assertThat(capacityGauge.getValue()).isEqualTo(1.0);
     }
 
     @Test
@@ -61,7 +61,7 @@ class CapacityMonitorTest {
 
         Map<String, Metric> metricSet = testSubject.getMetrics();
         Gauge<Double> capacityGauge = (Gauge<Double>) metricSet.get("capacity");
-        assertEquals(2, capacityGauge.getValue(), 0);
+        assertThat(capacityGauge.getValue()).isEqualTo(2.0);
     }
 
     @Test
@@ -70,6 +70,6 @@ class CapacityMonitorTest {
         CapacityMonitor testSubject = new CapacityMonitor(1, TimeUnit.SECONDS, testClock);
         Map<String, Metric> metricSet = testSubject.getMetrics();
         Gauge<Double> capacityGauge = (Gauge<Double>) metricSet.get("capacity");
-        assertEquals(0, capacityGauge.getValue(), 0);
+        assertThat(capacityGauge.getValue()).isEqualTo(0.0);
     }
 }

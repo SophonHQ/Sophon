@@ -17,10 +17,10 @@
 
 package org.sophonhq.sophon.disruptor.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link DisruptorCommandBus.Builder}.
@@ -31,11 +31,13 @@ class DisruptorCommandBusBuilderTest {
 
     @Test
     void setIllegalPublisherThreadCount() {
-        assertThrows(SophonConfigurationException.class, () -> DisruptorCommandBus.builder().publisherThreadCount(0));
+        assertThatThrownBy(() -> DisruptorCommandBus.builder().publisherThreadCount(0))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void setIllegalInvokerThreadCount() {
-        assertThrows(SophonConfigurationException.class, () -> DisruptorCommandBus.builder().invokerThreadCount(0));
+        assertThatThrownBy(() -> DisruptorCommandBus.builder().invokerThreadCount(0))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 }

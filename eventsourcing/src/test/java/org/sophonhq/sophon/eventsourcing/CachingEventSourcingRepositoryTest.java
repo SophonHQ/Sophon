@@ -24,7 +24,9 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.core.Ehcache;
 import org.ehcache.core.EhcacheManager;
 import org.ehcache.core.config.DefaultConfiguration;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.caching.Cache;
 import org.sophonhq.sophon.common.caching.EhCache3Adapter;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
@@ -49,7 +51,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatObject;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -103,16 +107,16 @@ class CachingEventSourcingRepositoryTest {
         LockAwareAggregate<StubAggregate, EventSourcedAggregate<StubAggregate>> aggregate1 =
                 testSubject.newInstance(() -> new StubAggregate("aggregateId"));
         aggregate1.execute(StubAggregate::doSomething);
-        assertEquals(0, aggregate1.getWrappedAggregate().lastSequence());
+        assertThat(aggregate1.getWrappedAggregate().lastSequence()).isZero();
         CurrentUnitOfWork.commit();
 
         startAndGetUnitOfWork();
         LockAwareAggregate<StubAggregate, EventSourcedAggregate<StubAggregate>> reloadedAggregate1 =
                 testSubject.load("aggregateId", null);
-        assertEquals(0, reloadedAggregate1.getWrappedAggregate().lastSequence());
+        assertThat(reloadedAggregate1.getWrappedAggregate().lastSequence()).isZero();
         aggregate1.execute(StubAggregate::doSomething);
         aggregate1.execute(StubAggregate::doSomething);
-        assertEquals(2, aggregate1.getWrappedAggregate().lastSequence());
+        assertThat(aggregate1.getWrappedAggregate().lastSequence()).isEqualTo(2);
         CurrentUnitOfWork.commit();
 
         DefaultUnitOfWork.startAndGet(null);
@@ -121,14 +125,14 @@ class CachingEventSourcingRepositoryTest {
         while (events.hasNext()) {
             eventList.add(events.next());
         }
-        assertEquals(3, eventList.size());
+        assertThat(eventList).hasSize(3);
         ehCache.clear();
 
         reloadedAggregate1 = testSubject.load(aggregate1.identifierAsString(), null);
 
-        assertNotSame(aggregate1.getWrappedAggregate(), reloadedAggregate1.getWrappedAggregate());
-        assertEquals(aggregate1.version(), reloadedAggregate1.version());
-        assertEquals(2, reloadedAggregate1.getWrappedAggregate().lastSequence());
+        assertThat(reloadedAggregate1.getWrappedAggregate()).isNotSameAs(aggregate1.getWrappedAggregate());
+        assertThat(reloadedAggregate1.version()).isEqualTo(aggregate1.version());
+        assertThat(reloadedAggregate1.getWrappedAggregate().lastSequence()).isEqualTo(2);
     }
 
     @Test
@@ -139,7 +143,7 @@ class CachingEventSourcingRepositoryTest {
 
         CurrentUnitOfWork.commit();
 
-        assertNotNull(cache.get("id1"));
+        assertThatObject(cache.get("id1")).isNotNull();
         verify(cache, never()).put(isNull(), any());
     }
 
@@ -161,7 +165,7 @@ class CachingEventSourcingRepositoryTest {
             testSubject.load(identifier);
             fail("Expected AggregateDeletedException");
         } catch (AggregateDeletedException e) {
-            assertTrue(e.getMessage().contains(identifier));
+            assertThat(e.getMessage()).contains(identifier);
         } finally {
             CurrentUnitOfWork.commit();
         }
@@ -177,7 +181,7 @@ class CachingEventSourcingRepositoryTest {
         } catch (MockException e) {
             // great, that's what we expect
         }
-        assertNull(cache.get("id1"));
+        assertThatObject(cache.get("id1")).isNull();
     }
 
     @Test
@@ -195,7 +199,7 @@ class CachingEventSourcingRepositoryTest {
         } catch (MockException e) {
             // great, that's what we expect
         }
-        assertNull(cache.get("id1"));
+        assertThatObject(cache.get("id1")).isNull();
     }
 
     @Test
@@ -211,7 +215,7 @@ class CachingEventSourcingRepositoryTest {
         } catch (MockException e) {
             // great, that's what we expect
         }
-        assertNull(cache.get("id1"));
+        assertThatObject(cache.get("id1")).isNull();
     }
 
     @Test
@@ -225,7 +229,7 @@ class CachingEventSourcingRepositoryTest {
         } catch (MockException e) {
             // great, that's what we expect
         }
-        assertNull(cache.get("id1"));
+        assertThatObject(cache.get("id1")).isNull();
     }
 
     @Test
@@ -243,9 +247,9 @@ class CachingEventSourcingRepositoryTest {
         CurrentUnitOfWork.commit();
 
         AggregateCacheEntry<?> updated = (AggregateCacheEntry<?>) cache.get("aggregateId");
-        assertNotNull(updated);
+        assertThat(updated).isNotNull();
         // Version should be 42 (from the supplier), not 1 (the locally-predicted sequence).
-        assertEquals(42L, updated.getVersion());
+        assertThat(updated.getVersion()).isEqualTo(42L);
     }
 
     @Test
@@ -264,7 +268,7 @@ class CachingEventSourcingRepositoryTest {
         testSubject.load("aggregateId").execute(StubAggregate::doSomething);
         CurrentUnitOfWork.commit();
 
-        assertNull(cache.get("aggregateId"));
+        assertThatObject(cache.get("aggregateId")).isNull();
     }
 
     private UnitOfWork<?> startAndGetUnitOfWork() {

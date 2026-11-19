@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.test.aggregate;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.annotation.HandlerDefinition;
 import org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
@@ -31,7 +32,7 @@ import java.lang.reflect.Parameter;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.test.matchers.Matchers.exactSequenceOf;
 import static org.sophonhq.sophon.test.matchers.Matchers.predicate;
 
@@ -60,7 +61,7 @@ public class FixtureTest_RegisteringMethodEnhancements {
                    .when(new ResolveParameterCommand(TEST_AGGREGATE_IDENTIFIER))
                    .expectEventsMatching(exactSequenceOf(predicate(eventMessage -> {
                        Object payload = eventMessage.getPayload();
-                       assertTrue(payload instanceof ParameterResolvedEvent);
+                       assertThat(payload).isInstanceOf(ParameterResolvedEvent.class);
                        AtomicBoolean assertion = ((ParameterResolvedEvent) payload).getAssertion();
                        return assertion.get();
                    })));
@@ -77,7 +78,7 @@ public class FixtureTest_RegisteringMethodEnhancements {
                            eventMessage -> eventMessage.getPayloadType().isAssignableFrom(MyEvent.class)
                    )));
 
-        assertTrue(handlerDefinitionReached.get());
+        assertThat(handlerDefinitionReached.get()).isTrue();
     }
 
     @Test
@@ -91,7 +92,7 @@ public class FixtureTest_RegisteringMethodEnhancements {
                            eventMessage -> eventMessage.getPayloadType().isAssignableFrom(MyEvent.class)
                    )));
 
-        assertTrue(handlerEnhancerReached.get());
+        assertThat(handlerEnhancerReached.get()).isTrue();
     }
 
     private static class TestParameterResolverFactory

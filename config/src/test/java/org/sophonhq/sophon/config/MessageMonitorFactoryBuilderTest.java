@@ -17,13 +17,13 @@
 
 package org.sophonhq.sophon.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
 
 import java.util.function.BiFunction;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MessageMonitorFactoryBuilderTest {
 
@@ -48,18 +48,18 @@ class MessageMonitorFactoryBuilderTest {
                 .build(null);
 
         // For an non-configured type, expect the default monitor
-        assertEquals(defaultMonitor, factory.apply(D.class, "any"));
+        assertThat(factory.apply(D.class, "any")).isEqualTo(defaultMonitor);
 
         // For a configured type, expect the configured monitor
-        assertEquals(aMonitor, factory.apply(A.class, "any"));
-        assertEquals(bMonitor, factory.apply(B.class, "any"));
+        assertThat(factory.apply(A.class, "any")).isEqualTo(aMonitor);
+        assertThat(factory.apply(B.class, "any")).isEqualTo(bMonitor);
 
         // For a configured name and type, expect the configured monitor only if both match
         // If no match is found, fall back to matching on type only
-        assertEquals(cMonitor, factory.apply(C.class, "c"));
-        assertEquals(defaultMonitor, factory.apply(C.class, "any"));
-        assertEquals(defaultMonitor, factory.apply(D.class, "c"));
-        assertEquals(aMonitor, factory.apply(A.class, "c"));
+        assertThat(factory.apply(C.class, "c")).isEqualTo(cMonitor);
+        assertThat(factory.apply(C.class, "any")).isEqualTo(defaultMonitor);
+        assertThat(factory.apply(D.class, "c")).isEqualTo(defaultMonitor);
+        assertThat(factory.apply(A.class, "c")).isEqualTo(aMonitor);
     }
 
     private interface I {}
@@ -96,17 +96,17 @@ class MessageMonitorFactoryBuilderTest {
 
     private void validateTypeHierarchyResults(BiFunction<Class<?>, String, MessageMonitor<Message<?>>> factory) {
         // For a configured type, expect the configured monitor
-        assertEquals(kMonitor, factory.apply(K.class, "any"));
-        assertEquals(mMonitor, factory.apply(M.class, "any"));
-        assertEquals(iMonitor, factory.apply(I.class, "any"));
+        assertThat(factory.apply(K.class, "any")).isEqualTo(kMonitor);
+        assertThat(factory.apply(M.class, "any")).isEqualTo(mMonitor);
+        assertThat(factory.apply(I.class, "any")).isEqualTo(iMonitor);
 
         // For a non-configured type, expect the closest parent in the class hierarchy, or the normal default
-        assertEquals(defaultMonitor, factory.apply(Object.class, "any"));
-        assertEquals(kMonitor, factory.apply(L.class, "any"));
+        assertThat(factory.apply(Object.class, "any")).isEqualTo(defaultMonitor);
+        assertThat(factory.apply(L.class, "any")).isEqualTo(kMonitor);
 
         // For a class that extends a base class and implements an interface, the choice is deterministic, but not
         // user controllable
-        assertEquals(iMonitor, factory.apply(N.class, "any"));
+        assertThat(factory.apply(N.class, "any")).isEqualTo(iMonitor);
     }
 
     @Test
@@ -118,12 +118,12 @@ class MessageMonitorFactoryBuilderTest {
                 .build(null);
 
         // For a configured type and name combination, expect the configured monitor
-        assertEquals(kMonitor, factory.apply(K.class, "name"));
-        assertEquals(mMonitor, factory.apply(M.class, "name"));
+        assertThat(factory.apply(K.class, "name")).isEqualTo(kMonitor);
+        assertThat(factory.apply(M.class, "name")).isEqualTo(mMonitor);
 
         // For a non-configured type, expect the closest parent in the class hierarchy, or the normal default
-        assertEquals(defaultMonitor, factory.apply(Object.class, "name"));
-        assertEquals(kMonitor, factory.apply(L.class, "name"));
-        assertEquals(mMonitor, factory.apply(N.class, "name"));
+        assertThat(factory.apply(Object.class, "name")).isEqualTo(defaultMonitor);
+        assertThat(factory.apply(L.class, "name")).isEqualTo(kMonitor);
+        assertThat(factory.apply(N.class, "name")).isEqualTo(mMonitor);
     }
 }

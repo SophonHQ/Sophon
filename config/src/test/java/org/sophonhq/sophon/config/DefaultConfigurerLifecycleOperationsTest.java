@@ -17,8 +17,8 @@
 
 package org.sophonhq.sophon.config;
 
-import org.junit.jupiter.api.*;
-import org.mockito.*;
+import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.lifecycle.LifecycleHandlerInvocationException;
 
@@ -27,7 +27,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -372,7 +374,7 @@ class DefaultConfigurerLifecycleOperationsTest {
             testSubject.start();
             fail("Expected a LifecycleHandlerInvocationException to be thrown");
         } catch (LifecycleHandlerInvocationException e) {
-            assertTrue(e.getCause().getMessage().contains(START_FAILURE_EXCEPTION_MESSAGE));
+            assertThat(e.getCause().getMessage()).contains(START_FAILURE_EXCEPTION_MESSAGE);
         }
 
         InOrder lifecycleOrder =
@@ -412,7 +414,7 @@ class DefaultConfigurerLifecycleOperationsTest {
         lifecycleOrder.verify(phaseZeroHandler).start();
         lifecycleOrder.verify(phaseOneHandler).uncompletableStart();
         lifecycleOrder.verify(phaseTwoHandler).start();
-        assertFalse(invoked.get());
+        assertThat(invoked.get()).isFalse();
     }
 
     @Test
@@ -436,37 +438,31 @@ class DefaultConfigurerLifecycleOperationsTest {
         lifecycleOrder.verify(phaseZeroHandler).start();
         lifecycleOrder.verify(extremelySlowPhaseOneHandler).uncompletableStart();
         lifecycleOrder.verify(phaseTwoHandler).start();
-        assertFalse(invoked.get());
+        assertThat(invoked.get()).isFalse();
     }
 
     @Test
     void configureLifecyclePhaseTimeoutWithZeroTimeoutThrowsSophonConfigurationException() {
         Configurer configurerTestSubject = DefaultConfigurer.defaultConfiguration();
 
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> configurerTestSubject.configureLifecyclePhaseTimeout(0, TimeUnit.SECONDS)
-        );
+        assertThatThrownBy(() -> configurerTestSubject.configureLifecyclePhaseTimeout(0, TimeUnit.SECONDS))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void configureLifecyclePhaseTimeoutWithNegativeTimeoutThrowsSophonConfigurationException() {
         Configurer configurerTestSubject = DefaultConfigurer.defaultConfiguration();
 
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> configurerTestSubject.configureLifecyclePhaseTimeout(-1, TimeUnit.SECONDS)
-        );
+        assertThatThrownBy(() -> configurerTestSubject.configureLifecyclePhaseTimeout(-1, TimeUnit.SECONDS))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void configureLifecyclePhaseTimeoutWithNullTimeUnitThrowsSophonConfigurationException() {
         Configurer configurerTestSubject = DefaultConfigurer.defaultConfiguration();
 
-        assertThrows(
-                SophonConfigurationException.class,
-                () -> configurerTestSubject.configureLifecyclePhaseTimeout(1, null)
-        );
+        assertThatThrownBy(() -> configurerTestSubject.configureLifecyclePhaseTimeout(1, null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     private static class LifecycleManagedInstance {

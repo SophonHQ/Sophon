@@ -29,7 +29,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class NestingSpanFactoryTest {
@@ -112,7 +113,7 @@ class NestingSpanFactoryTest {
         when(delegate.propagateContext(original)).thenReturn(modified);
 
         Message result = spanFactory.propagateContext(original);
-        assertSame(result, modified);
+        assertThat(result).isSameAs(modified);
     }
 
     @Test
@@ -120,32 +121,24 @@ class NestingSpanFactoryTest {
         NestingSpanFactory.Builder builder = NestingSpanFactory.builder()
                                                                .clock(clock)
                                                                .timeLimit(Duration.ZERO);
-        assertThrows(SophonConfigurationException.class, () -> {
-            builder.build();
-        });
+        assertThatThrownBy(builder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void builderThrowsExceptionWhenNullDelegateIsSet() {
         NestingSpanFactory.Builder builder = NestingSpanFactory.builder();
-        assertThrows(SophonConfigurationException.class, () -> {
-            builder.delegate(null);
-        });
+        assertThatThrownBy(() -> builder.delegate(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void builderThrowsExceptionWhenNullTimeLimitIsSet() {
         NestingSpanFactory.Builder builder = NestingSpanFactory.builder();
-        assertThrows(SophonConfigurationException.class, () -> {
-            builder.timeLimit(null);
-        });
+        assertThatThrownBy(() -> builder.timeLimit(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void builderThrowsExceptionWhenNullClockIsSet() {
         NestingSpanFactory.Builder builder = NestingSpanFactory.builder();
-        assertThrows(SophonConfigurationException.class, () -> {
-            builder.clock(null);
-        });
+        assertThatThrownBy(() -> builder.clock(null)).isInstanceOf(SophonConfigurationException.class);
     }
 }

@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.modelling.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.modelling.OnlyAcceptConstructorPropertiesAnnotation;
 import org.sophonhq.sophon.modelling.utils.TestSerializer;
 import org.sophonhq.sophon.serialization.SerializedObject;
@@ -30,7 +31,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This test class tests whether the {@link AggregateScopeDescriptor} is serializable as expected, by Java, XStream and
@@ -62,8 +63,8 @@ class AggregateScopeDescriptorSerializationTest {
         AggregateScopeDescriptor result = (AggregateScopeDescriptor) objectInputStream.readObject();
         objectInputStream.close();
 
-        assertEquals(expectedType, result.getType());
-        assertEquals(expectedIdentifier, result.getIdentifier());
+        assertThat(result.getType()).isEqualTo(expectedType);
+        assertThat(result.getIdentifier()).isEqualTo(expectedIdentifier);
     }
 
     @Test
@@ -75,8 +76,8 @@ class AggregateScopeDescriptorSerializationTest {
                 xStreamSerializer.serialize(testSubject, String.class);
         AggregateScopeDescriptor result = xStreamSerializer.deserialize(serializedObject);
 
-        assertEquals(expectedType, result.getType());
-        assertEquals(expectedIdentifier, result.getIdentifier());
+        assertThat(result.getType()).isEqualTo(expectedType);
+        assertThat(result.getIdentifier()).isEqualTo(expectedIdentifier);
     }
 
     @Test
@@ -87,8 +88,8 @@ class AggregateScopeDescriptorSerializationTest {
         SerializedObject<String> serializedObject = jacksonSerializer.serialize(testSubject, String.class);
         AggregateScopeDescriptor result = jacksonSerializer.deserialize(serializedObject);
 
-        assertEquals(expectedType, result.getType());
-        assertEquals(expectedIdentifier, result.getIdentifier());
+        assertThat(result.getType()).isEqualTo(expectedType);
+        assertThat(result.getIdentifier()).isEqualTo(expectedIdentifier);
     }
 
     @Test
@@ -99,7 +100,7 @@ class AggregateScopeDescriptorSerializationTest {
         SerializedObject<String> serializedObject = jacksonSerializer.serialize(testSubject, String.class);
         AggregateScopeDescriptor result = jacksonSerializer.deserialize(serializedObject);
 
-        assertEquals(expectedType, result.getType());
-        assertEquals(expectedIdentifier, result.getIdentifier());
+        assertThat(result.getType()).isEqualTo(expectedType);
+        assertThat(result.getIdentifier()).isEqualTo(expectedIdentifier);
     }
 }

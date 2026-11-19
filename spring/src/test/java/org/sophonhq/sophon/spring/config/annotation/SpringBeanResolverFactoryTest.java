@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.spring.config.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.SimpleCommandBus;
@@ -44,7 +45,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 /**
@@ -76,18 +78,18 @@ public class SpringBeanResolverFactoryTest {
     @BeforeEach
     void setUp() {
         counter.set(0);
-        assertTrue(applicationContext.getBean("duplicateResourceWithPrimary1", DuplicateResourceWithPrimary.class)
-                                     .isPrimary());
-        assertFalse(applicationContext.getBean("duplicateResourceWithPrimary2", DuplicateResourceWithPrimary.class)
-                                      .isPrimary());
+        assertThat(applicationContext.getBean("duplicateResourceWithPrimary1", DuplicateResourceWithPrimary.class)
+                                     .isPrimary()).isTrue();
+        assertThat(applicationContext.getBean("duplicateResourceWithPrimary2", DuplicateResourceWithPrimary.class)
+                                     .isPrimary()).isFalse();
     }
 
     @Test
     void methodsAreProperlyInjected() throws Exception {
-        assertNotNull(annotatedHandler);
+        assertThat(annotatedHandler).isNotNull();
         new AnnotationEventHandlerAdapter(annotatedHandler, parameterResolver).handle(asEventMessage("Hello"));
         // make sure the invocation actually happened
-        assertEquals(1, counter.get());
+        assertThat(counter.get()).isOne();
     }
 
     @Test
@@ -98,7 +100,7 @@ public class SpringBeanResolverFactoryTest {
         );
         adapter.handle(asEventMessage("Hello1"));
         adapter.handle(asEventMessage("Hello2"));
-        assertEquals(2, counter.get());
+        assertThat(counter.get()).isEqualTo(2);
     }
 
     @Test
@@ -106,9 +108,8 @@ public class SpringBeanResolverFactoryTest {
         // this should generate an error
         Object bean = applicationContext.getBean("missingResourceHandler");
         AnnotationEventHandlerAdapter adapter = new AnnotationEventHandlerAdapter(bean, parameterResolver);
-        assertThrows(
-                FixtureExecutionException.class, () -> adapter.handle(asEventMessage("Hi there"))
-        );
+        assertThatThrownBy(() -> adapter.handle(asEventMessage("Hi there")))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
@@ -116,7 +117,7 @@ public class SpringBeanResolverFactoryTest {
         new AnnotationEventHandlerAdapter(applicationContext.getBean("nullableResourceHandler"),
                                           parameterResolver).handle(asEventMessage("Hi there"));
 
-        assertEquals(1, counter.get());
+        assertThat(counter.get()).isOne();
     }
 
     @Test
@@ -124,9 +125,8 @@ public class SpringBeanResolverFactoryTest {
         // this should generate an error
         Object bean = applicationContext.getBean("duplicateResourceHandler");
         AnnotationEventHandlerAdapter adapter = new AnnotationEventHandlerAdapter(bean, parameterResolver);
-        assertThrows(
-                FixtureExecutionException.class, () -> adapter.handle(asEventMessage("Hi there"))
-        );
+        assertThatThrownBy(() -> adapter.handle(asEventMessage("Hi there")))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class SpringBeanResolverFactoryTest {
         new AnnotationEventHandlerAdapter(applicationContext.getBean("duplicateResourceHandlerWithPrimary"),
                                           parameterResolver).handle(asEventMessage("Hi there"));
 
-        assertEquals(1, counter.get());
+        assertThat(counter.get()).isOne();
     }
 
     @Test
@@ -145,7 +145,7 @@ public class SpringBeanResolverFactoryTest {
         new AnnotationEventHandlerAdapter(applicationContext.getBean("duplicateResourceHandlerWithQualifier"),
                                           parameterResolver).handle(asEventMessage("Hi there"));
 
-        assertEquals(1, counter.get());
+        assertThat(counter.get()).isOne();
     }
 
     @Test
@@ -156,7 +156,7 @@ public class SpringBeanResolverFactoryTest {
                 parameterResolver
         ).handle(asEventMessage("Hi there"));
 
-        assertEquals(1, counter.get());
+        assertThat(counter.get()).isOne();
     }
 
     @Test
@@ -167,7 +167,8 @@ public class SpringBeanResolverFactoryTest {
                 handler, applicationContext.getBean(ParameterResolverFactory.class)
         );
         // Spring dependency resolution will resolve at time of execution
-        assertThrows(NoUniqueBeanDefinitionException.class, () -> adapter.handle(asEventMessage("Hi there")));
+        assertThatThrownBy(() -> adapter.handle(asEventMessage("Hi there")))
+                .isInstanceOf(NoUniqueBeanDefinitionException.class);
     }
 
     @Test
@@ -178,7 +179,7 @@ public class SpringBeanResolverFactoryTest {
                 parameterResolver).handle(asEventMessage("Hi there")
         );
 
-        assertEquals(1, counter.get());
+        assertThat(counter.get()).isOne();
     }
 
     public interface DuplicateResourceWithPrimary {
@@ -365,7 +366,7 @@ public class SpringBeanResolverFactoryTest {
         @EventHandler
         public void handle(String message,
                            @Qualifier("duplicateResourceWithPrimary2") DuplicateResourceWithPrimary resource) {
-            assertFalse(resource.isPrimary(), "expect the non-primary bean to be autowired here");
+            assertThat(resource.isPrimary()).as("expect the non-primary bean to be autowired here").isFalse();
             counter.incrementAndGet();
         }
     }
@@ -396,7 +397,8 @@ public class SpringBeanResolverFactoryTest {
 
         @EventHandler
         public void handle(String message, PrototypeResource resource) {
-            assertNotEquals(this.resource, this.resource = resource);
+            assertThat(resource).isNotEqualTo(this.resource);
+            this.resource = resource;
             counter.incrementAndGet();
         }
     }
@@ -405,9 +407,9 @@ public class SpringBeanResolverFactoryTest {
 
         @EventHandler
         public void handle(String message, CommandBus commandBus, EventBus eventBus) {
-            assertNotNull(message);
-            assertNotNull(commandBus);
-            assertNotNull(eventBus);
+            assertThat(message).isNotNull();
+            assertThat(commandBus).isNotNull();
+            assertThat(eventBus).isNotNull();
             counter.incrementAndGet();
         }
     }

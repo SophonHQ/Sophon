@@ -19,7 +19,7 @@ package org.sophonhq.sophon.metrics;
 
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Metric;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
 
@@ -27,7 +27,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -58,7 +58,7 @@ class EventProcessorLatencyMonitorTest {
         //noinspection unchecked
         Gauge<Long> latency = (Gauge<Long>) metricSet.get("latency");
 
-        assertTrue(latency.getValue() >= 1000);
+        assertThat(latency.getValue()).isGreaterThanOrEqualTo(1000);
     }
 
     @Test
@@ -78,7 +78,7 @@ class EventProcessorLatencyMonitorTest {
         //noinspection unchecked
         Gauge<Long> latency = (Gauge<Long>) metricSet.get("latency");
 
-        assertTrue(latency.getValue() >= 1000);
+        assertThat(latency.getValue()).isGreaterThanOrEqualTo(1000);
     }
 
     @Test
@@ -88,6 +88,6 @@ class EventProcessorLatencyMonitorTest {
         //noinspection unchecked
         Gauge<Long> latency = (Gauge<Long>) metricSet.get("latency");
 
-        assertEquals(0, latency.getValue(), 0);
+        assertThat(latency.getValue()).isZero();
     }
 }

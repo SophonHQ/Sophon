@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.modelling.command;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.lock.Lock;
 import org.sophonhq.sophon.common.lock.LockAcquisitionFailedException;
 import org.sophonhq.sophon.common.lock.LockFactory;
@@ -45,7 +47,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -165,8 +169,8 @@ class LockingRepositoryTest {
 
         verifyNoInteractions(lockFactory);
         verify(eventBus).publish(isA(EventMessage.class));
-        assertNull(result.identifier());
-        assertEquals(0, testSubject.getSaveCount());
+        assertThat(result.identifier()).isNull();
+        assertThat(testSubject.getSaveCount()).isZero();
     }
 
     @Test
@@ -177,7 +181,7 @@ class LockingRepositoryTest {
         verify(lockFactory).obtainLock("newAggregate");
 
         Aggregate<StubAggregate> loadedAggregate = testSubject.loadOrCreate("newAggregate", StubAggregate::new);
-        assertEquals(createdAggregate.identifier(), loadedAggregate.identifier());
+        assertThat(loadedAggregate.identifier()).isEqualTo(createdAggregate.identifier());
         CurrentUnitOfWork.commit();
         verify(lock).release();
     }
@@ -201,8 +205,8 @@ class LockingRepositoryTest {
 
         // Act: loadOrCreate on a "deleted" aggregate — throws a subclass of AggregateNotFoundException
         UnitOfWork<?> uow = startAndGetUnitOfWork();
-        assertThrows(AggregateNotFoundException.class,
-                     () -> subjectWithRealLocks.loadOrCreate(aggregate.getIdentifier(), StubAggregate::new));
+        assertThatThrownBy(() -> subjectWithRealLocks.loadOrCreate(aggregate.getIdentifier(), StubAggregate::new))
+                .isInstanceOf(AggregateNotFoundException.class);
         uow.rollback();
 
         // Assert: the lock must be released — another thread must be able to acquire it
@@ -216,8 +220,9 @@ class LockingRepositoryTest {
                 return false;
             }
         });
-        assertTrue(acquirable.get(5, TimeUnit.SECONDS),
-                   "lock must be released after loadOrCreate fails with an AggregateNotFoundException subclass");
+        assertThat(acquirable.get(5, TimeUnit.SECONDS))
+                .as("lock must be released after loadOrCreate fails with an AggregateNotFoundException subclass")
+                .isTrue();
         executor.shutdownNow();
     }
 
@@ -268,7 +273,7 @@ class LockingRepositoryTest {
             CurrentUnitOfWork.commit();
             fail("Expected exception to be thrown");
         } catch (RuntimeException e) {
-            assertEquals("Mock Exception", e.getMessage());
+            assertThat(e.getMessage()).isEqualTo("Mock Exception");
         }
 
         // make sure the lock is released
@@ -306,7 +311,7 @@ class LockingRepositoryTest {
             CurrentUnitOfWork.commit();
             fail("Expected exception to be thrown");
         } catch (RuntimeException e) {
-            assertEquals("Mock Exception", e.getMessage());
+            assertThat(e.getMessage()).isEqualTo("Mock Exception");
         }
 
         // make sure the lock is released

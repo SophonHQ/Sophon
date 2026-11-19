@@ -27,7 +27,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Tests serialization capabilities of the {@link ConfigToken}.
@@ -45,7 +46,7 @@ class ConfigTokenTest {
     void tokenShouldBeSerializable(TestSerializer serializer) {
         Map<String, String> configMap = Collections.singletonMap("some-key", "some-value");
         ConfigToken token = new ConfigToken(configMap);
-        assertEquals(token, serializer.serializeDeserialize(token));
+        assertThat(serializer.serializeDeserialize(token)).isEqualTo(token);
     }
 
     @Test
@@ -53,8 +54,11 @@ class ConfigTokenTest {
         Map<String, String> configMap = Collections.singletonMap("some-key", "some-value");
         ConfigToken token = new ConfigToken(configMap);
 
-        assertThrows(UnsupportedOperationException.class, () -> token.samePositionAs(token));
-        assertThrows(UnsupportedOperationException.class, () -> token.samePositionAs(new GlobalSequenceTrackingToken(0)));
-        assertThrows(UnsupportedOperationException.class, () -> token.samePositionAs(null));
+        assertThatThrownBy(() -> token.samePositionAs(token))
+                .isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> token.samePositionAs(new GlobalSequenceTrackingToken(0)))
+                .isInstanceOf(UnsupportedOperationException.class);
+        assertThatThrownBy(() -> token.samePositionAs(null))
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 }

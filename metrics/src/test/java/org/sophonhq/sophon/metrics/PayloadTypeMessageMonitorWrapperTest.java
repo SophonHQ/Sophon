@@ -19,7 +19,8 @@ package org.sophonhq.sophon.metrics;
 
 import com.codahale.metrics.Metric;
 import com.codahale.metrics.MetricSet;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.junit.jupiter.*;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
@@ -30,7 +31,7 @@ import org.sophonhq.sophon.monitoring.MessageMonitor;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,14 +60,14 @@ class PayloadTypeMessageMonitorWrapperTest<T extends MessageMonitor<Message<?>> 
         testSubject.onMessageIngested(STRING_MESSAGE);
 
         Map<String, T> payloadTypeMonitors = ReflectionUtils.getFieldValue(payloadTypeMonitorsField, testSubject);
-        assertEquals(1, payloadTypeMonitors.size());
+        assertThat(payloadTypeMonitors).hasSize(1);
         MessageMonitor<Message<?>> messageMessageMonitor = payloadTypeMonitors.get(expectedMonitorName);
-        assertNotNull(messageMessageMonitor);
-        assertTrue(expectedMonitorClass.isInstance(messageMessageMonitor));
+        assertThat(messageMessageMonitor).isNotNull();
+        assertThat(messageMessageMonitor).isInstanceOf(expectedMonitorClass);
 
         Map<String, Metric> resultMetrics = testSubject.getMetrics();
-        assertEquals(1, resultMetrics.size());
-        assertNotNull(resultMetrics.get(expectedMonitorName));
+        assertThat(resultMetrics).hasSize(1);
+        assertThat(resultMetrics.get(expectedMonitorName)).isNotNull();
     }
 
     @Test
@@ -82,20 +83,20 @@ class PayloadTypeMessageMonitorWrapperTest<T extends MessageMonitor<Message<?>> 
         testSubject.onMessageIngested(INTEGER_MESSAGE); // Second unique payload type
 
         Map<String, T> payloadTypeMonitors = ReflectionUtils.getFieldValue(payloadTypeMonitorsField, testSubject);
-        assertEquals(2, payloadTypeMonitors.size());
+        assertThat(payloadTypeMonitors).hasSize(2);
 
         MessageMonitor<Message<?>> messageMessageMonitor = payloadTypeMonitors.get(expectedStringMonitorName);
-        assertNotNull(messageMessageMonitor);
-        assertTrue(expectedMonitorClass.isInstance(messageMessageMonitor));
+        assertThat(messageMessageMonitor).isNotNull();
+        assertThat(messageMessageMonitor).isInstanceOf(expectedMonitorClass);
 
         messageMessageMonitor = payloadTypeMonitors.get(expectedIntegerMonitorName);
-        assertNotNull(messageMessageMonitor);
-        assertTrue(expectedMonitorClass.isInstance(messageMessageMonitor));
+        assertThat(messageMessageMonitor).isNotNull();
+        assertThat(messageMessageMonitor).isInstanceOf(expectedMonitorClass);
 
         Map<String, Metric> resultMetrics = testSubject.getMetrics();
-        assertEquals(2, resultMetrics.size());
-        assertNotNull(resultMetrics.get(expectedStringMonitorName));
-        assertNotNull(resultMetrics.get(expectedStringMonitorName));
+        assertThat(resultMetrics).hasSize(2);
+        assertThat(resultMetrics.get(expectedStringMonitorName)).isNotNull();
+        assertThat(resultMetrics.get(expectedStringMonitorName)).isNotNull();
     }
 
     @Test
@@ -109,7 +110,7 @@ class PayloadTypeMessageMonitorWrapperTest<T extends MessageMonitor<Message<?>> 
         testSubject.onMessageIngested(STRING_MESSAGE);
 
         Map<String, Metric> resultMetrics = testSubject.getMetrics();
-        assertEquals(1, resultMetrics.size());
-        assertNotNull(resultMetrics.get(expectedMonitorName));
+        assertThat(resultMetrics).hasSize(1);
+        assertThat(resultMetrics.get(expectedMonitorName)).isNotNull();
     }
 }

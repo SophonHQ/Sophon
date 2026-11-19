@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.spring.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.SimpleCommandBus;
 import org.sophonhq.sophon.common.SophonConfigurationException;
@@ -25,7 +26,8 @@ import org.sophonhq.sophon.config.Configuration;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -48,7 +50,7 @@ class SpringConfigurerTest {
 
         SpringConfigurer configurer = new SpringConfigurer(context);
 
-        assertSame(commandBus, configurer.buildConfiguration().commandBus());
+        assertThat(configurer.buildConfiguration().commandBus()).isSameAs(commandBus);
     }
 
     @Test
@@ -63,7 +65,7 @@ class SpringConfigurerTest {
 
         SpringConfigurer configurer = new SpringConfigurer(context);
 
-        assertSame(commandBus, configurer.buildConfiguration().commandBus());
+        assertThat(configurer.buildConfiguration().commandBus()).isSameAs(commandBus);
 
         //noinspection unchecked
         verify(context, never()).getBean(eq("alternative"), any(Class.class));
@@ -81,7 +83,7 @@ class SpringConfigurerTest {
         SpringConfigurer configurer = new SpringConfigurer(context);
 
         Configuration configuration = configurer.buildConfiguration();
-        assertThrows(SophonConfigurationException.class, configuration::commandBus);
+        assertThatThrownBy(configuration::commandBus).isInstanceOf(SophonConfigurationException.class);
 
         //noinspection unchecked
         verify(context, never()).getBean(anyString(), any(Class.class));
@@ -98,7 +100,7 @@ class SpringConfigurerTest {
         SpringConfigurer configurer = new SpringConfigurer(context);
 
         Configuration configuration = configurer.buildConfiguration();
-        assertThrows(SophonConfigurationException.class, configuration::commandBus);
+        assertThatThrownBy(configuration::commandBus).isInstanceOf(SophonConfigurationException.class);
 
         //noinspection unchecked
         verify(context, never()).getBean(anyString(), any(Class.class));
@@ -108,7 +110,7 @@ class SpringConfigurerTest {
     void usesConfigurerDefaultsWhenNoBeansDefined() {
         SpringConfigurer configurer = new SpringConfigurer(context);
 
-        assertNotNull(configurer.buildConfiguration().commandBus());
+        assertThat(configurer.buildConfiguration().commandBus()).isNotNull();
 
         //noinspection unchecked
         verify(context, never()).getBean(anyString(), any(Class.class));

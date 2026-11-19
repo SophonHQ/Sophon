@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.spring.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.eventhandling.EventHandler;
@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -50,7 +50,8 @@ public class AnnotationDrivenConfigurationTest_CustomValues {
     void commandHandlerPostProcessorBeanDefinitionContainCustomValues() {
         BeanDefinition beanDefinition =  beanFactory.getBeanDefinition(
                 "__sophon-annotation-command-handler-bean-post-processor");
-        assertEquals(AnnotationCommandHandlerBeanPostProcessor.class.getName(), beanDefinition.getBeanClassName());
+        assertThat(beanDefinition.getBeanClassName())
+                .isEqualTo(AnnotationCommandHandlerBeanPostProcessor.class.getName());
     }
 
     @AnnotationDriven

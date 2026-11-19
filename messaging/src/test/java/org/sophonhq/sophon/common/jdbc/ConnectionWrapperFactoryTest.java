@@ -17,12 +17,14 @@
 
 package org.sophonhq.sophon.common.jdbc;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.common.jdbc.ConnectionWrapperFactory.wrap;
 
@@ -64,29 +66,29 @@ class ConnectionWrapperFactoryTest {
         final Runnable runnable = mock(Runnable.class);
         Connection wrapped = wrap(connection, Runnable.class, runnable, closeHandler);
 
-        assertNotEquals(wrapped, connection);
-        assertEquals(wrapped, wrapped);
+        assertThat(wrapped).isNotEqualTo(connection);
+        assertThat(wrapped).isEqualTo(wrapped);
     }
 
     @Test
     void equals_WithoutWrapper() {
         Connection wrapped = wrap(connection, closeHandler);
 
-        assertNotEquals(wrapped, connection);
-        assertEquals(wrapped, wrapped);
+        assertThat(wrapped).isNotEqualTo(connection);
+        assertThat(wrapped).isEqualTo(wrapped);
     }
 
     @Test
     void hashCode_WithWrapper() {
         final Runnable runnable = mock(Runnable.class);
         Connection wrapped = wrap(connection, Runnable.class, runnable, closeHandler);
-        assertEquals(wrapped.hashCode(), wrapped.hashCode());
+        assertThat(wrapped).hasSameHashCodeAs(wrapped);
     }
 
     @Test
     void hashCode_WithoutWrapper() {
         Connection wrapped = wrap(connection, closeHandler);
-        assertEquals(wrapped.hashCode(), wrapped.hashCode());
+        assertThat(wrapped).hasSameHashCodeAs(wrapped);
     }
 
     @Test
@@ -94,7 +96,7 @@ class ConnectionWrapperFactoryTest {
         when(connection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         Connection wrapper = wrap(connection, closeHandler);
-        assertThrows(SQLException.class, () -> wrapper.prepareStatement("foo"));
+        assertThatThrownBy(() -> wrapper.prepareStatement("foo")).isInstanceOf(SQLException.class);
     }
 
     @Test
@@ -103,7 +105,7 @@ class ConnectionWrapperFactoryTest {
         when(connection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         Connection wrapper = wrap(connection, WrapperInterface.class, wrapperImplementation, closeHandler);
-        assertThrows(SQLException.class, () -> wrapper.prepareStatement("foo"));
+        assertThatThrownBy(() -> wrapper.prepareStatement("foo")).isInstanceOf(SQLException.class);
     }
 
     @Test
@@ -115,7 +117,7 @@ class ConnectionWrapperFactoryTest {
                                                            WrapperInterface.class,
                                                            wrapperImplementation,
                                                            closeHandler);
-        assertThrows(SQLException.class, wrapper::foo);
+        assertThatThrownBy(wrapper::foo).isInstanceOf(SQLException.class);
     }
 
     private interface WrapperInterface {

@@ -17,14 +17,14 @@
 
 package org.sophonhq.sophon.tracing.attributes;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.tracing.SpanAttributesProvider;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PayloadTypeSpanAttributesProviderTest {
 
@@ -35,8 +35,9 @@ class PayloadTypeSpanAttributesProviderTest {
         Message<?> message = new GenericEventMessage<>("MyEvent");
 
         Map<String, String> map = provider.provideForMessage(message);
-        assertEquals(1, map.size());
-        assertEquals("java.lang.String", map.get("sophon_payload_type"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_payload_type", "java.lang.String");
     }
 
     @Test
@@ -44,9 +45,10 @@ class PayloadTypeSpanAttributesProviderTest {
         Message<?> message = new GenericEventMessage<>(new MyEvent());
 
         Map<String, String> map = provider.provideForMessage(message);
-        assertEquals(1, map.size());
-        assertEquals("org.sophonhq.sophon.tracing.attributes.PayloadTypeSpanAttributesProviderTest$MyEvent",
-                     map.get("sophon_payload_type"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_payload_type",
+                               "org.sophonhq.sophon.tracing.attributes.PayloadTypeSpanAttributesProviderTest$MyEvent");
     }
 
     private static class MyEvent {

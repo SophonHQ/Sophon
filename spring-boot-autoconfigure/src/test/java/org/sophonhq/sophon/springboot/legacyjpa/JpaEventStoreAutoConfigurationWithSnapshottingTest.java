@@ -43,8 +43,7 @@ import org.springframework.context.annotation.Primary;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -68,10 +67,10 @@ class JpaEventStoreAutoConfigurationWithSnapshottingTest {
                 .run(context -> {
                     SnapshotTriggerDefinition snapshotTriggerDefinition =
                             context.getBean(SnapshotTriggerDefinition.class);
-                    assertNotNull(snapshotTriggerDefinition);
+                    assertThat(snapshotTriggerDefinition).isNotNull();
                     Snapshotter snapshotter = context.getBean(Snapshotter.class);
-                    assertNotNull(snapshotter);
-                    assertNotNull(context.getBean(JpaEventStorageEngine.class));
+                    assertThat(snapshotter).isNotNull();
+                    assertThat(context.getBean(JpaEventStorageEngine.class)).isNotNull();
 
                     CommandGateway commandGateway = context.getBean(CommandGateway.class);
                     commandGateway.send(new TestContext.CreateCommand(AGGREGATE_ID));
@@ -88,8 +87,8 @@ class JpaEventStoreAutoConfigurationWithSnapshottingTest {
                 .withUserConfiguration(TestContext.class)
                 .run(context -> {
                     SnapshotFilter snapshotFilter = context.getBean(SnapshotFilter.class);
-                    assertNotNull(snapshotFilter);
-                    assertNotNull(context.getBean(JpaEventStorageEngine.class));
+                    assertThat(snapshotFilter).isNotNull();
+                    assertThat(context.getBean(JpaEventStorageEngine.class)).isNotNull();
 
                     CommandGateway commandGateway = context.getBean(CommandGateway.class);
                     commandGateway.send(new TestContext.CreateCommand(AGGREGATE_ID));
@@ -98,7 +97,7 @@ class JpaEventStoreAutoConfigurationWithSnapshottingTest {
                     EventStore eventStore = context.getBean(EventStore.class);
                     eventStore.readEvents(AGGREGATE_ID);
 
-                    assertTrue(TestContext.SNAPSHOT_FILTER_INVOKED.get());
+                    assertThat(TestContext.SNAPSHOT_FILTER_INVOKED.get()).isTrue();
                 });
     }
 

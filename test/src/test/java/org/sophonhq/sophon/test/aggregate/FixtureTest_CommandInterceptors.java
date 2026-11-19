@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.test.aggregate;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.invocation.*;
@@ -48,7 +49,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
@@ -102,14 +103,14 @@ class FixtureTest_CommandInterceptors {
                 ArgumentCaptor.forClass(GenericCommandMessage.class);
         verify(firstMockCommandDispatchInterceptor).handle(firstCommandMessageCaptor.capture());
         GenericCommandMessage<?> firstResult = firstCommandMessageCaptor.getValue();
-        assertEquals(expectedCommand, firstResult.getPayload());
+        assertThat(firstResult.getPayload()).isEqualTo(expectedCommand);
 
         //noinspection unchecked
         ArgumentCaptor<GenericCommandMessage<?>> secondCommandMessageCaptor =
                 ArgumentCaptor.forClass(GenericCommandMessage.class);
         verify(secondMockCommandDispatchInterceptor).handle(secondCommandMessageCaptor.capture());
         GenericCommandMessage<?> secondResult = secondCommandMessageCaptor.getValue();
-        assertEquals(expectedCommand, secondResult.getPayload());
+        assertThat(secondResult.getPayload()).isEqualTo(expectedCommand);
     }
 
     @Test
@@ -162,8 +163,8 @@ class FixtureTest_CommandInterceptors {
         verify(mockCommandHandlerInterceptor).handle(unitOfWorkCaptor.capture(), interceptorChainCaptor.capture());
         UnitOfWork<? extends CommandMessage<?>> unitOfWorkResult = unitOfWorkCaptor.getValue();
         Message<?> messageResult = unitOfWorkResult.getMessage();
-        assertEquals(expectedCommand, messageResult.getPayload());
-        assertEquals(expectedMetaDataMap, messageResult.getMetaData());
+        assertThat(messageResult.getPayload()).isEqualTo(expectedCommand);
+        assertThat(messageResult.getMetaData()).isEqualTo(expectedMetaDataMap);
     }
 
     @Test
@@ -228,7 +229,7 @@ class FixtureTest_CommandInterceptors {
                .expectEvents(new TestEvent(AGGREGATE_IDENTIFIER, MetaData.emptyInstance()))
                .expectSuccessfulHandlerExecution();
 
-        assertEquals(2, invocations.get());
+        assertThat(invocations.get()).isEqualTo(2);
     }
 
     @Test
@@ -244,7 +245,7 @@ class FixtureTest_CommandInterceptors {
                .expectEvents(new TestEvent(AGGREGATE_IDENTIFIER, MetaData.emptyInstance()))
                .expectSuccessfulHandlerExecution();
 
-        assertEquals(2, invocations.get());
+        assertThat(invocations.get()).isEqualTo(2);
     }
 
     @Test
@@ -274,7 +275,7 @@ class FixtureTest_CommandInterceptors {
                 .when(new DoWithEntityCommand(AGGREGATE_IDENTIFIER))
                 .expectEvents(new DoneWithEntityEvent(AGGREGATE_IDENTIFIER))
                 .expectSuccessfulHandlerExecution();
-        assertTrue(intercepted.get());
+        assertThat(intercepted.get()).isTrue();
     }
 
     @SuppressWarnings("unused")

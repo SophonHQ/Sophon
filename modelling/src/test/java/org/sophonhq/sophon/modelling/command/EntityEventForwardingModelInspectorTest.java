@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.modelling.command.inspection.AnnotatedAggregateMetaModelFactory.inspectAggregate;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
@@ -50,8 +50,8 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong entityPayload = new AtomicLong();
         inspector.publish(asEventMessage(new EntityRoutedEvent(ENTITY_ID, entityPayload)), target);
 
-        assertEquals(1L, aggregatePayload.get());
-        assertEquals(1L, entityPayload.get());
+        assertThat(aggregatePayload.get()).isOne();
+        assertThat(entityPayload.get()).isOne();
     }
 
     @Test
@@ -68,8 +68,8 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong entityPayload = new AtomicLong();
         inspector.publish(asEventMessage(new EntityRoutedEvent(ENTITY_ID, entityPayload)), target);
 
-        assertEquals(1L, aggregatePayload.get());
-        assertEquals(2L, entityPayload.get());
+        assertThat(aggregatePayload.get()).isOne();
+        assertThat(entityPayload.get()).isEqualTo(2L);
     }
 
     @Test
@@ -86,8 +86,8 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong entityPayload = new AtomicLong();
         inspector.publish(asEventMessage(new EntityRoutedEvent(ENTITY_ID, entityPayload)), target);
 
-        assertEquals(1L, aggregatePayload.get());
-        assertEquals(2L, entityPayload.get());
+        assertThat(aggregatePayload.get()).isOne();
+        assertThat(entityPayload.get()).isEqualTo(2L);
     }
 
     @Test
@@ -105,8 +105,8 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong entityPayload = new AtomicLong();
         inspector.publish(asEventMessage(new SomeOtherEntityRoutedEvent(ENTITY_ID, entityPayload)), target);
 
-        assertEquals(1L, aggregatePayload.get());
-        assertEquals(2L, entityPayload.get());
+        assertThat(aggregatePayload.get()).isOne();
+        assertThat(entityPayload.get()).isEqualTo(2L);
     }
 
     @Test
@@ -124,8 +124,8 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong entityPayload = new AtomicLong();
         inspector.publish(asEventMessage(new SomeOtherEntityRoutedEvent(ENTITY_ID, entityPayload)), target);
 
-        assertEquals(1L, aggregatePayload.get());
-        assertEquals(2L, entityPayload.get());
+        assertThat(aggregatePayload.get()).isOne();
+        assertThat(entityPayload.get()).isEqualTo(2L);
     }
 
     @Test
@@ -143,9 +143,9 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong entityThreePayload = new AtomicLong();
         inspector.publish(asEventMessage(new EntityRoutedEvent("entityId3", entityThreePayload)), target);
 
-        assertEquals(1L, entityOnePayload.get());
-        assertEquals(1L, entityTwoPayload.get());
-        assertEquals(1L, entityThreePayload.get());
+        assertThat(entityOnePayload.get()).isOne();
+        assertThat(entityTwoPayload.get()).isOne();
+        assertThat(entityThreePayload.get()).isOne();
     }
 
     @Test
@@ -163,9 +163,9 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong entityThreePayload = new AtomicLong();
         inspector.publish(asEventMessage(new EntityRoutedEvent("entityId3", entityThreePayload)), target);
 
-        assertEquals(1L, entityOnePayload.get());
-        assertEquals(1L, entityTwoPayload.get());
-        assertEquals(1L, entityThreePayload.get());
+        assertThat(entityOnePayload.get()).isOne();
+        assertThat(entityTwoPayload.get()).isOne();
+        assertThat(entityThreePayload.get()).isOne();
     }
 
     @Test
@@ -183,9 +183,9 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong entityThreePayload = new AtomicLong();
         inspector.publish(asEventMessage(new EntityRoutedEvent("entityId3", entityThreePayload)), target);
 
-        assertEquals(1L, entityOnePayload.get());
-        assertEquals(1L, entityTwoPayload.get());
-        assertEquals(1L, entityThreePayload.get());
+        assertThat(entityOnePayload.get()).isOne();
+        assertThat(entityTwoPayload.get()).isOne();
+        assertThat(entityThreePayload.get()).isOne();
     }
 
     @Test
@@ -203,9 +203,9 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong entityThreePayload = new AtomicLong();
         inspector.publish(asEventMessage(new EntityRoutedEvent("entityId3", entityThreePayload)), target);
 
-        assertEquals(1L, entityOnePayload.get());
-        assertEquals(1L, entityTwoPayload.get());
-        assertEquals(1L, entityThreePayload.get());
+        assertThat(entityOnePayload.get()).isOne();
+        assertThat(entityTwoPayload.get()).isOne();
+        assertThat(entityThreePayload.get()).isOne();
     }
 
     @Test
@@ -225,9 +225,9 @@ class EntityEventForwardingModelInspectorTest {
         AtomicLong anotherEntityPayload = new AtomicLong();
         inspector.publish(asEventMessage(new EntityRoutedEvent(ANOTHER_ENTITY_ID, anotherEntityPayload)), target);
 
-        assertEquals(1L, aggregatePayload.get());
-        assertEquals(2L, entityPayload.get());
-        assertEquals(2L, anotherEntityPayload.get());
+        assertThat(aggregatePayload.get()).isOne();
+        assertThat(entityPayload.get()).isEqualTo(2L);
+        assertThat(anotherEntityPayload.get()).isEqualTo(2L);
     }
 
     private static class SomeNoneEventForwardingEntityAggregate {

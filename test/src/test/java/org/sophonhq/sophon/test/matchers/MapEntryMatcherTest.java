@@ -26,9 +26,7 @@ import java.util.TreeMap;
 import java.util.stream.Stream;
 
 import static java.util.Collections.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.sophonhq.sophon.test.matchers.EqualsMatcher.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MapEntryMatcherTest {
 
@@ -44,45 +42,49 @@ class MapEntryMatcherTest {
 
     @Test
     void nullSafe() {
-        assertFalse(matcher.matches(null));
+        assertThat(matcher.matches(null)).isFalse();
     }
 
     @Test
     void expectedEntriesNotPresent() {
-        assertFalse(matcher.matches(singletonMap("a", new ValueItem("a"))));
+        assertThat(matcher.matches(singletonMap("a", new ValueItem("a")))).isFalse();
 
-        assertThat(matcher.getMissingEntries(), equalTo(newHashMap("b", new ValueItem("b"), "c", new ValueItem("c"))));
+        assertThat(matcher.getMissingEntries()).isEqualTo(newHashMap("b", new ValueItem("b"), "c", new ValueItem("c")));
     }
 
     @Test
     void tooManyEntries() {
-        assertFalse(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"), "c", new ValueItem("c"),
-                                               "d", new ValueItem("d"), "e", new ValueItem("e"))));
+        assertThat(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"), "c", new ValueItem("c"),
+                                              "d", new ValueItem("d"), "e", new ValueItem("e")))).isFalse();
 
-        assertThat(matcher.getAdditionalEntries(), equalTo(newHashMap("d", new ValueItem("d"), "e", new ValueItem("e"))));
+        assertThat(matcher.getAdditionalEntries())
+                .isEqualTo(newHashMap("d", new ValueItem("d"), "e", new ValueItem("e")));
     }
 
     @Test
     void incorrectValue() {
-        assertFalse(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"), "c", new ValueItem("CCCC"))));
+        assertThat(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"),
+                                              "c", new ValueItem("CCCC")))).isFalse();
 
-        assertThat(matcher.getAdditionalEntries(), equalTo(newHashMap("c", new ValueItem("CCCC"))));
+        assertThat(matcher.getAdditionalEntries()).isEqualTo(newHashMap("c", new ValueItem("CCCC")));
 
-        assertFalse(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"), "c", null)));
+        assertThat(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"), "c", null))).isFalse();
 
-        assertThat(matcher.getAdditionalEntries(), equalTo(newHashMap("c", null)));
+        assertThat(matcher.getAdditionalEntries()).isEqualTo(newHashMap("c", null));
 
     }
 
     @Test
     void incorrectKey() {
-        assertFalse(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"), "CCCC", new ValueItem("c"))));
+        assertThat(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"),
+                                              "CCCC", new ValueItem("c")))).isFalse();
 
-        assertThat(matcher.getAdditionalEntries(), equalTo(newHashMap("CCCC", new ValueItem("c"))));
+        assertThat(matcher.getAdditionalEntries()).isEqualTo(newHashMap("CCCC", new ValueItem("c")));
 
-        assertFalse(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"), null, new ValueItem("c"))));
+        assertThat(matcher.matches(newHashMap("a", new ValueItem("a"), "b", new ValueItem("b"),
+                                              null, new ValueItem("c")))).isFalse();
 
-        assertThat(matcher.getAdditionalEntries(), equalTo(newHashMap(null, new ValueItem("c"))));
+        assertThat(matcher.getAdditionalEntries()).isEqualTo(newHashMap(null, new ValueItem("c")));
 
     }
 
@@ -91,31 +93,35 @@ class MapEntryMatcherTest {
         TreeMap<String, Object> sortedMap = new TreeMap<>();
         sortedMap.putAll(EXPECTED);
 
-        assertTrue(matcher.matches(sortedMap));
-        assertTrue(matcher.matches(sortedMap.descendingMap()));
+        assertThat(matcher.matches(sortedMap)).isTrue();
+        assertThat(matcher.matches(sortedMap.descendingMap())).isTrue();
     }
 
     @Test
     void matchEmptyMap() {
-        assertTrue(new MapEntryMatcher(emptyMap()).matches(emptyMap()));
+        assertThat(new MapEntryMatcher(emptyMap()).matches(emptyMap())).isTrue();
     }
 
     @Test
     void testNull() {
-        assertFalse(new MapEntryMatcher(emptyMap()).matches(null));
+        assertThat(new MapEntryMatcher(emptyMap()).matches(null)).isFalse();
     }
 
     @Test
     void nonMapType() {
-        assertFalse(new MapEntryMatcher(emptyMap()).matches(new Object()));
-        assertFalse(new MapEntryMatcher(emptyMap()).matches(emptySet()));
+        assertThat(new MapEntryMatcher(emptyMap()).matches(new Object())).isFalse();
+        assertThat(new MapEntryMatcher(emptyMap()).matches(emptySet())).isFalse();
     }
 
     @Test
     void testToString() {
         StringDescription description = new StringDescription();
         matcher.describeTo(description);
-        assertEquals(description.toString(), "map containing " + String.format("[<%s=%s>,<%s=%s>,<%s=%s>]", EXPECTED.entrySet().stream().flatMap(entry -> Stream.of(entry.getKey(), entry.getValue())).toArray()));
+        assertThat(description.toString())
+                .isEqualTo("map containing " + String.format("[<%s=%s>,<%s=%s>,<%s=%s>]", EXPECTED.entrySet()
+                        .stream()
+                        .flatMap(entry -> Stream.of(entry.getKey(), entry.getValue()))
+                        .toArray()));
     }
 
     private Map<String, Object> newHashMap(Object... keysAndValues) {

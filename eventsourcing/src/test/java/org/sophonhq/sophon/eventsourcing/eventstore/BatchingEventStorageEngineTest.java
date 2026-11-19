@@ -25,8 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.AGGREGATE;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.createEvents;
 
@@ -46,11 +45,11 @@ public abstract class BatchingEventStorageEngineTest<E extends BatchingEventStor
         int eventCount = testSubject.batchSize() + 10;
         testSubject.appendEvents(createEvents(eventCount));
         testSubject.appendEvents(new GenericEventMessage<>("test"));
-        assertEquals(eventCount, testSubject.readEvents(AGGREGATE).asStream().count());
+        assertThat(testSubject.readEvents(AGGREGATE).asStream().count()).isEqualTo(eventCount);
         Optional<? extends DomainEventMessage<?>> resultEventMessage =
                 testSubject.readEvents(AGGREGATE).asStream().reduce((a, b) -> b);
-        assertTrue(resultEventMessage.isPresent());
-        assertEquals(eventCount - 1, resultEventMessage.get().getSequenceNumber());
+        assertThat(resultEventMessage).isPresent();
+        assertThat(resultEventMessage.get().getSequenceNumber()).isEqualTo(eventCount - 1);
     }
 
     @Test
@@ -62,9 +61,9 @@ public abstract class BatchingEventStorageEngineTest<E extends BatchingEventStor
 
         Optional<? extends EventMessage<?>> resultEventMessage =
                 testSubject.readEvents(null, false).reduce((a, b) -> b);
-        assertEquals(testSubject.batchSize() + 11, testSubject.readEvents(null, false).count());
-        assertTrue(resultEventMessage.isPresent());
-        assertEquals(last.getIdentifier(), resultEventMessage.get().getIdentifier());
+        assertThat(testSubject.readEvents(null, false).count()).isEqualTo(testSubject.batchSize() + 11);
+        assertThat(resultEventMessage).isPresent();
+        assertThat(resultEventMessage.get().getIdentifier()).isEqualTo(last.getIdentifier());
     }
 
     protected void setTestSubject(BatchingEventStorageEngine testSubject) {

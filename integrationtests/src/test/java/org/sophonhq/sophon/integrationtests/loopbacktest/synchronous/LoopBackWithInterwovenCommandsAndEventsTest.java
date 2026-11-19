@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.integrationtests.loopbacktest.synchronous;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
@@ -41,9 +42,8 @@ import org.sophonhq.sophon.modelling.command.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 /**
@@ -96,7 +96,8 @@ class LoopBackWithInterwovenCommandsAndEventsTest {
     void orderInCommandHandlerAggregate() {
         MyAggregate commandHandlerAggregate = configuration.commandGateway().sendAndWait(command);
 
-        assertEquals(expectedDescriptions(command), commandHandlerAggregate.getHandledCommands());
+        assertThat(commandHandlerAggregate.getHandledCommands())
+                .containsExactlyElementsOf(expectedDescriptions(command));
     }
 
     @Test
@@ -109,19 +110,19 @@ class LoopBackWithInterwovenCommandsAndEventsTest {
         MyAggregate loadedAggregate = repository.load(aggregateIdentifier).invoke(Function.identity());
         unitOfWork.commit();
 
-        assertEquals(expectedDescriptions(command), loadedAggregate.getHandledCommands());
+        assertThat(loadedAggregate.getHandledCommands()).containsExactlyElementsOf(expectedDescriptions(command));
     }
 
     @Test
     void orderInEventStore() {
         configuration.commandGateway().sendAndWait(command);
-        assertEquals(expectedDescriptions(command), configuration.eventStore()
-                                                                 .readEvents(aggregateIdentifier)
-                                                                 .asStream()
-                                                                 .map(Message::getPayload)
-                                                                 .map(MyEvent.class::cast)
-                                                                 .map(MyEvent::getDescription)
-                                                                 .collect(Collectors.toList()));
+        assertThat(configuration.eventStore()
+                                .readEvents(aggregateIdentifier)
+                                .asStream()
+                                .map(Message::getPayload)
+                                .map(MyEvent.class::cast)
+                                .map(MyEvent::getDescription))
+                .containsExactlyElementsOf(expectedDescriptions(command));
     }
 
     private List<String> expectedDescriptions(MyCommand command) {

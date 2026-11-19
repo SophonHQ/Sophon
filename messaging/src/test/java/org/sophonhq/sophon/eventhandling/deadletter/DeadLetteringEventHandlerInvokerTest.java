@@ -49,7 +49,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.utils.EventTestUtils.createEvent;
 
@@ -415,7 +416,7 @@ class DeadLetteringEventHandlerInvokerTest {
 
         boolean result = testSubject.processAny();
 
-        assertFalse(result);
+        assertThat(result).isFalse();
         verify(transactionManager).startTransaction();
 
         //noinspection unchecked
@@ -424,7 +425,7 @@ class DeadLetteringEventHandlerInvokerTest {
         verify(queue).process(filterCaptor.capture(), any());
 
         Predicate<DeadLetter<? extends EventMessage<?>>> letterFilter = filterCaptor.getValue();
-        assertTrue(letterFilter.test(null));
+        assertThat(letterFilter.test(null)).isTrue();
     }
 
     @Test
@@ -437,7 +438,7 @@ class DeadLetteringEventHandlerInvokerTest {
 
         boolean result = testSubject.processAny();
 
-        assertTrue(result);
+        assertThat(result).isTrue();
         verify(transactionManager).startTransaction();
 
 
@@ -454,7 +455,7 @@ class DeadLetteringEventHandlerInvokerTest {
         // This allows thorough validation of the second sequenceIdentifierFilter.
         taskFilterCaptor.getAllValues().get(0).apply(testDeadLetter);
 
-        filterCaptor.getAllValues().forEach(letterFilter -> assertTrue(letterFilter.test(null)));
+        filterCaptor.getAllValues().forEach(letterFilter -> assertThat(letterFilter.test(null)).isTrue());
     }
 
     @Test
@@ -468,7 +469,7 @@ class DeadLetteringEventHandlerInvokerTest {
 
         boolean result = testSubject.process(testFilter);
 
-        assertFalse(result);
+        assertThat(result).isFalse();
         verify(transactionManager).startTransaction();
 
         //noinspection unchecked
@@ -477,8 +478,8 @@ class DeadLetteringEventHandlerInvokerTest {
         verify(queue).process(filterCaptor.capture(), any());
 
         Predicate<DeadLetter<? extends EventMessage<?>>> letterFilter = filterCaptor.getValue();
-        assertTrue(letterFilter.test(null));
-        assertTrue(filterInvoked.get());
+        assertThat(letterFilter.test(null)).isTrue();
+        assertThat(filterInvoked.get()).isTrue();
     }
 
     @Test
@@ -496,7 +497,7 @@ class DeadLetteringEventHandlerInvokerTest {
 
         boolean result = testSubject.process(testFilter);
 
-        assertTrue(result);
+        assertThat(result).isTrue();
         verify(transactionManager).startTransaction();
 
         //noinspection unchecked
@@ -512,8 +513,8 @@ class DeadLetteringEventHandlerInvokerTest {
         // This allows thorough validation of the second sequenceIdentifierFilter.
         taskFilterCaptor.getAllValues().get(0).apply(testDeadLetter);
 
-        letterFilterCaptor.getAllValues().forEach(letterFilter -> assertTrue(letterFilter.test(null)));
-        assertTrue(filterInvoked.get());
+        letterFilterCaptor.getAllValues().forEach(letterFilter -> assertThat(letterFilter.test(null)).isTrue());
+        assertThat(filterInvoked.get()).isTrue();
     }
 
     @Test
@@ -521,7 +522,7 @@ class DeadLetteringEventHandlerInvokerTest {
         DeadLetteringEventHandlerInvoker.Builder builderTestSubject = DeadLetteringEventHandlerInvoker.builder();
 
         //noinspection ConstantConditions
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.queue(null));
+        assertThatThrownBy(() -> builderTestSubject.queue(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -530,14 +531,15 @@ class DeadLetteringEventHandlerInvokerTest {
                 DeadLetteringEventHandlerInvoker.builder()
                                                 .transactionManager(NoTransactionManager.instance());
 
-        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullEnqueuePolicyThrowsSophonConfigurationException() {
         DeadLetteringEventHandlerInvoker.Builder builderTestSubject = DeadLetteringEventHandlerInvoker.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.enqueuePolicy(null));
+        assertThatThrownBy(() -> builderTestSubject.enqueuePolicy(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -546,7 +548,8 @@ class DeadLetteringEventHandlerInvokerTest {
                 DeadLetteringEventHandlerInvoker.builder();
 
         //noinspection ConstantConditions
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.transactionManager(null));
+        assertThatThrownBy(() -> builderTestSubject.transactionManager(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -555,7 +558,7 @@ class DeadLetteringEventHandlerInvokerTest {
                 DeadLetteringEventHandlerInvoker.builder()
                                                 .queue(queue);
 
-        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -564,7 +567,8 @@ class DeadLetteringEventHandlerInvokerTest {
                 DeadLetteringEventHandlerInvoker.builder();
 
         //noinspection ConstantConditions
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.listenerInvocationErrorHandler(null));
+        assertThatThrownBy(() -> builderTestSubject.listenerInvocationErrorHandler(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     // This stub TransactionManager is used for spying.
@@ -578,11 +582,11 @@ class DeadLetteringEventHandlerInvokerTest {
 
     private static void assertLetter(DeadLetter<? extends EventMessage<?>> expected,
                                      DeadLetter<? extends EventMessage<?>> result) {
-        assertEquals(expected.message(), result.message());
-        assertEquals(expected.cause(), result.cause());
-        assertEquals(expected.enqueuedAt(), result.enqueuedAt());
-        assertEquals(expected.lastTouched(), result.lastTouched());
-        assertEquals(expected.diagnostics(), result.diagnostics());
+        assertThat(result.message()).isEqualTo(expected.message());
+        assertThat(result.cause()).isEqualTo(expected.cause());
+        assertThat(result.enqueuedAt()).isEqualTo(expected.enqueuedAt());
+        assertThat(result.lastTouched()).isEqualTo(expected.lastTouched());
+        assertThat(result.diagnostics()).isEqualTo(expected.diagnostics());
     }
 
     private static DomainEventMessage<?> nextMessage(DomainEventMessage<?> domainEventMessage) {

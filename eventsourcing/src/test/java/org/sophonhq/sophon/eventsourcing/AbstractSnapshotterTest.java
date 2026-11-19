@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Executor;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.argThat;
@@ -164,7 +164,7 @@ class AbstractSnapshotterTest {
         verify(mockEventStore, times(2)).storeSnapshot(argThat(event(aggregateIdentifier, 1)));
 
         List<LogEvent> logEvents = recordingAppender.stopRecording();
-        assertEquals(Collections.emptyList(), logEvents);
+        assertThat(logEvents).isEqualTo(Collections.emptyList());
     }
 
     @Test
@@ -211,13 +211,13 @@ class AbstractSnapshotterTest {
         testSubject.scheduleSnapshot(Object.class, "id1");
         testSubject.scheduleSnapshot(Object.class, "id1");
 
-        assertEquals(1, executor.size());
+        assertThat(executor.size()).isOne();
         executor.executeNext();
-        assertEquals(0, executor.size());
+        assertThat(executor.size()).isZero();
 
         testSubject.scheduleSnapshot(Object.class, "id1");
 
-        assertEquals(1, executor.size());
+        assertThat(executor.size()).isOne();
     }
 
     @Test
@@ -228,13 +228,13 @@ class AbstractSnapshotterTest {
         testSubject.scheduleSnapshot(Object.class, "id1");
         testSubject.scheduleSnapshot(Object.class, "id2");
 
-        assertEquals(2, executor.size());
+        assertThat(executor.size()).isEqualTo(2);
         executor.executeNext();
-        assertEquals(1, executor.size());
+        assertThat(executor.size()).isOne();
 
         testSubject.scheduleSnapshot(Object.class, "id2");
 
-        assertEquals(1, executor.size());
+        assertThat(executor.size()).isOne();
     }
 
     @SuppressWarnings("SameParameterValue")

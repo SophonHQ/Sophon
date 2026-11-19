@@ -36,7 +36,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -76,27 +76,27 @@ class AnnotationCommandHandlerAdapterTest {
     @Test
     void handlerDispatchingVoidReturnType() throws Exception {
         Object actualReturnValue = testSubject.handle(GenericCommandMessage.asCommandMessage(""));
-        assertNull(actualReturnValue);
-        assertEquals(1, mockTarget.voidHandlerInvoked);
-        assertEquals(0, mockTarget.returningHandlerInvoked);
+        assertThat(actualReturnValue).isNull();
+        assertThat(mockTarget.voidHandlerInvoked).isOne();
+        assertThat(mockTarget.returningHandlerInvoked).isZero();
     }
 
     @Test
     void handlerDispatchingWithReturnType() throws Exception {
         Object actualReturnValue = testSubject.handle(GenericCommandMessage.asCommandMessage(1L));
-        assertEquals(1L, actualReturnValue);
-        assertEquals(0, mockTarget.voidHandlerInvoked);
-        assertEquals(1, mockTarget.returningHandlerInvoked);
+        assertThat(actualReturnValue).isEqualTo(1L);
+        assertThat(mockTarget.voidHandlerInvoked).isZero();
+        assertThat(mockTarget.returningHandlerInvoked).isOne();
     }
 
     @Test
     void handlerDispatchingWithCustomCommandName() throws Exception {
         Object actualReturnValue = testSubject.handle(new GenericCommandMessage<>(new GenericMessage<>(1L),
                                                                                   "almostLong"));
-        assertEquals(1L, actualReturnValue);
-        assertEquals(0, mockTarget.voidHandlerInvoked);
-        assertEquals(0, mockTarget.returningHandlerInvoked);
-        assertEquals(1, mockTarget.almostDuplicateReturningHandlerInvoked);
+        assertThat(actualReturnValue).isEqualTo(1L);
+        assertThat(mockTarget.voidHandlerInvoked).isZero();
+        assertThat(mockTarget.returningHandlerInvoked).isZero();
+        assertThat(mockTarget.almostDuplicateReturningHandlerInvoked).isOne();
     }
 
     @Test
@@ -105,7 +105,7 @@ class AnnotationCommandHandlerAdapterTest {
             testSubject.handle(GenericCommandMessage.asCommandMessage(new HashSet<>()));
             fail("Expected exception");
         } catch (Exception ex) {
-            assertEquals(Exception.class, ex.getClass());
+            assertThat(ex.getClass()).isEqualTo(Exception.class);
             return;
         }
         fail("Shouldn't make it till here");
@@ -128,7 +128,7 @@ class AnnotationCommandHandlerAdapterTest {
     void handleNoHandlerForCommand() {
         CommandMessage<Object> command = GenericCommandMessage.asCommandMessage(new LinkedList<>());
 
-        assertThrows(NoHandlerForCommandException.class, () -> testSubject.handle(command));
+        assertThatThrownBy(() -> testSubject.handle(command)).isInstanceOf(NoHandlerForCommandException.class);
     }
 
     @Test
@@ -142,10 +142,10 @@ class AnnotationCommandHandlerAdapterTest {
 
         Object result = testSubject.handle(testCommandMessage);
 
-        assertNull(result);
-        assertEquals(1, mockTarget.voidHandlerInvoked);
-        assertEquals(Collections.singletonList(testCommandMessage), withInterceptor);
-        assertEquals(Collections.singletonList(testCommandMessage), withoutInterceptor);
+        assertThat(result).isNull();
+        assertThat(mockTarget.voidHandlerInvoked).isOne();
+        assertThat(withInterceptor).isEqualTo(Collections.singletonList(testCommandMessage));
+        assertThat(withoutInterceptor).isEqualTo(Collections.singletonList(testCommandMessage));
     }
 
     @Test
@@ -158,12 +158,13 @@ class AnnotationCommandHandlerAdapterTest {
 
         String result = (String) testSubject.handle(testCommandMessage);
 
-        assertNull(result);
-        assertFalse(interceptedExceptions.isEmpty());
-        assertEquals(1, interceptedExceptions.size());
+        assertThat(result).isNull();
+        assertThat(interceptedExceptions)
+                .isNotEmpty()
+                .hasSize(1);
         Exception interceptedException = interceptedExceptions.get(0);
-        assertTrue(interceptedException instanceof RuntimeException);
-        assertEquals("Some exception", interceptedException.getMessage());
+        assertThat(interceptedException).isInstanceOf(RuntimeException.class);
+        assertThat(interceptedException.getMessage()).isEqualTo("Some exception");
     }
 
     private static class MyCommandHandler {
@@ -180,14 +181,14 @@ class AnnotationCommandHandlerAdapterTest {
 
         @CommandHandler(commandName = "almostLong")
         public Long myAlmostDuplicateReturningHandler(Long longCommand, UnitOfWork<CommandMessage<?>> unitOfWork) {
-            assertNotNull(unitOfWork, "The UnitOfWork was not passed to the command handler");
+            assertThat(unitOfWork).as("The UnitOfWork was not passed to the command handler").isNotNull();
             almostDuplicateReturningHandlerInvoked++;
             return longCommand;
         }
 
         @CommandHandler
         public Long myReturningHandler(Long longCommand, UnitOfWork<CommandMessage<?>> unitOfWork) {
-            assertNotNull(unitOfWork, "The UnitOfWork was not passed to the command handler");
+            assertThat(unitOfWork).as("The UnitOfWork was not passed to the command handler").isNotNull();
             returningHandlerInvoked++;
             return longCommand;
         }

@@ -24,7 +24,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 import java.util.Collection;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests serialization capabilities of {@link ReplayToken}.
@@ -42,6 +42,6 @@ class ReplayTokenSerializationTest {
     void tokenShouldBeSerializable(TestSerializer serializer) {
         TrackingToken innerToken = GapAwareTrackingToken.newInstance(10, Collections.singleton(9L));
         ReplayToken token = new ReplayToken(innerToken);
-        assertEquals(token, serializer.serializeDeserialize(token));
+        assertThat(serializer.serializeDeserialize(token)).isEqualTo(token);
     }
 }

@@ -22,7 +22,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.Version;
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.mockito.internal.stubbing.answers.*;
 import org.sophonhq.sophon.common.SophonConfigurationException;
@@ -45,7 +47,9 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
@@ -111,7 +115,7 @@ class GenericJpaRepositoryTest {
     @Test
     void loadAggregate() {
         Aggregate<StubJpaAggregate> actualResult = testSubject.load(aggregateId);
-        assertSame(aggregate, actualResult.invoke(Function.identity()));
+        assertThat(actualResult.invoke(Function.identity())).isSameAs(aggregate);
     }
 
     @Test
@@ -131,7 +135,7 @@ class GenericJpaRepositoryTest {
     void loadAggregateWithConverter() {
         when(identifierConverter.apply("original")).thenAnswer(new Returns(aggregateId));
         Aggregate<StubJpaAggregate> actualResult = testSubject.load("original");
-        assertSame(aggregate, actualResult.invoke(Function.identity()));
+        assertThat(actualResult.invoke(Function.identity())).isSameAs(aggregate);
     }
 
     @Test
@@ -153,28 +157,28 @@ class GenericJpaRepositoryTest {
         CurrentUnitOfWork.commit();
 
         List<EventMessage<?>> publishedEvents = testEventBus.getPublishedEvents();
-        assertEquals(3, publishedEvents.size());
+        assertThat(publishedEvents).hasSize(3);
 
         EventMessage<?> eventOne = publishedEvents.get(0);
-        assertTrue(eventOne instanceof DomainEventMessage);
+        assertThat(eventOne).isInstanceOf(DomainEventMessage.class);
         DomainEventMessage<?> domainEventOne = (DomainEventMessage<?>) eventOne;
-        assertEquals("test1", domainEventOne.getPayload());
-        assertEquals(0, domainEventOne.getSequenceNumber());
-        assertEquals("id", domainEventOne.getAggregateIdentifier());
+        assertThat(domainEventOne.getPayload()).isEqualTo("test1");
+        assertThat(domainEventOne.getSequenceNumber()).isZero();
+        assertThat(domainEventOne.getAggregateIdentifier()).isEqualTo("id");
 
         EventMessage<?> eventTwo = publishedEvents.get(1);
-        assertTrue(eventTwo instanceof DomainEventMessage);
+        assertThat(eventTwo).isInstanceOf(DomainEventMessage.class);
         DomainEventMessage<?> domainEventTwo = (DomainEventMessage<?>) eventTwo;
-        assertEquals("test2", domainEventTwo.getPayload());
-        assertEquals(1, domainEventTwo.getSequenceNumber());
-        assertEquals("id", domainEventTwo.getAggregateIdentifier());
+        assertThat(domainEventTwo.getPayload()).isEqualTo("test2");
+        assertThat(domainEventTwo.getSequenceNumber()).isOne();
+        assertThat(domainEventTwo.getAggregateIdentifier()).isEqualTo("id");
 
         EventMessage<?> eventThree = publishedEvents.get(2);
-        assertTrue(eventThree instanceof DomainEventMessage);
+        assertThat(eventThree).isInstanceOf(DomainEventMessage.class);
         DomainEventMessage<?> domainEventThree = (DomainEventMessage<?>) eventThree;
-        assertEquals("test3", domainEventThree.getPayload());
-        assertEquals(2, domainEventThree.getSequenceNumber());
-        assertEquals("id", domainEventThree.getAggregateIdentifier());
+        assertThat(domainEventThree.getPayload()).isEqualTo("test3");
+        assertThat(domainEventThree.getSequenceNumber()).isEqualTo(2);
+        assertThat(domainEventThree.getAggregateIdentifier()).isEqualTo("id");
     }
 
     @Test
@@ -202,10 +206,10 @@ class GenericJpaRepositoryTest {
         verify(testEventBus).publish(eventCaptor.capture());
         List<? extends EventMessage<?>> capturedEvents = eventCaptor.getValue();
 
-        assertEquals(1, capturedEvents.size());
+        assertThat(capturedEvents.size()).isOne();
         EventMessage<?> eventOne = capturedEvents.get(0);
-        assertFalse(eventOne instanceof DomainEventMessage);
-        assertEquals("test2", eventOne.getPayload());
+        assertThat(eventOne).isNotInstanceOf(DomainEventMessage.class);
+        assertThat(eventOne.getPayload()).isEqualTo("test2");
     }
 
     @Test
@@ -233,19 +237,19 @@ class GenericJpaRepositoryTest {
         CurrentUnitOfWork.commit();
 
         List<EventMessage<?>> publishedEvents = testEventBus.getPublishedEvents();
-        assertEquals(3, publishedEvents.size());
+        assertThat(publishedEvents).hasSize(3);
 
         EventMessage<?> eventOne = publishedEvents.get(0);
-        assertFalse(eventOne instanceof DomainEventMessage);
-        assertEquals(expectedFirstPayload, eventOne.getPayload());
+        assertThat(eventOne).isNotInstanceOf(DomainEventMessage.class);
+        assertThat(eventOne.getPayload()).isEqualTo(expectedFirstPayload);
 
         EventMessage<?> eventTwo = publishedEvents.get(1);
-        assertFalse(eventTwo instanceof DomainEventMessage);
-        assertEquals(expectedSecondPayload, eventTwo.getPayload());
+        assertThat(eventTwo).isNotInstanceOf(DomainEventMessage.class);
+        assertThat(eventTwo.getPayload()).isEqualTo(expectedSecondPayload);
 
         EventMessage<?> eventThree = publishedEvents.get(2);
-        assertFalse(eventThree instanceof DomainEventMessage);
-        assertEquals(expectedThirdPayload, eventThree.getPayload());
+        assertThat(eventThree).isNotInstanceOf(DomainEventMessage.class);
+        assertThat(eventThree.getPayload()).isEqualTo(expectedThirdPayload);
     }
 
     @Test
@@ -255,7 +259,7 @@ class GenericJpaRepositoryTest {
             testSubject.load(aggregateIdentifier);
             fail("Expected AggregateNotFoundException");
         } catch (AggregateNotFoundException e) {
-            assertEquals(aggregateIdentifier, e.getAggregateIdentifier());
+            assertThat(e.getAggregateIdentifier()).isEqualTo(aggregateIdentifier);
         }
     }
 
@@ -265,8 +269,8 @@ class GenericJpaRepositoryTest {
             testSubject.load(aggregateId, 2L);
             fail("Expected ConflictingAggregateVersionException");
         } catch (ConflictingAggregateVersionException e) {
-            assertEquals(2L, e.getExpectedVersion());
-            assertEquals(0L, e.getActualVersion());
+            assertThat(e.getExpectedVersion()).isEqualTo(2L);
+            assertThat(e.getActualVersion()).isZero();
         }
     }
 
@@ -300,7 +304,8 @@ class GenericJpaRepositoryTest {
                                     .entityManagerProvider(new SimpleEntityManagerProvider(mockEntityManager))
                                     .eventBus(eventBus);
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.subtypes(null));
+        assertThatThrownBy(() -> builderTestSubject.subtypes(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -310,7 +315,8 @@ class GenericJpaRepositoryTest {
                                     .entityManagerProvider(new SimpleEntityManagerProvider(mockEntityManager))
                                     .eventBus(eventBus);
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.subtype(null));
+        assertThatThrownBy(() -> builderTestSubject.subtype(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     private class StubJpaAggregate {

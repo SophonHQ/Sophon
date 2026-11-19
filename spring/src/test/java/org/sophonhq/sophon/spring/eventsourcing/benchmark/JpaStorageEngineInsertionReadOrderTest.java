@@ -18,7 +18,10 @@
 package org.sophonhq.sophon.spring.eventsourcing.benchmark;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.common.legacyjpa.SimpleEntityManagerProvider;
 import org.sophonhq.sophon.eventhandling.TrackedEventMessage;
@@ -53,7 +56,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration test class validating the insertion order of events for the {@link JpaEventStorageEngine}.
@@ -108,8 +111,9 @@ class JpaStorageEngineInsertionReadOrderTest {
             thread.join();
         }
 
-        assertEquals(expectedEventCount, readEvents.size(),
-                     "The actually read list of events is shorted than the expected value");
+        assertThat(readEvents)
+                .as("The actually read list of events is shorted than the expected value")
+                .hasSize(expectedEventCount);
     }
 
     @Test
@@ -136,8 +140,9 @@ class JpaStorageEngineInsertionReadOrderTest {
             thread.join();
         }
 
-        assertEquals(expectedEventCount, counter,
-                     "The actually read list of events is shorted than the expected value");
+        assertThat(counter)
+                .as("The actually read list of events is shorted than the expected value")
+                .isEqualTo(expectedEventCount);
     }
 
     @Test
@@ -170,8 +175,9 @@ class JpaStorageEngineInsertionReadOrderTest {
             thread.join();
         }
 
-        assertEquals(expectedEventCount, counter,
-                     "The actually read list of events is shorted than the expected value");
+        assertThat(counter)
+                .as("The actually read list of events is shorted than the expected value")
+                .isEqualTo(expectedEventCount);
     }
 
     private Thread[] storeEvents(int threadCount, int eventsPerThread, int inverseRollbackRate) {

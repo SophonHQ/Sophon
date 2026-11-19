@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.common.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.RoutingKey;
 
 import java.lang.annotation.Annotation;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.common.annotation.AnnotationUtils.*;
 
 /**
@@ -48,33 +48,36 @@ class AnnotationUtilsTest {
     void findAttributesOnDirectAnnotation() throws NoSuchMethodException {
         Optional<Map<String, Object>> optionalResult =
                 findAnnotationAttributes(getClass().getDeclaredMethod("directAnnotated"), TheTarget.class);
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         Map<String, Object> results = optionalResult.get();
 
-        assertEquals("value", results.get("property"));
-        assertFalse(results.containsKey("value"), "value property should use annotation Simple class name as key");
-        assertEquals("value()", results.get("theTarget"));
+        assertThat(results).containsEntry("property", "value");
+        assertThat(results.containsKey("value"))
+                .as("value property should use annotation Simple class name as key")
+                .isFalse();
+        assertThat(results).containsEntry("theTarget", "value()");
     }
 
     @Test
     void findAttributesOnStaticMetaAnnotation() throws NoSuchMethodException {
         Optional<Map<String, Object>> optionalResult =
                 findAnnotationAttributes(getClass().getDeclaredMethod("staticallyOverridden"), TheTarget.class);
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         Map<String, Object> results = optionalResult.get();
 
-        assertEquals("overridden_statically", results.get("property"));
+        assertThat(results).containsEntry("property", "overridden_statically");
     }
 
     @Test
     void findAttributesOnDynamicMetaAnnotation() throws NoSuchMethodException {
         Optional<Map<String, Object>> optionalResult =
                 findAnnotationAttributes(getClass().getDeclaredMethod("dynamicallyOverridden"), TheTarget.class);
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         Map<String, Object> results = optionalResult.get();
 
-        assertEquals("dynamic-override", results.get("property"));
-        assertEquals("extra", results.get("extraValue"));
+        assertThat(results)
+                .containsEntry("property", "dynamic-override")
+                .containsEntry("extraValue", "extra");
     }
 
     @Test
@@ -82,19 +85,20 @@ class AnnotationUtilsTest {
         Optional<Map<String, Object>> optionalResult = findAnnotationAttributes(
                 getClass().getDeclaredMethod("dynamicallyOverridden"), TheTarget.class.getName()
         );
-        assertTrue(optionalResult.isPresent());
+        assertThat(optionalResult).isPresent();
         Map<String, Object> results = optionalResult.get();
 
-        assertEquals("dynamic-override", results.get("property"));
-        assertEquals("extra", results.get("extraValue"));
-        assertEquals("otherValue", results.get("theTarget"));
+        assertThat(results)
+                .containsEntry("property", "dynamic-override")
+                .containsEntry("extraValue", "extra")
+                .containsEntry("theTarget", "otherValue");
     }
 
     @Test
     void findAttributesOnNonExistentAnnotation() throws NoSuchMethodException {
         Optional<Map<String, Object>> result =
                 findAnnotationAttributes(getClass().getDeclaredMethod("dynamicallyOverridden"), RoutingKey.class);
-        assertFalse(result.isPresent(), "Didn't expect attributes to be found for non-existent annotation");
+        assertThat(result).as("Didn't expect attributes to be found for non-existent annotation").isNotPresent();
     }
 
     @Test
@@ -109,8 +113,8 @@ class AnnotationUtilsTest {
         Optional<Map<String, Object>> result =
                 findAnnotationAttributes(annotatedElement, TheTarget.class, OVERRIDE_ONLY);
 
-        assertTrue(result.isPresent());
-        assertEquals(expected, result.get());
+        assertThat(result).isPresent();
+        assertThat(result).hasValue(expected);
     }
 
     @Test
@@ -125,8 +129,8 @@ class AnnotationUtilsTest {
         Optional<Map<String, Object>> result =
                 findAnnotationAttributes(annotatedElement, TheTarget.class.getName(), OVERRIDE_ONLY);
 
-        assertTrue(result.isPresent());
-        assertEquals(expected, result.get());
+        assertThat(result).isPresent();
+        assertThat(result).hasValue(expected);
     }
 
     @Test
@@ -148,9 +152,9 @@ class AnnotationUtilsTest {
                 AnotherMetaAnnotation.class, TheTarget.class, resultAnnotatedWithSubject, resultVisited
         );
 
-        assertTrue(result);
-        assertEquals(expectedAnnotatedWithSubject, resultAnnotatedWithSubject);
-        assertEquals(expectedVisited, resultVisited);
+        assertThat(result).isTrue();
+        assertThat(resultAnnotatedWithSubject).isEqualTo(expectedAnnotatedWithSubject);
+        assertThat(resultVisited).isEqualTo(expectedVisited);
     }
 
     @Test
@@ -169,9 +173,9 @@ class AnnotationUtilsTest {
                 NotMetaAnnotated.class, TheTarget.class, resultAnnotatedWithSubject, resultVisited
         );
 
-        assertFalse(result);
-        assertEquals(expectedAnnotatedWithSubject, resultAnnotatedWithSubject);
-        assertEquals(expectedVisited, resultVisited);
+        assertThat(result).isFalse();
+        assertThat(resultAnnotatedWithSubject).isEqualTo(expectedAnnotatedWithSubject);
+        assertThat(resultVisited).isEqualTo(expectedVisited);
     }
 
     @TheTarget

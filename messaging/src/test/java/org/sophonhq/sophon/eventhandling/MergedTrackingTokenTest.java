@@ -17,9 +17,9 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class MergedTrackingTokenTest {
@@ -28,49 +28,55 @@ class MergedTrackingTokenTest {
     void mergedTokenCoversOriginal() {
         MergedTrackingToken testSubject = new MergedTrackingToken(token(1), token(3));
 
-        assertTrue(testSubject.covers(token(1)));
-        assertFalse(testSubject.covers(token(2)));
-        assertFalse(testSubject.covers(token(3)));
+        assertThat(testSubject.covers(token(1))).isTrue();
+        assertThat(testSubject.covers(token(2))).isFalse();
+        assertThat(testSubject.covers(token(3))).isFalse();
     }
 
     @Test
     void upperBound() {
         MergedTrackingToken testSubject = new MergedTrackingToken(token(1), token(3));
 
-        assertEquals(new MergedTrackingToken(token(2), token(3)), testSubject.upperBound(token(2)));
-        assertEquals(token(3), testSubject.upperBound(token(3)));
+        assertThat(testSubject.upperBound(token(2))).isEqualTo(new MergedTrackingToken(token(2), token(3)));
+        assertThat(testSubject.upperBound(token(3))).isEqualTo(token(3));
     }
 
     @Test
     void lowerBound() {
         MergedTrackingToken testSubject = new MergedTrackingToken(token(1), token(3));
 
-        assertEquals(new MergedTrackingToken(token(1), token(2)), testSubject.lowerBound(token(2)));
-        assertEquals(token(1), testSubject.lowerBound(token(1)));
+        assertThat(testSubject.lowerBound(token(2))).isEqualTo(new MergedTrackingToken(token(1), token(2)));
+        assertThat(testSubject.lowerBound(token(1))).isEqualTo(token(1));
     }
 
     @Test
     void unwrapToLowerBound() {
-        assertEquals(token(1), new MergedTrackingToken(new MergedTrackingToken(token(1), token(5)), token(3)).lowerBound());
-        assertEquals(token(1), new MergedTrackingToken(token(1), new MergedTrackingToken(token(5), token(3))).lowerBound());
+        assertThat(new MergedTrackingToken(new MergedTrackingToken(token(1), token(5)), token(3)).lowerBound())
+                .isEqualTo(token(1));
+        assertThat(new MergedTrackingToken(token(1), new MergedTrackingToken(token(5), token(3))).lowerBound())
+                .isEqualTo(token(1));
     }
 
     @Test
     void upperBound_NestedTokens() {
         MergedTrackingToken testSubject = new MergedTrackingToken(new MergedTrackingToken(token(1), token(3)), token(5));
 
-        assertEquals(new MergedTrackingToken(token(4), token(5)), testSubject.upperBound(token(4)));
-        assertEquals(new MergedTrackingToken(new MergedTrackingToken(token(3), token(3)), token(5)), testSubject.upperBound(token(3)));
-        assertEquals(new MergedTrackingToken(new MergedTrackingToken(token(2), token(3)), token(5)), testSubject.upperBound(token(2)));
+        assertThat(testSubject.upperBound(token(4))).isEqualTo(new MergedTrackingToken(token(4), token(5)));
+        assertThat(testSubject.upperBound(token(3)))
+                .isEqualTo(new MergedTrackingToken(new MergedTrackingToken(token(3), token(3)), token(5)));
+        assertThat(testSubject.upperBound(token(2)))
+                .isEqualTo(new MergedTrackingToken(new MergedTrackingToken(token(2), token(3)), token(5)));
     }
 
     @Test
     void lowerBound_NestedTokens() {
         MergedTrackingToken testSubject = new MergedTrackingToken(new MergedTrackingToken(token(1), token(5)), token(3));
 
-        assertEquals(new MergedTrackingToken(new MergedTrackingToken(token(1), token(3)), token(3)), testSubject.lowerBound(token(3)));
-        assertEquals(new MergedTrackingToken(new MergedTrackingToken(token(1), token(2)), token(2)), testSubject.lowerBound(token(2)));
-        assertEquals(token(1), testSubject.lowerBound(token(1)));
+        assertThat(testSubject.lowerBound(token(3)))
+                .isEqualTo(new MergedTrackingToken(new MergedTrackingToken(token(1), token(3)), token(3)));
+        assertThat(testSubject.lowerBound(token(2)))
+                .isEqualTo(new MergedTrackingToken(new MergedTrackingToken(token(1), token(2)), token(2)));
+        assertThat(testSubject.lowerBound(token(1))).isEqualTo(token(1));
     }
 
     @Test
@@ -84,91 +90,94 @@ class MergedTrackingTokenTest {
 
         TrackingToken advancedToken = currentToken.advancedTo(incomingMessage);
 
-        assertTrue(advancedToken instanceof MergedTrackingToken);
+        assertThat(advancedToken).isInstanceOf(MergedTrackingToken.class);
         MergedTrackingToken actual = (MergedTrackingToken) advancedToken;
-        assertTrue(actual.lowerSegmentToken() instanceof ReplayToken); // this token should not have been modified
-        assertTrue(actual.upperSegmentToken() instanceof ReplayToken, "Wrong upper segment: " + actual.upperSegmentToken()); // this token should not have been modified
+        assertThat(actual.lowerSegmentToken())
+                .isInstanceOf(ReplayToken.class); // this token should not have been modified
+        assertThat(actual.upperSegmentToken())
+                .as("Wrong upper segment: " + actual.upperSegmentToken())
+                .isInstanceOf(ReplayToken.class); // this token should not have been modified
     }
 
     @Test
     void unwrapPrefersLastAdvancedToken_LowerSegmentAdvanced() {
         TrackingToken merged = new MergedTrackingToken(token(1), token(3)).advancedTo(token(2));
-        assertTrue(merged instanceof MergedTrackingToken);
-        assertEquals(token(2), WrappedToken.unwrap(merged, GlobalSequenceTrackingToken.class).orElse(null));
+        assertThat(merged).isInstanceOf(MergedTrackingToken.class);
+        assertThat(WrappedToken.unwrap(merged, GlobalSequenceTrackingToken.class).orElse(null)).isEqualTo(token(2));
     }
 
     @Test
     void unwrapPrefersLastAdvancedToken_UpperSegmentAdvanced() {
         TrackingToken merged = new MergedTrackingToken(token(3), token(1)).advancedTo(token(2));
-        assertTrue(merged instanceof MergedTrackingToken);
-        assertEquals(token(2), WrappedToken.unwrap(merged, GlobalSequenceTrackingToken.class).orElse(null));
+        assertThat(merged).isInstanceOf(MergedTrackingToken.class);
+        assertThat(WrappedToken.unwrap(merged, GlobalSequenceTrackingToken.class).orElse(null)).isEqualTo(token(2));
     }
 
     @Test
     void unwrapPrefersLastAdvancedToken_NeitherSegmentAdvanced() {
         TrackingToken merged = new MergedTrackingToken(token(3), token(3)).advancedTo(token(2));
-        assertTrue(merged instanceof MergedTrackingToken);
-        assertEquals(token(3), WrappedToken.unwrap(merged, GlobalSequenceTrackingToken.class).orElse(null));
+        assertThat(merged).isInstanceOf(MergedTrackingToken.class);
+        assertThat(WrappedToken.unwrap(merged, GlobalSequenceTrackingToken.class).orElse(null)).isEqualTo(token(3));
     }
 
     @Test
     void unwrapPrefersLastAdvancedToken_NeitherSegmentAdvanced_OnlyLowerIsCandidate() {
         MergedTrackingToken merged = new MergedTrackingToken(token(3), mock(TrackingToken.class));
-        assertEquals(token(3), merged.unwrap(GlobalSequenceTrackingToken.class).orElse(null));
+        assertThat(merged.unwrap(GlobalSequenceTrackingToken.class).orElse(null)).isEqualTo(token(3));
     }
 
     @Test
     void unwrapPrefersLastAdvancedToken_NeitherSegmentAdvanced_OnlyUpperIsCandidate() {
         MergedTrackingToken merged = new MergedTrackingToken(mock(TrackingToken.class), token(3));
-        assertEquals(token(3), merged.unwrap(GlobalSequenceTrackingToken.class).orElse(null));
+        assertThat(merged.unwrap(GlobalSequenceTrackingToken.class).orElse(null)).isEqualTo(token(3));
     }
 
     @Test
     void positionReportsLowestSegment() {
         MergedTrackingToken merged = new MergedTrackingToken(token(4), token(3));
-        assertEquals(3L, merged.position().orElse(0L));
+        assertThat(merged.position().orElse(0L)).isEqualTo(3L);
     }
 
     @Test
     void positionIsNotPresent() {
         MergedTrackingToken merged = new MergedTrackingToken(mock(TrackingToken.class), token(3));
-        assertFalse(merged.position().isPresent());
+        assertThat(merged.position().isPresent()).isFalse();
     }
 
     @Test
     void isMergeInProgress() {
         MergedTrackingToken testSubject = new MergedTrackingToken(token(1), token(3));
-        assertTrue(MergedTrackingToken.isMergeInProgress(testSubject));
+        assertThat(MergedTrackingToken.isMergeInProgress(testSubject)).isTrue();
     }
 
     @Test
     void mergePosition() {
         MergedTrackingToken testSubject = new MergedTrackingToken(new MergedTrackingToken(token(1), token(3)), token(5));
 
-        assertTrue(MergedTrackingToken.mergePosition(testSubject).isPresent());
-        assertEquals(MergedTrackingToken.mergePosition(testSubject).getAsLong(), 5);
+        assertThat(MergedTrackingToken.mergePosition(testSubject).isPresent()).isTrue();
+        assertThat(MergedTrackingToken.mergePosition(testSubject).getAsLong()).isEqualTo(5);
     }
 
     @Test
     void coversWithNestedMergedNullTokens() {
         MergedTrackingToken testSubject = new MergedTrackingToken(new MergedTrackingToken(null, null), null);
 
-        assertFalse(testSubject.covers(token(0)));
-        assertTrue(testSubject.covers(null));
+        assertThat(testSubject.covers(token(0))).isFalse();
+        assertThat(testSubject.covers(null)).isTrue();
 
         GlobalSequenceTrackingToken advance = token(1);
-        assertSame(advance, testSubject.advancedTo(advance));
+        assertThat(testSubject.advancedTo(advance)).isSameAs(advance);
     }
 
     @Test
     void coversWithNullTokens() {
         MergedTrackingToken testSubject = new MergedTrackingToken(null, null);
 
-        assertFalse(testSubject.covers(token(0)));
-        assertTrue(testSubject.covers(null));
+        assertThat(testSubject.covers(token(0))).isFalse();
+        assertThat(testSubject.covers(null)).isTrue();
 
         GlobalSequenceTrackingToken advance = token(1);
-        assertSame(advance, testSubject.advancedTo(advance));
+        assertThat(testSubject.advancedTo(advance)).isSameAs(advance);
     }
 
     @Test
@@ -176,23 +185,23 @@ class MergedTrackingTokenTest {
         MergedTrackingToken testSubject = new MergedTrackingToken(token(1), token(3));
 
         // Both segments must be at the same position
-        assertFalse(testSubject.samePositionAs(token(1)));
-        assertFalse(testSubject.samePositionAs(token(2)));  // Lower segment is at 1, not 2
-        assertFalse(testSubject.samePositionAs(token(3)));  // Lower segment is at 1, not 3
+        assertThat(testSubject.samePositionAs(token(1))).isFalse();
+        assertThat(testSubject.samePositionAs(token(2))).isFalse();  // Lower segment is at 1, not 2
+        assertThat(testSubject.samePositionAs(token(3))).isFalse();  // Lower segment is at 1, not 3
 
         // When both segments are at the same position
         MergedTrackingToken equalSegments = new MergedTrackingToken(token(5), token(5));
-        assertTrue(equalSegments.samePositionAs(token(5)));
-        assertFalse(equalSegments.samePositionAs(token(4)));
-        assertFalse(equalSegments.samePositionAs(token(6)));
+        assertThat(equalSegments.samePositionAs(token(5))).isTrue();
+        assertThat(equalSegments.samePositionAs(token(4))).isFalse();
+        assertThat(equalSegments.samePositionAs(token(6))).isFalse();
     }
 
     @Test
     void samePositionAsWithNullTokens() {
         MergedTrackingToken testSubject = new MergedTrackingToken(null, null);
 
-        assertTrue(testSubject.samePositionAs(null));
-        assertFalse(testSubject.samePositionAs(token(0)));
+        assertThat(testSubject.samePositionAs(null)).isTrue();
+        assertThat(testSubject.samePositionAs(token(0))).isFalse();
     }
 
     private GlobalSequenceTrackingToken token(int sequence) {

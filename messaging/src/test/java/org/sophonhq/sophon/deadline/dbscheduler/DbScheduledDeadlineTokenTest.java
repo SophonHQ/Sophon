@@ -18,11 +18,11 @@
 package org.sophonhq.sophon.deadline.dbscheduler;
 
 import com.github.kagkarlsson.scheduler.task.TaskInstanceId;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DbScheduledDeadlineTokenTest {
 
@@ -32,9 +32,10 @@ class DbScheduledDeadlineTokenTest {
         TaskInstanceId one = new DbSchedulerDeadlineToken(uuid);
         TaskInstanceId other = new DbSchedulerDeadlineToken(uuid);
 
-        assertEquals(one, other);
-        assertEquals(one.toString(), other.toString());
-        assertEquals(one.hashCode(), other.hashCode());
+        assertThat(other).isEqualTo(one);
+        assertThat(other)
+                .hasToString(one.toString())
+                .hasSameHashCodeAs(one);
     }
 
     @Test
@@ -42,8 +43,8 @@ class DbScheduledDeadlineTokenTest {
         TaskInstanceId one = new DbSchedulerDeadlineToken(UUID.randomUUID().toString());
         TaskInstanceId other = new DbSchedulerDeadlineToken(UUID.randomUUID().toString());
 
-        assertNotEquals(one, other);
-        assertNotEquals(one.toString(), other.toString());
-        assertNotEquals(one.hashCode(), other.hashCode());
+        assertThat(other).isNotEqualTo(one);
+        assertThat(other.toString()).isNotEqualTo(one.toString());
+        assertThat(other.hashCode()).isNotEqualTo(one.hashCode());
     }
 }

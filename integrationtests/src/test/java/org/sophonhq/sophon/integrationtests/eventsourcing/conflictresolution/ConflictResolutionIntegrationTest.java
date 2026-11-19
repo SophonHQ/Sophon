@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.integrationtests.eventsourcing.conflictresolution;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
 import org.sophonhq.sophon.config.Configuration;
@@ -33,7 +34,7 @@ import org.sophonhq.sophon.modelling.command.TargetAggregateVersion;
 
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 class ConflictResolutionIntegrationTest {
@@ -64,20 +65,17 @@ class ConflictResolutionIntegrationTest {
     void unresolvedConflictCausesException() {
         commandGateway.sendAndWait(new CreateCommand("1234"));
         commandGateway.sendAndWait(new UpdateCommand("1234", "update1", 0L));
-        assertThrows(
-                ConflictingAggregateVersionException.class,
-                () -> commandGateway.sendAndWait(new UpdateWithoutConflictDetectionCommand("1234", "update2", 0L))
-        );
+        assertThatThrownBy(() -> commandGateway.sendAndWait(
+                new UpdateWithoutConflictDetectionCommand("1234", "update2", 0L)
+        )).isInstanceOf(ConflictingAggregateVersionException.class);
     }
 
     @Test
     void expressedConflictCausesException() {
         commandGateway.sendAndWait(new CreateCommand("1234"));
         commandGateway.sendAndWait(new UpdateCommand("1234", "update1", 0L));
-        assertThrows(
-                ConflictingAggregateVersionException.class,
-                () -> commandGateway.sendAndWait(new UpdateCommand("1234", "update1", 0L))
-        );
+        assertThatThrownBy(() -> commandGateway.sendAndWait(new UpdateCommand("1234", "update1", 0L)))
+                .isInstanceOf(ConflictingAggregateVersionException.class);
     }
 
     @Test

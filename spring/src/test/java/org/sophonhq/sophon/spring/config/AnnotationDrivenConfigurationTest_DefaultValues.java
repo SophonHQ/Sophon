@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.spring.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -49,8 +49,8 @@ public class AnnotationDrivenConfigurationTest_DefaultValues {
         Object eventHandler = applicationContext.getBean("eventHandler");
         Object commandHandler = applicationContext.getBean("commandHandler");
 
-        assertNotNull(eventHandler);
-        assertNotNull(commandHandler);
+        assertThat(eventHandler).isNotNull();
+        assertThat(commandHandler).isNotNull();
     }
 
     @AnnotationDriven

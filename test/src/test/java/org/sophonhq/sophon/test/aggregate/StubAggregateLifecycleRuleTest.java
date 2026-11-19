@@ -20,8 +20,7 @@ package org.sophonhq.sophon.test.aggregate;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.markDeleted;
 
@@ -34,17 +33,17 @@ public class StubAggregateLifecycleRuleTest {
     public void testAppliedEventsArePassedToActiveLifecycle() {
         apply("test");
 
-        assertEquals(1, testSubject.getAppliedEvents().size());
-        assertEquals("test", testSubject.getAppliedEventPayloads().get(0));
-        assertEquals("test", testSubject.getAppliedEvents().get(0).getPayload());
+        assertThat(testSubject.getAppliedEvents()).hasSize(1);
+        assertThat(testSubject.getAppliedEventPayloads().get(0)).isEqualTo("test");
+        assertThat(testSubject.getAppliedEvents().get(0).getPayload()).isEqualTo("test");
     }
 
     @Test
     public void testMarkDeletedIsRegisteredWithActiveLifecycle() {
         markDeleted();
 
-        assertEquals(0, testSubject.getAppliedEvents().size());
-        assertTrue(testSubject.isMarkedDeleted());
+        assertThat(testSubject.getAppliedEvents()).hasSize(0);
+        assertThat(testSubject.isMarkedDeleted()).isTrue();
     }
 
 }

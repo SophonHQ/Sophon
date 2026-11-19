@@ -19,7 +19,7 @@ package org.sophonhq.sophon.metrics;
 
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Metric;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
@@ -27,7 +27,7 @@ import org.sophonhq.sophon.monitoring.MessageMonitor;
 import java.util.Arrays;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 class MessageCountingMonitorTest {
@@ -51,10 +51,10 @@ class MessageCountingMonitorTest {
         Counter failureCounter = (Counter) metricSet.get("failureCounter");
         Counter ignoredCounter = (Counter) metricSet.get("ignoredCounter");
 
-        assertEquals(3, ingestedCounter.getCount());
-        assertEquals(2, processedCounter.getCount());
-        assertEquals(1, successCounter.getCount());
-        assertEquals(1, failureCounter.getCount());
-        assertEquals(1, ignoredCounter.getCount());
+        assertThat(ingestedCounter.getCount()).isEqualTo(3);
+        assertThat(processedCounter.getCount()).isEqualTo(2);
+        assertThat(successCounter.getCount()).isOne();
+        assertThat(failureCounter.getCount()).isOne();
+        assertThat(ignoredCounter.getCount()).isOne();
     }
 }

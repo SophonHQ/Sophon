@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.test.matchers;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -34,21 +34,21 @@ class MatchAllFieldFilterTest {
 
     @Test
     void acceptWhenEmpty() throws Exception {
-        assertTrue(new MatchAllFieldFilter(Collections.emptyList())
-                           .accept(MatchAllFieldFilterTest.class.getDeclaredField("field")));
+        assertThat(new MatchAllFieldFilter(Collections.emptyList())
+                           .accept(MatchAllFieldFilterTest.class.getDeclaredField("field"))).isTrue();
     }
 
     @Test
     void acceptWhenAllAccept() throws Exception {
-        assertTrue(new MatchAllFieldFilter(Arrays.asList(AllFieldsFilter.instance(),
+        assertThat(new MatchAllFieldFilter(Arrays.asList(AllFieldsFilter.instance(),
                                                          AllFieldsFilter.instance()))
-                           .accept(MatchAllFieldFilterTest.class.getDeclaredField("field")));
+                           .accept(MatchAllFieldFilterTest.class.getDeclaredField("field"))).isTrue();
     }
 
     @Test
     void rejectWhenOneRejects() throws Exception {
-        assertFalse(new MatchAllFieldFilter(Arrays.asList(AllFieldsFilter.instance(),
-                                                          field -> false))
-                            .accept(MatchAllFieldFilterTest.class.getDeclaredField("field")));
+        assertThat(new MatchAllFieldFilter(Arrays.asList(AllFieldsFilter.instance(),
+                                                         field -> false))
+                           .accept(MatchAllFieldFilterTest.class.getDeclaredField("field"))).isFalse();
     }
 }

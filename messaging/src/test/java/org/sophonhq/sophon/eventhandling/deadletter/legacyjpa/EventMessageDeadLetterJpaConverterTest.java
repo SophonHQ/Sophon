@@ -16,12 +16,12 @@
 
 package org.sophonhq.sophon.eventhandling.deadletter.legacyjpa;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEventEntry;
 
 import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link EventMessageDeadLetterJpaConverter}.
@@ -37,7 +37,7 @@ class EventMessageDeadLetterJpaConverterTest {
                 null, null, null, null, null, null, null, null, null
         );
 
-        assertTrue(converter.canConvert(legacyEntry));
+        assertThat(converter.canConvert(legacyEntry)).isTrue();
     }
 
     @Test
@@ -47,6 +47,6 @@ class EventMessageDeadLetterJpaConverterTest {
                 null, null, null, null, null, null, null, null, null
         );
 
-        assertFalse(converter.canConvert(entry));
+        assertThat(converter.canConvert(entry)).isFalse();
     }
 }

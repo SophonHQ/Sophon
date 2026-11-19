@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.test.aggregate;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandExecutionException;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.NoHandlerForCommandException;
@@ -28,8 +28,10 @@ import org.sophonhq.sophon.modelling.command.TargetAggregateIdentifier;
 import org.sophonhq.sophon.test.FixtureExecutionException;
 import org.sophonhq.sophon.test.SophonAssertionError;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.core.StringContains.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 /**
@@ -52,13 +54,13 @@ class FixtureTest_ExceptionHandling {
 
     @Test
     void givenUnknownCommand() {
-        FixtureExecutionException result = assertThrows(FixtureExecutionException.class, () ->
+        FixtureExecutionException result = assertThatExceptionOfType(FixtureExecutionException.class).isThrownBy(() ->
                 fixture.givenCommands(
                         new CreateMyAggregateCommand("14"),
                         new UnknownCommand("14")
                 )
-        );
-        assertEquals(NoHandlerForCommandException.class, result.getCause().getClass());
+        ).actual();
+        assertThat(result.getCause().getClass()).isEqualTo(NoHandlerForCommandException.class);
     }
 
     @Test
@@ -70,12 +72,12 @@ class FixtureTest_ExceptionHandling {
 
     @Test
     void givenExceptionTriggeringCommand() {
-        assertThrows(RuntimeException.class, () ->
+        assertThatThrownBy(() ->
                 fixture.givenCommands(
                         new CreateMyAggregateCommand("14"),
                         new ExceptionTriggeringCommand("14")
                 )
-        );
+        ).isInstanceOf(RuntimeException.class);
     }
 
     @Test
@@ -131,22 +133,21 @@ class FixtureTest_ExceptionHandling {
 
     @Test
     void whenCommandWithInvalidIdentifier() {
-        assertThrows(FixtureExecutionException.class, () ->
+        assertThatThrownBy(() ->
                 fixture.givenCommands(
                         new CreateMyAggregateCommand("1"),
                         new ValidMyAggregateCommand("2")
                 )
-        );
+        ).isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
     void expectExceptionMessageThrowsFixtureExecutionExceptionWhenNoExceptionIsThrown() {
-        assertThrows(
-                SophonAssertionError.class,
+        assertThatThrownBy(
                 () -> fixture.given(new MyAggregateCreatedEvent(AGGREGATE_ID))
                              .when(new ValidMyAggregateCommand(AGGREGATE_ID))
                              .expectExceptionMessage("some-exception-message")
-        );
+        ).isInstanceOf(SophonAssertionError.class);
     }
 
     @Test

@@ -21,7 +21,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
 import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import org.sophonhq.sophon.common.jpa.SimpleEntityManagerProvider;
@@ -47,15 +49,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 import java.util.stream.LongStream;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.*;
 import static org.sophonhq.sophon.eventsourcing.utils.TestSerializer.xStreamSerializer;
@@ -101,15 +103,15 @@ class JpaEventStorageEngineTest
     void storeAndLoadEventsFromDatastore() {
         testSubject.appendEvents(createEvents(2));
         entityManager.clear();
-        assertEquals(2, testSubject.readEvents(AGGREGATE).asStream().count());
+        assertThat(testSubject.readEvents(AGGREGATE).asStream().count()).isEqualTo(2);
     }
 
     @Test
     void loadLastSequenceNumber() {
         testSubject.appendEvents(createEvents(2));
         entityManager.clear();
-        assertEquals(1L, (long) testSubject.lastSequenceNumberFor(AGGREGATE).orElse(-1L));
-        assertFalse(testSubject.lastSequenceNumberFor(UUID.randomUUID().toString()).isPresent());
+        assertThat((long) testSubject.lastSequenceNumberFor(AGGREGATE).orElse(-1L)).isOne();
+        assertThat(testSubject.lastSequenceNumberFor(UUID.randomUUID().toString())).isEmpty();
     }
 
     @Test
@@ -136,7 +138,7 @@ class JpaEventStorageEngineTest
 
         testSubject.fetchTrackedEvents(null, 100).stream()
                    .map(i -> (GapAwareTrackingToken) i.trackingToken())
-                   .forEach(i -> assertTrue(!i.hasGaps() || i.getGaps().first() >= 5L));
+                   .forEach(i -> assertThat(!i.hasGaps() || i.getGaps().first() >= 5L).isTrue());
     }
 
     @DirtiesContext
@@ -167,7 +169,7 @@ class JpaEventStorageEngineTest
                                             )
                                             .setParameter("aggregateIdentifier", "aggregateId").getResultList();
         Optional<Long> maxResult = sequences.stream().max(Long::compareTo);
-        assertTrue(maxResult.isPresent());
+        assertThat(maxResult).isPresent();
         long largestIndex = maxResult.get();
         long secondLastEventIndex = largestIndex - 2;
         // create a lot of gaps most of them fake (< 0), but some of them real
@@ -178,15 +180,13 @@ class JpaEventStorageEngineTest
         List<? extends TrackedEventData<?>> events = testSubject.fetchTrackedEvents(
                 GapAwareTrackingToken.newInstance(secondLastEventIndex, gaps), 100
         );
-        assertEquals(1, events.size());
+        assertThat(events.size()).isOne();
 
         // we expect the gap before the last event we had read previously
-        assertEquals(
-                secondLastEventIndex - 1,
-                (long) ((GapAwareTrackingToken) events.get(0).trackingToken()).getGaps().first()
-        );
+        assertThat((long) ((GapAwareTrackingToken) events.get(0).trackingToken()).getGaps().first())
+                .isEqualTo(secondLastEventIndex - 1);
         // and we've got a new gap in this batch
-        assertEquals(2, ((GapAwareTrackingToken) events.get(0).trackingToken()).getGaps().size());
+        assertThat(((GapAwareTrackingToken) events.get(0).trackingToken()).getGaps()).hasSize(2);
     }
 
     @Test
@@ -195,7 +195,7 @@ class JpaEventStorageEngineTest
         entityManager.createQuery("UPDATE DomainEventEntry e SET e.payloadType = :type").setParameter("type", "unknown")
                      .executeUpdate();
         DomainEventMessage<?> actual = testSubject.readEvents(AGGREGATE).peek();
-        assertEquals(UnknownSerializedType.class, actual.getPayloadType());
+        assertThat(actual.getPayloadType()).isEqualTo(UnknownSerializedType.class);
     }
 
     @Test
@@ -240,9 +240,9 @@ class JpaEventStorageEngineTest
         entityManager.flush();
         entityManager.clear();
 
-        assertFalse(entityManager.createQuery("SELECT e FROM CustomDomainEventEntry e").getResultList().isEmpty());
-        assertEquals("Snapshot1", testSubject.readSnapshot(AGGREGATE).get().getPayload());
-        assertEquals("Payload1", testSubject.readEvents(AGGREGATE).peek().getPayload());
+        assertThat(entityManager.createQuery("SELECT e FROM CustomDomainEventEntry e").getResultList()).isNotEmpty();
+        assertThat(testSubject.readSnapshot(AGGREGATE).get().getPayload()).isEqualTo("Snapshot1");
+        assertThat(testSubject.readEvents(AGGREGATE).peek().getPayload()).isEqualTo("Payload1");
     }
 
     @Test
@@ -269,16 +269,16 @@ class JpaEventStorageEngineTest
                                                            .filter(m -> m.getPayload() instanceof String)
                                                            .map(m -> (String) m.getPayload())
                                                            .collect(toList());
-        assertEquals(Arrays.asList(expectedPayloadOne, expectedPayloadTwo), eventStorageEngineResult);
+        assertThat(eventStorageEngineResult).containsExactlyElementsOf(asList(expectedPayloadOne, expectedPayloadTwo));
 
         TrackingEventStream eventStoreResult = testEventStore.openStream(null);
 
-        assertTrue(eventStoreResult.hasNextAvailable());
-        assertEquals(UnknownSerializedType.class, eventStoreResult.nextAvailable().getPayloadType());
-        assertEquals(UnknownSerializedType.class, eventStoreResult.nextAvailable().getPayloadType());
-        assertEquals(expectedPayloadOne, eventStoreResult.nextAvailable().getPayload());
-        assertEquals(expectedPayloadTwo, eventStoreResult.nextAvailable().getPayload());
-        assertFalse(eventStoreResult.hasNextAvailable());
+        assertThat(eventStoreResult.hasNextAvailable()).isTrue();
+        assertThat(eventStoreResult.nextAvailable().getPayloadType()).isEqualTo(UnknownSerializedType.class);
+        assertThat(eventStoreResult.nextAvailable().getPayloadType()).isEqualTo(UnknownSerializedType.class);
+        assertThat(eventStoreResult.nextAvailable().getPayload()).isEqualTo(expectedPayloadOne);
+        assertThat(eventStoreResult.nextAvailable().getPayload()).isEqualTo(expectedPayloadTwo);
+        assertThat(eventStoreResult.hasNextAvailable()).isFalse();
     }
 
     @Test

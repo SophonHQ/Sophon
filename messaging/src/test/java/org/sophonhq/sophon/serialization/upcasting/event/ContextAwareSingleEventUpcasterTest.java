@@ -23,7 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventData;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import org.sophonhq.sophon.messaging.MetaData;
@@ -42,7 +43,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * This test class only asserts whether the context map is created, filled with data and if that data is used to upcast
@@ -97,24 +98,24 @@ class ContextAwareSingleEventUpcasterTest {
         List<IntermediateEventRepresentation> result = upcaster.upcast(testEventRepresentationStream)
                                                                .collect(toList());
 
-        assertEquals(expectedNumberOfEvents, result.size());
+        assertThat(result).hasSize(expectedNumberOfEvents);
 
         IntermediateEventRepresentation firstEventResult = result.get(0);
-        assertNull(firstEventResult.getType().getRevision());
-        assertEquals(firstTestEventData.getEventIdentifier(), firstEventResult.getMessageIdentifier());
-        assertEquals(firstTestEventData.getTimestamp(), firstEventResult.getTimestamp());
-        assertEquals(testMetaData, firstEventResult.getMetaData().getObject());
+        assertThat(firstEventResult.getType().getRevision()).isNull();
+        assertThat(firstEventResult.getMessageIdentifier()).isEqualTo(firstTestEventData.getEventIdentifier());
+        assertThat(firstEventResult.getTimestamp()).isEqualTo(firstTestEventData.getTimestamp());
+        assertThat(firstEventResult.getMetaData().getObject()).isEqualTo(testMetaData);
         SecondStubEvent contextEvent = serializer.deserialize(firstEventResult.getData());
-        assertEquals(expectedContextEventString, contextEvent.getName());
-        assertEquals(expectedContextEventNumber, contextEvent.getNumber());
+        assertThat(contextEvent.getName()).isEqualTo(expectedContextEventString);
+        assertThat(contextEvent.getNumber()).isEqualTo(expectedContextEventNumber);
 
         IntermediateEventRepresentation secondEventResult = result.get(1);
-        assertEquals(expectedRevisionNumber, secondEventResult.getType().getRevision());
-        assertEquals(secondTestEventData.getEventIdentifier(), secondEventResult.getMessageIdentifier());
-        assertEquals(secondTestEventData.getTimestamp(), secondEventResult.getTimestamp());
-        assertEquals(testMetaData, secondEventResult.getMetaData().getObject());
+        assertThat(secondEventResult.getType().getRevision()).isEqualTo(expectedRevisionNumber);
+        assertThat(secondEventResult.getMessageIdentifier()).isEqualTo(secondTestEventData.getEventIdentifier());
+        assertThat(secondEventResult.getTimestamp()).isEqualTo(secondTestEventData.getTimestamp());
+        assertThat(secondEventResult.getMetaData().getObject()).isEqualTo(testMetaData);
         StubDomainEvent upcastedEvent = serializer.deserialize(secondEventResult.getData());
-        assertEquals(expectedNewString, upcastedEvent.getName());
+        assertThat(upcastedEvent.getName()).isEqualTo(expectedNewString);
     }
 
     private static class StubContextAwareSingleEventUpcaster

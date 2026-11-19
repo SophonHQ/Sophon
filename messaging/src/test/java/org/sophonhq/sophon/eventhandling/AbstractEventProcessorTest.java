@@ -18,7 +18,7 @@
 package org.sophonhq.sophon.eventhandling;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.unitofwork.BatchingUnitOfWork;
 import org.sophonhq.sophon.messaging.unitofwork.RollbackConfigurationType;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
@@ -27,8 +27,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
 import static org.sophonhq.sophon.utils.EventTestUtils.createEvent;
 import static org.sophonhq.sophon.utils.EventTestUtils.createEvents;
 
@@ -77,7 +78,7 @@ class AbstractEventProcessorTest {
 
         testSubject.processInBatchingUnitOfWork(events);
 
-        assertTrue(pending.isEmpty(), "Not all events were presented to monitor");
+        assertThat(pending).as("Not all events were presented to monitor").isEmpty();
     }
 
     private static class TestEventProcessor extends AbstractEventProcessor {

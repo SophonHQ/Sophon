@@ -38,8 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
@@ -70,7 +69,7 @@ public class AnnotatedAggregateTest {
         DefaultUnitOfWork<CommandMessage<Object>> uow = DefaultUnitOfWork.startAndGet(asCommandMessage(command));
         Aggregate<AggregateRoot> aggregate = uow.executeWithResult(() -> repository
                 .newInstance(() -> new AggregateRoot(command))).getPayload();
-        assertNotNull(aggregate);
+        assertThat(aggregate).isNotNull();
 
         InOrder inOrder = inOrder(eventBus);
         inOrder.verify(eventBus).publish(argThat((ArgumentMatcher<EventMessage<?>>) x -> Event_1.class
@@ -85,7 +84,7 @@ public class AnnotatedAggregateTest {
         DefaultUnitOfWork<CommandMessage<Object>> uow = DefaultUnitOfWork.startAndGet(asCommandMessage(command));
         Aggregate<AggregateRoot> aggregate = uow.executeWithResult(() -> repository
                 .newInstance(() -> new AggregateRoot(command))).getPayload();
-        assertNotNull(aggregate);
+        assertThat(aggregate).isNotNull();
 
         InOrder inOrder = inOrder(eventBus);
         inOrder.verify(eventBus).publish(argThat((ArgumentMatcher<EventMessage<?>>) x -> Event_1.class
@@ -103,7 +102,7 @@ public class AnnotatedAggregateTest {
                 (AnnotatedAggregate<AggregateRoot>) uow.executeWithResult(
                         () -> repository.newInstance(AggregateRoot::new)).getPayload();
 
-        assertNull(testSubject.lastSequence());
+        assertThat(testSubject.lastSequence()).isNull();
     }
 
     @ParameterizedTest
@@ -113,7 +112,7 @@ public class AnnotatedAggregateTest {
         DefaultUnitOfWork<CommandMessage<Object>> uow = DefaultUnitOfWork.startAndGet(asCommandMessage(command));
         Aggregate<AggregateRoot> aggregate = uow.executeWithResult(() -> repository
                 .newInstance(() -> new AggregateRoot(command, sideEffect))).getPayload();
-        assertNotNull(aggregate);
+        assertThat(aggregate).isNotNull();
 
         InOrder inOrderEvents = inOrder(eventBus);
         inOrderEvents.verify(eventBus).publish(argThat((ArgumentMatcher<EventMessage<?>>) x -> Event_1.class

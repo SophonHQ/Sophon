@@ -18,13 +18,15 @@
 package org.sophonhq.sophon.eventhandling.scheduling.dbscheduler;
 
 import com.github.kagkarlsson.scheduler.Scheduler;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
 import org.sophonhq.sophon.eventhandling.EventBus;
 import org.sophonhq.sophon.serialization.TestSerializer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class DbSchedulerEventSchedulerBuilderTest {
@@ -47,33 +49,34 @@ class DbSchedulerEventSchedulerBuilderTest {
                                                           .eventBus(eventBus)
                                                           .build();
 
-        assertNotNull(eventScheduler);
+        assertThat(eventScheduler).isNotNull();
     }
 
     @Test
     void validateNeedsAllPropertiesSet() {
         builder.scheduler(scheduler)
                .transactionManager(transactionManager);
-        assertThrows(SophonConfigurationException.class, () -> builder.build());
+        assertThatThrownBy(() -> builder.build()).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void whenSettingSchedulerWithNullThrowError() {
-        assertThrows(SophonConfigurationException.class, () -> builder.scheduler(null));
+        assertThatThrownBy(() -> builder.scheduler(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void whenSettingTransactionManagerWithNullThrowError() {
-        assertThrows(SophonConfigurationException.class, () -> builder.transactionManager(null));
+        assertThatThrownBy(() -> builder.transactionManager(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void whenSettingSerializerWithNullThrowError() {
-        assertThrows(SophonConfigurationException.class, () -> builder.serializer(null));
+        assertThatThrownBy(() -> builder.serializer(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void whenSettingEventBusWithNullThrowError() {
-        assertThrows(SophonConfigurationException.class, () -> builder.eventBus(null));
+        assertThatThrownBy(() -> builder.eventBus(null)).isInstanceOf(SophonConfigurationException.class);
     }
 }

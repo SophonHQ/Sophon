@@ -17,11 +17,11 @@
 
 package org.sophonhq.sophon.messaging;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.serialization.SerializedObject;
 import org.sophonhq.sophon.serialization.json.JacksonSerializer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.messaging.GenericResultMessage.asResultMessage;
 
 /**
@@ -38,7 +38,7 @@ class GenericResultMessageTest {
         try {
             resultMessage.getPayload();
         } catch (IllegalPayloadAccessException ipae) {
-            assertEquals(t, ipae.getCause());
+            assertThat(ipae.getCause()).isEqualTo(t);
         }
     }
 
@@ -50,6 +50,6 @@ class GenericResultMessageTest {
         SerializedObject<String> serializedObject =
                 resultMessage.serializeExceptionResult(jacksonSerializer, String.class);
         RemoteExceptionDescription actual = jacksonSerializer.deserialize(serializedObject);
-        assertEquals("java.lang.Throwable: oops", actual.getDescriptions().get(0));
+        assertThat(actual.getDescriptions().get(0)).isEqualTo("java.lang.Throwable: oops");
     }
 }

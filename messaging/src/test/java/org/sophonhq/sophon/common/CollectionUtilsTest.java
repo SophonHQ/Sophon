@@ -24,7 +24,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class CollectionUtilsTest {
 
@@ -37,12 +37,12 @@ class CollectionUtilsTest {
         Collection<String> collectionFromSpliterator = CollectionUtils.asCollection(Spliterators.spliterator(new String[] {"item1", "item2"}, Spliterator.ORDERED));
         Collection<String> collectionFromIterable = CollectionUtils.asCollection((Iterable) () -> asList("item1", "item2").iterator());
 
-        assertEquals(1, collectionFromElement.size());
-        assertEquals(0, collectionFromNull.size());
-        assertEquals(2, collectionFromArray.size());
-        assertEquals(2, collectionFromCollection.size());
-        assertEquals(2, collectionFromSpliterator.size());
-        assertEquals(2, collectionFromIterable.size());
+        assertThat(collectionFromElement).hasSize(1);
+        assertThat(collectionFromNull).isEmpty();
+        assertThat(collectionFromArray).hasSize(2);
+        assertThat(collectionFromCollection).hasSize(2);
+        assertThat(collectionFromSpliterator).hasSize(2);
+        assertThat(collectionFromIterable).hasSize(2);
     }
 
     @Test
@@ -51,8 +51,8 @@ class CollectionUtilsTest {
         TreeSet<Integer> result2 = CollectionUtils.intersect(emptyList(), asList(1, 3, 5, 7), TreeSet::new);
         List<Integer> result3 = CollectionUtils.intersect(singletonList(1), asList(1, 3, 5, 7), ArrayList::new);
 
-        assertEquals(new TreeSet<>(asList(1, 5)), result1);
-        assertEquals(new TreeSet<>(), result2);
-        assertEquals(singletonList(1), result3);
+        assertThat(result1).isEqualTo(new TreeSet<>(asList(1, 5)));
+        assertThat(result2).isEqualTo(new TreeSet<>());
+        assertThat(result3).containsExactlyElementsOf(singletonList(1));
     }
 }

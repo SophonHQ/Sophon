@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.spring.eventsourcing;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.config.Configurer;
 import org.sophonhq.sophon.config.ConfigurerModule;
@@ -41,7 +41,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link SpringPrototypeAggregateFactory}.
@@ -58,7 +58,7 @@ class SpringPrototypeAggregateFactoryTest {
 
     @Test
     void contextStarts() {
-        assertNotNull(testSubject);
+        assertThat(testSubject).isNotNull();
     }
 
     @Test
@@ -68,7 +68,7 @@ class SpringPrototypeAggregateFactoryTest {
         );
         SpringWiredAggregate aggregate = testSubject.createAggregateRoot("id2", domainEvent);
 
-        assertNotNull(aggregate.getContext(), "ContextAware method not invoked");
+        assertThat(aggregate.getContext()).as("ContextAware method not invoked").isNotNull();
     }
 
     @Test
@@ -78,7 +78,7 @@ class SpringPrototypeAggregateFactoryTest {
         );
         SpringWiredAggregate aggregate = testSubject.createAggregateRoot("id2", snapshotEvent);
 
-        assertNotNull(aggregate.getContext(), "ContextAware method not invoked");
+        assertThat(aggregate.getContext()).as("ContextAware method not invoked").isNotNull();
     }
 
     @Configuration

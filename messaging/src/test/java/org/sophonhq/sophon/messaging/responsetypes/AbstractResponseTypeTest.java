@@ -31,7 +31,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.common.ReflectionUtils.methodOf;
 
 /**
@@ -64,8 +64,8 @@ public abstract class AbstractResponseTypeTest<R> {
     protected void testMatchRanked(String methodNameToTest, Integer expectedResult) throws NoSuchMethodException {
         Method methodToTest = methodOf(getClass(), methodNameToTest);
         Type methodReturnType = methodToTest.getGenericReturnType();
-        assertEquals(expectedResult, testSubject.matchRank(methodReturnType));
-        assertEquals(expectedResult > 0, testSubject.matches(methodReturnType));
+        assertThat(testSubject.matchRank(methodReturnType)).isEqualTo(expectedResult);
+        assertThat(testSubject.matches(methodReturnType)).isEqualTo(expectedResult > 0);
     }
 
     @SuppressWarnings("unused")

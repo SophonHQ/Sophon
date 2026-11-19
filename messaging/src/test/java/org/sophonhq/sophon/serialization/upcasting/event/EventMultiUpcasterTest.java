@@ -25,7 +25,8 @@ import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventData;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventEntry;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -49,7 +50,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -91,9 +92,9 @@ class EventMultiUpcasterTest {
         List<IntermediateEventRepresentation> result = upcaster.upcast(Stream.of(testRepresentation))
                                                                .collect(toList());
 
-        assertEquals(1, result.size());
+        assertThat(result).hasSize(1);
         IntermediateEventRepresentation resultRepresentation = result.get(0);
-        assertSame(testRepresentation, resultRepresentation);
+        assertThat(resultRepresentation).isSameAs(testRepresentation);
         verify(testRepresentation, never()).getData();
     }
 
@@ -111,14 +112,14 @@ class EventMultiUpcasterTest {
 
         testRepresentation = spy(result.get(0));
         // Initial upcast was successful
-        assertEquals(expectedRevisionNumber, testRepresentation.getType().getRevision());
+        assertThat(testRepresentation.getType().getRevision()).isEqualTo(expectedRevisionNumber);
 
         result = upcaster.upcast(Stream.of(testRepresentation))
                          .collect(toList());
 
-        assertFalse(result.isEmpty());
+        assertThat(result).isNotEmpty();
         IntermediateEventRepresentation resultRepresentation = result.get(0);
-        assertSame(testRepresentation, resultRepresentation);
+        assertThat(resultRepresentation).isSameAs(testRepresentation);
         verify(testRepresentation, never()).getData();
     }
 
@@ -141,25 +142,25 @@ class EventMultiUpcasterTest {
         List<IntermediateEventRepresentation> result = upcaster.upcast(Stream.of(testRepresentation))
                                                                .collect(toList());
 
-        assertFalse(result.isEmpty());
+        assertThat(result).isNotEmpty();
 
         IntermediateEventRepresentation firstEventResult = result.get(0);
-        assertEquals(testAggregateType, firstEventResult.getAggregateType().get());
-        assertEquals(testAggregateId, firstEventResult.getAggregateIdentifier().get());
-        assertEquals(testTrackingToken, firstEventResult.getTrackingToken().get());
-        assertEquals(Long.valueOf(testSequenceNumber), firstEventResult.getSequenceNumber().get());
+        assertThat(firstEventResult.getAggregateType()).hasValue(testAggregateType);
+        assertThat(firstEventResult.getAggregateIdentifier()).hasValue(testAggregateId);
+        assertThat(firstEventResult.getTrackingToken().get()).isEqualTo(testTrackingToken);
+        assertThat(firstEventResult.getSequenceNumber()).hasValue(Long.valueOf(testSequenceNumber));
 
         IntermediateEventRepresentation secondEventResult = result.get(1);
-        assertEquals(testAggregateType, secondEventResult.getAggregateType().get());
-        assertEquals(testAggregateId, secondEventResult.getAggregateIdentifier().get());
-        assertEquals(testTrackingToken, secondEventResult.getTrackingToken().get());
-        assertEquals(Long.valueOf(testSequenceNumber), secondEventResult.getSequenceNumber().get());
+        assertThat(secondEventResult.getAggregateType()).hasValue(testAggregateType);
+        assertThat(secondEventResult.getAggregateIdentifier()).hasValue(testAggregateId);
+        assertThat(secondEventResult.getTrackingToken().get()).isEqualTo(testTrackingToken);
+        assertThat(secondEventResult.getSequenceNumber()).hasValue(Long.valueOf(testSequenceNumber));
 
         IntermediateEventRepresentation thirdEventResult = result.get(2);
-        assertEquals(testAggregateType, thirdEventResult.getAggregateType().get());
-        assertEquals(testAggregateId, thirdEventResult.getAggregateIdentifier().get());
-        assertEquals(testTrackingToken, thirdEventResult.getTrackingToken().get());
-        assertEquals(Long.valueOf(testSequenceNumber), thirdEventResult.getSequenceNumber().get());
+        assertThat(thirdEventResult.getAggregateType()).hasValue(testAggregateType);
+        assertThat(thirdEventResult.getAggregateIdentifier()).hasValue(testAggregateId);
+        assertThat(thirdEventResult.getTrackingToken().get()).isEqualTo(testTrackingToken);
+        assertThat(thirdEventResult.getSequenceNumber()).hasValue(Long.valueOf(testSequenceNumber));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -177,34 +178,34 @@ class EventMultiUpcasterTest {
         List<IntermediateEventRepresentation> result = upcaster.upcast(Stream.of(testRepresentation))
                                                                .collect(toList());
 
-        assertFalse(result.isEmpty());
+        assertThat(result).isNotEmpty();
 
         IntermediateEventRepresentation firstResultRepresentation = result.get(0);
-        assertEquals(expectedRevisionNumber, firstResultRepresentation.getType().getRevision());
-        assertEquals(testEventData.getEventIdentifier(), firstResultRepresentation.getMessageIdentifier());
-        assertEquals(testEventData.getTimestamp(), firstResultRepresentation.getTimestamp());
-        assertEquals(testMetaData, firstResultRepresentation.getMetaData().getObject());
+        assertThat(firstResultRepresentation.getType().getRevision()).isEqualTo(expectedRevisionNumber);
+        assertThat(firstResultRepresentation.getMessageIdentifier()).isEqualTo(testEventData.getEventIdentifier());
+        assertThat(firstResultRepresentation.getTimestamp()).isEqualTo(testEventData.getTimestamp());
+        assertThat(firstResultRepresentation.getMetaData().getObject()).isEqualTo(testMetaData);
         StubDomainEvent firstUpcastedEvent = serializer.deserialize(firstResultRepresentation.getData());
-        assertEquals(expectedNewString, firstUpcastedEvent.getName());
+        assertThat(firstUpcastedEvent.getName()).isEqualTo(expectedNewString);
 
         IntermediateEventRepresentation secondResultRepresentation = result.get(1);
-        assertEquals(expectedSecondAndThirdRevisionNumber, secondResultRepresentation.getType().getRevision());
-        assertEquals(testEventData.getEventIdentifier(), secondResultRepresentation.getMessageIdentifier());
-        assertEquals(testEventData.getTimestamp(), secondResultRepresentation.getTimestamp());
-        assertEquals(testMetaData, secondResultRepresentation.getMetaData().getObject());
+        assertThat(secondResultRepresentation.getType().getRevision()).isEqualTo(expectedSecondAndThirdRevisionNumber);
+        assertThat(secondResultRepresentation.getMessageIdentifier()).isEqualTo(testEventData.getEventIdentifier());
+        assertThat(secondResultRepresentation.getTimestamp()).isEqualTo(testEventData.getTimestamp());
+        assertThat(secondResultRepresentation.getMetaData().getObject()).isEqualTo(testMetaData);
         SecondStubEvent secondUpcastedEvent = serializer.deserialize(secondResultRepresentation.getData());
-        assertEquals(expectedNewString, secondUpcastedEvent.getName());
-        assertEquals(expectedNewInteger, secondUpcastedEvent.getNumber());
+        assertThat(secondUpcastedEvent.getName()).isEqualTo(expectedNewString);
+        assertThat(secondUpcastedEvent.getNumber()).isEqualTo(expectedNewInteger);
 
         IntermediateEventRepresentation thirdResultRepresentation = result.get(2);
-        assertEquals(expectedSecondAndThirdRevisionNumber, thirdResultRepresentation.getType().getRevision());
-        assertEquals(testEventData.getEventIdentifier(), thirdResultRepresentation.getMessageIdentifier());
-        assertEquals(testEventData.getTimestamp(), thirdResultRepresentation.getTimestamp());
-        assertEquals(testMetaData, thirdResultRepresentation.getMetaData().getObject());
+        assertThat(thirdResultRepresentation.getType().getRevision()).isEqualTo(expectedSecondAndThirdRevisionNumber);
+        assertThat(thirdResultRepresentation.getMessageIdentifier()).isEqualTo(testEventData.getEventIdentifier());
+        assertThat(thirdResultRepresentation.getTimestamp()).isEqualTo(testEventData.getTimestamp());
+        assertThat(thirdResultRepresentation.getMetaData().getObject()).isEqualTo(testMetaData);
         ThirdStubEvent thirdUpcastedEvent = serializer.deserialize(thirdResultRepresentation.getData());
-        assertEquals(expectedNewString, thirdUpcastedEvent.getName());
-        assertEquals(expectedNewInteger, thirdUpcastedEvent.getNumber());
-        assertEquals(expectedNewBooleans, thirdUpcastedEvent.getTruths());
+        assertThat(thirdUpcastedEvent.getName()).isEqualTo(expectedNewString);
+        assertThat(thirdUpcastedEvent.getNumber()).isEqualTo(expectedNewInteger);
+        assertThat(thirdUpcastedEvent.getTruths()).containsExactlyElementsOf(expectedNewBooleans);
     }
 
     private static class StubEventMultiUpcaster extends EventMultiUpcaster {

@@ -21,7 +21,8 @@ import com.github.kagkarlsson.scheduler.Scheduler;
 import com.github.kagkarlsson.scheduler.task.Execution;
 import com.github.kagkarlsson.scheduler.task.TaskInstance;
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -34,8 +35,8 @@ import java.time.Instant;
 import java.util.List;
 import javax.sql.DataSource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.sophonhq.sophon.utils.DbSchedulerTestUtil.getScheduler;
 import static org.sophonhq.sophon.utils.DbSchedulerTestUtil.reCreateTable;
 
@@ -64,8 +65,8 @@ class DbSchedulerDeadlineManagerTest {
             await().atMost(Duration.ofSeconds(1L)).untilAsserted(
                     () -> {
                         List<Execution> failures = scheduler.getFailingExecutions(Duration.ofHours(1L));
-                        assertEquals(1, failures.size());
-                        assertNotNull(failures.get(0).lastFailure);
+                        assertThat(failures).hasSize(1);
+                        assertThat(failures.get(0).lastFailure).isNotNull();
                     }
             );
         } finally {
@@ -86,8 +87,8 @@ class DbSchedulerDeadlineManagerTest {
             await().atMost(Duration.ofSeconds(1L)).untilAsserted(
                     () -> {
                         List<Execution> failures = scheduler.getFailingExecutions(Duration.ofHours(1L));
-                        assertEquals(1, failures.size());
-                        assertNotNull(failures.get(0).lastFailure);
+                        assertThat(failures).hasSize(1);
+                        assertThat(failures.get(0).lastFailure).isNotNull();
                     }
             );
         } finally {

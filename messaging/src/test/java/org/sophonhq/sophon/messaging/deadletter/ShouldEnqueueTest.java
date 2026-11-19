@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.messaging.deadletter;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.MetaData;
@@ -27,7 +28,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating {@link ShouldEnqueue}.  Constructs a {@code ShouldEnqueue} through the constructor and
@@ -50,22 +51,22 @@ class ShouldEnqueueTest {
     void constructorShouldEnqueueAllowsEnqueueing() {
         ShouldEnqueue<Message<?>> testSubject = new ShouldEnqueue<>();
 
-        assertTrue(testSubject.shouldEnqueue());
-        assertFalse(testSubject.enqueueCause().isPresent());
+        assertThat(testSubject.shouldEnqueue()).isTrue();
+        assertThat(testSubject.enqueueCause()).isEmpty();
 
         DeadLetter<? extends Message<?>> result = testSubject.withDiagnostics(testLetter);
-        assertEquals(testLetter, result);
+        assertThat(result).isEqualTo(testLetter);
     }
 
     @Test
     void decisionsEnqueueAllowsEnqueueing() {
         ShouldEnqueue<Message<?>> testSubject = Decisions.enqueue();
 
-        assertTrue(testSubject.shouldEnqueue());
-        assertFalse(testSubject.enqueueCause().isPresent());
+        assertThat(testSubject.shouldEnqueue()).isTrue();
+        assertThat(testSubject.enqueueCause()).isEmpty();
 
         DeadLetter<? extends Message<?>> result = testSubject.withDiagnostics(testLetter);
-        assertEquals(testLetter, result);
+        assertThat(result).isEqualTo(testLetter);
     }
 
     @Test
@@ -74,13 +75,13 @@ class ShouldEnqueueTest {
 
         ShouldEnqueue<Message<?>> testSubject = new ShouldEnqueue<>(testCause);
 
-        assertTrue(testSubject.shouldEnqueue());
+        assertThat(testSubject.shouldEnqueue()).isTrue();
         Optional<Throwable> resultCause = testSubject.enqueueCause();
-        assertTrue(resultCause.isPresent());
-        assertEquals(testCause, resultCause.get());
+        assertThat(resultCause).isPresent();
+        assertThat(resultCause).hasValue(testCause);
 
         DeadLetter<? extends Message<?>> result = testSubject.withDiagnostics(testLetter);
-        assertEquals(testLetter, result);
+        assertThat(result).isEqualTo(testLetter);
     }
 
     @Test
@@ -89,13 +90,13 @@ class ShouldEnqueueTest {
 
         ShouldEnqueue<Message<?>> testSubject = Decisions.enqueue(testCause);
 
-        assertTrue(testSubject.shouldEnqueue());
+        assertThat(testSubject.shouldEnqueue()).isTrue();
         Optional<Throwable> resultCause = testSubject.enqueueCause();
-        assertTrue(resultCause.isPresent());
-        assertEquals(testCause, resultCause.get());
+        assertThat(resultCause).isPresent();
+        assertThat(resultCause).hasValue(testCause);
 
         DeadLetter<? extends Message<?>> result = testSubject.withDiagnostics(testLetter);
-        assertEquals(testLetter, result);
+        assertThat(result).isEqualTo(testLetter);
     }
 
     @Test
@@ -104,13 +105,13 @@ class ShouldEnqueueTest {
 
         ShouldEnqueue<Message<?>> testSubject = Decisions.requeue(testCause);
 
-        assertTrue(testSubject.shouldEnqueue());
+        assertThat(testSubject.shouldEnqueue()).isTrue();
         Optional<Throwable> resultCause = testSubject.enqueueCause();
-        assertTrue(resultCause.isPresent());
-        assertEquals(testCause, resultCause.get());
+        assertThat(resultCause).isPresent();
+        assertThat(resultCause).hasValue(testCause);
 
         DeadLetter<? extends Message<?>> result = testSubject.withDiagnostics(testLetter);
-        assertEquals(testLetter, result);
+        assertThat(result).isEqualTo(testLetter);
     }
 
     @Test
@@ -120,17 +121,17 @@ class ShouldEnqueueTest {
 
         ShouldEnqueue<Message<?>> testSubject = new ShouldEnqueue<>(testCause, letter -> testMetaData);
 
-        assertTrue(testSubject.shouldEnqueue());
+        assertThat(testSubject.shouldEnqueue()).isTrue();
         Optional<Throwable> resultCause = testSubject.enqueueCause();
-        assertTrue(resultCause.isPresent());
-        assertEquals(testCause, resultCause.get());
+        assertThat(resultCause).isPresent();
+        assertThat(resultCause).hasValue(testCause);
 
         DeadLetter<? extends Message<?>> result = testSubject.withDiagnostics(testLetter);
-        assertEquals(testLetter.message(), result.message());
-        assertEquals(testLetter.cause(), result.cause());
-        assertEquals(testLetter.enqueuedAt(), result.enqueuedAt());
-        assertEquals(testLetter.lastTouched(), result.lastTouched());
-        assertEquals(testMetaData, result.diagnostics());
+        assertThat(result.message()).isEqualTo(testLetter.message());
+        assertThat(result.cause()).isEqualTo(testLetter.cause());
+        assertThat(result.enqueuedAt()).isEqualTo(testLetter.enqueuedAt());
+        assertThat(result.lastTouched()).isEqualTo(testLetter.lastTouched());
+        assertThat(result.diagnostics()).isEqualTo(testMetaData);
     }
 
     @Test
@@ -140,16 +141,16 @@ class ShouldEnqueueTest {
 
         ShouldEnqueue<Message<?>> testSubject = Decisions.requeue(testCause, letter -> testMetaData);
 
-        assertTrue(testSubject.shouldEnqueue());
+        assertThat(testSubject.shouldEnqueue()).isTrue();
         Optional<Throwable> resultCause = testSubject.enqueueCause();
-        assertTrue(resultCause.isPresent());
-        assertEquals(testCause, resultCause.get());
+        assertThat(resultCause).isPresent();
+        assertThat(resultCause).hasValue(testCause);
 
         DeadLetter<? extends Message<?>> result = testSubject.withDiagnostics(testLetter);
-        assertEquals(testLetter.message(), result.message());
-        assertEquals(testLetter.cause(), result.cause());
-        assertEquals(testLetter.enqueuedAt(), result.enqueuedAt());
-        assertEquals(testLetter.lastTouched(), result.lastTouched());
-        assertEquals(testMetaData, result.diagnostics());
+        assertThat(result.message()).isEqualTo(testLetter.message());
+        assertThat(result.cause()).isEqualTo(testLetter.cause());
+        assertThat(result.enqueuedAt()).isEqualTo(testLetter.enqueuedAt());
+        assertThat(result.lastTouched()).isEqualTo(testLetter.lastTouched());
+        assertThat(result.diagnostics()).isEqualTo(testMetaData);
     }
 }

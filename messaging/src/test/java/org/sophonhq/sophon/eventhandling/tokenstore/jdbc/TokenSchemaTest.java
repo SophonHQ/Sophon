@@ -2,7 +2,7 @@ package org.sophonhq.sophon.eventhandling.tokenstore.jdbc;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class TokenSchemaTest {
 
@@ -11,13 +11,13 @@ class TokenSchemaTest {
         TokenSchema tokenSchema = TokenSchema.builder()
             .build();
 
-        assertEquals("TokenEntry", tokenSchema.tokenTable());
-        assertEquals("processorName", tokenSchema.processorNameColumn());
-        assertEquals("segment", tokenSchema.segmentColumn());
-        assertEquals("token", tokenSchema.tokenColumn());
-        assertEquals("tokenType", tokenSchema.tokenTypeColumn());
-        assertEquals("timestamp", tokenSchema.timestampColumn());
-        assertEquals("owner", tokenSchema.ownerColumn());
+        assertThat(tokenSchema.tokenTable()).isEqualTo("TokenEntry");
+        assertThat(tokenSchema.processorNameColumn()).isEqualTo("processorName");
+        assertThat(tokenSchema.segmentColumn()).isEqualTo("segment");
+        assertThat(tokenSchema.tokenColumn()).isEqualTo("token");
+        assertThat(tokenSchema.tokenTypeColumn()).isEqualTo("tokenType");
+        assertThat(tokenSchema.timestampColumn()).isEqualTo("timestamp");
+        assertThat(tokenSchema.ownerColumn()).isEqualTo("owner");
     }
 
     @Test
@@ -32,13 +32,13 @@ class TokenSchemaTest {
             .setOwnerColumn("ownerModified")
             .build();
 
-        assertEquals("TokenEntryModified", tokenSchema.tokenTable());
-        assertEquals("processorNameModified", tokenSchema.processorNameColumn());
-        assertEquals("segmentModified", tokenSchema.segmentColumn());
-        assertEquals("tokenModified", tokenSchema.tokenColumn());
-        assertEquals("tokenTypeModified", tokenSchema.tokenTypeColumn());
-        assertEquals("timestampModified", tokenSchema.timestampColumn());
-        assertEquals("ownerModified", tokenSchema.ownerColumn());
+        assertThat(tokenSchema.tokenTable()).isEqualTo("TokenEntryModified");
+        assertThat(tokenSchema.processorNameColumn()).isEqualTo("processorNameModified");
+        assertThat(tokenSchema.segmentColumn()).isEqualTo("segmentModified");
+        assertThat(tokenSchema.tokenColumn()).isEqualTo("tokenModified");
+        assertThat(tokenSchema.tokenTypeColumn()).isEqualTo("tokenTypeModified");
+        assertThat(tokenSchema.timestampColumn()).isEqualTo("timestampModified");
+        assertThat(tokenSchema.ownerColumn()).isEqualTo("ownerModified");
     }
 
 }

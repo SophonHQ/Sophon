@@ -24,7 +24,8 @@ import io.micrometer.core.instrument.distribution.HistogramSnapshot;
 import io.micrometer.core.instrument.distribution.ValueAtPercentile;
 import io.micrometer.core.instrument.simple.SimpleConfig;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.Message;
@@ -38,7 +39,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.requireNonNull;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 /**
@@ -85,10 +86,10 @@ class MessageTimerMonitorTest {
         Timer failureTimer = requireNonNull(meterRegistry.find(METER_NAME_PREFIX + ".failureTimer").timer());
         Timer ignoredTimer = requireNonNull(meterRegistry.find(METER_NAME_PREFIX + ".ignoredTimer").timer());
 
-        assertEquals(3, all.totalTime(TimeUnit.SECONDS), 0);
-        assertEquals(1, successTimer.totalTime(TimeUnit.SECONDS), 0);
-        assertEquals(1, failureTimer.totalTime(TimeUnit.SECONDS), 0);
-        assertEquals(1, ignoredTimer.totalTime(TimeUnit.SECONDS), 0);
+        assertThat(all.totalTime(TimeUnit.SECONDS)).isEqualTo(3.0);
+        assertThat(successTimer.totalTime(TimeUnit.SECONDS)).isEqualTo(1.0);
+        assertThat(failureTimer.totalTime(TimeUnit.SECONDS)).isEqualTo(1.0);
+        assertThat(ignoredTimer.totalTime(TimeUnit.SECONDS)).isEqualTo(1.0);
     }
 
     @Test
@@ -115,33 +116,34 @@ class MessageTimerMonitorTest {
         Collection<Timer> ignoredTimer = meterRegistry.find(METER_NAME_PREFIX + ".ignoredTimer").timers();
 
         // Expecting two timers with the same meter name ([name=PROCESSOR_NAME.suffix ; payloadType=Integer] , [name=PROCESSOR_NAME.suffix ; payloadType=String])
-        assertEquals(2, all.size(), 0);
-        assertEquals(2, successTimer.size(), 0);
-        assertEquals(2, failureTimer.size(), 0);
-        assertEquals(2, ignoredTimer.size(), 0);
+        assertThat(all).hasSize(2);
+        assertThat(successTimer).hasSize(2);
+        assertThat(failureTimer).hasSize(2);
+        assertThat(ignoredTimer).hasSize(2);
 
-        assertTrue(all.stream()
+        assertThat(all.stream()
                       .filter(timer -> Objects.equals(timer.getId().getTag("payloadType"), "Integer"))
-                      .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1));
-        assertTrue(all.stream()
+                      .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1)).isTrue();
+        assertThat(all.stream()
                       .filter(timer -> Objects.equals(timer.getId().getTag("payloadType"), "String"))
-                      .allMatch(timer -> (timer.totalTime(TimeUnit.SECONDS) == 2 && timer.max(TimeUnit.SECONDS) == 1)));
+                      .allMatch(timer -> (timer.totalTime(TimeUnit.SECONDS) == 2 && timer.max(TimeUnit.SECONDS) == 1)))
+                .isTrue();
 
-        assertTrue(successTimer.stream()
+        assertThat(successTimer.stream()
                                .filter(timer -> Objects.equals(timer.getId().getTag("payloadType"), "Integer"))
-                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1));
+                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1)).isTrue();
 
-        assertTrue(successTimer.stream()
+        assertThat(successTimer.stream()
                                .filter(timer -> Objects.equals(timer.getId().getTag("payloadType"), "String"))
-                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 0));
+                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 0)).isTrue();
 
-        assertTrue(failureTimer.stream()
+        assertThat(failureTimer.stream()
                                .filter(timer -> Objects.equals(timer.getId().getTag("payloadType"), "Integer"))
-                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 0));
+                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 0)).isTrue();
 
-        assertTrue(failureTimer.stream()
+        assertThat(failureTimer.stream()
                                .filter(timer -> Objects.equals(timer.getId().getTag("payloadType"), "String"))
-                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1));
+                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1)).isTrue();
     }
 
     @Test
@@ -171,33 +173,34 @@ class MessageTimerMonitorTest {
         Collection<Timer> ignoredTimer = meterRegistry.find(METER_NAME_PREFIX + ".ignoredTimer").timers();
 
         // Expecting two timers with the same meter name ([name=PROCESSOR_NAME.suffix ; payloadType=Integer] , [name=PROCESSOR_NAME.suffix ; payloadType=String])
-        assertEquals(2, all.size(), 0);
-        assertEquals(2, successTimer.size(), 0);
-        assertEquals(2, failureTimer.size(), 0);
-        assertEquals(2, ignoredTimer.size(), 0);
+        assertThat(all).hasSize(2);
+        assertThat(successTimer).hasSize(2);
+        assertThat(failureTimer).hasSize(2);
+        assertThat(ignoredTimer).hasSize(2);
 
-        assertTrue(all.stream()
+        assertThat(all.stream()
                       .filter(timer -> Objects.equals(timer.getId().getTag("myMetaData"), "myMetadataValue1"))
-                      .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1));
-        assertTrue(all.stream()
+                      .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1)).isTrue();
+        assertThat(all.stream()
                       .filter(timer -> Objects.equals(timer.getId().getTag("myMetaData"), "myMetadataValue2"))
-                      .allMatch(timer -> (timer.totalTime(TimeUnit.SECONDS) == 2 && timer.max(TimeUnit.SECONDS) == 1)));
+                      .allMatch(timer -> (timer.totalTime(TimeUnit.SECONDS) == 2 && timer.max(TimeUnit.SECONDS) == 1)))
+                .isTrue();
 
-        assertTrue(successTimer.stream()
+        assertThat(successTimer.stream()
                                .filter(timer -> Objects.equals(timer.getId().getTag("myMetaData"), "myMetadataValue1"))
-                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1));
+                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1)).isTrue();
 
-        assertTrue(successTimer.stream()
+        assertThat(successTimer.stream()
                                .filter(timer -> Objects.equals(timer.getId().getTag("myMetaData"), "myMetadataValue2"))
-                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 0));
+                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 0)).isTrue();
 
-        assertTrue(failureTimer.stream()
+        assertThat(failureTimer.stream()
                                .filter(timer -> Objects.equals(timer.getId().getTag("myMetaData"), "myMetadataValue1"))
-                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 0));
+                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 0)).isTrue();
 
-        assertTrue(failureTimer.stream()
+        assertThat(failureTimer.stream()
                                .filter(timer -> Objects.equals(timer.getId().getTag("myMetaData"), "myMetadataValue2"))
-                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1));
+                               .allMatch(timer -> timer.totalTime(TimeUnit.SECONDS) == 1)).isTrue();
     }
 
     @Test
@@ -228,58 +231,60 @@ class MessageTimerMonitorTest {
 
     void assertPercentiles(HistogramSnapshot resultHistogram) {
         ValueAtPercentile[] resultPercentiles = resultHistogram.percentileValues();
-        assertEquals(0.5, resultPercentiles[0].percentile());
-        assertEquals(0.75, resultPercentiles[1].percentile());
-        assertEquals(0.95, resultPercentiles[2].percentile());
+        assertThat(resultPercentiles[0].percentile()).isEqualTo(0.5);
+        assertThat(resultPercentiles[1].percentile()).isEqualTo(0.75);
+        assertThat(resultPercentiles[2].percentile()).isEqualTo(0.95);
     }
 
     @Test
     void buildWithNullMeterNamePrefixThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.meterNamePrefix(null));
+        assertThatThrownBy(() -> testSubject.meterNamePrefix(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyMeterNamePrefixThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.meterNamePrefix(""));
+        assertThatThrownBy(() -> testSubject.meterNamePrefix("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithoutMeterNamePrefixThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder()
                                                                      .meterRegistry(meterRegistry);
-        assertThrows(SophonConfigurationException.class, testSubject::build);
+        assertThatThrownBy(testSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullMeterRegistryThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.meterRegistry(null));
+        assertThatThrownBy(() -> testSubject.meterRegistry(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithoutMeterRegistryThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder()
                                                                      .meterNamePrefix(METER_NAME_PREFIX);
-        assertThrows(SophonConfigurationException.class, testSubject::build);
+        assertThatThrownBy(testSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullClockThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.clock(null));
+        assertThatThrownBy(() -> testSubject.clock(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullTagsBuilderThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.tagsBuilder(null));
+        assertThatThrownBy(() -> testSubject.tagsBuilder(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullTimerCustomizationThrowsSophonConfigurationException() {
         MessageTimerMonitor.Builder testSubject = MessageTimerMonitor.builder();
-        assertThrows(SophonConfigurationException.class, () -> testSubject.timerCustomization(null));
+        assertThatThrownBy(() -> testSubject.timerCustomization(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 }

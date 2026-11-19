@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.eventhandling.scheduling.jobrunr;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 import org.sophonhq.sophon.eventhandling.scheduling.ScheduleToken;
@@ -26,7 +26,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 import java.util.Collection;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class JobRunrScheduleTokenTest {
 
@@ -36,9 +36,10 @@ class JobRunrScheduleTokenTest {
         ScheduleToken one = new JobRunrScheduleToken(uuid);
         ScheduleToken other = new JobRunrScheduleToken(uuid);
 
-        assertEquals(one, other);
-        assertEquals(one.toString(), other.toString());
-        assertEquals(one.hashCode(), other.hashCode());
+        assertThat(other).isEqualTo(one);
+        assertThat(other)
+                .hasToString(one.toString())
+                .hasSameHashCodeAs(one);
     }
 
     @Test
@@ -46,16 +47,16 @@ class JobRunrScheduleTokenTest {
         ScheduleToken one = new JobRunrScheduleToken(UUID.randomUUID());
         ScheduleToken other = new JobRunrScheduleToken(UUID.randomUUID());
 
-        assertNotEquals(one, other);
-        assertNotEquals(one.toString(), other.toString());
-        assertNotEquals(one.hashCode(), other.hashCode());
+        assertThat(other).isNotEqualTo(one);
+        assertThat(other.toString()).isNotEqualTo(one.toString());
+        assertThat(other.hashCode()).isNotEqualTo(one.hashCode());
     }
 
     @MethodSource("serializers")
     @ParameterizedTest
     void tokenShouldBeSerializable(TestSerializer serializer) {
         ScheduleToken tokenToTest = new JobRunrScheduleToken(UUID.randomUUID());
-        assertEquals(tokenToTest, serializer.serializeDeserialize(tokenToTest));
+        assertThat(serializer.serializeDeserialize(tokenToTest)).isEqualTo(tokenToTest);
     }
 
     public static Collection<TestSerializer> serializers() {

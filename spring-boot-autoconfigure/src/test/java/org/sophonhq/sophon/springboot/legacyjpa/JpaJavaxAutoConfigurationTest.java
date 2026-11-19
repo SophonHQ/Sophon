@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.springboot.legacyjpa;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.ReflectionUtils;
 import org.sophonhq.sophon.common.legacyjpa.EntityManagerProvider;
 import org.sophonhq.sophon.config.EventProcessingModule;
@@ -40,7 +41,7 @@ import java.time.temporal.TemporalAmount;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests JPA auto-configuration
@@ -62,28 +63,26 @@ class JpaJavaxAutoConfigurationTest {
         testContext.run(context -> {
             Map<String, EntityManagerProvider> entityManagerProviders =
                     context.getBeansOfType(EntityManagerProvider.class);
-            assertTrue(entityManagerProviders.containsKey("entityManagerProvider"));
-            assertEquals(ContainerManagedEntityManagerProvider.class,
-                         entityManagerProviders.get("entityManagerProvider").getClass());
+            assertThat(entityManagerProviders).containsKey("entityManagerProvider");
+            assertThat(entityManagerProviders.get("entityManagerProvider").getClass())
+                    .isEqualTo(ContainerManagedEntityManagerProvider.class);
 
             Map<String, TokenStore> tokenStores =
                     context.getBeansOfType(TokenStore.class);
-            assertTrue(tokenStores.containsKey("tokenStore"));
-            assertEquals(JpaTokenStore.class,
-                         tokenStores.get("tokenStore").getClass());
+            assertThat(tokenStores).containsKey("tokenStore");
+            assertThat(tokenStores.get("tokenStore").getClass()).isEqualTo(JpaTokenStore.class);
 
             //noinspection rawtypes
             Map<String, SagaStore> sagaStores =
                     context.getBeansOfType(SagaStore.class);
-            assertTrue(sagaStores.containsKey("sagaStore"));
-            assertEquals(JpaSagaStore.class,
-                         sagaStores.get("sagaStore").getClass());
+            assertThat(sagaStores).containsKey("sagaStore");
+            assertThat(sagaStores.get("sagaStore").getClass()).isEqualTo(JpaSagaStore.class);
 
             Map<String, SQLErrorCodesResolver> persistenceExceptionResolvers =
                     context.getBeansOfType(SQLErrorCodesResolver.class);
-            assertTrue(persistenceExceptionResolvers.containsKey("persistenceExceptionResolver"));
-            assertEquals(SQLErrorCodesResolver.class,
-                         persistenceExceptionResolvers.get("persistenceExceptionResolver").getClass());
+            assertThat(persistenceExceptionResolvers).containsKey("persistenceExceptionResolver");
+            assertThat(persistenceExceptionResolvers.get("persistenceExceptionResolver").getClass())
+                    .isEqualTo(SQLErrorCodesResolver.class);
         });
     }
 
@@ -93,13 +92,13 @@ class JpaJavaxAutoConfigurationTest {
                    .run(context -> {
                        Map<String, TokenStore> tokenStores =
                                context.getBeansOfType(TokenStore.class);
-                       assertTrue(tokenStores.containsKey("tokenStore"));
+                       assertThat(tokenStores).containsKey("tokenStore");
                        TokenStore tokenStore = tokenStores.get("tokenStore");
                        //noinspection deprecation
                        TemporalAmount tokenClaimInterval = ReflectionUtils.getFieldValue(
                                JpaTokenStore.class.getDeclaredField("claimTimeout"), tokenStore
                        );
-                       assertEquals(Duration.ofSeconds(5L), tokenClaimInterval);
+                       assertThat(tokenClaimInterval).isEqualTo(Duration.ofSeconds(5L));
                    });
     }
 
@@ -107,19 +106,19 @@ class JpaJavaxAutoConfigurationTest {
     void sequencedDeadLetterQueueCanBeSetViaSpringConfiguration() {
         testContext.withPropertyValues("sophon.eventhandling.processors.first.dlq.enabled=true")
                    .run(context -> {
-                       assertNotNull(context.getBean(DeadLetterQueueProviderConfigurerModule.class));
+                       assertThat(context.getBean(DeadLetterQueueProviderConfigurerModule.class)).isNotNull();
 
                        EventProcessingModule eventProcessingConfig = context.getBean(EventProcessingModule.class);
-                       assertNotNull(eventProcessingConfig);
+                       assertThat(eventProcessingConfig).isNotNull();
 
                        Optional<SequencedDeadLetterQueue<EventMessage<?>>> dlq =
                                eventProcessingConfig.deadLetterQueue("first");
-                       assertTrue(dlq.isPresent());
+                       assertThat(dlq).isPresent();
                        //noinspection deprecation
-                       assertTrue(dlq.get() instanceof JpaSequencedDeadLetterQueue);
+                       assertThat(dlq.get()).isInstanceOf(JpaSequencedDeadLetterQueue.class);
 
                        dlq = eventProcessingConfig.deadLetterQueue("second");
-                       assertFalse(dlq.isPresent());
+                       assertThat(dlq).isNotPresent();
                    });
     }
 

@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.commandhandling.gateway;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
@@ -33,7 +34,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Test the {@link IntervalRetryScheduler}.
@@ -99,18 +100,20 @@ class IntervalRetrySchedulerTest {
     void scheduleRetry() {
         for (int nrOfFailures = 1; nrOfFailures <= MAX_RETRIES; nrOfFailures++) {
             long actualDelay = doScheduleRetry(retryScheduler, nrOfFailures);
-            assertTrue(actualDelay >= RETRY_INTERVAL,
-                       "Scheduling a retry after " + nrOfFailures + " failure(s) should wait at least "
-                               + RETRY_INTERVAL + "ms, but waited " + actualDelay + "ms.");
+            assertThat(actualDelay >= RETRY_INTERVAL)
+                    .as("Scheduling a retry after " + nrOfFailures + " failure(s) should wait at least "
+                                + RETRY_INTERVAL + "ms, but waited " + actualDelay + "ms.")
+                    .isTrue();
         }
 
-        assertEquals(0, doScheduleRetry(retryScheduler, MAX_RETRIES + 1),
-                     "Scheduling a retry when past maxRetryCount should have failed.");
+        assertThat(doScheduleRetry(retryScheduler, MAX_RETRIES + 1))
+                .as("Scheduling a retry when past maxRetryCount should have failed.")
+                .isZero();
     }
 
     @Test
     void buildingWhilstMissingScheduledExecutorServiceThrowsConfigurationException() {
         IntervalRetryScheduler.Builder builder = IntervalRetryScheduler.builder();
-        assertThrows(SophonConfigurationException.class, builder::build);
+        assertThatThrownBy(builder::build).isInstanceOf(SophonConfigurationException.class);
     }
 }

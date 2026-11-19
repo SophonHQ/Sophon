@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.springboot;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.config.TagsConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -25,7 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests whether gathering of Sophon tags is properly configured.
@@ -51,12 +52,13 @@ class SophonAutoConfigurationWithTagsTest {
                    )
                    .run(context -> {
                        TagsConfiguration tagsConfiguration = context.getBean(TagsConfiguration.class);
-                       assertNotNull(tagsConfiguration);
+                       assertThat(tagsConfiguration).isNotNull();
                        Map<String, String> tags = tagsConfiguration.getTags();
-                       assertEquals(3, tags.size());
-                       assertEquals("Eu", tags.get("region"));
-                       assertEquals("It", tags.get("country"));
-                       assertEquals("Rome", tags.get("city"));
+                       assertThat(tags)
+                               .hasSize(3)
+                               .containsEntry("region", "Eu")
+                               .containsEntry("country", "It")
+                               .containsEntry("city", "Rome");
                    });
     }
 

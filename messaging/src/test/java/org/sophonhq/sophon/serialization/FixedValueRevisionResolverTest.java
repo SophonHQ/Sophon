@@ -19,7 +19,7 @@ package org.sophonhq.sophon.serialization;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -28,6 +28,6 @@ class FixedValueRevisionResolverTest {
 
     @Test
     void revisionOf() {
-        assertEquals("test", new FixedValueRevisionResolver("test").revisionOf(Object.class));
+        assertThat(new FixedValueRevisionResolver("test").revisionOf(Object.class)).isEqualTo("test");
     }
 }

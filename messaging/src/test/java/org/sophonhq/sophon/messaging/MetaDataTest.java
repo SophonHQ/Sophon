@@ -19,8 +19,7 @@ package org.sophonhq.sophon.messaging;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MetaDataTest {
 
@@ -29,8 +28,8 @@ class MetaDataTest {
         MetaData metaData = MetaData.with("nullkey", null).and("otherkey", "value").and("lastkey", "lastvalue")
                 .subset("nullkey", "otherkey");
 
-        assertEquals(2, metaData.size());
-        assertNull(metaData.get("nullkey"));
-        assertEquals("value", metaData.get("otherkey"));
+        assertThat(metaData.size()).isEqualTo(2);
+        assertThat(metaData.get("nullkey")).isNull();
+        assertThat(metaData).containsEntry("otherkey", "value");
     }
 }

@@ -7,7 +7,7 @@ import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.sophonhq.sophon.modelling.saga.AssociationResolver;
 import org.sophonhq.sophon.modelling.saga.PayloadAssociationResolver;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.fail;
 
 public class AssociationResolverStub implements AssociationResolver {
 

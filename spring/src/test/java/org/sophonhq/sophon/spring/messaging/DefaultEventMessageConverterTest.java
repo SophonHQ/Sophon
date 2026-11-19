@@ -18,7 +18,7 @@
 package org.sophonhq.sophon.spring.messaging;
 
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created on 04/02/17.
@@ -55,11 +55,11 @@ class DefaultEventMessageConverterTest {
 
 		EventMessage<EventPayload> convertedSophonMessage = eventMessageConverter.convertFromInboundMessage(eventMessageConverter.convertToOutboundMessage(sophonMessage));
 
-		assertEquals(instant, convertedSophonMessage.getTimestamp());
-		assertEquals(100, convertedSophonMessage.getMetaData().get("number"));
-		assertEquals("world", convertedSophonMessage.getMetaData().get("string"));
-		assertEquals("hello", convertedSophonMessage.getPayload().name);
-		assertEquals(id, convertedSophonMessage.getIdentifier());
+		assertThat(convertedSophonMessage.getTimestamp()).isEqualTo(instant);
+		assertThat(convertedSophonMessage.getMetaData()).containsEntry("number", 100);
+		assertThat(convertedSophonMessage.getMetaData()).containsEntry("string", "world");
+		assertThat(convertedSophonMessage.getPayload().name).isEqualTo("hello");
+		assertThat(convertedSophonMessage.getIdentifier()).isEqualTo(id);
 	}
 
 	@Test
@@ -77,17 +77,17 @@ class DefaultEventMessageConverterTest {
 		EventMessage<EventPayload> sophonMessage = new GenericDomainEventMessage<>("foo", aggId, 1, payload, metaData, id, instant);
 		EventMessage<EventPayload> convertedSophonMessage = eventMessageConverter.convertFromInboundMessage(eventMessageConverter.convertToOutboundMessage(sophonMessage));
 
-		assertTrue(convertedSophonMessage instanceof DomainEventMessage);
+		assertThat(convertedSophonMessage).isInstanceOf(DomainEventMessage.class);
 
 		DomainEventMessage<EventPayload> convertDomainMessage = (DomainEventMessage<EventPayload>) convertedSophonMessage;
-		assertEquals(instant, convertDomainMessage.getTimestamp());
-		assertEquals(100, convertDomainMessage.getMetaData().get("number"));
-		assertEquals("world", convertDomainMessage.getMetaData().get("string"));
-		assertEquals("hello", convertDomainMessage.getPayload().name);
-		assertEquals(id, convertDomainMessage.getIdentifier());
-		assertEquals("foo", convertDomainMessage.getType());
-		assertEquals(aggId, convertDomainMessage.getAggregateIdentifier());
-		assertEquals(1, convertDomainMessage.getSequenceNumber());
+		assertThat(convertDomainMessage.getTimestamp()).isEqualTo(instant);
+		assertThat(convertDomainMessage.getMetaData()).containsEntry("number", 100);
+		assertThat(convertDomainMessage.getMetaData()).containsEntry("string", "world");
+		assertThat(convertDomainMessage.getPayload().name).isEqualTo("hello");
+		assertThat(convertDomainMessage.getIdentifier()).isEqualTo(id);
+		assertThat(convertDomainMessage.getType()).isEqualTo("foo");
+		assertThat(convertDomainMessage.getAggregateIdentifier()).isEqualTo(aggId);
+		assertThat(convertDomainMessage.getSequenceNumber()).isOne();
 	}
 
 	private class EventPayload{

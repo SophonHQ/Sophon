@@ -17,20 +17,20 @@
 
 package org.sophonhq.sophon.deadline.jobrunr;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.deadline.TestScopeDescriptor;
 import org.sophonhq.sophon.messaging.ScopeDescriptor;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.TestSerializer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class LabelUtilsTest {
 
     @Test
     void forShortStringLabelShouldBeSameAsInput() {
         String expected = "short";
-        assertEquals(expected, LabelUtils.getLabel(expected));
+        assertThat(LabelUtils.getLabel(expected)).isEqualTo(expected);
     }
 
     @Test
@@ -38,8 +38,8 @@ class LabelUtilsTest {
         String longString = "shortsadfsdfsdfsdfsdfsdfsafdsfdgdgdgdgfgfdgdfgdfsfdsfsdfds"
                 + "fdsfsdfdssdjklfisdfikusdufidsufsdfdsufsifsfsfsdfgdfdfgfgdfgdfgdfs";
         String expected = LabelUtils.getLabel(longString);
-        assertEquals(expected, LabelUtils.getLabel(longString));
-        assertTrue(longString.length() > expected.length());
+        assertThat(LabelUtils.getLabel(longString)).isEqualTo(expected);
+        assertThat(longString.length()).isGreaterThan(expected.length());
     }
 
     @Test
@@ -48,7 +48,7 @@ class LabelUtilsTest {
         Serializer serializer = TestSerializer.JACKSON.getSerializer();
         ScopeDescriptor descriptor = new TestScopeDescriptor("aggregateType", "identifier");
         String expected = LabelUtils.getCombinedLabel(serializer, deadLineName, descriptor);
-        assertEquals(expected, LabelUtils.getCombinedLabel(serializer, deadLineName, descriptor));
-        assertTrue(expected.length() < 45);
+        assertThat(LabelUtils.getCombinedLabel(serializer, deadLineName, descriptor)).isEqualTo(expected);
+        assertThat(expected.length()).isLessThan(45);
     }
 }

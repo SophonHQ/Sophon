@@ -17,7 +17,6 @@
 
 package org.sophonhq.sophon.integrationtests.eventhandling;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
@@ -91,9 +90,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptySortedSet;
 import static java.util.Collections.singleton;
 import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.*;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.eventhandling.EventUtils.asTrackedEventMessage;
 import static org.sophonhq.sophon.integrationtests.utils.AssertUtils.assertUntil;
@@ -298,22 +296,24 @@ class TrackingEventProcessorTest {
         doAnswer(invocation -> {
             int cnt = counter.incrementAndGet();
             countDownLatch.countDown();
-            assertTrue(cnt <= expectedEventCount);
+            assertThat(cnt).isLessThanOrEqualTo(expectedEventCount);
             return null;
         }).when(mockHandler).handle(any());
 
         testSubject.start();
 
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Handler to have received 4 published events");
-        assertEquals(expectedEventCount, counter.get(), "Handler should only receive each event once");
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Handler to have received 4 published events")
+                .isTrue();
+        assertThat(counter.get()).as("Handler should only receive each event once").isEqualTo(expectedEventCount);
     }
 
     @Test
     void sequenceMaxCapacity() {
         testSubject.start();
-        assertEquals(1, testSubject.maxCapacity());
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(0, testSubject.availableProcessorThreads()));
-        assertEquals(1, testSubject.activeProcessorThreads());
+        assertThat(testSubject.maxCapacity()).isOne();
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(testSubject.availableProcessorThreads()).isZero());
+        assertThat(testSubject.activeProcessorThreads()).isOne();
     }
 
     @Test
@@ -327,7 +327,9 @@ class TrackingEventProcessorTest {
         // Give it a bit of time to start
         Thread.sleep(200);
         eventBus.publish(createEvents(2));
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Handler to have received 2 published events");
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Handler to have received 2 published events")
+                .isTrue();
     }
 
     @Test
@@ -348,7 +350,9 @@ class TrackingEventProcessorTest {
         // Give it a bit of time to start
         Thread.sleep(200);
         eventBus.publish(createEvents(2));
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Handler to have received 2 published events");
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Handler to have received 2 published events")
+                .isTrue();
         spanFactory.verifySpanCompleted("StreamingEventProcessor.process");
         spanFactory.verifySpanCompleted("StreamingEventProcessor.batch");
     }
@@ -373,8 +377,9 @@ class TrackingEventProcessorTest {
                                             .build();
         testSubject.start();
         assertWithin(1, TimeUnit.SECONDS, () -> {
-            assertEquals(1, skipped.size());
-            assertTrue(skipped.contains(String.class));
+            assertThat(skipped)
+                    .hasSize(1)
+                    .contains(String.class);
         });
     }
 
@@ -404,7 +409,7 @@ class TrackingEventProcessorTest {
 
         testSubject.start();
 
-        assertWithin(8, TimeUnit.SECONDS, () -> assertTrue(skipped.contains(String.class)));
+        assertWithin(8, TimeUnit.SECONDS, () -> assertThat(skipped).contains(String.class));
     }
 
     @Test
@@ -424,18 +429,18 @@ class TrackingEventProcessorTest {
 
         assertWithin(2, TimeUnit.SECONDS, () -> {
             EventTrackerStatus status = testSubject.processingStatus().get(segmentId);
-            assertNotNull(status);
-            assertTrue(status.isErrorState());
-            assertEquals(MockException.class, status.getError().getClass());
+            assertThat(status).isNotNull();
+            assertThat(status.isErrorState()).isTrue();
+            assertThat(status.getError().getClass()).isEqualTo(MockException.class);
         });
 
         errorFlag.set(false);
 
         assertWithin(5, TimeUnit.SECONDS, () -> {
             EventTrackerStatus status = testSubject.processingStatus().get(segmentId);
-            assertNotNull(status);
-            assertFalse(status.isErrorState());
-            assertNull(status.getError());
+            assertThat(status).isNotNull();
+            assertThat(status.isErrorState()).isFalse();
+            assertThat(status.getError()).isNull();
         });
     }
 
@@ -459,8 +464,10 @@ class TrackingEventProcessorTest {
         // Give it a bit of time to start
         Thread.sleep(200);
         eventBus.publish(createEvents(2));
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Handler to have received 2 published events");
-        assertEquals(1, counterAtHandle.get());
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Handler to have received 2 published events")
+                .isTrue();
+        assertThat(counterAtHandle.get()).isOne();
     }
 
     @Test
@@ -470,12 +477,14 @@ class TrackingEventProcessorTest {
         testSubject.start();
 
         assertWithin(
-                1, TimeUnit.SECONDS, () -> assertFalse(testSubject.isRunning(), "Expected processor to have stopped")
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.isRunning()).as("Expected processor to have stopped").isFalse()
         );
         assertWithin(
-                1, TimeUnit.SECONDS, () -> assertTrue(testSubject.isError(), "Expected processor to set the error flag")
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.isError()).as("Expected processor to set the error flag").isTrue()
         );
-        assertEquals(Collections.emptyList(), sleepInstructions);
+        assertThat(sleepInstructions).isEmpty();
     }
 
     @Test
@@ -494,10 +503,12 @@ class TrackingEventProcessorTest {
 
         eventBus.publish(createEvent());
 
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Handler to have received published event");
-        assertTrue(testSubject.isRunning());
-        assertFalse(testSubject.isError());
-        assertEquals(Collections.singletonList(5000L), sleepInstructions);
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Handler to have received published event")
+                .isTrue();
+        assertThat(testSubject.isRunning()).isTrue();
+        assertThat(testSubject.isError()).isFalse();
+        assertThat(sleepInstructions).containsExactly(5000L);
     }
 
     @Test
@@ -510,9 +521,11 @@ class TrackingEventProcessorTest {
         }));
         eventBus.publish(createEvent());
         testSubject.start();
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Unit of Work to have reached clean up phase");
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase")
+                .isTrue();
         verify(tokenStore).storeToken(any(), eq(testSubject.getName()), eq(0));
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 0));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isNotNull();
     }
 
     @Test
@@ -550,19 +563,17 @@ class TrackingEventProcessorTest {
         }));
         testSubject.start();
         eventBus.publish(createEvents(2));
-        assertTrue(
-                countDownLatch.await(5, TimeUnit.SECONDS),
-                "Expected Unit of Work to have reached clean up phase for 2 messages"
-        );
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase for 2 messages")
+                .isTrue();
         InOrder inOrder = inOrder(tokenStore);
         inOrder.verify(tokenStore, times(1)).extendClaim(eq(testSubject.getName()), anyInt());
         inOrder.verify(tokenStore, atLeastOnce()).storeToken(any(), any(), anyInt());
 
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 0));
-        assertEquals(
-                1, invocationsInUnitOfWork.get(),
-                "Unexpected number of invocations of token extension in unit of work"
-        );
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isNotNull();
+        assertThat(invocationsInUnitOfWork.get())
+                .as("Unexpected number of invocations of token extension in unit of work")
+                .isOne();
     }
 
     @Test
@@ -594,18 +605,16 @@ class TrackingEventProcessorTest {
         }));
         testSubject.start();
         eventBus.publish(createEvents(2));
-        assertTrue(
-                countDownLatch.await(5, TimeUnit.SECONDS),
-                "Expected Unit of Work to have reached clean up phase for 2 messages"
-        );
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase for 2 messages")
+                .isTrue();
 
         verify(tokenStore, atLeastOnce()).storeToken(any(), any(), anyInt());
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 0));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isNotNull();
 
-        assertEquals(
-                1, invocationsInUnitOfWork.get(),
-                "Unexpected number of invocations of token extension in unit of work"
-        );
+        assertThat(invocationsInUnitOfWork.get())
+                .as("Unexpected number of invocations of token extension in unit of work")
+                .isOne();
     }
 
     @Test
@@ -638,18 +647,16 @@ class TrackingEventProcessorTest {
         }));
         testSubject.start();
         eventBus.publish(createEvents(2));
-        assertTrue(
-                countDownLatch.await(5, TimeUnit.SECONDS),
-                "Expected Unit of Work to have reached clean up phase for 2 messages"
-        );
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase for 2 messages")
+                .isTrue();
 
         verify(tokenStore, times(1)).storeToken(any(), any(), anyInt());
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 0));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isNotNull();
 
-        assertEquals(
-                0, invocationsInUnitOfWork.get(),
-                "Unexpected number of invocations of token extension in unit of work"
-        );
+        assertThat(invocationsInUnitOfWork.get())
+                .as("Unexpected number of invocations of token extension in unit of work")
+                .isZero();
     }
 
     @Test
@@ -675,16 +682,15 @@ class TrackingEventProcessorTest {
         testSubject.start();
 
         eventBus.publish(createEvents(2));
-        assertTrue(
-                countDownLatch.await(5, TimeUnit.SECONDS),
-                "Expected Unit of Work to have reached clean up phase for 2 messages"
-        );
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase for 2 messages")
+                .isTrue();
 
         InOrder inOrder = inOrder(tokenStore);
         inOrder.verify(tokenStore, times(1)).storeToken(any(), any(), anyInt());
         inOrder.verify(tokenStore, times(1)).extendClaim(eq(testSubject.getName()), anyInt());
 
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 0));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isNotNull();
     }
 
     @Test
@@ -705,14 +711,18 @@ class TrackingEventProcessorTest {
         testSubject.start();
 
         eventBus.publish(createEvent());
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Unit of Work to have reached clean up phase");
-        assertThat(
-                tokenStore.fetchToken(testSubject.getName(), 0),
-                CoreMatchers.anyOf(CoreMatchers.nullValue(),
-                                   CoreMatchers.equalTo(TrackingEventProcessorConfiguration.forSingleThreadedProcessing()
-                                                                                           .getInitialTrackingToken()
-                                                                                           .apply(eventBus)))
-        );
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase")
+                .isTrue();
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0))
+                .satisfiesAnyOf(
+                        arg -> assertThat(arg).isNull(),
+                        arg -> assertThat(arg).isEqualTo(
+                                TrackingEventProcessorConfiguration.forSingleThreadedProcessing()
+                                                                   .getInitialTrackingToken()
+                                                                   .apply(eventBus)
+                        )
+                );
     }
 
     @Test
@@ -722,7 +732,7 @@ class TrackingEventProcessorTest {
         //noinspection resource
         TrackedEventMessage<?> firstEvent = eventBus.openStream(null).nextAvailable();
         tokenStore.storeToken(firstEvent.trackingToken(), testSubject.getName(), 0);
-        assertEquals(firstEvent.trackingToken(), tokenStore.fetchToken(testSubject.getName(), 0));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isEqualTo(firstEvent.trackingToken());
 
         List<EventMessage<?>> acknowledgedEvents = new CopyOnWriteArrayList<>();
         CountDownLatch countDownLatch = new CountDownLatch(9);
@@ -741,8 +751,10 @@ class TrackingEventProcessorTest {
                                             .build();
         testSubject.start();
 
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected 9 invocations on Event Handler by now");
-        assertEquals(9, acknowledgedEvents.size());
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected 9 invocations on Event Handler by now")
+                .isTrue();
+        assertThat(acknowledgedEvents).hasSize(9);
     }
 
     @Test
@@ -760,8 +772,10 @@ class TrackingEventProcessorTest {
 
         eventBus.publish(createEvents(2));
 
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected 2 invocations on Event Handler by now");
-        assertEquals(2, acknowledgedEvents.size());
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected 2 invocations on Event Handler by now")
+                .isTrue();
+        assertThat(acknowledgedEvents).hasSize(2);
 
         testSubject.shutDown();
         // The thread may block for 1 second waiting for a next event to pop up
@@ -779,12 +793,14 @@ class TrackingEventProcessorTest {
 
         eventBus.publish(createEvents(2));
 
-        assertEquals(2, countDownLatch2.getCount());
+        assertThat(countDownLatch2.getCount()).isEqualTo(2);
 
         testSubject.start();
 
-        assertTrue(countDownLatch2.await(5, TimeUnit.SECONDS), "Expected 4 invocations on Event Handler by now");
-        assertEquals(4, acknowledgedEvents.size());
+        assertThat(countDownLatch2.await(5, TimeUnit.SECONDS))
+                .as("Expected 4 invocations on Event Handler by now")
+                .isTrue();
+        assertThat(acknowledgedEvents).hasSize(4);
     }
 
     @Test
@@ -814,8 +830,10 @@ class TrackingEventProcessorTest {
         testSubject.start();
         // Give it a bit of time to start
         Thread.sleep(200);
-        assertTrue(countDownLatch.await(10, TimeUnit.SECONDS), "Expected 5 invocations on Event Handler by now");
-        assertEquals(5, acknowledgedEvents.size());
+        assertThat(countDownLatch.await(10, TimeUnit.SECONDS))
+                .as("Expected 5 invocations on Event Handler by now")
+                .isTrue();
+        assertThat(acknowledgedEvents).hasSize(5);
         //noinspection resource
         verify(eventBus, times(2)).openStream(any());
     }
@@ -855,16 +873,20 @@ class TrackingEventProcessorTest {
         Thread.sleep(200);
         Optional<EventTrackerStatus> healthy = testSubject.processingStatus().values().stream().filter(s -> !s
                 .isErrorState()).findFirst();
-        assertThat("no healthy processor when open stream fails", !healthy.isPresent());
+        assertThat(healthy.isEmpty()).as("no healthy processor when open stream fails").isTrue();
         fail.set(false);
-        assertTrue(countDownLatch.await(10, TimeUnit.SECONDS), "Expected 5 invocations on Event Handler by now");
-        assertEquals(5, acknowledgedEvents.size());
+        assertThat(countDownLatch.await(10, TimeUnit.SECONDS))
+                .as("Expected 5 invocations on Event Handler by now")
+                .isTrue();
+        assertThat(acknowledgedEvents).hasSize(5);
         Optional<EventTrackerStatus> inErrorState = testSubject.processingStatus()
                                                                .values()
                                                                .stream()
                                                                .filter(EventTrackerStatus::isErrorState)
                                                                .findFirst();
-        assertThat("no processor in error state when open stream succeeds again", !inErrorState.isPresent());
+        assertThat(inErrorState.isEmpty())
+                .as("no processor in error state when open stream succeeds again")
+                .isTrue();
     }
 
     @Test
@@ -890,9 +912,11 @@ class TrackingEventProcessorTest {
         Thread.sleep(200);
 
         eventBus.publish(events);
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Unit of Work to have reached clean up phase");
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase")
+                .isTrue();
         verify(tokenStore, atLeastOnce()).storeToken(any(), any(), anyInt());
-        assertNotNull(tokenStore.fetchToken(testSubject.getName(), 0));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isNotNull();
     }
 
     @Test
@@ -935,9 +959,11 @@ class TrackingEventProcessorTest {
         // Give it a bit of time to start
         Thread.sleep(200);
 
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Unit of Work to have reached clean up phase");
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase")
+                .isTrue();
         verify(tokenStore, atLeastOnce()).storeToken(any(), any(), anyInt());
-        assertNull(tokenStore.fetchToken(testSubject.getName(), 0));
+        assertThat(tokenStore.fetchToken(testSubject.getName(), 0)).isNull();
     }
 
     @Test
@@ -966,11 +992,10 @@ class TrackingEventProcessorTest {
         eventBus.publish(createEvents(numberOfEvents));
         await("Handle Events - Initial").pollDelay(Duration.ofMillis(50))
                                         .atMost(Duration.ofMillis(4000))
-                                        .untilAsserted(() -> assertEquals(
-                                                numberOfEvents, handled.size(),
-                                                () -> "Actually handled [" + handled.size() +
-                                                        "] instead of expected [" + numberOfEvents + "]"
-                                        ));
+                                        .untilAsserted(() -> assertThat(handled)
+                                                .as(() -> "Actually handled [" + handled.size() +
+                                                        "] instead of expected [" + numberOfEvents + "]")
+                                                .hasSize(numberOfEvents));
 
         testSubject.shutDown();
         MyResetContext one = new MyResetContext("one");
@@ -985,30 +1010,36 @@ class TrackingEventProcessorTest {
                 .pollDelay(Duration.ofMillis(50))
                 .until(() -> handled.size() == 8);
 
-        assertEquals(handled.subList(0, 4), handled.subList(4, 8));
-        assertEquals(handled.subList(4, 8), handledInRedelivery);
-        assertEquals(4, contextInRedelivery.size());
-        assertTrue(contextInRedelivery.stream().allMatch(two::equals));
-        assertTrue(testSubject.processingStatus().get(segmentId).isReplaying());
-        assertTrue(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent());
-        assertTrue(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent());
+        assertThat(handled.subList(4, 8)).containsExactlyElementsOf(handled.subList(0, 4));
+        assertThat(handledInRedelivery).containsExactlyElementsOf(handled.subList(4, 8));
+        assertThat(contextInRedelivery).hasSize(4);
+        assertThat(contextInRedelivery.stream().allMatch(two::equals)).isTrue();
+        assertThat(testSubject.processingStatus().get(segmentId).isReplaying()).isTrue();
+        assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent()).isTrue();
+        assertThat(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()).isTrue();
 
         long resetPositionAtReplay = testSubject.processingStatus().get(segmentId).getCurrentPosition().getAsLong();
         eventBus.publish(createEvents(1));
 
-        assertWithin(1, TimeUnit.SECONDS, () -> assertFalse(
-                testSubject.processingStatus().get(segmentId).isReplaying()
-        ));
-        assertWithin(1, TimeUnit.SECONDS, () -> assertFalse(
-                testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()
-        ));
-        assertWithin(1, TimeUnit.SECONDS, () -> assertTrue(
-                testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent()
-        ));
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).isReplaying()).isFalse()
+        );
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()).isFalse()
+        );
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent())
+                        .isTrue()
+        );
         //noinspection OptionalGetWithoutIsPresent
-        assertWithin(1, TimeUnit.SECONDS, () -> assertTrue(
-                testSubject.processingStatus().get(segmentId).getCurrentPosition().getAsLong() > resetPositionAtReplay
-        ));
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().getAsLong())
+                        .isGreaterThan(resetPositionAtReplay)
+        );
 
         verify(eventHandlerInvoker, times(1)).performReset(one);
         verify(eventHandlerInvoker, times(1)).performReset(two);
@@ -1030,7 +1061,7 @@ class TrackingEventProcessorTest {
 
         eventBus.publish(createEvents(4));
         testSubject.start();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(4, handled.size()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(handled).hasSize(4));
 
         testSubject.shutDown();
         testSubject.resetTokens(resetContext);
@@ -1070,31 +1101,38 @@ class TrackingEventProcessorTest {
         testSubject.resetTokens(source -> new GlobalSequenceTrackingToken(1L));
         testSubject.start();
 
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(6, handled.size()));
-        assertFalse(handledInRedelivery.contains(handled.get(0)));
-        assertFalse(handledInRedelivery.contains(handled.get(1)));
-        assertEquals(handled.subList(2, 4), handled.subList(4, 6));
-        assertEquals(handled.subList(4, 6), handledInRedelivery);
-        assertTrue(testSubject.processingStatus().get(segmentId).isReplaying());
-        assertTrue(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent());
-        assertTrue(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent());
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(handled).hasSize(6));
+        assertThat(handledInRedelivery)
+                .doesNotContain(handled.get(0))
+                .doesNotContain(handled.get(1));
+        assertThat(handled.subList(4, 6)).containsExactlyElementsOf(handled.subList(2, 4));
+        assertThat(handledInRedelivery).containsExactlyElementsOf(handled.subList(4, 6));
+        assertThat(testSubject.processingStatus().get(segmentId).isReplaying()).isTrue();
+        assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent()).isTrue();
+        assertThat(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()).isTrue();
 
         long resetPositionAtReplay = testSubject.processingStatus().get(segmentId).getResetPosition().getAsLong();
         eventBus.publish(createEvents(1));
 
-        assertWithin(1, TimeUnit.SECONDS, () -> assertFalse(
-                testSubject.processingStatus().get(segmentId).isReplaying()
-        ));
-        assertWithin(1, TimeUnit.SECONDS, () -> assertFalse(
-                testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()
-        ));
-        assertWithin(1, TimeUnit.SECONDS, () -> assertTrue(
-                testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent()
-        ));
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).isReplaying()).isFalse()
+        );
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()).isFalse()
+        );
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent())
+                        .isTrue()
+        );
         //noinspection OptionalGetWithoutIsPresent
-        assertWithin(1, TimeUnit.SECONDS, () -> assertTrue(
-                testSubject.processingStatus().get(segmentId).getCurrentPosition().getAsLong() > resetPositionAtReplay
-        ));
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().getAsLong())
+                        .isGreaterThan(resetPositionAtReplay)
+        );
 
         verify(eventHandlerInvoker).performReset(NO_RESET_PAYLOAD);
     }
@@ -1144,32 +1182,39 @@ class TrackingEventProcessorTest {
 
         eventBus.publish(createEvents(4));
         testSubject.start();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(2, handled.size()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(handled).hasSize(2));
         testSubject.shutDown();
         testSubject.resetTokens();
         testSubject.start();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(4, handled.size()));
-        assertEquals(handled.subList(0, 2), handled.subList(2, 4));
-        assertEquals(handled.subList(2, 4), handledInRedelivery);
-        assertTrue(testSubject.processingStatus().get(segmentId).isReplaying());
-        assertTrue(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent());
-        assertTrue(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent());
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(handled).hasSize(4));
+        assertThat(handled.subList(2, 4)).containsExactlyElementsOf(handled.subList(0, 2));
+        assertThat(handledInRedelivery).containsExactlyElementsOf(handled.subList(2, 4));
+        assertThat(testSubject.processingStatus().get(segmentId).isReplaying()).isTrue();
+        assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent()).isTrue();
+        assertThat(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()).isTrue();
 
         long resetPositionAtReplay = testSubject.processingStatus().get(segmentId).getResetPosition().getAsLong();
         eventBus.publish(createEvents(1));
 
-        assertWithin(1, TimeUnit.SECONDS, () -> assertFalse(
-                testSubject.processingStatus().get(segmentId).isReplaying()
-        ));
-        assertWithin(1, TimeUnit.SECONDS, () -> assertFalse(
-                testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()));
-        assertWithin(1, TimeUnit.SECONDS, () -> assertTrue(
-                testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent()
-        ));
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).isReplaying()).isFalse()
+        );
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()).isFalse()
+        );
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent())
+                        .isTrue()
+        );
         //noinspection OptionalGetWithoutIsPresent
-        assertWithin(1, TimeUnit.SECONDS, () -> assertTrue(
-                testSubject.processingStatus().get(segmentId).getCurrentPosition().getAsLong() > resetPositionAtReplay
-        ));
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().getAsLong())
+                        .isGreaterThan(resetPositionAtReplay)
+        );
 
         verify(eventHandlerInvoker).performReset(NO_RESET_PAYLOAD);
     }
@@ -1198,23 +1243,22 @@ class TrackingEventProcessorTest {
         eventBus.publish(createEvents(numberOfEvents));
         await("Handle Events").pollDelay(Duration.ofMillis(50))
                               .atMost(Duration.ofMillis(2500))
-                              .untilAsserted(() -> assertEquals(
-                                      numberOfEvents, handled.size(),
-                                      () -> "Actually handled [" + handled.size() +
-                                              "] instead of expected [" + numberOfEvents + "]"
-                              ));
+                              .untilAsserted(() -> assertThat(handled)
+                                      .as(() -> "Actually handled [" + handled.size() +
+                                              "] instead of expected [" + numberOfEvents + "]")
+                                      .hasSize(numberOfEvents));
 
-        assertEquals(0, handledInRedelivery.size());
-        assertFalse(testSubject.processingStatus().get(segmentId).isReplaying());
-        assertFalse(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent());
-        assertTrue(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent());
-        assertTrue(testSubject.processingStatus().get(segmentId).getCurrentPosition().getAsLong() > 0);
+        assertThat(handledInRedelivery).isEmpty();
+        assertThat(testSubject.processingStatus().get(segmentId).isReplaying()).isFalse();
+        assertThat(testSubject.processingStatus().get(segmentId).getResetPosition().isPresent()).isFalse();
+        assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().isPresent()).isTrue();
+        assertThat(testSubject.processingStatus().get(segmentId).getCurrentPosition().getAsLong()).isGreaterThan(0);
 
         verify(eventHandlerInvoker).performReset(NO_RESET_PAYLOAD);
     }
 
     private void awaitProcessorStarted() {
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.activeProcessorThreads()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(testSubject.activeProcessorThreads()).isOne());
     }
 
     @SuppressWarnings("unchecked")
@@ -1243,7 +1287,7 @@ class TrackingEventProcessorTest {
         }).when(eventHandlerInvoker).handle(any(), any());
 
         testSubject.start();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(4, firstRun.size()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(firstRun).hasSize(4));
         testSubject.shutDown();
 
         doAnswer(i -> {
@@ -1253,12 +1297,12 @@ class TrackingEventProcessorTest {
 
         testSubject.resetTokens();
         testSubject.start();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(8, replayRun.size()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(replayRun).hasSize(8));
 
-        assertEquals(GapAwareTrackingToken.newInstance(5, asList(3L, 4L)), firstRun.get(3));
-        assertInstanceOf(ReplayToken.class, replayRun.get(0));
-        assertInstanceOf(ReplayToken.class, replayRun.get(5));
-        assertEquals(GapAwareTrackingToken.newInstance(6, emptySortedSet()), replayRun.get(6));
+        assertThat(firstRun.get(3)).isEqualTo(GapAwareTrackingToken.newInstance(5, asList(3L, 4L)));
+        assertThat(replayRun.get(0)).isInstanceOf(ReplayToken.class);
+        assertThat(replayRun.get(5)).isInstanceOf(ReplayToken.class);
+        assertThat(replayRun.get(6)).isEqualTo(GapAwareTrackingToken.newInstance(6, emptySortedSet()));
 
         verify(eventHandlerInvoker).performReset(NO_RESET_PAYLOAD);
     }
@@ -1267,20 +1311,20 @@ class TrackingEventProcessorTest {
     void resetRejectedWhileRunning() {
         testSubject.start();
 
-        assertThrows(IllegalStateException.class, testSubject::resetTokens);
+        assertThatThrownBy(testSubject::resetTokens).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     void resetNotSupportedWhenInvokerDoesNotSupportReset() {
         when(mockHandler.supportsReset()).thenReturn(false);
-        assertFalse(testSubject.supportsReset());
+        assertThat(testSubject.supportsReset()).isFalse();
     }
 
     @Test
     void resetRejectedWhenInvokerDoesNotSupportReset() {
         when(mockHandler.supportsReset()).thenReturn(false);
 
-        assertThrows(IllegalStateException.class, testSubject::resetTokens);
+        assertThatThrownBy(testSubject::resetTokens).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -1288,7 +1332,7 @@ class TrackingEventProcessorTest {
         tokenStore.initializeTokenSegments("test", 4);
         when(tokenStore.fetchToken("test", 3)).thenThrow(new UnableToClaimTokenException("Mock"));
 
-        assertThrows(UnableToClaimTokenException.class, testSubject::resetTokens);
+        assertThatThrownBy(testSubject::resetTokens).isInstanceOf(UnableToClaimTokenException.class);
         verify(tokenStore, never()).storeToken(isNull(), anyString(), anyInt());
     }
 
@@ -1307,13 +1351,13 @@ class TrackingEventProcessorTest {
 
         eventBus.publish(createEvents(4));
         testSubject.start();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(4, count.get()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(count.get()).isEqualTo(4));
         testSubject.shutDown();
         testSubject.resetTokens(resetContext);
         testSubject.start();
 
         TrackingToken test = tokenStore.fetchToken("test", 0);
-        assertEquals(resetContext, ReplayToken.replayContext(test, String.class).orElse(null));
+        assertThat(ReplayToken.replayContext(test, String.class).orElse(null)).isEqualTo(resetContext);
     }
 
     @Test
@@ -1333,7 +1377,7 @@ class TrackingEventProcessorTest {
             Thread.sleep(10);
         }
 
-        assertEquals(1, testSubject.activeProcessorThreads());
+        assertThat(testSubject.activeProcessorThreads()).isOne();
     }
 
     @Test
@@ -1360,35 +1404,35 @@ class TrackingEventProcessorTest {
         EventTrackerStatus eventTrackerStatus = testSubject.processingStatus().get(segmentId);
         GapAwareTrackingToken expectedToken = GapAwareTrackingToken.newInstance(5, asList(3L, 4L));
         TrackingToken lastToken = eventTrackerStatus.getTrackingToken();
-        assertTrue(lastToken.covers(expectedToken));
+        assertThat(lastToken.covers(expectedToken)).isTrue();
     }
 
     @Test
     void releaseSegment() {
         testSubject.start();
-        assertWithin(5, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.activeProcessorThreads()));
+        assertWithin(5, TimeUnit.SECONDS, () -> assertThat(testSubject.activeProcessorThreads()).isOne());
         testSubject.releaseSegment(0, 2, TimeUnit.SECONDS);
-        assertWithin(2, TimeUnit.SECONDS, () -> assertEquals(0, testSubject.activeProcessorThreads()));
-        assertWithin(5, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.activeProcessorThreads()));
+        assertWithin(2, TimeUnit.SECONDS, () -> assertThat(testSubject.activeProcessorThreads()).isZero());
+        assertWithin(5, TimeUnit.SECONDS, () -> assertThat(testSubject.activeProcessorThreads()).isOne());
     }
 
     @Test
     void releaseAndClaimSegmentWillOverrideReleaseDuration() {
         testSubject.start();
-        assertWithin(5, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.activeProcessorThreads()));
+        assertWithin(5, TimeUnit.SECONDS, () -> assertThat(testSubject.activeProcessorThreads()).isOne());
         testSubject.releaseSegment(0, 180, TimeUnit.SECONDS);
-        assertWithin(2, TimeUnit.SECONDS, () -> assertEquals(0, testSubject.activeProcessorThreads()));
+        assertWithin(2, TimeUnit.SECONDS, () -> assertThat(testSubject.activeProcessorThreads()).isZero());
         testSubject.claimSegment(0).join();
-        assertWithin(5, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.activeProcessorThreads()));
+        assertWithin(5, TimeUnit.SECONDS, () -> assertThat(testSubject.activeProcessorThreads()).isOne());
     }
 
     @Test
     void hasAvailableSegments() {
-        assertEquals(1, testSubject.availableProcessorThreads());
+        assertThat(testSubject.availableProcessorThreads()).isOne();
         testSubject.start();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(0, testSubject.availableProcessorThreads()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(testSubject.availableProcessorThreads()).isZero());
         testSubject.releaseSegment(0);
-        assertWithin(2, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.availableProcessorThreads()));
+        assertWithin(2, TimeUnit.SECONDS, () -> assertThat(testSubject.availableProcessorThreads()).isOne());
     }
 
     @Test
@@ -1398,18 +1442,18 @@ class TrackingEventProcessorTest {
         doAnswer(invocation -> {
             shutdownThread.set(new Thread(testSubject::shutDown));
             shutdownThread.get().start();
-            assertWithin(1, TimeUnit.SECONDS, () -> assertFalse(testSubject.isRunning()));
+            assertWithin(1, TimeUnit.SECONDS, () -> assertThat(testSubject.isRunning()).isFalse());
             return invocation.callRealMethod();
         }).doCallRealMethod().when(tokenStore).fetchToken(eq("test"), any(Segment.class));
 
         testSubject.start();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertNotNull(shutdownThread.get()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(shutdownThread.get()).isNotNull());
         shutdownThread.get().join(5000);
         verify(tokenStore).releaseClaim("test", 0);
-        assertEquals(1, testSubject.availableProcessorThreads());
+        assertThat(testSubject.availableProcessorThreads()).isOne();
 
         testSubject.start();
-        assertWithin(2, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.activeProcessorThreads()));
+        assertWithin(2, TimeUnit.SECONDS, () -> assertThat(testSubject.activeProcessorThreads()).isOne());
     }
 
     @Test
@@ -1418,8 +1462,8 @@ class TrackingEventProcessorTest {
         tokenStore.initializeTokenSegments(testSubject.getName(), 1);
         testSubject.start();
         waitForSegmentStart(0);
-        assertTrue(testSubject.splitSegment(0).join(), "Expected split to succeed");
-        assertArrayEquals(new int[]{0, 1}, tokenStore.fetchSegments(testSubject.getName()));
+        assertThat(testSubject.splitSegment(0).join()).as("Expected split to succeed").isTrue();
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(0, 1);
         waitForSegmentStart(0);
     }
 
@@ -1433,12 +1477,12 @@ class TrackingEventProcessorTest {
         }
         int segmentId = 0;
 
-        assertTrue(testSubject.mergeSegment(segmentId).join(), "Expected merge to succeed");
+        assertThat(testSubject.mergeSegment(segmentId).join()).as("Expected merge to succeed").isTrue();
         waitForProcessingStatus(segmentId, EventTrackerStatus::isMerging);
 
         waitForSegmentStart(segmentId);
 
-        assertArrayEquals(new int[]{0}, tokenStore.fetchSegments(testSubject.getName()));
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(0);
 
         publishEvents(1);
         waitForProcessingStatus(segmentId, s -> !s.isMerging());
@@ -1463,31 +1507,30 @@ class TrackingEventProcessorTest {
 
         assertWithin(
                 5, TimeUnit.SECONDS,
-                () -> assertEquals(
-                        10, handledEvents.stream().map(EventMessage::getIdentifier).distinct().count(),
-                        "Expected message to be handled"
-                )
+                () -> assertThat(handledEvents.stream().map(EventMessage::getIdentifier).distinct().count())
+                        .as("Expected message to be handled")
+                        .isEqualTo(10)
         );
 
-        assertFalse(testSubject.processingStatus().get(segmentId).isMerging());
-        assertFalse(testSubject.processingStatus().get(segmentId).mergeCompletedPosition().isPresent());
+        assertThat(testSubject.processingStatus().get(segmentId).isMerging()).isFalse();
+        assertThat(testSubject.processingStatus().get(segmentId).mergeCompletedPosition().isPresent()).isFalse();
 
         assertWithin(
                 50, TimeUnit.MILLISECONDS,
-                () -> assertTrue(testSubject.mergeSegment(segmentId).join(), "Expected merge to succeed")
+                () -> assertThat(testSubject.mergeSegment(segmentId).join()).as("Expected merge to succeed").isTrue()
         );
 
         EventTrackerStatus status = waitForProcessingStatus(segmentId, EventTrackerStatus::isMerging);
-        assertTrue(status.mergeCompletedPosition().isPresent());
+        assertThat(status.mergeCompletedPosition().isPresent()).isTrue();
         long mergeCompletedPosition = status.mergeCompletedPosition().getAsLong();
 
-        assertArrayEquals(new int[]{0}, tokenStore.fetchSegments(testSubject.getName()));
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(0);
 
         publishEvents(1);
         status = waitForProcessingStatus(segmentId, s -> !s.isMerging());
-        assertFalse(status.mergeCompletedPosition().isPresent());
-        assertTrue(status.getCurrentPosition().isPresent());
-        assertTrue(status.getCurrentPosition().getAsLong() > mergeCompletedPosition);
+        assertThat(status.mergeCompletedPosition().isPresent()).isFalse();
+        assertThat(status.getCurrentPosition().isPresent()).isTrue();
+        assertThat(status.getCurrentPosition().getAsLong()).isGreaterThan(mergeCompletedPosition);
     }
 
     @Test
@@ -1511,9 +1554,9 @@ class TrackingEventProcessorTest {
 
         assertWithin(
                 50, TimeUnit.MILLISECONDS,
-                () -> assertTrue(testSubject.mergeSegment(segmentId).join(), "Expected merge to succeed")
+                () -> assertThat(testSubject.mergeSegment(segmentId).join()).as("Expected merge to succeed").isTrue()
         );
-        assertArrayEquals(new int[]{0}, tokenStore.fetchSegments(testSubject.getName()));
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(0);
         waitForSegmentStart(segmentId);
 
         while (!Optional.ofNullable(testSubject.processingStatus().get(segmentId))
@@ -1522,7 +1565,7 @@ class TrackingEventProcessorTest {
             Thread.sleep(10);
         }
 
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(10, handledEvents.size()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(handledEvents).hasSize(10));
     }
 
     @Test
@@ -1540,36 +1583,36 @@ class TrackingEventProcessorTest {
 
         assertWithin(
                 50, TimeUnit.MILLISECONDS,
-                () -> assertTrue(testSubject.splitSegment(segmentId).join(), "Expected split to succeed")
+                () -> assertThat(testSubject.splitSegment(segmentId).join()).as("Expected split to succeed").isTrue()
         );
         waitForActiveThreads(1);
 
         assertWithin(
                 50, TimeUnit.MILLISECONDS,
-                () -> assertTrue(testSubject.splitSegment(segmentId).join(), "Expected split to succeed")
+                () -> assertThat(testSubject.splitSegment(segmentId).join()).as("Expected split to succeed").isTrue()
         );
         waitForActiveThreads(1);
 
-        assertArrayEquals(new int[]{0, 1, 2}, tokenStore.fetchSegments(testSubject.getName()));
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(0, 1, 2);
 
         publishEvents(20);
 
         waitForProcessingStatus(segmentId, EventTrackerStatus::isCaughtUp);
 
-        assertFalse(testSubject.processingStatus().get(segmentId).isMerging());
+        assertThat(testSubject.processingStatus().get(segmentId).isMerging()).isFalse();
 
-        assertTrue(testSubject.mergeSegment(segmentId).join(), "Expected merge to succeed");
-        assertArrayEquals(new int[]{0, 1}, tokenStore.fetchSegments(testSubject.getName()));
+        assertThat(testSubject.mergeSegment(segmentId).join()).as("Expected merge to succeed").isTrue();
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(0, 1);
 
         publishEvents(10);
 
         waitForSegmentStart(segmentId);
         waitForProcessingStatus(segmentId, est -> est.getSegment().getMask() == 1 && est.isCaughtUp());
 
-        assertTrue(testSubject.mergeSegment(segmentId).join(), "Expected merge to succeed");
-        assertArrayEquals(new int[]{0}, tokenStore.fetchSegments(testSubject.getName()));
+        assertThat(testSubject.mergeSegment(segmentId).join()).as("Expected merge to succeed").isTrue();
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(0);
 
-        assertWithin(3, TimeUnit.SECONDS, () -> assertEquals(40, handledEvents.size()));
+        assertWithin(3, TimeUnit.SECONDS, () -> assertThat(handledEvents).hasSize(40));
     }
 
     @Test
@@ -1623,11 +1666,10 @@ class TrackingEventProcessorTest {
         int numberOfEvents = 30;
         await("Handled Events - After Merge").pollDelay(Duration.ofMillis(50))
                                              .atMost(Duration.ofSeconds(5))
-                                             .untilAsserted(() -> assertEquals(
-                                                     numberOfEvents, handledEvents.size(),
-                                                     () -> "Actually handled [" + handledEvents.size() +
-                                                             "] instead of expected [" + numberOfEvents + "]"
-                                             ));
+                                             .untilAsserted(() -> assertThat(handledEvents)
+                                                     .as(() -> "Actually handled [" + handledEvents.size() +
+                                                             "] instead of expected [" + numberOfEvents + "]")
+                                                     .hasSize(numberOfEvents));
     }
 
     @Test
@@ -1668,18 +1710,18 @@ class TrackingEventProcessorTest {
 
         publishEvents(20);
 
-        assertTrue(mergeResult.join(), "Expected merge to succeed");
-        assertArrayEquals(new int[]{0}, tokenStore.fetchSegments(testSubject.getName()));
+        assertThat(mergeResult.join()).as("Expected merge to succeed").isTrue();
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(0);
         waitForSegmentStart(segmentId);
 
-        assertWithin(10, TimeUnit.SECONDS, () -> assertEquals(30, handledEvents.size()));
+        assertWithin(10, TimeUnit.SECONDS, () -> assertThat(handledEvents).hasSize(30));
         Thread.sleep(100);
-        assertEquals(30, handledEvents.size());
+        assertThat(handledEvents).hasSize(30);
 
         // Make sure replay events are only delivered once.
-        assertEquals(
-                replayedEvents.stream().map(EventMessage::getIdentifier).distinct().count(), replayedEvents.size()
-        );
+        assertThat(replayedEvents)
+                .size()
+                .isEqualTo(replayedEvents.stream().map(EventMessage::getIdentifier).distinct().count());
     }
 
     @Test
@@ -1718,7 +1760,7 @@ class TrackingEventProcessorTest {
         publishEvents(10);
 
         CompletableFuture<Boolean> mergeResult = testSubject.mergeSegment(segmentIdZero);
-        assertTrue(mergeResult.join(), "Expected merge to succeed");
+        assertThat(mergeResult.join()).as("Expected merge to succeed").isTrue();
         await("Merge segments").pollDelay(pollDelay)
                                .atMost(Duration.ofMillis(1000))
                                .until(() -> testSubject.processingStatus().size() == 1);
@@ -1733,7 +1775,7 @@ class TrackingEventProcessorTest {
                .atMost(Duration.ofMillis(250))
                .until(() -> !testSubject.processingStatus().isEmpty());
 
-        assertArrayEquals(new int[]{0}, tokenStore.fetchSegments(testSubject.getName()));
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(0);
         await().pollDelay(pollDelay)
                .atMost(Duration.ofMillis(250))
                .until(() -> testSubject.processingStatus().containsKey(segmentIdZero));
@@ -1746,11 +1788,10 @@ class TrackingEventProcessorTest {
         int numberOfEvents = 30;
         await("Handle Events - Replay").pollDelay(pollDelay)
                                        .atMost(Duration.ofMillis(4000))
-                                       .untilAsserted(() -> assertEquals(
-                                               numberOfEvents, handledEvents.size(),
-                                               () -> "Actually handled [" + handledEvents.size() +
-                                                       "] instead of expected [" + numberOfEvents + "]"
-                                       ));
+                                       .untilAsserted(() -> assertThat(handledEvents)
+                                               .as(() -> "Actually handled [" + handledEvents.size() +
+                                                       "] instead of expected [" + numberOfEvents + "]")
+                                               .hasSize(numberOfEvents));
     }
 
     @Test
@@ -1760,15 +1801,15 @@ class TrackingEventProcessorTest {
 
         testSubject.start();
         waitForActiveThreads(3);
-        assertTrue(testSubject.processingStatus().containsKey(0));
-        assertTrue(testSubject.processingStatus().containsKey(1));
-        assertTrue(testSubject.processingStatus().containsKey(2));
+        assertThat(testSubject.processingStatus()).containsKey(0);
+        assertThat(testSubject.processingStatus()).containsKey(1);
+        assertThat(testSubject.processingStatus()).containsKey(2);
 
         // 1 is not "mergeable" with 0, because 0 itself was already split
         testSubject.releaseSegment(0);
         testSubject.releaseSegment(2);
 
-        testSubject.processingStatus().values().forEach(status -> assertFalse(status::isMerging));
+        testSubject.processingStatus().values().forEach(status -> assertThat(status.isMerging()).isFalse());
 
         while (testSubject.processingStatus().size() > 1) {
             Thread.sleep(10);
@@ -1776,7 +1817,7 @@ class TrackingEventProcessorTest {
 
         CompletableFuture<Boolean> actual = testSubject.mergeSegment(1);
 
-        assertFalse(actual.join(), "Expected merge to be rejected");
+        assertThat(actual.join()).as("Expected merge to be rejected").isFalse();
     }
 
     @Test
@@ -1791,8 +1832,8 @@ class TrackingEventProcessorTest {
 
         CompletableFuture<Boolean> actual = testSubject.mergeSegment(segmentId);
 
-        assertFalse(actual.join(), "Expected merge to be rejected");
-        assertFalse(testSubject.processingStatus().get(segmentId).isMerging());
+        assertThat(actual.join()).as("Expected merge to be rejected").isFalse();
+        assertThat(testSubject.processingStatus().get(segmentId).isMerging()).isFalse();
     }
 
     /**
@@ -1808,7 +1849,7 @@ class TrackingEventProcessorTest {
         waitForActiveThreads(4);
         int segmentId = 3;
         CompletableFuture<Boolean> mergeResult = testSubject.mergeSegment(segmentId);
-        assertTrue(mergeResult.join(), "Expected merge to succeed");
+        assertThat(mergeResult.join()).as("Expected merge to succeed").isTrue();
         verify(tokenStore).deleteToken("test", 3);
         verify(tokenStore).storeToken(any(), eq("test"), eq(1));
     }
@@ -1839,10 +1880,10 @@ class TrackingEventProcessorTest {
         eventBus.publish(createEvents(1));
         testSubject.start();
 
-        assertWithin(2, TimeUnit.SECONDS, () -> assertTrue(testSubject.isError()));
+        assertWithin(2, TimeUnit.SECONDS, () -> assertThat(testSubject.isError()).isTrue());
         assertWithin(
                 15, TimeUnit.SECONDS,
-                () -> assertInstanceOf(TestError.class, thrownException.get())
+                () -> assertThat(thrownException.get()).isInstanceOf(TestError.class)
         );
     }
 
@@ -1857,7 +1898,7 @@ class TrackingEventProcessorTest {
         // expect no extra invocations
         verify(tokenStore, times(1)).retrieveStorageIdentifier();
 
-        assertEquals(id, id2);
+        assertThat(id2).isEqualTo(id);
     }
 
     /**
@@ -1887,7 +1928,7 @@ class TrackingEventProcessorTest {
         AtomicInteger updatedStatusCounter = new AtomicInteger(0);
         AtomicInteger removedStatusCounter = new AtomicInteger(0);
         EventTrackerStatusChangeListener statusChangeListener = updatedTrackerStatus -> {
-            assertEquals(1, updatedTrackerStatus.size());
+            assertThat(updatedTrackerStatus).hasSize(1);
             EventTrackerStatus eventTrackerStatus = updatedTrackerStatus.get(0);
             if (eventTrackerStatus.trackerAdded()) {
                 addedStatusCounter.getAndIncrement();
@@ -1909,11 +1950,11 @@ class TrackingEventProcessorTest {
         Thread.sleep(200);
         publishEvents(2);
 
-        assertTrue(eventHandlingLatch.await(5, TimeUnit.SECONDS));
-        assertTrue(statusChangeLatch.await(5, TimeUnit.SECONDS));
-        assertEquals(1, addedStatusCounter.get());
-        assertEquals(1, updatedStatusCounter.get());
-        assertEquals(0, removedStatusCounter.get());
+        assertThat(eventHandlingLatch.await(5, TimeUnit.SECONDS)).isTrue();
+        assertThat(statusChangeLatch.await(5, TimeUnit.SECONDS)).isTrue();
+        assertThat(addedStatusCounter.get()).isOne();
+        assertThat(updatedStatusCounter.get()).isOne();
+        assertThat(removedStatusCounter.get()).isZero();
     }
 
     /**
@@ -1944,7 +1985,7 @@ class TrackingEventProcessorTest {
         EventTrackerStatusChangeListener statusChangeListener = new EventTrackerStatusChangeListener() {
             @Override
             public void onEventTrackerStatusChange(Map<Integer, EventTrackerStatus> updatedTrackerStatus) {
-                assertEquals(1, updatedTrackerStatus.size());
+                assertThat(updatedTrackerStatus).hasSize(1);
                 EventTrackerStatus eventTrackerStatus = updatedTrackerStatus.get(0);
                 if (eventTrackerStatus.trackerAdded()) {
                     addedStatusCounter.getAndIncrement();
@@ -1972,11 +2013,11 @@ class TrackingEventProcessorTest {
         Thread.sleep(200);
         publishEvents(2);
 
-        assertTrue(eventHandlingLatch.await(5, TimeUnit.SECONDS));
-        assertTrue(statusChangeLatch.await(5, TimeUnit.SECONDS));
-        assertEquals(1, addedStatusCounter.get());
-        assertEquals(3, updatedStatusCounter.get());
-        assertEquals(0, removedStatusCounter.get());
+        assertThat(eventHandlingLatch.await(5, TimeUnit.SECONDS)).isTrue();
+        assertThat(statusChangeLatch.await(5, TimeUnit.SECONDS)).isTrue();
+        assertThat(addedStatusCounter.get()).isOne();
+        assertThat(updatedStatusCounter.get()).isEqualTo(3);
+        assertThat(removedStatusCounter.get()).isZero();
     }
 
     @Test
@@ -1989,7 +2030,7 @@ class TrackingEventProcessorTest {
         CountDownLatch updatedStatusLatch = new CountDownLatch(1);
         CountDownLatch removedStatusLatch = new CountDownLatch(3);
         EventTrackerStatusChangeListener statusChangeListener = updatedTrackerStatus -> {
-            assertEquals(1, updatedTrackerStatus.size());
+            assertThat(updatedTrackerStatus).hasSize(1);
             EventTrackerStatus eventTrackerStatus = updatedTrackerStatus.values().iterator().next();
             if (eventTrackerStatus.trackerAdded()) {
                 addedStatusLatch.countDown();
@@ -2012,22 +2053,22 @@ class TrackingEventProcessorTest {
 
         publishEvents(2);
         testSubject.start();
-        assertWithin(5, TimeUnit.SECONDS, () -> assertTrue(testSubject.processingStatus().containsKey(firstSegment)));
+        assertWithin(5, TimeUnit.SECONDS, () -> assertThat(testSubject.processingStatus()).containsKey(firstSegment));
 
-        assertTrue(testSubject.splitSegment(firstSegment).join(), "Expected split to succeed");
-        assertArrayEquals(new int[]{firstSegment, secondSegment}, tokenStore.fetchSegments(testSubject.getName()));
-        assertWithin(5, TimeUnit.SECONDS, () -> assertTrue(testSubject.processingStatus().containsKey(secondSegment)));
+        assertThat(testSubject.splitSegment(firstSegment).join()).as("Expected split to succeed").isTrue();
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(firstSegment, secondSegment);
+        assertWithin(5, TimeUnit.SECONDS, () -> assertThat(testSubject.processingStatus()).containsKey(secondSegment));
 
         assertWithin(
                 500, TimeUnit.MILLISECONDS,
-                () -> assertTrue(testSubject.mergeSegment(firstSegment).join(), "Expected merge to succeed")
+                () -> assertThat(testSubject.mergeSegment(firstSegment).join()).as("Expected merge to succeed").isTrue()
         );
-        assertArrayEquals(new int[]{firstSegment}, tokenStore.fetchSegments(testSubject.getName()));
-        assertWithin(5, TimeUnit.SECONDS, () -> assertTrue(testSubject.processingStatus().containsKey(firstSegment)));
+        assertThat(tokenStore.fetchSegments(testSubject.getName())).containsExactly(firstSegment);
+        assertWithin(5, TimeUnit.SECONDS, () -> assertThat(testSubject.processingStatus()).containsKey(firstSegment));
 
-        assertTrue(addedStatusLatch.await(5, TimeUnit.SECONDS));
-        assertTrue(updatedStatusLatch.await(5, TimeUnit.SECONDS));
-        assertTrue(removedStatusLatch.await(5, TimeUnit.SECONDS));
+        assertThat(addedStatusLatch.await(5, TimeUnit.SECONDS)).isTrue();
+        assertThat(updatedStatusLatch.await(5, TimeUnit.SECONDS)).isTrue();
+        assertThat(removedStatusLatch.await(5, TimeUnit.SECONDS)).isTrue();
     }
 
     @Test
@@ -2078,15 +2119,18 @@ class TrackingEventProcessorTest {
         initProcessor(tepConfiguration, builder -> builder.messageSource(enhancedEventStore));
         testSubject.start();
 
-        assertWithin(100, TimeUnit.MILLISECONDS, () -> assertTrue(hasNextInvoked.get()));
+        assertWithin(100, TimeUnit.MILLISECONDS, () -> assertThat(hasNextInvoked.get()).isTrue());
 
         assertUntil(hasNextAvailableTimedOut::get, Duration.ofMillis(10), () -> {
             EventTrackerStatus trackerOneStatus = testSubject.processingStatus().get(0);
-            assertNotNull(trackerOneStatus);
-            assertFalse(trackerOneStatus.isCaughtUp());
+            assertThat(trackerOneStatus).isNotNull();
+            assertThat(trackerOneStatus.isCaughtUp()).isFalse();
         });
 
-        assertWithin(1, TimeUnit.SECONDS, () -> assertTrue(testSubject.processingStatus().get(0).isCaughtUp()));
+        assertWithin(
+                1, TimeUnit.SECONDS,
+                () -> assertThat(testSubject.processingStatus().get(0).isCaughtUp()).isTrue()
+        );
     }
 
     @Test
@@ -2101,13 +2145,15 @@ class TrackingEventProcessorTest {
             return i.callRealMethod();
         }).when(eventHandlerInvoker).handle(any(), any());
         testSubject.start();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertFalse(testSubject.processingStatus().isEmpty()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(testSubject.processingStatus()).isNotEmpty());
 
         cdl.await();
         testSubject.shutdownAsync();
 
-        IllegalStateException result = assertThrows(IllegalStateException.class, () -> testSubject.start());
-        assertTrue(result.getMessage().contains("pending shutdown"));
+        IllegalStateException result = assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> testSubject.start())
+                .actual();
+        assertThat(result.getMessage()).contains("pending shutdown");
     }
 
     @Test
@@ -2142,12 +2188,12 @@ class TrackingEventProcessorTest {
                 .pollDelay(Duration.ofMillis(50))
                 .until(() -> handled.size() == numberOfEvents);
 
-        assertEquals(0, handledInRedelivery.size());
+        assertThat(handledInRedelivery).isEmpty();
 
         // initiate reset to toggle replay status
         testSubject.shutDown();
         testSubject.resetTokens();
-        assertWithin(1, TimeUnit.SECONDS, () -> assertTrue(testSubject.processingStatus().isEmpty()));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(testSubject.processingStatus()).isEmpty());
 
         // Set a processing delay to ensure we see some redelivery events first.
         delay.set(10);
@@ -2157,10 +2203,10 @@ class TrackingEventProcessorTest {
         assertWithin(
                 100, TimeUnit.MILLISECONDS,
                 () -> {
-                    assertFalse(testSubject.processingStatus().isEmpty());
-                    assertFalse(testSubject.processingStatus().get(segmentId).isCaughtUp());
-                    assertTrue(testSubject.processingStatus().get(segmentId).isReplaying());
-                    assertTrue(testSubject.isReplaying());
+                    assertThat(testSubject.processingStatus()).isNotEmpty();
+                    assertThat(testSubject.processingStatus().get(segmentId).isCaughtUp()).isFalse();
+                    assertThat(testSubject.processingStatus().get(segmentId).isReplaying()).isTrue();
+                    assertThat(testSubject.isReplaying()).isTrue();
                 }
         );
 
@@ -2170,8 +2216,8 @@ class TrackingEventProcessorTest {
         assertWithin(
                 1, TimeUnit.SECONDS,
                 () -> {
-                    assertTrue(testSubject.processingStatus().get(segmentId).isCaughtUp());
-                    assertTrue(testSubject.processingStatus().get(segmentId).isReplaying());
+                    assertThat(testSubject.processingStatus().get(segmentId).isCaughtUp()).isTrue();
+                    assertThat(testSubject.processingStatus().get(segmentId).isReplaying()).isTrue();
                 }
         );
     }
@@ -2189,8 +2235,8 @@ class TrackingEventProcessorTest {
 
         eventBus.publish(createEvents(1));
 
-        assertWithin(1, TimeUnit.SECONDS, () -> assertEquals(1, testSubject.processingStatus().size()));
-        assertWithin(1, TimeUnit.SECONDS, () -> assertTrue(testSubject.processingStatus().containsKey(2)));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(testSubject.processingStatus()).hasSize(1));
+        assertWithin(1, TimeUnit.SECONDS, () -> assertThat(testSubject.processingStatus()).containsKey(2));
         verify(tokenStore, never())
                 .fetchToken(eq(testSubject.getName()), intThat(i -> Arrays.asList(0, 1, 3).contains(i)));
     }
@@ -2218,14 +2264,14 @@ class TrackingEventProcessorTest {
         // sleep a little to reach the EventAvailabilityTimeout usage on the Event Stream
         Thread.sleep(500);
 
-        assertEquals(2, createdThreads.size());
+        assertThat(createdThreads).hasSize(2);
 
         CompletableFuture<Void> result = testSubject.shutdownAsync();
         await().pollDelay(Duration.ofMillis(25))
                .atMost(Duration.ofMillis(testWorkerTerminationTimeout * 4))
                .until(result::isDone);
-        assertFalse(createdThreads.get(0).isAlive());
-        assertFalse(createdThreads.get(1).isAlive());
+        assertThat(createdThreads.get(0).isAlive()).isFalse();
+        assertThat(createdThreads.get(1).isAlive()).isFalse();
     }
 
     @Test
@@ -2242,9 +2288,11 @@ class TrackingEventProcessorTest {
 
         testSubject.start();
 
-        assertTrue(countDownLatch.await(5, TimeUnit.SECONDS), "Expected Unit of Work to have reached clean up phase");
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase")
+                .isTrue();
         TrackingToken trackingToken = tokenStore.fetchToken(testSubject.getName(), 0);
-        assertTrue(ReplayToken.isReplay(trackingToken), "Not a replay token: " + trackingToken);
+        assertThat(ReplayToken.isReplay(trackingToken)).as("Not a replay token: " + trackingToken).isTrue();
     }
 
     @Test
@@ -2268,9 +2316,11 @@ class TrackingEventProcessorTest {
 
         eventBus.publish(createEvent(2));
 
-        assertTrue(finished.await(5, TimeUnit.SECONDS), "Expected Unit of Work to have reached clean up phase");
+        assertThat(finished.await(5, TimeUnit.SECONDS))
+                .as("Expected Unit of Work to have reached clean up phase")
+                .isTrue();
         TrackingToken trackingToken = tokenStore.fetchToken(testSubject.getName(), 0);
-        assertFalse(ReplayToken.isReplay(trackingToken), "Not a replay token: " + trackingToken);
+        assertThat(ReplayToken.isReplay(trackingToken)).as("Not a replay token: " + trackingToken).isFalse();
     }
 
     @Test
@@ -2309,11 +2359,10 @@ class TrackingEventProcessorTest {
 
         eventBus.publish(createEvents(2));
 
-        assertTrue(
-                processedAfterError.await(10, TimeUnit.SECONDS),
-                "Processor should continue running and handle events despite timeout/exception race"
-        );
-        assertTrue(processorWithRealSleep.isRunning(), "Processor should still be running");
+        assertThat(processedAfterError.await(10, TimeUnit.SECONDS))
+                .as("Processor should continue running and handle events despite timeout/exception race")
+                .isTrue();
+        assertThat(processorWithRealSleep.isRunning()).as("Processor should still be running").isTrue();
         processorWithRealSleep.shutDown();
     }
 

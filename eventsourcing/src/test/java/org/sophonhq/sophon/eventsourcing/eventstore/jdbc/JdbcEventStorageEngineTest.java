@@ -46,7 +46,6 @@ import java.sql.Timestamp;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
@@ -54,10 +53,9 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -130,8 +128,8 @@ class JdbcEventStorageEngineTest
     void loadLastSequenceNumber() {
         String aggregateId = UUID.randomUUID().toString();
         testSubject.appendEvents(createEvent(aggregateId, 0), createEvent(aggregateId, 1));
-        assertEquals(1L, (long) testSubject.lastSequenceNumberFor(aggregateId).orElse(-1L));
-        assertFalse(testSubject.lastSequenceNumberFor("inexistent").isPresent());
+        assertThat((long) testSubject.lastSequenceNumberFor(aggregateId).orElse(-1L)).isOne();
+        assertThat(testSubject.lastSequenceNumberFor("inexistent")).isEmpty();
     }
 
     @Test
@@ -189,7 +187,7 @@ class JdbcEventStorageEngineTest
 
         testSubject.fetchTrackedEvents((TrackingToken) null, 100).stream()
                    .map(i -> (GapAwareTrackingToken) i.trackingToken())
-                   .forEach(i -> assertTrue(i.getGaps().size() <= 2));
+                   .forEach(i -> assertThat(i.getGaps().size()).isLessThanOrEqualTo(2));
     }
 
     @DirtiesContext
@@ -217,8 +215,8 @@ class JdbcEventStorageEngineTest
                                     .collect(Collectors.toList());
         List<? extends TrackedEventData<?>> events =
                 testSubject.fetchTrackedEvents(GapAwareTrackingToken.newInstance(6, gaps), 100);
-        assertEquals(1, events.size());
-        assertEquals(4L, (long) ((GapAwareTrackingToken) events.get(0).trackingToken()).getGaps().first());
+        assertThat(events.size()).isOne();
+        assertThat((long) ((GapAwareTrackingToken) events.get(0).trackingToken()).getGaps().first()).isEqualTo(4L);
     }
 
     @Test
@@ -244,14 +242,14 @@ class JdbcEventStorageEngineTest
                                                            .filter(m -> m.getPayload() instanceof String)
                                                            .map(m -> (String) m.getPayload())
                                                            .collect(toList());
-        assertEquals(Arrays.asList(expectedPayloadOne, expectedPayloadTwo), eventStorageEngineResult);
+        assertThat(eventStorageEngineResult).containsExactlyElementsOf(asList(expectedPayloadOne, expectedPayloadTwo));
 
         TrackingEventStream eventStoreResult = testEventStore.openStream(null);
-        assertTrue(eventStoreResult.hasNextAvailable());
-        assertEquals(UnknownSerializedType.class, eventStoreResult.nextAvailable().getPayloadType());
-        assertEquals(UnknownSerializedType.class, eventStoreResult.nextAvailable().getPayloadType());
-        assertEquals(expectedPayloadOne, eventStoreResult.nextAvailable().getPayload());
-        assertEquals(expectedPayloadTwo, eventStoreResult.nextAvailable().getPayload());
+        assertThat(eventStoreResult.hasNextAvailable()).isTrue();
+        assertThat(eventStoreResult.nextAvailable().getPayloadType()).isEqualTo(UnknownSerializedType.class);
+        assertThat(eventStoreResult.nextAvailable().getPayloadType()).isEqualTo(UnknownSerializedType.class);
+        assertThat(eventStoreResult.nextAvailable().getPayload()).isEqualTo(expectedPayloadOne);
+        assertThat(eventStoreResult.nextAvailable().getPayload()).isEqualTo(expectedPayloadTwo);
     }
 
     @Test
@@ -267,7 +265,7 @@ class JdbcEventStorageEngineTest
 
         Stream<? extends TrackedEventMessage<?>> actual = testSubject.readEvents(null, false);
         List<? extends TrackedEventMessage<?>> actualEvents = actual.collect(toList());
-        assertEquals(80, actualEvents.size());
+        assertThat(actualEvents.size()).isEqualTo(80);
     }
 
     @Test
@@ -294,7 +292,7 @@ class JdbcEventStorageEngineTest
 
         Stream<? extends TrackedEventMessage<?>> actual = testSubject.readEvents(null, false);
         List<? extends TrackedEventMessage<?>> actualEvents = actual.collect(toList());
-        assertEquals(20, actualEvents.size());
+        assertThat(actualEvents.size()).isEqualTo(20);
     }
 
     @Test
@@ -311,7 +309,7 @@ class JdbcEventStorageEngineTest
 
         Stream<? extends TrackedEventMessage<?>> actual = testSubject.readEvents(null, false);
         List<? extends TrackedEventMessage<?>> actualEvents = actual.collect(toList());
-        assertEquals(80, actualEvents.size());
+        assertThat(actualEvents.size()).isEqualTo(80);
     }
 
     @Test
@@ -330,12 +328,12 @@ class JdbcEventStorageEngineTest
         List<? extends DomainEventMessage<?>> result = testSubject.readEvents(AGGREGATE, 0L).asStream()
                                                                   .collect(toList());
 
-        assertEquals(5, result.size());
-        assertEquals(0, result.get(0).getSequenceNumber());
-        assertEquals(1, result.get(1).getSequenceNumber());
-        assertEquals(2, result.get(2).getSequenceNumber());
-        assertEquals(3, result.get(3).getSequenceNumber());
-        assertEquals(4, result.get(4).getSequenceNumber());
+        assertThat(result.size()).isEqualTo(5);
+        assertThat(result.get(0).getSequenceNumber()).isZero();
+        assertThat(result.get(1).getSequenceNumber()).isOne();
+        assertThat(result.get(2).getSequenceNumber()).isEqualTo(2);
+        assertThat(result.get(3).getSequenceNumber()).isEqualTo(3);
+        assertThat(result.get(4).getSequenceNumber()).isEqualTo(4);
     }
 
     @Test
@@ -354,11 +352,11 @@ class JdbcEventStorageEngineTest
         List<? extends DomainEventMessage<?>> result = testSubject.readEvents(AGGREGATE, 0L).asStream()
                                                                   .collect(toList());
 
-        assertEquals(4, result.size());
-        assertEquals(0, result.get(0).getSequenceNumber());
-        assertEquals(1, result.get(1).getSequenceNumber());
-        assertEquals(3, result.get(2).getSequenceNumber());
-        assertEquals(4, result.get(3).getSequenceNumber());
+        assertThat(result.size()).isEqualTo(4);
+        assertThat(result.get(0).getSequenceNumber()).isZero();
+        assertThat(result.get(1).getSequenceNumber()).isOne();
+        assertThat(result.get(2).getSequenceNumber()).isEqualTo(3);
+        assertThat(result.get(3).getSequenceNumber()).isEqualTo(4);
     }
 
     @Test
@@ -384,15 +382,15 @@ class JdbcEventStorageEngineTest
         List<? extends DomainEventMessage<?>> result = testSubject.readEvents(AGGREGATE, 0L).asStream()
                                                                   .collect(toList());
 
-        assertEquals(8, result.size());
-        assertEquals(0, result.get(0).getSequenceNumber());
-        assertEquals(1, result.get(1).getSequenceNumber());
-        assertEquals(2, result.get(2).getSequenceNumber());
-        assertEquals(3, result.get(3).getSequenceNumber());
-        assertEquals(4, result.get(4).getSequenceNumber());
-        assertEquals(5, result.get(5).getSequenceNumber());
-        assertEquals(6, result.get(6).getSequenceNumber());
-        assertEquals(7, result.get(7).getSequenceNumber());
+        assertThat(result.size()).isEqualTo(8);
+        assertThat(result.get(0).getSequenceNumber()).isZero();
+        assertThat(result.get(1).getSequenceNumber()).isOne();
+        assertThat(result.get(2).getSequenceNumber()).isEqualTo(2);
+        assertThat(result.get(3).getSequenceNumber()).isEqualTo(3);
+        assertThat(result.get(4).getSequenceNumber()).isEqualTo(4);
+        assertThat(result.get(5).getSequenceNumber()).isEqualTo(5);
+        assertThat(result.get(6).getSequenceNumber()).isEqualTo(6);
+        assertThat(result.get(7).getSequenceNumber()).isEqualTo(7);
     }
 
     @Test
@@ -418,14 +416,14 @@ class JdbcEventStorageEngineTest
         List<? extends DomainEventMessage<?>> result = testSubject.readEvents(AGGREGATE, 0L).asStream()
                                                                   .collect(toList());
 
-        assertEquals(7, result.size());
-        assertEquals(0, result.get(0).getSequenceNumber());
-        assertEquals(1, result.get(1).getSequenceNumber());
-        assertEquals(3, result.get(2).getSequenceNumber());
-        assertEquals(4, result.get(3).getSequenceNumber());
-        assertEquals(5, result.get(4).getSequenceNumber());
-        assertEquals(6, result.get(5).getSequenceNumber());
-        assertEquals(7, result.get(6).getSequenceNumber());
+        assertThat(result.size()).isEqualTo(7);
+        assertThat(result.get(0).getSequenceNumber()).isZero();
+        assertThat(result.get(1).getSequenceNumber()).isOne();
+        assertThat(result.get(2).getSequenceNumber()).isEqualTo(3);
+        assertThat(result.get(3).getSequenceNumber()).isEqualTo(4);
+        assertThat(result.get(4).getSequenceNumber()).isEqualTo(5);
+        assertThat(result.get(5).getSequenceNumber()).isEqualTo(6);
+        assertThat(result.get(6).getSequenceNumber()).isEqualTo(7);
     }
 
     @Override

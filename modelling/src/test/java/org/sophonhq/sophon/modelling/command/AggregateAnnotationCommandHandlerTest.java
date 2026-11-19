@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.modelling.command;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.internal.verification.*;
@@ -60,7 +61,10 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.DuplicateCommandHandlerResolution.rejectDuplicates;
 import static org.sophonhq.sophon.commandhandling.DuplicateCommandHandlerResolution.silentOverride;
@@ -133,7 +137,8 @@ class AggregateAnnotationCommandHandlerTest {
         commandBus.dispatch(asCommandMessage(new FailingCreateCommand("id", "parameter")),
                             (CommandCallback<FailingCreateCommand, Object>) (commandMessage, commandResultMessage) -> {
                                 if (commandResultMessage.isExceptional()) {
-                                    assertEquals("parameter", commandResultMessage.exceptionResult().getMessage());
+                                    assertThat(commandResultMessage.exceptionResult().getMessage())
+                                            .isEqualTo("parameter");
                                 } else {
                                     fail("Expected exception");
                                 }
@@ -148,7 +153,8 @@ class AggregateAnnotationCommandHandlerTest {
         commandBus.dispatch(asCommandMessage(new FailingUpdateCommand(aggregateIdentifier, "parameter")),
                             (CommandCallback<FailingUpdateCommand, Object>) (commandMessage, commandResultMessage) -> {
                                 if (commandResultMessage.isExceptional()) {
-                                    assertEquals("parameter", commandResultMessage.exceptionResult().getMessage());
+                                    assertThat(commandResultMessage.exceptionResult().getMessage())
+                                            .isEqualTo("parameter");
                                 } else {
                                     fail("Expected exception");
                                 }
@@ -178,7 +184,7 @@ class AggregateAnnotationCommandHandlerTest {
                 UpdateEntityFromMapStateCommand.class.getName(),
                 UpdateAbstractEntityFromCollectionStateCommand.class.getName()));
 
-        assertEquals(expected, actual);
+        assertThat(actual).hasSameElementsAs(expected);
     }
 
     @Test
@@ -204,8 +210,8 @@ class AggregateAnnotationCommandHandlerTest {
         ArgumentCaptor<CommandResultMessage<String>> responseCaptor = ArgumentCaptor
                 .forClass(CommandResultMessage.class);
         verify(callback).onResult(commandCaptor.capture(), responseCaptor.capture());
-        assertEquals(message, commandCaptor.getValue());
-        assertEquals("id", responseCaptor.getValue().getPayload());
+        assertThat(commandCaptor.getValue()).isEqualTo(message);
+        assertThat(responseCaptor.getValue().getPayload()).isEqualTo("id");
     }
 
     @Test
@@ -219,8 +225,8 @@ class AggregateAnnotationCommandHandlerTest {
         ArgumentCaptor<CommandResultMessage<String>> responseCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(callback).onResult(commandCaptor.capture(), responseCaptor.capture());
-        assertEquals(message, commandCaptor.getValue());
-        assertEquals("Always create works fine", responseCaptor.getValue().getPayload());
+        assertThat(commandCaptor.getValue()).isEqualTo(message);
+        assertThat(responseCaptor.getValue().getPayload()).isEqualTo("Always create works fine");
         verify(creationPolicyFactory).create("id");
         newInstanceCallableFactoryCaptor.getValue().call();
         verify(creationPolicyFactory, VerificationModeFactory.times(2)).create("id");
@@ -237,8 +243,8 @@ class AggregateAnnotationCommandHandlerTest {
         ArgumentCaptor<CommandResultMessage<String>> responseCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(callback).onResult(commandCaptor.capture(), responseCaptor.capture());
-        assertEquals(message, commandCaptor.getValue());
-        assertEquals("Always create works fine", responseCaptor.getValue().getPayload());
+        assertThat(commandCaptor.getValue()).isEqualTo(message);
+        assertThat(responseCaptor.getValue().getPayload()).isEqualTo("Always create works fine");
         verify(creationPolicyFactory).create(null);
         newInstanceCallableFactoryCaptor.getValue().call();
         verify(creationPolicyFactory, VerificationModeFactory.times(2)).create(null);
@@ -261,8 +267,8 @@ class AggregateAnnotationCommandHandlerTest {
                 .forClass(CommandResultMessage.class);
         verify(callback).onResult(commandCaptor.capture(), responseCaptor.capture());
         verify(spyAggregate).handle(message);
-        assertEquals(message, commandCaptor.getValue());
-        assertEquals("Create or update works fine", responseCaptor.getValue().getPayload());
+        assertThat(commandCaptor.getValue()).isEqualTo(message);
+        assertThat(responseCaptor.getValue().getPayload()).isEqualTo("Create or update works fine");
         verifyNoInteractions(creationPolicyFactory);
         factoryCaptor.getValue().call();
         verify(creationPolicyFactory).create("id");
@@ -283,8 +289,8 @@ class AggregateAnnotationCommandHandlerTest {
         ArgumentCaptor<CommandResultMessage<String>> responseCaptor = ArgumentCaptor
                 .forClass(CommandResultMessage.class);
         verify(callback).onResult(commandCaptor.capture(), responseCaptor.capture());
-        assertEquals(message, commandCaptor.getValue());
-        assertEquals("Create or update works fine", responseCaptor.getValue().getPayload());
+        assertThat(commandCaptor.getValue()).isEqualTo(message);
+        assertThat(responseCaptor.getValue().getPayload()).isEqualTo("Create or update works fine");
 
         verify(creationPolicyFactory).create(null);
         newInstanceCallableFactoryCaptor.getValue().call();
@@ -302,8 +308,8 @@ class AggregateAnnotationCommandHandlerTest {
         ArgumentCaptor<CommandResultMessage<String>> responseCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(callback).onResult(commandCaptor.capture(), responseCaptor.capture());
-        assertEquals(message, commandCaptor.getValue());
-        assertEquals("Always create works fine", responseCaptor.getValue().getPayload());
+        assertThat(commandCaptor.getValue()).isEqualTo(message);
+        assertThat(responseCaptor.getValue().getPayload()).isEqualTo("Always create works fine");
     }
 
     @Test
@@ -317,8 +323,8 @@ class AggregateAnnotationCommandHandlerTest {
         ArgumentCaptor<CommandResultMessage<String>> responseCaptor = ArgumentCaptor
                 .forClass(CommandResultMessage.class);
         verify(callback).onResult(commandCaptor.capture(), responseCaptor.capture());
-        assertEquals(message, commandCaptor.getValue());
-        assertEquals("id", responseCaptor.getValue().getPayload());
+        assertThat(commandCaptor.getValue()).isEqualTo(message);
+        assertThat(responseCaptor.getValue().getPayload()).isEqualTo("id");
     }
 
     @Test
@@ -332,7 +338,7 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("Method works fine", commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload()).isEqualTo("Method works fine");
                             }
         );
 
@@ -350,7 +356,8 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("Method with version works fine", commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload())
+                                        .isEqualTo("Method with version works fine");
                             }
         );
 
@@ -377,7 +384,8 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("Method with version works fine", commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload())
+                                        .isEqualTo("Method with version works fine");
                             }
         );
 
@@ -395,7 +403,7 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("Field works fine", commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload()).isEqualTo("Field works fine");
                             }
         );
 
@@ -413,7 +421,8 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("Field with version works fine", commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload())
+                                        .isEqualTo("Field with version works fine");
                             }
         );
 
@@ -431,8 +440,8 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("Field with integer version works fine",
-                                             commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload())
+                                        .isEqualTo("Field with integer version works fine");
                             }
         );
 
@@ -472,8 +481,8 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("entity command handled just fine",
-                                             commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload())
+                                        .isEqualTo("entity command handled just fine");
                             }
         );
 
@@ -495,7 +504,7 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("handled by 2", commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload()).isEqualTo("handled by 2");
                             }
         );
 
@@ -512,7 +521,7 @@ class AggregateAnnotationCommandHandlerTest {
                             (commandMessage, commandResultMessage) -> {
                                 if (commandResultMessage.isExceptional()) {
                                     Throwable cause = commandResultMessage.exceptionResult();
-                                    assertTrue(cause instanceof AggregateEntityNotFoundException);
+                                    assertThat(cause).isInstanceOf(AggregateEntityNotFoundException.class);
                                 } else {
                                     fail("Expected exception");
                                 }
@@ -532,7 +541,7 @@ class AggregateAnnotationCommandHandlerTest {
                             (commandMessage, commandResultMessage) -> {
                                 if (commandResultMessage.isExceptional()) {
                                     Throwable cause = commandResultMessage.exceptionResult();
-                                    assertTrue(cause instanceof AggregateEntityNotFoundException);
+                                    assertThat(cause).isInstanceOf(AggregateEntityNotFoundException.class);
                                 } else {
                                     fail("Expected exception");
                                 }
@@ -556,8 +565,8 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("nested entity command handled just fine",
-                                             commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload())
+                                        .isEqualTo("nested entity command handled just fine");
                             }
         );
 
@@ -573,7 +582,7 @@ class AggregateAnnotationCommandHandlerTest {
                                                  .aggregateType(CollectionFieldWithoutGenerics.class)
                                                  .repository(mockRepo);
 
-        assertThrows(SophonConfigurationException.class, repoBuilder::build);
+        assertThatThrownBy(repoBuilder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -591,7 +600,7 @@ class AggregateAnnotationCommandHandlerTest {
                                                         .ifPresent(Throwable::printStackTrace);
                                     fail("Did not expect exception");
                                 }
-                                assertEquals("handled by 2", commandResultMessage.getPayload());
+                                assertThat(commandResultMessage.getPayload()).isEqualTo("handled by 2");
                             }
         );
 
@@ -608,7 +617,7 @@ class AggregateAnnotationCommandHandlerTest {
                             (commandMessage, commandResultMessage) -> {
                                 if (commandResultMessage.isExceptional()) {
                                     Throwable cause = commandResultMessage.exceptionResult();
-                                    assertTrue(cause instanceof AggregateEntityNotFoundException);
+                                    assertThat(cause).isInstanceOf(AggregateEntityNotFoundException.class);
                                 } else {
                                     fail("Expected exception");
                                 }
@@ -628,7 +637,7 @@ class AggregateAnnotationCommandHandlerTest {
                             (commandMessage, commandResultMessage) -> {
                                 if (commandResultMessage.isExceptional()) {
                                     Throwable cause = commandResultMessage.exceptionResult();
-                                    assertTrue(cause instanceof AggregateEntityNotFoundException);
+                                    assertThat(cause).isInstanceOf(AggregateEntityNotFoundException.class);
                                 } else {
                                     fail("Expected exception");
                                 }
@@ -652,7 +661,8 @@ class AggregateAnnotationCommandHandlerTest {
                                                        .build();
 
         //noinspection resource
-        assertThrows(DuplicateCommandHandlerSubscriptionException.class, () -> testSubject.subscribe(commandBus));
+        assertThatThrownBy(() -> testSubject.subscribe(commandBus))
+                .isInstanceOf(DuplicateCommandHandlerSubscriptionException.class);
     }
 
     @Test
@@ -669,7 +679,7 @@ class AggregateAnnotationCommandHandlerTest {
                                             .ifPresent(Throwable::printStackTrace);
                         fail("Did not expect exception");
                     }
-                    assertEquals("handled by 1_b", commandResultMessage.getPayload());
+                    assertThat(commandResultMessage.getPayload()).isEqualTo("handled by 1_b");
                 }
         );
 
@@ -687,7 +697,7 @@ class AggregateAnnotationCommandHandlerTest {
                 (commandMessage, commandResultMessage) -> {
                     if (commandResultMessage.isExceptional()) {
                         Throwable cause = commandResultMessage.exceptionResult();
-                        assertTrue(cause instanceof AggregateEntityNotFoundException);
+                        assertThat(cause).isInstanceOf(AggregateEntityNotFoundException.class);
                     } else {
                         fail("Expected exception");
                     }
@@ -716,7 +726,7 @@ class AggregateAnnotationCommandHandlerTest {
                                                  .build();
 
         //noinspection resource
-        assertDoesNotThrow(() -> polymorphicAggregateTestSubject.subscribe(commandBus));
+        assertThatNoException().isThrownBy(() -> polymorphicAggregateTestSubject.subscribe(commandBus));
     }
 
     @SuppressWarnings("unused")
@@ -767,9 +777,9 @@ class AggregateAnnotationCommandHandlerTest {
                                              UnitOfWork<CommandMessage<?>> unitOfWork,
                                              @MetaDataValue("notExist") String value) {
             super(createCommand.getId());
-            assertNotNull(metaData);
-            assertNotNull(unitOfWork);
-            assertNull(value);
+            assertThat(metaData).isNotNull();
+            assertThat(unitOfWork).isNotNull();
+            assertThat(value).isNull();
             apply(new StubDomainEvent());
         }
 

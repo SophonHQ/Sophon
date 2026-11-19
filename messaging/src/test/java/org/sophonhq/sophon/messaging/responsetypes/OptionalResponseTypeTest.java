@@ -24,7 +24,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.common.ReflectionUtils.methodOf;
 
 /**
@@ -48,7 +49,7 @@ class OptionalResponseTypeTest
     void optionalMatchesExpectedType() throws NoSuchMethodException {
         Method methodToTest = methodOf(getClass(), "someOptionalQueryResponse");
         Type methodReturnType = methodToTest.getGenericReturnType();
-        assertEquals(Boolean.TRUE, ResponseTypes.instanceOf(QueryResponse.class).matches(methodReturnType));
+        assertThat(ResponseTypes.instanceOf(QueryResponse.class).matches(methodReturnType)).isEqualTo(Boolean.TRUE);
     }
 
     @Test
@@ -219,15 +220,15 @@ class OptionalResponseTypeTest
 
         Optional<QueryResponse> result = testSubject.convert(testResponse);
 
-        assertTrue(result.isPresent());
-        assertEquals(testResponse, result.get());
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(testResponse);
     }
 
     @Test
     void convertReturnsNullResponseAsEmptyOptional() {
         Optional<QueryResponse> result = testSubject.convert(null);
 
-        assertFalse(result.isPresent());
+        assertThat(result).isNotPresent();
     }
 
     @Test
@@ -236,20 +237,21 @@ class OptionalResponseTypeTest
 
         Optional<QueryResponse> result = testSubject.convert(testResponse);
 
-        assertTrue(result.isPresent());
-        assertEquals(testResponse, result.get());
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(testResponse);
     }
 
     @SuppressWarnings("unused")
     @Test
     void convertThrowsClassCastExceptionForDifferentSingleInstanceResponse() {
-        assertThrows(Exception.class, () -> testSubject.convert(new QueryResponseInterface() {
-        }));
+        assertThatThrownBy(() -> testSubject.convert(new QueryResponseInterface() {
+        })).isInstanceOf(Exception.class);
     }
 
     @SuppressWarnings("unused")
     @Test
     void convertThrowsClassCastExceptionForMultipleInstanceResponse() {
-        assertThrows(Exception.class, () -> testSubject.convert(new ArrayList<QueryResponse>()));
+        assertThatThrownBy(() -> testSubject.convert(new ArrayList<QueryResponse>()))
+                .isInstanceOf(Exception.class);
     }
 }

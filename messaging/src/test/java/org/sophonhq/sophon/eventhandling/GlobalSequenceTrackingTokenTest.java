@@ -17,9 +17,9 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class GlobalSequenceTrackingTokenTest {
 
@@ -28,9 +28,9 @@ class GlobalSequenceTrackingTokenTest {
         GlobalSequenceTrackingToken token1 = new GlobalSequenceTrackingToken(1L);
         GlobalSequenceTrackingToken token2 = new GlobalSequenceTrackingToken(2L);
 
-        assertSame(token2, token1.upperBound(token2));
-        assertSame(token2, token2.upperBound(token1));
-        assertSame(token2, token2.upperBound(token2));
+        assertThat(token1.upperBound(token2)).isSameAs(token2);
+        assertThat(token2.upperBound(token1)).isSameAs(token2);
+        assertThat(token2.upperBound(token2)).isSameAs(token2);
     }
 
     @Test
@@ -38,9 +38,9 @@ class GlobalSequenceTrackingTokenTest {
         GlobalSequenceTrackingToken token1 = new GlobalSequenceTrackingToken(1L);
         GlobalSequenceTrackingToken token2 = new GlobalSequenceTrackingToken(2L);
 
-        assertSame(token1, token1.lowerBound(token2));
-        assertSame(token1, token2.lowerBound(token1));
-        assertSame(token2, token2.lowerBound(token2));
+        assertThat(token1.lowerBound(token2)).isSameAs(token1);
+        assertThat(token2.lowerBound(token1)).isSameAs(token1);
+        assertThat(token2.lowerBound(token2)).isSameAs(token2);
     }
 
     @Test
@@ -48,17 +48,17 @@ class GlobalSequenceTrackingTokenTest {
         GlobalSequenceTrackingToken token1 = new GlobalSequenceTrackingToken(1L);
         GlobalSequenceTrackingToken token2 = new GlobalSequenceTrackingToken(2L);
 
-        assertFalse(token1.covers(token2));
-        assertTrue(token2.covers(token1));
-        assertTrue(token2.covers(token2));
-        assertTrue(token2.covers(null));
+        assertThat(token1.covers(token2)).isFalse();
+        assertThat(token2.covers(token1)).isTrue();
+        assertThat(token2.covers(token2)).isTrue();
+        assertThat(token2.covers(null)).isTrue();
     }
 
     @Test
     void position() {
         GlobalSequenceTrackingToken token = new GlobalSequenceTrackingToken(1L);
 
-        assertEquals(1L, token.position().getAsLong());
+        assertThat(token.position().getAsLong()).isOne();
     }
 
     @Test
@@ -68,16 +68,16 @@ class GlobalSequenceTrackingTokenTest {
         GlobalSequenceTrackingToken token1Copy = new GlobalSequenceTrackingToken(1L);
 
         // Same index means same position
-        assertTrue(token1.samePositionAs(token1));
-        assertTrue(token1.samePositionAs(token1Copy));
-        assertTrue(token2.samePositionAs(token2));
+        assertThat(token1.samePositionAs(token1)).isTrue();
+        assertThat(token1.samePositionAs(token1Copy)).isTrue();
+        assertThat(token2.samePositionAs(token2)).isTrue();
 
         // Different index means different position
-        assertFalse(token1.samePositionAs(token2));
-        assertFalse(token2.samePositionAs(token1));
+        assertThat(token1.samePositionAs(token2)).isFalse();
+        assertThat(token2.samePositionAs(token1)).isFalse();
 
         // Null is never the same
-        assertFalse(token1.samePositionAs(null));
-        assertFalse(token2.samePositionAs(null));
+        assertThat(token1.samePositionAs(null)).isFalse();
+        assertThat(token2.samePositionAs(null)).isFalse();
     }
 }

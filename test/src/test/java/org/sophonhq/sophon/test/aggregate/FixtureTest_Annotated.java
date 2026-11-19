@@ -19,7 +19,9 @@ package org.sophonhq.sophon.test.aggregate;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -36,7 +38,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.test.matchers.Matchers.exactSequenceOf;
 import static org.sophonhq.sophon.test.matchers.Matchers.matches;
@@ -66,17 +71,16 @@ class FixtureTest_Annotated {
 
     @Test
     void nullIdentifierIsRejected() {
-        SophonAssertionError error = assertThrows(SophonAssertionError.class, () ->
+        SophonAssertionError error = assertThatExceptionOfType(SophonAssertionError.class).isThrownBy(() ->
                 fixture.given(new MyEvent(null, 0))
                        .when(new TestCommand("test"))
                        .expectEvents(new MyEvent("test", 1))
                        .expectSuccessfulHandlerExecution()
-        );
+        ).actual();
 
-        assertTrue(
-                error.getMessage().contains("IncompatibleAggregateException"),
-                "Expected test to fail with IncompatibleAggregateException"
-        );
+        assertThat(error.getMessage())
+                .as("Expected test to fail with IncompatibleAggregateException")
+                .contains("IncompatibleAggregateException");
     }
 
     @Test
@@ -96,17 +100,15 @@ class FixtureTest_Annotated {
                        description.appendText("list with all events with timestamp at epoch");
                    }
                });
-        assertTrue(
-                fixture.getEventStore()
-                       .readEvents("AggregateId")
-                       .asStream()
-                       .allMatch(i -> Instant.EPOCH.equals(i.getTimestamp()))
-        );
-        assertEquals(1, fixture.getEventStore().readEvents("AggregateId")
-                               .asStream()
-                               .map(EventMessage::getTimestamp)
-                               .distinct()
-                               .count());
+        assertThat(fixture.getEventStore()
+                          .readEvents("AggregateId")
+                          .asStream()
+                          .allMatch(i -> Instant.EPOCH.equals(i.getTimestamp()))).isTrue();
+        assertThat(fixture.getEventStore().readEvents("AggregateId")
+                          .asStream()
+                          .map(EventMessage::getTimestamp)
+                          .distinct()
+                          .count()).isOne();
     }
 
     @Test
@@ -114,11 +116,11 @@ class FixtureTest_Annotated {
         fixture.given(new MyEvent("AggregateId", 1), new MyEvent("AggregateId", 2))
                .when(new TestCommand("AggregateId"));
 
-        assertEquals(1, fixture.getEventStore().readEvents("AggregateId")
-                               .asStream()
-                               .map(EventMessage::getTimestamp)
-                               .distinct()
-                               .count());
+        assertThat(fixture.getEventStore().readEvents("AggregateId")
+                          .asStream()
+                          .map(EventMessage::getTimestamp)
+                          .distinct()
+                          .count()).isOne();
     }
 
     @Test
@@ -130,7 +132,7 @@ class FixtureTest_Annotated {
         });
 
         fixture.given().when(new CreateAggregateCommand()).expectEvents();
-        assertTrue(invoked.get(), "");
+        assertThat(invoked.get()).isTrue();
     }
 
     @Test
@@ -143,7 +145,8 @@ class FixtureTest_Annotated {
     @Test
     void unavailableResourcesCausesFailure() {
         TestExecutor<AnnotatedAggregate> given = fixture.given();
-        assertThrows(FixtureExecutionException.class, () -> given.when(new CreateAggregateCommand()));
+        assertThatThrownBy(() -> given.when(new CreateAggregateCommand()))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
@@ -151,22 +154,21 @@ class FixtureTest_Annotated {
         fixture.given(new MyEvent("AggregateId", 1), new MyEvent("AggregateId", 2))
                .when(new TestCommand("AggregateId"))
                .expectEvents(new MyEvent("AggregateId", 3))
-               .expectState(Assertions::assertNotNull);
+               .expectState(aggregate -> assertThat(aggregate).isNotNull());
 
         DomainEventStream events = fixture.getEventStore().readEvents("AggregateId");
         for (int t = 0; t < 3; t++) {
-            assertTrue(events.hasNext());
+            assertThat(events).hasNext();
             DomainEventMessage<?> next = events.next();
-            assertEquals("AggregateId", next.getAggregateIdentifier());
-            assertEquals(t, next.getSequenceNumber());
+            assertThat(next.getAggregateIdentifier()).isEqualTo("AggregateId");
+            assertThat(next.getSequenceNumber()).isEqualTo(t);
         }
     }
 
     @Test
     void fixtureGivenCommands_ResourcesNotAvailable() {
-        assertThrows(
-                FixtureExecutionException.class, () -> fixture.givenCommands(new CreateAggregateCommand(AGGREGATE_ID))
-        );
+        assertThatThrownBy(() -> fixture.givenCommands(new CreateAggregateCommand(AGGREGATE_ID)))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
@@ -202,26 +204,27 @@ class FixtureTest_Annotated {
         fixture.given()
                .when(new CreateAggregateCommand("AggregateId"));
 
-        assertThrows(FixtureExecutionException.class, () -> fixture.registerInjectableResource("I am injectable"));
+        assertThatThrownBy(() -> fixture.registerInjectableResource("I am injectable"))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
     void fixtureGeneratesExceptionOnWrongEvents_DifferentAggregateIdentifiers() {
-        assertThrows(EventStoreException.class, () ->
+        assertThatThrownBy(() ->
                 fixture.getEventStore().publish(
                         new GenericDomainEventMessage<>("test", UUID.randomUUID().toString(), 0, new StubDomainEvent()),
                         new GenericDomainEventMessage<>("test", UUID.randomUUID().toString(), 0, new StubDomainEvent()))
-        );
+        ).isInstanceOf(EventStoreException.class);
     }
 
     @Test
     void fixtureGeneratesExceptionOnWrongEvents_WrongSequence() {
         String identifier = UUID.randomUUID().toString();
-        assertThrows(EventStoreException.class, () ->
+        assertThatThrownBy(() ->
                 fixture.getEventStore().publish(
                         new GenericDomainEventMessage<>("test", identifier, 0, new StubDomainEvent()),
                         new GenericDomainEventMessage<>("test", identifier, 2, new StubDomainEvent()))
-        );
+        ).isInstanceOf(EventStoreException.class);
     }
 
     @Test
@@ -234,9 +237,10 @@ class FixtureTest_Annotated {
     @Test
     void fixtureDetectsStateChangeOutsideOfHandler_AggregateDeleted() {
         TestExecutor<AnnotatedAggregate> exec = fixture.given(new MyEvent(AGGREGATE_ID, 5));
-        AssertionError error =
-                assertThrows(AssertionError.class, () -> exec.when(new DeleteCommand(AGGREGATE_ID, true)));
-        assertTrue(error.getMessage().contains("considered deleted"), "Wrong message: " + error.getMessage());
+        AssertionError error = assertThatExceptionOfType(AssertionError.class)
+                .isThrownBy(() -> exec.when(new DeleteCommand(AGGREGATE_ID, true)))
+                .actual();
+        assertThat(error.getMessage()).as("Wrong message: " + error.getMessage()).contains("considered deleted");
     }
 
     @Test
@@ -286,9 +290,9 @@ class FixtureTest_Annotated {
                                && MyEvent.class.equals(eventMessage.getPayloadType())
                )));
 
-        assertEquals(3, fixture.getEventStore()
-                               .readEvents(testAggregateId)
-                               .asStream().count());
+        assertThat(fixture.getEventStore()
+                          .readEvents(testAggregateId)
+                          .asStream().count()).isEqualTo(3);
     }
 
     @Test

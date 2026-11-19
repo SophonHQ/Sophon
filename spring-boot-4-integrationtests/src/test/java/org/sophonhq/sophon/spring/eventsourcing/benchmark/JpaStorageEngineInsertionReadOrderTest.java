@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Integration test class validating the insertion order of events for the {@link JpaEventStorageEngine}.
@@ -112,8 +112,9 @@ class JpaStorageEngineInsertionReadOrderTest {
             thread.join();
         }
 
-        assertEquals(expectedEventCount, readEvents.size(),
-                "The actually read list of events is shorted than the expected value");
+        assertThat(readEvents)
+                .as("The actually read list of events is shorted than the expected value")
+                .hasSize(expectedEventCount);
     }
 
     @Test
@@ -139,8 +140,9 @@ class JpaStorageEngineInsertionReadOrderTest {
             thread.join();
         }
 
-        assertEquals(expectedEventCount, counter,
-                "The actually read list of events is shorted than the expected value");
+        assertThat(counter)
+                .as("The actually read list of events is shorted than the expected value")
+                .isEqualTo(expectedEventCount);
     }
 
     @Test
@@ -173,8 +175,9 @@ class JpaStorageEngineInsertionReadOrderTest {
             thread.join();
         }
 
-        assertEquals(expectedEventCount, counter,
-                "The actually read list of events is shorted than the expected value");
+        assertThat(counter)
+                .as("The actually read list of events is shorted than the expected value")
+                .isEqualTo(expectedEventCount);
     }
 
     private Thread[] storeEvents(int threadCount, int eventsPerThread, int inverseRollbackRate) {

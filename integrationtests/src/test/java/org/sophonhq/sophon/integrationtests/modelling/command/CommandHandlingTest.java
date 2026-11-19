@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.integrationtests.modelling.command;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.Registration;
 import org.sophonhq.sophon.eventhandling.AbstractEventBus;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
@@ -40,7 +41,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class CommandHandlingTest {
 
@@ -69,13 +70,13 @@ class CommandHandlingTest {
         CurrentUnitOfWork.commit();
 
         Iterator<? extends DomainEventMessage<?>> es = stubEventStore.readEvents(aggregateIdentifier);
-        assertTrue(es.hasNext());
-        assertEquals((Object) 0L, es.next().getSequenceNumber());
-        assertTrue(es.hasNext());
-        assertEquals((Object) 1L, es.next().getSequenceNumber());
-        assertTrue(es.hasNext());
-        assertEquals((Object) 2L, es.next().getSequenceNumber());
-        assertFalse(es.hasNext());
+        assertThat(es).hasNext();
+        assertThat(es.next().getSequenceNumber()).isZero();
+        assertThat(es).hasNext();
+        assertThat(es.next().getSequenceNumber()).isOne();
+        assertThat(es).hasNext();
+        assertThat(es.next().getSequenceNumber()).isEqualTo(2L);
+        assertThat(es).isExhausted();
     }
 
     private static class StubEventStore extends AbstractEventBus implements EventStore {

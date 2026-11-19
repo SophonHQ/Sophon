@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.springboot;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
 import org.sophonhq.sophon.spring.authorization.SecuredMessageHandlerDefinition;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,7 +25,7 @@ import org.springframework.boot.test.context.FilteredClassLoader;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SecurityAutoConfigurationTest {
 
@@ -34,11 +34,12 @@ class SecurityAutoConfigurationTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertNotNull(context);
+                    assertThat(context).isNotNull();
 
-                    assertTrue(context.containsBean("securedMessageHandlerDefinition"));
-                    assertTrue(context.getBeansOfType(HandlerEnhancerDefinition.class).containsKey("securedMessageHandlerDefinition"));
-                    assertFalse(context.getBeansOfType(SecuredMessageHandlerDefinition.class).isEmpty());
+                    assertThat(context.containsBean("securedMessageHandlerDefinition")).isTrue();
+                    assertThat(context.getBeansOfType(HandlerEnhancerDefinition.class))
+                            .containsKey("securedMessageHandlerDefinition");
+                    assertThat(context.getBeansOfType(SecuredMessageHandlerDefinition.class)).isNotEmpty();
                 });
     }
 
@@ -48,7 +49,7 @@ class SecurityAutoConfigurationTest {
                 .withClassLoader(new FilteredClassLoader("org.springframework.security.access.annotation.Secured"))
                 .withUserConfiguration(Context.class)
                 .run(context -> {
-                    assertFalse(context.containsBean("securedMessageHandlerDefinition"));
+                    assertThat(context.containsBean("securedMessageHandlerDefinition")).isFalse();
                 });
     }
 

@@ -18,7 +18,7 @@
 package org.sophonhq.sophon.springboot;
 
 import com.codahale.metrics.MetricRegistry;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.sophonhq.sophon.metrics.GlobalMetricRegistry;
 import org.sophonhq.sophon.metrics.MetricsConfigurerModule;
@@ -31,7 +31,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration
 @EnableAutoConfiguration(exclude = {
@@ -56,18 +56,18 @@ class SophonAutoConfigurationWithMetricsTest {
 
     @Test
     void contextInitialization() {
-        assertNotNull(applicationContext);
+        assertThat(applicationContext).isNotNull();
 
-        assertTrue(applicationContext.containsBean("metricRegistry"));
-        assertNotNull(applicationContext.getBean(MetricRegistry.class));
-        assertEquals(MetricRegistry.class, metricRegistry.getClass());
+        assertThat(applicationContext.containsBean("metricRegistry")).isTrue();
+        assertThat(applicationContext.getBean(MetricRegistry.class)).isNotNull();
+        assertThat(metricRegistry.getClass()).isEqualTo(MetricRegistry.class);
 
-        assertTrue(applicationContext.containsBean("globalMetricRegistry"));
-        assertNotNull(applicationContext.getBean(GlobalMetricRegistry.class));
-        assertEquals(GlobalMetricRegistry.class, globalMetricRegistry.getClass());
+        assertThat(applicationContext.containsBean("globalMetricRegistry")).isTrue();
+        assertThat(applicationContext.getBean(GlobalMetricRegistry.class)).isNotNull();
+        assertThat(globalMetricRegistry.getClass()).isEqualTo(GlobalMetricRegistry.class);
 
-        assertTrue(applicationContext.containsBean("metricsConfigurerModule"));
-        assertNotNull(applicationContext.getBean(MetricsConfigurerModule.class));
-        assertEquals(MetricsConfigurerModule.class, metricsConfigurerModule.getClass());
+        assertThat(applicationContext.containsBean("metricsConfigurerModule")).isTrue();
+        assertThat(applicationContext.getBean(MetricsConfigurerModule.class)).isNotNull();
+        assertThat(metricsConfigurerModule.getClass()).isEqualTo(MetricsConfigurerModule.class);
     }
 }

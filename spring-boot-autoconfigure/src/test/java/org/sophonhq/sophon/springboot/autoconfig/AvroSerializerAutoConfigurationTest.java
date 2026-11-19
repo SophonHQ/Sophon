@@ -20,7 +20,10 @@ package org.sophonhq.sophon.springboot.autoconfig;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.message.SchemaStore;
 import org.apache.avro.util.ClassSecurityValidator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.serialization.SerializationException;
 import org.sophonhq.sophon.serialization.SerializedObject;
@@ -42,7 +45,7 @@ import org.springframework.test.context.ContextConfiguration;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * AvroSerializer Spring integration test, verifying classpath scan and serialize/deserialize.
@@ -134,7 +137,7 @@ class AvroSerializerAutoConfigurationTest {
                         "sophon.serializer.events=avro")
                 .run(context -> {
                     Serializer serializer = context.getBean("eventSerializer", Serializer.class);
-                    assertInstanceOf(AvroSerializer.class, serializer);
+                    assertThat(serializer).isInstanceOf(AvroSerializer.class);
                     AvroSerializer avroSerializer = (AvroSerializer) serializer;
                     ComplexObject complexObject = ComplexObject.newBuilder()
                                                                .setValue1("foo")
@@ -146,7 +149,7 @@ class AvroSerializerAutoConfigurationTest {
 
                     // back to original type
                     ComplexObject deserialized = avroSerializer.deserialize(serialized);
-                    assertEquals(complexObject, deserialized);
+                    assertThat(deserialized).isEqualTo(complexObject);
 
                     // back to generic type (aka intermediate)
                     GenericRecord genericRecord = avroSerializer.deserialize(serialized);
@@ -160,7 +163,7 @@ class AvroSerializerAutoConfigurationTest {
                                                          serialized.getType())
                     );
 
-                    assertEquals("newValue", deserializedAfterUpcasting.getValue2());
+                    assertThat(deserializedAfterUpcasting.getValue2()).isEqualTo("newValue");
                 });
     }
 
@@ -175,7 +178,7 @@ class AvroSerializerAutoConfigurationTest {
                         "sophon.serializer.events=avro")
                 .run(context -> {
                     Serializer serializer = context.getBean("eventSerializer", Serializer.class);
-                    assertInstanceOf(AvroSerializer.class, serializer);
+                    assertThat(serializer).isInstanceOf(AvroSerializer.class);
                     AvroSerializer avroSerializer = (AvroSerializer) serializer;
                     ComplexObject complexObject = ComplexObject.newBuilder()
                                                                .setValue1("foo")
@@ -184,13 +187,14 @@ class AvroSerializerAutoConfigurationTest {
                                                                .build();
                     SerializedObject<byte[]> serialized = avroSerializer.serialize(complexObject,
                                                                                    byte[].class);
-                    SerializationException serializationException = assertThrows(SerializationException.class,
-                                                                                 () -> avroSerializer.deserialize(
-                                                                                         serialized));
-                    assertEquals(AvroUtil.createExceptionNoSchemaFound(
+                    SerializationException serializationException =
+                            assertThatExceptionOfType(SerializationException.class)
+                                    .isThrownBy(() -> avroSerializer.deserialize(serialized))
+                                    .actual();
+                    assertThat(serializationException.getMessage()).isEqualTo(AvroUtil.createExceptionNoSchemaFound(
                             ComplexObject.class,
                             AvroUtil.fingerprint(ComplexObject.getClassSchema())
-                    ).getMessage(), serializationException.getMessage());
+                    ).getMessage());
                 });
     }
 

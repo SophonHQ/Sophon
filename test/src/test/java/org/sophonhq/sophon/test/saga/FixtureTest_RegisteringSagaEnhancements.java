@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.test.saga;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.ListenerInvocationErrorHandler;
 import org.sophonhq.sophon.eventhandling.LoggingErrorHandler;
 import org.sophonhq.sophon.modelling.saga.SagaEventHandler;
@@ -29,9 +30,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.time.Duration.ofSeconds;
 import static java.time.Instant.now;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -56,37 +56,37 @@ class FixtureTest_RegisteringSagaEnhancements {
     void startRecordingCallbackIsInvokedOnWhenPublishingAnEvent() {
         testSubject.registerStartRecordingCallback(startRecordingCount::getAndIncrement)
                    .givenAPublished(new SomeTestSaga.SomeEvent());
-        assertThat(startRecordingCount.get(), equalTo(0));
+        assertThat(startRecordingCount.get()).isZero();
 
         testSubject.whenPublishingA(new SomeTestSaga.SomeEvent());
-        assertThat(startRecordingCount.get(), equalTo(1));
+        assertThat(startRecordingCount.get()).isOne();
     }
 
     @Test
     void startRecordingCallbackIsInvokedOnWhenTimeAdvances() {
         testSubject.registerStartRecordingCallback(startRecordingCount::getAndIncrement)
                    .givenAPublished(new SomeTestSaga.SomeEvent());
-        assertThat(startRecordingCount.get(), equalTo(0));
+        assertThat(startRecordingCount.get()).isZero();
 
         testSubject.whenTimeAdvancesTo(now());
-        assertThat(startRecordingCount.get(), equalTo(1));
+        assertThat(startRecordingCount.get()).isOne();
     }
 
     @Test
     void startRecordingCallbackIsInvokedOnWhenTimeElapses() {
         testSubject.registerStartRecordingCallback(startRecordingCount::getAndIncrement)
                    .givenAPublished(new SomeTestSaga.SomeEvent());
-        assertThat(startRecordingCount.get(), equalTo(0));
+        assertThat(startRecordingCount.get()).isZero();
 
         testSubject.whenTimeElapses(ofSeconds(5));
-        assertThat(startRecordingCount.get(), equalTo(1));
+        assertThat(startRecordingCount.get()).isOne();
     }
 
     @Test
     void customListenerInvocationErrorHandlerIsUsedInWhenPhase() {
         SomeTestSaga.SomeEvent testEvent = new SomeTestSaga.SomeEvent("some-id", true);
         ListenerInvocationErrorHandler testErrorHandler = (exception, event, eventHandler) ->
-                assertEquals(testEvent.getException().getMessage(), exception.getMessage());
+                assertThat(exception.getMessage()).isEqualTo(testEvent.getException().getMessage());
         this.testSubject.registerListenerInvocationErrorHandler(testErrorHandler);
 
         this.testSubject.givenNoPriorActivity()
@@ -97,7 +97,7 @@ class FixtureTest_RegisteringSagaEnhancements {
     void customListenerInvocationErrorHandlerIsUsedInGivenPhase() {
         SomeTestSaga.SomeEvent testEvent = new SomeTestSaga.SomeEvent("some-id", true);
         ListenerInvocationErrorHandler testErrorHandler = (exception, event, eventHandler) ->
-                assertEquals(testEvent.getException().getMessage(), exception.getMessage());
+                assertThat(exception.getMessage()).isEqualTo(testEvent.getException().getMessage());
 
         this.testSubject.registerListenerInvocationErrorHandler(testErrorHandler)
                         .suppressExceptionInGivenPhase(true);
@@ -112,7 +112,8 @@ class FixtureTest_RegisteringSagaEnhancements {
 
         this.testSubject.registerListenerInvocationErrorHandler(testErrorHandler);
 
-        assertThrows(FixtureExecutionException.class, () -> this.testSubject.givenAPublished(testEvent));
+        assertThatThrownBy(() -> this.testSubject.givenAPublished(testEvent))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
@@ -122,7 +123,7 @@ class FixtureTest_RegisteringSagaEnhancements {
                    // Publishing a single event should trigger the creation and injection of resources
                    .givenAPublished(new SomeTestSaga.SomeEvent());
 
-        assertTrue(assertion.get());
+        assertThat(assertion.get()).isTrue();
     }
 
     public static class SomeTestSaga {

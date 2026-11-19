@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
@@ -43,38 +42,40 @@ class AssociationValueMapTest {
 
     @Test
     void storeVarietyOfItems() {
-        assertTrue(testSubject.isEmpty());
+        assertThat(testSubject.isEmpty()).isTrue();
 
         Object anObject = new Object();
         testSubject.add(av("1"), "T", "1");
         testSubject.add(av("1"), "T", "1");
-        assertEquals(1, testSubject.size(), "Wrong count after adding an object twice");
+        assertThat(testSubject.size()).as("Wrong count after adding an object twice").isOne();
         testSubject.add(av("2"), "T", "1");
-        assertEquals(2, testSubject.size(), "Wrong count after adding two objects");
+        assertThat(testSubject.size()).as("Wrong count after adding two objects").isEqualTo(2);
         testSubject.add(av("a"), "T", "1");
         testSubject.add(av("a"), "T", "1");
-        assertEquals(3, testSubject.size(), "Wrong count after adding two identical Strings");
+        assertThat(testSubject.size()).as("Wrong count after adding two identical Strings").isEqualTo(3);
         testSubject.add(av("b"), "T", "1");
-        assertEquals(4, testSubject.size(), "Wrong count after adding two identical Strings");
+        assertThat(testSubject.size()).as("Wrong count after adding two identical Strings").isEqualTo(4);
 
         testSubject.add(av("a"), "T", "2");
         testSubject.add(av("a"), "Y", "2");
-        assertEquals(6, testSubject.size(), "Wrong count after adding two identical Strings for different saga");
-        assertEquals(2, testSubject.findSagas("T", av("a")).size());
+        assertThat(testSubject.size())
+                .as("Wrong count after adding two identical Strings for different saga")
+                .isEqualTo(6);
+        assertThat(testSubject.findSagas("T", av("a"))).hasSize(2);
     }
 
     @Test
     void removeItems() {
         storeVarietyOfItems();
-        assertEquals(6, testSubject.size(), "Wrong initial item count");
+        assertThat(testSubject.size()).as("Wrong initial item count").isEqualTo(6);
         testSubject.remove(av("a"), "T", "1");
-        assertEquals(5, testSubject.size(), "Wrong item count");
+        assertThat(testSubject.size()).as("Wrong item count").isEqualTo(5);
         testSubject.remove(av("a"), "T", "2");
-        assertEquals(4, testSubject.size(), "Wrong item count");
+        assertThat(testSubject.size()).as("Wrong item count").isEqualTo(4);
 
         testSubject.clear();
-        assertTrue(testSubject.isEmpty());
-        assertEquals(0, testSubject.size(), "Wrong item count");
+        assertThat(testSubject.isEmpty()).isTrue();
+        assertThat(testSubject.size()).as("Wrong item count").isZero();
     }
 
     private AssociationValue av(String value) {
@@ -95,11 +96,11 @@ class AssociationValueMapTest {
             }
         }
 
-        assertEquals(10000, testSubject.size());
+        assertThat(testSubject.size()).isEqualTo(10000);
         for (AssociationValue item : usedAssociations) {
             Set<String> actualResult = testSubject.findSagas("type", item);
-            assertEquals(1, actualResult.size(),"Failure on item: " + usedAssociations.indexOf(item));
-            assertEquals(item.getKey(), actualResult.iterator().next());
+            assertThat(actualResult).as("Failure on item: " + usedAssociations.indexOf(item)).hasSize(1);
+            assertThat(actualResult.iterator().next()).isEqualTo(item.getKey());
         }
     }
 }

@@ -25,8 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class PriorityAnnotationComparatorTest {
 
@@ -39,31 +38,31 @@ class PriorityAnnotationComparatorTest {
 
     @Test
     void compareDifferentPriorities() {
-        assertTrue(testSubject.compare(new LowPrio(), new HighPrio()) > 0);
-        assertTrue(testSubject.compare(new LowPrio(), new NeutralPrio()) > 0);
-        assertTrue(testSubject.compare(new NeutralPrio(), new HighPrio()) > 0);
+        assertThat(testSubject.compare(new LowPrio(), new HighPrio())).isGreaterThan(0);
+        assertThat(testSubject.compare(new LowPrio(), new NeutralPrio())).isGreaterThan(0);
+        assertThat(testSubject.compare(new NeutralPrio(), new HighPrio())).isGreaterThan(0);
 
-        assertTrue(testSubject.compare(new HighPrio(), new LowPrio()) < 0);
-        assertTrue(testSubject.compare(new NeutralPrio(), new LowPrio()) < 0);
-        assertTrue(testSubject.compare(new HighPrio(), new NeutralPrio()) < 0);
+        assertThat(testSubject.compare(new HighPrio(), new LowPrio())).isLessThan(0);
+        assertThat(testSubject.compare(new NeutralPrio(), new LowPrio())).isLessThan(0);
+        assertThat(testSubject.compare(new HighPrio(), new NeutralPrio())).isLessThan(0);
     }
 
     @Test
     void compareSamePriorities() {
-        assertEquals(0, testSubject.compare(new LowPrio(), new LowPrio()));
-        assertEquals(0, testSubject.compare(new NeutralPrio(), new NeutralPrio()));
-        assertEquals(0, testSubject.compare(new HighPrio(), new HighPrio()));
+        assertThat(testSubject.compare(new LowPrio(), new LowPrio())).isZero();
+        assertThat(testSubject.compare(new NeutralPrio(), new NeutralPrio())).isZero();
+        assertThat(testSubject.compare(new HighPrio(), new HighPrio())).isZero();
     }
 
     @Test
     void undefinedConsideredNeutralPriority() {
-        assertTrue(testSubject.compare(new UndefinedPrio(), new HighPrio()) > 0);
-        assertTrue(testSubject.compare(new UndefinedPrio(), new LowPrio()) < 0);
-        assertTrue(testSubject.compare(new UndefinedPrio(), new NeutralPrio()) == 0);
+        assertThat(testSubject.compare(new UndefinedPrio(), new HighPrio())).isGreaterThan(0);
+        assertThat(testSubject.compare(new UndefinedPrio(), new LowPrio())).isLessThan(0);
+        assertThat(testSubject.compare(new UndefinedPrio(), new NeutralPrio())).isEqualTo(0);
 
-        assertTrue(testSubject.compare(new HighPrio(), new UndefinedPrio()) < 0);
-        assertTrue(testSubject.compare(new LowPrio(), new UndefinedPrio()) > 0);
-        assertTrue(testSubject.compare(new NeutralPrio(), new UndefinedPrio()) == 0);
+        assertThat(testSubject.compare(new HighPrio(), new UndefinedPrio())).isLessThan(0);
+        assertThat(testSubject.compare(new LowPrio(), new UndefinedPrio())).isGreaterThan(0);
+        assertThat(testSubject.compare(new NeutralPrio(), new UndefinedPrio())).isEqualTo(0);
     }
 
     @Test
@@ -76,8 +75,8 @@ class PriorityAnnotationComparatorTest {
             Collections.shuffle(result);
             result.sort(testSubject);
 
-            assertEquals(highPrio, result.get(0));
-            assertEquals(lowPrio, result.get(3));
+            assertThat(result.get(0)).isEqualTo(highPrio);
+            assertThat(result.get(3)).isEqualTo(lowPrio);
         }
     }
 

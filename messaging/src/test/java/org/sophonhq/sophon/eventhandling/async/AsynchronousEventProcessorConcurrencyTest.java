@@ -31,8 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 /**
@@ -64,9 +63,11 @@ class AsynchronousEventProcessorConcurrencyTest {
         }
 
         executor.shutdown();
-        assertTrue(executor.awaitTermination(10, TimeUnit.SECONDS), "Executor not closed within a reasonable timeframe");
+        assertThat(executor.awaitTermination(10, TimeUnit.SECONDS))
+                .as("Executor not closed within a reasonable timeframe")
+                .isTrue();
 
-        assertEquals(threadCount * EventsPublisher.EVENTS_COUNT, counter.get());
+        assertThat(counter.get()).isEqualTo(threadCount * EventsPublisher.EVENTS_COUNT);
     }
 
     private class EventsPublisher implements Runnable {

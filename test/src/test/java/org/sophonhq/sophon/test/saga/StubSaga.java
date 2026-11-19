@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Stub saga used to test various scenarios of the {@link FixtureConfiguration}.
@@ -69,7 +69,7 @@ public class StubSaga {
                                 TrackingToken trackingToken,
                                 EventMessage<TriggerSagaStartEvent> message,
                                 @MetaDataValue("extraIdentifier") Object extraIdentifier) {
-        assertNotNull(trackingToken);
+        assertThat(trackingToken).isNotNull();
         handledEvents.add(event);
 
         if (extraIdentifier != null) {
@@ -97,7 +97,7 @@ public class StubSaga {
     @SagaEventHandler(associationProperty = "identifier")
     public void handle(ParameterResolvedEvent event, AtomicBoolean assertion) {
         handledEvents.add(event);
-        assertFalse(assertion.get());
+        assertThat(assertion.get()).isFalse();
         assertion.set(true);
         commandGateway.send(new ResolveParameterCommand(event.getIdentifier(), assertion));
     }

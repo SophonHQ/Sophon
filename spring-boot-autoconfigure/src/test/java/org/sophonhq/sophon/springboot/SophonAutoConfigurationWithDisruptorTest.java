@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.springboot;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
@@ -44,7 +44,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SophonAutoConfigurationWithDisruptorTest {
 
@@ -53,22 +53,23 @@ class SophonAutoConfigurationWithDisruptorTest {
         new ApplicationContextRunner()
                 .withUserConfiguration(SophonAutoConfigurationWithDisruptorTest.Context.class)
                 .run(applicationContext -> {
-                    assertNotNull(applicationContext);
-                    assertNotNull(applicationContext.getBean(Configurer.class));
-                    assertNotNull(applicationContext.getBean(CommandBus.class));
-                    assertEquals(DisruptorCommandBus.class, applicationContext.getBean(CommandBus.class).getClass());
-                    assertNotNull(applicationContext.getBean(EventBus.class));
-                    assertNotNull(applicationContext.getBean(CommandGateway.class));
-                    assertNotNull(applicationContext.getBean(EventGateway.class));
-                    assertNotNull(applicationContext.getBean(Serializer.class));
-                    assertEquals(1, applicationContext.getBeansOfType(EventStorageEngine.class).size());
-                    assertEquals(0, applicationContext.getBeansOfType(TokenStore.class).size());
-                    assertNotNull(applicationContext.getBean(Context.MySaga.class));
-                    assertNotNull(applicationContext.getBean(Context.MyAggregate.class));
-                    assertNotNull(applicationContext.getBean(Repository.class));
-                    assertNotNull(applicationContext.getBean(AggregateFactory.class));
+                    assertThat(applicationContext).isNotNull();
+                    assertThat(applicationContext.getBean(Configurer.class)).isNotNull();
+                    assertThat(applicationContext.getBean(CommandBus.class)).isNotNull();
+                    assertThat(applicationContext.getBean(CommandBus.class).getClass())
+                            .isEqualTo(DisruptorCommandBus.class);
+                    assertThat(applicationContext.getBean(EventBus.class)).isNotNull();
+                    assertThat(applicationContext.getBean(CommandGateway.class)).isNotNull();
+                    assertThat(applicationContext.getBean(EventGateway.class)).isNotNull();
+                    assertThat(applicationContext.getBean(Serializer.class)).isNotNull();
+                    assertThat(applicationContext.getBeansOfType(EventStorageEngine.class)).hasSize(1);
+                    assertThat(applicationContext.getBeansOfType(TokenStore.class)).hasSize(0);
+                    assertThat(applicationContext.getBean(Context.MySaga.class)).isNotNull();
+                    assertThat(applicationContext.getBean(Context.MyAggregate.class)).isNotNull();
+                    assertThat(applicationContext.getBean(Repository.class)).isNotNull();
+                    assertThat(applicationContext.getBean(AggregateFactory.class)).isNotNull();
                     org.sophonhq.sophon.config.Configuration configuration = applicationContext.getBean(org.sophonhq.sophon.config.Configuration.class);
-                    assertEquals(2, configuration.correlationDataProviders().size());
+                    assertThat(configuration.correlationDataProviders()).hasSize(2);
                 });
     }
 

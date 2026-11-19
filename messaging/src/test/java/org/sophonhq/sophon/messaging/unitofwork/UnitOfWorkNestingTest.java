@@ -17,25 +17,22 @@
 
 package org.sophonhq.sophon.messaging.unitofwork;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.sophonhq.sophon.utils.MockException;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
+import org.sophonhq.sophon.utils.MockException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
  */
 class UnitOfWorkNestingTest {
 
-    private List<PhaseTransition> phaseTransitions = new ArrayList<>();
+    private final List<PhaseTransition> phaseTransitions = new ArrayList<>();
     private UnitOfWork<?> outer;
     private UnitOfWork<?> middle;
     private UnitOfWork<?> inner;
@@ -81,7 +78,7 @@ class UnitOfWorkNestingTest {
 
     @AfterEach
     void tearDown() {
-        assertFalse(CurrentUnitOfWork.isStarted(), "A UnitOfWork was not properly cleared");
+        assertThat(CurrentUnitOfWork.isStarted()).as("A UnitOfWork was not properly cleared").isFalse();
     }
 
     @Test
@@ -101,16 +98,18 @@ class UnitOfWorkNestingTest {
             //ok
         }
 
-        assertFalse(CurrentUnitOfWork.isStarted(), "The UnitOfWork hasn't been correctly cleared");
-        assertEquals(Arrays.asList(new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.COMMIT),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.COMMIT, "x"),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.ROLLBACK),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
-        ), phaseTransitions);
+        assertThat(CurrentUnitOfWork.isStarted()).as("The UnitOfWork hasn't been correctly cleared").isFalse();
+        assertThat(phaseTransitions)
+                .containsExactly(
+                        new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.COMMIT),
+                        new PhaseTransition(outer, UnitOfWork.Phase.COMMIT, "x"),
+                        new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
+                        new PhaseTransition(outer, UnitOfWork.Phase.ROLLBACK),
+                        new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
+                        new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
+                );
     }
 
     @Test
@@ -129,15 +128,17 @@ class UnitOfWorkNestingTest {
             //ok
         }
 
-        assertFalse(CurrentUnitOfWork.isStarted(), "The UnitOfWork hasn't been correctly cleared");
-        assertEquals(Arrays.asList(new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.ROLLBACK),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
-        ), phaseTransitions);
+        assertThat(CurrentUnitOfWork.isStarted()).as("The UnitOfWork hasn't been correctly cleared").isFalse();
+        assertThat(phaseTransitions)
+                .containsExactly(
+                        new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
+                        new PhaseTransition(outer, UnitOfWork.Phase.ROLLBACK),
+                        new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
+                        new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
+                );
     }
 
     @Test
@@ -149,16 +150,18 @@ class UnitOfWorkNestingTest {
         outer.start();
         outer.commit();
 
-        assertFalse(CurrentUnitOfWork.isStarted(), "The UnitOfWork hasn't been correctly cleared");
-        assertEquals(Arrays.asList(new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.COMMIT),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.AFTER_COMMIT),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.AFTER_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
-        ), phaseTransitions);
+        assertThat(CurrentUnitOfWork.isStarted()).as("The UnitOfWork hasn't been correctly cleared").isFalse();
+        assertThat(phaseTransitions)
+                .containsExactly(
+                        new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.COMMIT),
+                        new PhaseTransition(outer, UnitOfWork.Phase.COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.AFTER_COMMIT),
+                        new PhaseTransition(outer, UnitOfWork.Phase.AFTER_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
+                        new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
+                );
     }
 
     @Test
@@ -170,14 +173,16 @@ class UnitOfWorkNestingTest {
         outer.start();
         outer.commit();
 
-        assertFalse(CurrentUnitOfWork.isStarted(), "The UnitOfWork hasn't been correctly cleared");
-        assertEquals(Arrays.asList(new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.COMMIT),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.AFTER_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
-        ), phaseTransitions);
+        assertThat(CurrentUnitOfWork.isStarted()).as("The UnitOfWork hasn't been correctly cleared").isFalse();
+        assertThat(phaseTransitions)
+                .containsExactly(
+                        new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
+                        new PhaseTransition(outer, UnitOfWork.Phase.COMMIT),
+                        new PhaseTransition(outer, UnitOfWork.Phase.AFTER_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
+                        new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
+                );
     }
 
     @Test
@@ -191,22 +196,28 @@ class UnitOfWorkNestingTest {
         outer.start();
         outer.commit();
 
-        assertTrue(middle.isRolledBack(), "The middle UnitOfWork hasn't been correctly marked as rolled back");
-        assertTrue(inner.isRolledBack(), "The inner UnitOfWork hasn't been correctly marked as rolled back");
-        assertFalse(outer.isRolledBack(), "The out UnitOfWork has been incorrectly marked as rolled back");
-        assertFalse(CurrentUnitOfWork.isStarted(), "The UnitOfWork hasn't been correctly cleared");
-        assertEquals(Arrays.asList(new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.COMMIT),
-                                   // important that the inner has been given a rollback signal
-                                   new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
-                                   new PhaseTransition(middle, UnitOfWork.Phase.ROLLBACK),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.COMMIT),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.AFTER_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
-                                   new PhaseTransition(middle, UnitOfWork.Phase.CLEANUP),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
-        ), phaseTransitions);
+        assertThat(middle.isRolledBack())
+                .as("The middle UnitOfWork hasn't been correctly marked as rolled back")
+                .isTrue();
+        assertThat(inner.isRolledBack())
+                .as("The inner UnitOfWork hasn't been correctly marked as rolled back")
+                .isTrue();
+        assertThat(outer.isRolledBack()).as("The out UnitOfWork has been incorrectly marked as rolled back").isFalse();
+        assertThat(CurrentUnitOfWork.isStarted()).as("The UnitOfWork hasn't been correctly cleared").isFalse();
+        assertThat(phaseTransitions)
+                .containsExactly(
+                        new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.COMMIT),
+                        // important that the inner has been given a rollback signal
+                        new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
+                        new PhaseTransition(middle, UnitOfWork.Phase.ROLLBACK),
+                        new PhaseTransition(outer, UnitOfWork.Phase.COMMIT),
+                        new PhaseTransition(outer, UnitOfWork.Phase.AFTER_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
+                        new PhaseTransition(middle, UnitOfWork.Phase.CLEANUP),
+                        new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
+                );
     }
 
     @Test
@@ -227,16 +238,18 @@ class UnitOfWorkNestingTest {
         outer.start();
         outer.commit();
 
-        assertFalse(CurrentUnitOfWork.isStarted(), "The UnitOfWork hasn't been correctly cleared");
-        assertEquals(Arrays.asList(new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.COMMIT, "x"),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.COMMIT),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.AFTER_COMMIT),
-                                   new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
-                                   new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
-        ), phaseTransitions);
+        assertThat(CurrentUnitOfWork.isStarted()).as("The UnitOfWork hasn't been correctly cleared").isFalse();
+        assertThat(phaseTransitions)
+                .containsExactly(
+                        new PhaseTransition(outer, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.PREPARE_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.COMMIT, "x"),
+                        new PhaseTransition(inner, UnitOfWork.Phase.ROLLBACK),
+                        new PhaseTransition(outer, UnitOfWork.Phase.COMMIT),
+                        new PhaseTransition(outer, UnitOfWork.Phase.AFTER_COMMIT),
+                        new PhaseTransition(inner, UnitOfWork.Phase.CLEANUP),
+                        new PhaseTransition(outer, UnitOfWork.Phase.CLEANUP)
+                );
     }
 
     private static class PhaseTransition {
@@ -252,7 +265,7 @@ class UnitOfWorkNestingTest {
         public PhaseTransition(UnitOfWork<?> unitOfWork, UnitOfWork.Phase phase, String id) {
             this.unitOfWork = unitOfWork;
             this.phase = phase;
-            this.id = id.length() > 0 ? " " + id : id;
+            this.id = !id.isEmpty() ? " " + id : id;
         }
 
         @Override

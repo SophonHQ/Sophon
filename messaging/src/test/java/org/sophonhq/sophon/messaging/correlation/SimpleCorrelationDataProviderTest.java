@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.messaging.correlation;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.messaging.GenericMessage;
 import org.sophonhq.sophon.messaging.Message;
 
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Collections.singletonMap;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SimpleCorrelationDataProviderTest {
 
@@ -35,14 +35,14 @@ class SimpleCorrelationDataProviderTest {
         metaData.put("key1", "value1");
         metaData.put("key2", "value2");
         metaData.put("key3", "value3");
-        Message message = new GenericMessage<>("payload", metaData);
+        Message<?> message = new GenericMessage<>("payload", metaData);
 
-        assertEquals(singletonMap("key1", "value1"),
-                     new SimpleCorrelationDataProvider("key1").correlationDataFor(message));
+        assertThat(new SimpleCorrelationDataProvider("key1").correlationDataFor(message))
+                .isEqualTo(singletonMap("key1", "value1"));
 
         final Map<String, ?> actual2 = new SimpleCorrelationDataProvider("key1", "key2", "noExist", null)
                 .correlationDataFor(message);
-        assertEquals("value1", actual2.get("key1"));
-        assertEquals("value2", actual2.get("key2"));
+        assertThat(actual2.get("key1")).isEqualTo("value1");
+        assertThat(actual2.get("key2")).isEqualTo("value2");
     }
 }

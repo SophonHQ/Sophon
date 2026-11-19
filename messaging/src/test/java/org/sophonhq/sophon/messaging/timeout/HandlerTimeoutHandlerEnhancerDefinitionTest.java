@@ -16,7 +16,8 @@
  */
 package org.sophonhq.sophon.messaging.timeout;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.deadline.annotation.DeadlineHandler;
 import org.sophonhq.sophon.eventhandling.EventHandler;
@@ -27,7 +28,7 @@ import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.sophonhq.sophon.messaging.annotation.ParameterResolverFactory;
 import org.sophonhq.sophon.queryhandling.QueryHandler;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class HandlerTimeoutHandlerEnhancerDefinitionTest {
 
@@ -56,7 +57,7 @@ class HandlerTimeoutHandlerEnhancerDefinitionTest {
 
         assertIsWrappedAndAssert(result, 100, 50, 10);
 
-        assertInstanceOf(TimeoutWrappedMessageHandlingMember.class, result);
+        assertThat(result).isInstanceOf(TimeoutWrappedMessageHandlingMember.class);
     }
 
 
@@ -68,7 +69,7 @@ class HandlerTimeoutHandlerEnhancerDefinitionTest {
 
         assertIsWrappedAndAssert(result, 20000, 14000, 2000);
 
-        assertInstanceOf(TimeoutWrappedMessageHandlingMember.class, result);
+        assertThat(result).isInstanceOf(TimeoutWrappedMessageHandlingMember.class);
     }
 
 
@@ -81,7 +82,7 @@ class HandlerTimeoutHandlerEnhancerDefinitionTest {
 
         assertIsWrappedAndAssert(result, 100, 50, 10);
 
-        assertInstanceOf(TimeoutWrappedMessageHandlingMember.class, result);
+        assertThat(result).isInstanceOf(TimeoutWrappedMessageHandlingMember.class);
     }
 
 
@@ -93,7 +94,7 @@ class HandlerTimeoutHandlerEnhancerDefinitionTest {
 
         assertIsWrappedAndAssert(result, 30000, 24000, 3000);
 
-        assertInstanceOf(TimeoutWrappedMessageHandlingMember.class, result);
+        assertThat(result).isInstanceOf(TimeoutWrappedMessageHandlingMember.class);
     }
 
 
@@ -106,7 +107,7 @@ class HandlerTimeoutHandlerEnhancerDefinitionTest {
 
         assertIsWrappedAndAssert(result, 100, 50, 10);
 
-        assertInstanceOf(TimeoutWrappedMessageHandlingMember.class, result);
+        assertThat(result).isInstanceOf(TimeoutWrappedMessageHandlingMember.class);
     }
 
 
@@ -118,7 +119,7 @@ class HandlerTimeoutHandlerEnhancerDefinitionTest {
 
         assertIsWrappedAndAssert(result, 40000, 34000, 4000);
 
-        assertInstanceOf(TimeoutWrappedMessageHandlingMember.class, result);
+        assertThat(result).isInstanceOf(TimeoutWrappedMessageHandlingMember.class);
     }
 
 
@@ -131,7 +132,7 @@ class HandlerTimeoutHandlerEnhancerDefinitionTest {
 
         assertIsWrappedAndAssert(result, 100, 50, 10);
 
-        assertInstanceOf(TimeoutWrappedMessageHandlingMember.class, result);
+        assertThat(result).isInstanceOf(TimeoutWrappedMessageHandlingMember.class);
     }
 
 
@@ -143,17 +144,17 @@ class HandlerTimeoutHandlerEnhancerDefinitionTest {
 
         assertIsWrappedAndAssert(result, 10000, 4000, 1000);
 
-        assertInstanceOf(TimeoutWrappedMessageHandlingMember.class, result);
+        assertThat(result).isInstanceOf(TimeoutWrappedMessageHandlingMember.class);
     }
 
     private void assertIsWrappedAndAssert(MessageHandlingMember<?> handler, int timeout, int warningThreshold,
                                           int warningInterval) {
-        assertInstanceOf(TimeoutWrappedMessageHandlingMember.class, handler);
+        assertThat(handler).isInstanceOf(TimeoutWrappedMessageHandlingMember.class);
 
         TimeoutWrappedMessageHandlingMember<?> castResult = (TimeoutWrappedMessageHandlingMember<?>) handler;
-        assertEquals(timeout, castResult.getTimeout());
-        assertEquals(warningThreshold, castResult.getWarningThreshold());
-        assertEquals(warningInterval, castResult.getWarningInterval());
+        assertThat(castResult.getTimeout()).isEqualTo(timeout);
+        assertThat(castResult.getWarningThreshold()).isEqualTo(warningThreshold);
+        assertThat(castResult.getWarningInterval()).isEqualTo(warningInterval);
     }
 
     private <T> MessageHandlingMember<T> getHandler(Class<T> targetClass, String methodName)

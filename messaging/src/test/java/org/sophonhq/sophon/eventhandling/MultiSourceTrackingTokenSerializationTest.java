@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests serialization capabilities of {@link MultiSourceTrackingToken}.
@@ -46,6 +46,6 @@ class MultiSourceTrackingTokenSerializationTest {
         tokenMap.put("token2", new GlobalSequenceTrackingToken(0));
         tokenMap.put("token3", null);
         MultiSourceTrackingToken testSubject = new MultiSourceTrackingToken(tokenMap);
-        assertEquals(testSubject, serializer.serializeDeserialize(testSubject));
+        assertThat(serializer.serializeDeserialize(testSubject)).isEqualTo(testSubject);
     }
 }

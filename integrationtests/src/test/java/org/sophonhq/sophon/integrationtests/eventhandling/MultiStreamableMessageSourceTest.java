@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.integrationtests.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.stream.BlockingStream;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -42,7 +43,8 @@ import java.util.OptionalLong;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -79,8 +81,8 @@ class MultiStreamableMessageSourceTest {
         BlockingStream<TrackedEventMessage<?>> singleEventStream =
                 testSubject.openStream(testSubject.createTailToken());
 
-        assertTrue(singleEventStream.hasNextAvailable());
-        assertEquals(publishedEvent.getPayload(), singleEventStream.nextAvailable().getPayload());
+        assertThat(singleEventStream.hasNextAvailable()).isTrue();
+        assertThat(singleEventStream.nextAvailable().getPayload()).isEqualTo(publishedEvent.getPayload());
 
         singleEventStream.close();
     }
@@ -98,7 +100,7 @@ class MultiStreamableMessageSourceTest {
         when(source1.openStream(any())).thenReturn(mockStream);
         when(source2.openStream(any())).thenThrow(new RuntimeException());
 
-        assertThrows(RuntimeException.class, () -> testSubject.openStream(null));
+        assertThatThrownBy(() -> testSubject.openStream(null)).isInstanceOf(RuntimeException.class);
 
         verify(mockStream).close();
         verify(source1).openStream(null);
@@ -113,11 +115,11 @@ class MultiStreamableMessageSourceTest {
         BlockingStream<TrackedEventMessage<?>> singleEventStream =
                 testSubject.openStream(testSubject.createTailToken());
 
-        assertTrue(singleEventStream.hasNextAvailable());
+        assertThat(singleEventStream.hasNextAvailable()).isTrue();
         TrackedEventMessage<?> actual = singleEventStream.nextAvailable();
 
-        assertEquals(publishedEvent.getPayload(), actual.getPayload());
-        assertTrue(actual instanceof DomainEventMessage);
+        assertThat(actual.getPayload()).isEqualTo(publishedEvent.getPayload());
+        assertThat(actual).isInstanceOf(DomainEventMessage.class);
 
         singleEventStream.close();
     }
@@ -131,15 +133,16 @@ class MultiStreamableMessageSourceTest {
         eventStoreA.publish(publishedEvent1);
 
         BlockingStream<TrackedEventMessage<?>> stream = testSubject.openStream(null);
-        assertEquals("Event1", stream.peek().map(Message::getPayload).map(Object::toString).orElse("None"));
-        assertTrue(stream.hasNextAvailable());
-        assertTrue(stream.hasNextAvailable(10, TimeUnit.SECONDS));
+        assertThat(stream.peek().map(Message::getPayload).map(Object::toString).orElse("None")).isEqualTo("Event1");
+        assertThat(stream.hasNextAvailable()).isTrue();
+        assertThat(stream.hasNextAvailable(10, TimeUnit.SECONDS)).isTrue();
     }
 
     @SuppressWarnings("resource")
     @Test
     void openStreamWithWrongToken() {
-        assertThrows(IllegalArgumentException.class, () -> testSubject.openStream(new GlobalSequenceTrackingToken(0L)));
+        assertThatThrownBy(() -> testSubject.openStream(new GlobalSequenceTrackingToken(0L)))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -148,10 +151,10 @@ class MultiStreamableMessageSourceTest {
         eventStoreA.publish(message);
 
         BlockingStream<TrackedEventMessage<?>> actual = testSubject.openStream(null);
-        assertNotNull(actual);
+        assertThat(actual).isNotNull();
         TrackedEventMessage<?> trackedEventMessage = actual.nextAvailable();
-        assertEquals(message.getIdentifier(), trackedEventMessage.getIdentifier());
-        assertEquals(message.getPayload(), trackedEventMessage.getPayload());
+        assertThat(trackedEventMessage.getIdentifier()).isEqualTo(message.getIdentifier());
+        assertThat(trackedEventMessage.getPayload()).isEqualTo(message.getPayload());
     }
 
     @Test
@@ -160,11 +163,11 @@ class MultiStreamableMessageSourceTest {
                 testSubject.openStream(testSubject.createTokenAt(Instant.now()));
 
         long beforePollTime = System.currentTimeMillis();
-        assertFalse(singleEventStream.hasNextAvailable(100, TimeUnit.MILLISECONDS));
+        assertThat(singleEventStream.hasNextAvailable(100, TimeUnit.MILLISECONDS)).isFalse();
         long pollTime = System.currentTimeMillis() - beforePollTime;
         // allow for some deviation in polling time
-        assertTrue(pollTime > 80, "Poll time too short: " + pollTime + "ms");
-        assertTrue(pollTime < 120, "Poll time too long: " + pollTime + "ms");
+        assertThat(pollTime > 80).as("Poll time too short: " + pollTime + "ms").isTrue();
+        assertThat(pollTime < 120).as("Poll time too long: " + pollTime + "ms").isTrue();
 
         singleEventStream.close();
     }
@@ -180,8 +183,8 @@ class MultiStreamableMessageSourceTest {
         long beforePollTime = System.currentTimeMillis();
         boolean hasNextAvailable = singleEventStream.hasNextAvailable(100, TimeUnit.MILLISECONDS);
         long afterPollTime = System.currentTimeMillis();
-        assertTrue(hasNextAvailable);
-        assertTrue(afterPollTime - beforePollTime < 10);
+        assertThat(hasNextAvailable).isTrue();
+        assertThat(afterPollTime - beforePollTime).isLessThan(10);
 
         singleEventStream.close();
     }
@@ -199,12 +202,12 @@ class MultiStreamableMessageSourceTest {
         BlockingStream<TrackedEventMessage<?>> singleEventStream =
                 testSubject.openStream(testSubject.createTokenAt(recentTimeStamp()));
 
-        assertTrue(singleEventStream.hasNextAvailable());
+        assertThat(singleEventStream.hasNextAvailable()).isTrue();
 
         //order published must be same as order consumed
-        assertEquals(pubToStreamA.getPayload(), singleEventStream.nextAvailable().getPayload());
-        assertEquals(pubToStreamB.getPayload(), singleEventStream.nextAvailable().getPayload());
-        assertFalse(singleEventStream.hasNextAvailable());
+        assertThat(singleEventStream.nextAvailable().getPayload()).isEqualTo(pubToStreamA.getPayload());
+        assertThat(singleEventStream.nextAvailable().getPayload()).isEqualTo(pubToStreamB.getPayload());
+        assertThat(singleEventStream.hasNextAvailable()).isFalse();
 
         singleEventStream.close();
     }
@@ -218,11 +221,11 @@ class MultiStreamableMessageSourceTest {
         BlockingStream<TrackedEventMessage<?>> singleEventStream =
                 testSubject.openStream(testSubject.createTokenAt(recentTimeStamp()));
 
-        assertTrue(singleEventStream.peek().isPresent());
-        assertEquals(publishedEvent.getPayload(), singleEventStream.peek().get().getPayload());
+        assertThat(singleEventStream.peek()).isPresent();
+        assertThat(singleEventStream.peek().get().getPayload()).isEqualTo(publishedEvent.getPayload());
 
         //message is still consumable
-        assertEquals(publishedEvent.getPayload(), singleEventStream.nextAvailable().getPayload());
+        assertThat(singleEventStream.nextAvailable().getPayload()).isEqualTo(publishedEvent.getPayload());
 
         singleEventStream.close();
     }
@@ -240,24 +243,24 @@ class MultiStreamableMessageSourceTest {
         BlockingStream<TrackedEventMessage<?>> singleEventStream =
                 testSubject.openStream(testSubject.createTokenAt(recentTimeStamp()));
 
-        assertTrue(singleEventStream.peek().isPresent());
+        assertThat(singleEventStream.peek()).isPresent();
         TrackedEventMessage<?> peekedMessageA = singleEventStream.peek().get();
         MultiSourceTrackingToken tokenA = (MultiSourceTrackingToken) peekedMessageA.trackingToken();
-        assertEquals(pubToStreamA.getPayload(), peekedMessageA.getPayload());
+        assertThat(peekedMessageA.getPayload()).isEqualTo(pubToStreamA.getPayload());
 
         //message is still consumable and consumed message equal to peeked
-        assertEquals(peekedMessageA.getPayload(), singleEventStream.nextAvailable().getPayload());
+        assertThat(singleEventStream.nextAvailable().getPayload()).isEqualTo(peekedMessageA.getPayload());
 
         //peek and consume another
-        assertTrue(singleEventStream.peek().isPresent());
+        assertThat(singleEventStream.peek()).isPresent();
         TrackedEventMessage<?> peekedMessageB = singleEventStream.peek().get();
         MultiSourceTrackingToken tokenB = (MultiSourceTrackingToken) peekedMessageB.trackingToken();
-        assertEquals(pubToStreamB.getPayload(), peekedMessageB.getPayload());
+        assertThat(peekedMessageB.getPayload()).isEqualTo(pubToStreamB.getPayload());
 
-        assertEquals(peekedMessageB.getPayload(), singleEventStream.nextAvailable().getPayload());
+        assertThat(singleEventStream.nextAvailable().getPayload()).isEqualTo(peekedMessageB.getPayload());
 
         //consuming from second stream doesn't alter token from first stream
-        assertEquals(tokenA.getTokenForStream("eventStoreA"), tokenB.getTokenForStream("eventStoreA"));
+        assertThat(tokenB.getTokenForStream("eventStoreA")).isEqualTo(tokenA.getTokenForStream("eventStoreA"));
 
         singleEventStream.close();
     }
@@ -285,11 +288,11 @@ class MultiStreamableMessageSourceTest {
         MultiSourceTrackingToken tailToken = testSubject.createTailToken();
 
         OptionalLong storeAPosition = tailToken.getTokenForStream("eventStoreA").position();
-        assertTrue(storeAPosition.isPresent());
-        assertEquals(-1L, storeAPosition.getAsLong());
+        assertThat(storeAPosition.isPresent()).isTrue();
+        assertThat(storeAPosition).hasValue(-1L);
         OptionalLong storeBPosition = tailToken.getTokenForStream("eventStoreB").position();
-        assertTrue(storeBPosition.isPresent());
-        assertEquals(-1L, storeBPosition.getAsLong());
+        assertThat(storeBPosition.isPresent()).isTrue();
+        assertThat(storeBPosition).hasValue(-1L);
     }
 
     @Test
@@ -304,11 +307,11 @@ class MultiStreamableMessageSourceTest {
         MultiSourceTrackingToken headToken = testSubject.createHeadToken();
 
         OptionalLong storeAPosition = headToken.getTokenForStream("eventStoreA").position();
-        assertTrue(storeAPosition.isPresent());
-        assertEquals(0L, storeAPosition.getAsLong());
+        assertThat(storeAPosition.isPresent()).isTrue();
+        assertThat(storeAPosition.getAsLong()).isZero();
         OptionalLong storeBPosition = headToken.getTokenForStream("eventStoreB").position();
-        assertTrue(storeBPosition.isPresent());
-        assertEquals(1L, storeBPosition.getAsLong());
+        assertThat(storeBPosition.isPresent()).isTrue();
+        assertThat(storeBPosition.getAsLong()).isOne();
     }
 
     @Test
@@ -326,10 +329,10 @@ class MultiStreamableMessageSourceTest {
         MultiSourceTrackingToken createdAtToken = testSubject.createTokenAt(Instant.now().minusMillis(10));
 
         // storeA's token resembles an storeA head token since the created token at timestamp is after all its events
-        assertEquals(eventStoreA.createHeadToken(), createdAtToken.getTokenForStream("eventStoreA"));
+        assertThat(createdAtToken.getTokenForStream("eventStoreA")).isEqualTo(eventStoreA.createHeadToken());
         OptionalLong storeBPosition = createdAtToken.getTokenForStream("eventStoreB").position();
-        assertTrue(storeBPosition.isPresent());
-        assertEquals(-1L, storeBPosition.getAsLong());
+        assertThat(storeBPosition.isPresent()).isTrue();
+        assertThat(storeBPosition).hasValue(-1L);
     }
 
     @Test
@@ -347,10 +350,10 @@ class MultiStreamableMessageSourceTest {
         MultiSourceTrackingToken createdSinceToken = testSubject.createTokenSince(Duration.ofMillis(10));
 
         // storeA's token resembles an storeA head token since the created token at timestamp is after all its events
-        assertEquals(eventStoreA.createHeadToken(), createdSinceToken.getTokenForStream("eventStoreA"));
+        assertThat(createdSinceToken.getTokenForStream("eventStoreA")).isEqualTo(eventStoreA.createHeadToken());
         OptionalLong storeBPosition = createdSinceToken.getTokenForStream("eventStoreB").position();
-        assertTrue(storeBPosition.isPresent());
-        assertEquals(-1L, storeBPosition.getAsLong());
+        assertThat(storeBPosition.isPresent()).isTrue();
+        assertThat(storeBPosition).hasValue(-1L);
     }
 
     @SuppressWarnings("resource")
@@ -390,8 +393,8 @@ class MultiStreamableMessageSourceTest {
         singleEventStream.nextAvailable();
         singleEventStream.nextAvailable();
         singleEventStream.nextAvailable();
-        assertEquals(pubToStreamC.getPayload(), singleEventStream.nextAvailable().getPayload());
-        assertEquals(pubToStreamB.getPayload(), singleEventStream.nextAvailable().getPayload());
+        assertThat(singleEventStream.nextAvailable().getPayload()).isEqualTo(pubToStreamC.getPayload());
+        assertThat(singleEventStream.nextAvailable().getPayload()).isEqualTo(pubToStreamB.getPayload());
     }
 
     @SuppressWarnings({"unchecked", "resource"})
@@ -456,14 +459,14 @@ class MultiStreamableMessageSourceTest {
                                             .build();
         BlockingStream<TrackedEventMessage<?>> testSubject = multiStream.openStream(null);
 
-        assertTrue(testSubject.setOnAvailableCallback(testCallback));
+        assertThat(testSubject.setOnAvailableCallback(testCallback)).isTrue();
 
         verify(streamOne).setOnAvailableCallback(testCallback);
         verify(streamTwo).setOnAvailableCallback(testCallback);
         verify(streamThree).setOnAvailableCallback(testCallback);
 
         streamOne.invokeCallback();
-        assertTrue(invoked.get());
+        assertThat(invoked.get()).isTrue();
     }
 
     @SuppressWarnings({"unchecked", "resource"})
@@ -495,7 +498,7 @@ class MultiStreamableMessageSourceTest {
                                             .build();
         BlockingStream<TrackedEventMessage<?>> testSubject = multiStream.openStream(null);
 
-        assertFalse(testSubject.setOnAvailableCallback(testCallback));
+        assertThat(testSubject.setOnAvailableCallback(testCallback)).isFalse();
 
         verify(streamOne).setOnAvailableCallback(testCallback);
         verify(streamTwo).setOnAvailableCallback(testCallback);
@@ -503,7 +506,7 @@ class MultiStreamableMessageSourceTest {
 
         // "invoked" results in true, as the callback is not removed if one of the streams does not support it.
         streamOne.invokeCallback();
-        assertTrue(invoked.get());
+        assertThat(invoked.get()).isTrue();
     }
 
     private static class CallbackSupportingBlockingStream implements BlockingStream<TrackedEventMessage<?>> {

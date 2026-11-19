@@ -44,7 +44,8 @@ import org.sophonhq.sophon.modelling.command.Repository;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
@@ -84,7 +85,7 @@ public class SynchronousLoopbackTest {
         expectErrorCallback = (commandMessage, commandResultMessage) -> {
             if (commandResultMessage.isExceptional()) {
                 Throwable cause = commandResultMessage.exceptionResult();
-                assertEquals("Mock exception", cause.getMessage());
+                assertThat(cause.getMessage()).isEqualTo("Mock exception");
             } else {
                 fail("Expected this command to fail");
             }
@@ -106,15 +107,14 @@ public class SynchronousLoopbackTest {
     void loopBackKeepsProperEventOrder_PessimisticLocking() {
         initializeRepository(PessimisticLockFactory.usingDefaults());
         EventMessageHandler eventHandler = event -> {
-            DomainEventMessage domainEvent = (DomainEventMessage) event;
-            if (event.getPayload() instanceof CounterChangedEvent) {
-                CounterChangedEvent counterChangedEvent = (CounterChangedEvent) event.getPayload();
-                if (counterChangedEvent.getCounter() == 1) {
+            DomainEventMessage<?> domainEvent = (DomainEventMessage<?>) event;
+            if (event.getPayload() instanceof CounterChangedEvent counterChangedEvent) {
+                if (counterChangedEvent.counter() == 1) {
                     commandBus.dispatch(asCommandMessage(new ChangeCounterCommand(domainEvent.getAggregateIdentifier(),
-                                                                                  counterChangedEvent.getCounter() +
+                                                                                  counterChangedEvent.counter() +
                                                                                           1)), reportErrorCallback);
                     commandBus.dispatch(asCommandMessage(new ChangeCounterCommand(domainEvent.getAggregateIdentifier(),
-                                                                                  counterChangedEvent.getCounter() +
+                                                                                  counterChangedEvent.counter() +
                                                                                           2)), reportErrorCallback);
                 }
             }
@@ -133,13 +133,12 @@ public class SynchronousLoopbackTest {
         commandBus.dispatch(asCommandMessage(new ChangeCounterCommand(aggregateIdentifier, 1)), reportErrorCallback);
 
         DomainEventStream storedEvents = eventStore.readEvents(aggregateIdentifier);
-        assertTrue(storedEvents.hasNext());
+        assertThat(storedEvents).hasNext();
         //noinspection Duplicates
         while (storedEvents.hasNext()) {
-            DomainEventMessage next = storedEvents.next();
-            if (next.getPayload() instanceof CounterChangedEvent) {
-                CounterChangedEvent event = (CounterChangedEvent) next.getPayload();
-                assertEquals(event.getCounter(), next.getSequenceNumber());
+            DomainEventMessage<?> next = storedEvents.next();
+            if (next.getPayload() instanceof CounterChangedEvent event) {
+                assertThat(next.getSequenceNumber()).isEqualTo(event.counter());
             }
         }
 
@@ -151,16 +150,15 @@ public class SynchronousLoopbackTest {
         initializeRepository(PessimisticLockFactory.usingDefaults());
         EventMessageHandler eventHandler = event -> {
             DomainEventMessage domainEvent = (DomainEventMessage) event;
-            if (event.getPayload() instanceof CounterChangedEvent) {
-                CounterChangedEvent counterChangedEvent = (CounterChangedEvent) event.getPayload();
-                if (counterChangedEvent.getCounter() == 1) {
+            if (event.getPayload() instanceof CounterChangedEvent counterChangedEvent) {
+                if (counterChangedEvent.counter() == 1) {
                     commandBus.dispatch(asCommandMessage(new ChangeCounterCommand(domainEvent.getAggregateIdentifier(),
-                                                                                  counterChangedEvent.getCounter() +
+                                                                                  counterChangedEvent.counter() +
                                                                                           1)), reportErrorCallback);
                     commandBus.dispatch(asCommandMessage(new ChangeCounterCommand(domainEvent.getAggregateIdentifier(),
-                                                                                  counterChangedEvent.getCounter() +
+                                                                                  counterChangedEvent.counter() +
                                                                                           2)), reportErrorCallback);
-                } else if (counterChangedEvent.getCounter() == 2) {
+                } else if (counterChangedEvent.counter() == 2) {
                     throw new RuntimeException("Mock exception");
                 }
             }
@@ -181,62 +179,31 @@ public class SynchronousLoopbackTest {
         commandBus.dispatch(asCommandMessage(new ChangeCounterCommand(aggregateIdentifier, 1)), expectErrorCallback);
 
         DomainEventStream storedEvents = eventStore.readEvents(aggregateIdentifier);
-        assertTrue(storedEvents.hasNext());
+        assertThat(storedEvents).hasNext();
         while (storedEvents.hasNext()) {
             DomainEventMessage next = storedEvents.next();
-            if (next.getPayload() instanceof CounterChangedEvent) {
-                CounterChangedEvent event = (CounterChangedEvent) next.getPayload();
-                assertEquals(event.getCounter(), next.getSequenceNumber());
+            if (next.getPayload() instanceof CounterChangedEvent event) {
+                assertThat(next.getSequenceNumber()).isEqualTo(event.counter());
             }
         }
 
         verify(eventStore, times(3)).publish(anyEventList());
     }
 
-    private static class CounterCommandHandler {
-
-        private Repository<CountingAggregate> repository;
-
-        private CounterCommandHandler(Repository<CountingAggregate> repository) {
-            this.repository = repository;
-        }
+    private record CounterCommandHandler(Repository<CountingAggregate> repository) {
 
         @CommandHandler
         public void changeCounter(ChangeCounterCommand command) {
-            repository.load(command.getAggregateId()).execute(r -> r.setCounter(command.getNewValue()));
+            repository.load(command.aggregateId()).execute(r -> r.setCounter(command.newValue()));
         }
     }
 
-    private static class ChangeCounterCommand {
+    private record ChangeCounterCommand(String aggregateId, int newValue) {
 
-        private String aggregateId;
-        private int newValue;
-
-        private ChangeCounterCommand(String aggregateId, int newValue) {
-            this.aggregateId = aggregateId;
-            this.newValue = newValue;
-        }
-
-        public String getAggregateId() {
-            return aggregateId;
-        }
-
-        public int getNewValue() {
-            return newValue;
-        }
     }
 
-    private static class AggregateCreatedEvent {
+    private record AggregateCreatedEvent(String aggregateIdentifier) {
 
-        private final String aggregateIdentifier;
-
-        private AggregateCreatedEvent(String aggregateIdentifier) {
-            this.aggregateIdentifier = aggregateIdentifier;
-        }
-
-        public String getAggregateIdentifier() {
-            return aggregateIdentifier;
-        }
     }
 
     private static class CountingAggregate {
@@ -261,25 +228,16 @@ public class SynchronousLoopbackTest {
 
         @EventSourcingHandler
         private void handleCreatedEvent(AggregateCreatedEvent event) {
-            this.identifier = event.getAggregateIdentifier();
+            this.identifier = event.aggregateIdentifier();
         }
 
         @EventSourcingHandler
         private void handleCounterIncreased(CounterChangedEvent event) {
-            this.counter = event.getCounter();
+            this.counter = event.counter();
         }
     }
 
-    private static class CounterChangedEvent {
+    private record CounterChangedEvent(int counter) {
 
-        private final int counter;
-
-        private CounterChangedEvent(int counter) {
-            this.counter = counter;
-        }
-
-        public int getCounter() {
-            return counter;
-        }
     }
 }

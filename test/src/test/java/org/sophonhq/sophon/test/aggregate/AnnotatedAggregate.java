@@ -29,7 +29,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.markDeleted;
 
@@ -56,8 +56,8 @@ class AnnotatedAggregate implements AnnotatedAggregateInterface {
 
     @CommandHandler
     public AnnotatedAggregate(CreateAggregateCommand command, EventBus eventBus, HardToCreateResource resource) {
-        assertNotNull(resource, "resource should not be null");
-        assertNotNull(eventBus, "Expected EventBus to be injected as resource");
+        assertThat(resource).as("resource should not be null").isNotNull();
+        assertThat(eventBus).as("Expected EventBus to be injected as resource").isNotNull();
 
         if (command.shouldPublishEvents()) {
             apply(new MyEvent(
@@ -82,7 +82,7 @@ class AnnotatedAggregate implements AnnotatedAggregateInterface {
 
     @CommandHandler
     public void handle(ResolveParameterCommand command, AtomicBoolean assertion) {
-        assertFalse(assertion.get());
+        assertThat(assertion.get()).isFalse();
         assertion.set(true);
         apply(new ParameterResolvedEvent(identifier, assertion));
     }

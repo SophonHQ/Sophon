@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.test.saga;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.EventMessageHandler;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -26,7 +27,8 @@ import org.sophonhq.sophon.eventhandling.ListenerInvocationErrorHandler;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -56,17 +58,19 @@ class RecordingListenerInvocationErrorHandlerTest {
 
     @Test
     void emptyOnCreation() {
-        assertFalse(testSubject.getException().isPresent());
+        assertThat(testSubject.getException()).isEmpty();
     }
 
     @Test
     void wrappedHandlerCannotBeNull() {
-        assertThrows(IllegalArgumentException.class, () -> new RecordingListenerInvocationErrorHandler(null));
+        assertThatThrownBy(() -> new RecordingListenerInvocationErrorHandler(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void cannotSetWrappedHandlerToNull() {
-        assertThrows(IllegalArgumentException.class, () -> testSubject.setListenerInvocationErrorHandler(null));
+        assertThatThrownBy(() -> testSubject.setListenerInvocationErrorHandler(null))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -76,8 +80,8 @@ class RecordingListenerInvocationErrorHandlerTest {
         testSubject.onError(TEST_EXCEPTION, TEST_EVENT, eventHandler);
 
         Optional<Exception> result = testSubject.getException();
-        assertTrue(result.isPresent());
-        assertEquals(TEST_EXCEPTION, result.get());
+        assertThat(result).isPresent();
+        assertThat(result).hasValue(TEST_EXCEPTION);
         verify(wrappedErrorHandler).onError(TEST_EXCEPTION, TEST_EVENT, eventHandler);
     }
 
@@ -87,14 +91,14 @@ class RecordingListenerInvocationErrorHandlerTest {
         testSubject.onError(TEST_EXCEPTION, TEST_EVENT, eventHandler);
         testSubject.startRecording();
 
-        assertFalse(testSubject.getException().isPresent());
+        assertThat(testSubject.getException()).isEmpty();
         verify(wrappedErrorHandler).onError(TEST_EXCEPTION, TEST_EVENT, eventHandler);
     }
 
     @Test
     void byDefaultRethrowsExceptionsIfRecordingHasNotStartedYet() {
-        assertThrows(IllegalArgumentException.class,
-                     () -> testSubject.onError(TEST_EXCEPTION, TEST_EVENT, eventHandler));
+        assertThatThrownBy(() -> testSubject.onError(TEST_EXCEPTION, TEST_EVENT, eventHandler))
+                .isInstanceOf(IllegalArgumentException.class);
         verifyNoInteractions(wrappedErrorHandler);
     }
 
@@ -105,8 +109,8 @@ class RecordingListenerInvocationErrorHandlerTest {
         testSubject.onError(TEST_EXCEPTION, TEST_EVENT, eventHandler);
 
         Optional<Exception> result = testSubject.getException();
-        assertTrue(result.isPresent());
-        assertEquals(TEST_EXCEPTION, result.get());
+        assertThat(result).isPresent();
+        assertThat(result).hasValue(TEST_EXCEPTION);
         verify(wrappedErrorHandler).onError(TEST_EXCEPTION, TEST_EVENT, eventHandler);
     }
 

@@ -17,10 +17,11 @@
 
 package org.sophonhq.sophon.eventhandling.deadletter.jdbc;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.SophonConfigurationException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link DeadLetterSchema}.
@@ -37,21 +38,22 @@ class DeadLetterSchemaTest {
                                                   .deadLetterTable(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.deadLetterTable());
+        assertThat(result.deadLetterTable()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullDeadLetterTableThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.deadLetterTable(null));
+        assertThatThrownBy(() -> testBuilder.deadLetterTable(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyDeadLetterTableThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.deadLetterTable(""));
+        assertThatThrownBy(() -> testBuilder.deadLetterTable("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -60,21 +62,23 @@ class DeadLetterSchemaTest {
                                                   .deadLetterIdentifierColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.deadLetterIdentifierColumn());
+        assertThat(result.deadLetterIdentifierColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullDeadLetterIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.deadLetterIdentifierColumn(null));
+        assertThatThrownBy(() -> testBuilder.deadLetterIdentifierColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyDeadLetterIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.deadLetterIdentifierColumn(""));
+        assertThatThrownBy(() -> testBuilder.deadLetterIdentifierColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -83,21 +87,23 @@ class DeadLetterSchemaTest {
                                                   .processingGroupColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.processingGroupColumn());
+        assertThat(result.processingGroupColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullProcessingGroupColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingGroupColumn(null));
+        assertThatThrownBy(() -> testBuilder.processingGroupColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyProcessingGroupColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingGroupColumn(""));
+        assertThatThrownBy(() -> testBuilder.processingGroupColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -106,21 +112,23 @@ class DeadLetterSchemaTest {
                                                   .sequenceIdentifierColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.sequenceIdentifierColumn());
+        assertThat(result.sequenceIdentifierColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullSequenceIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceIdentifierColumn(null));
+        assertThatThrownBy(() -> testBuilder.sequenceIdentifierColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptySequenceIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceIdentifierColumn(""));
+        assertThatThrownBy(() -> testBuilder.sequenceIdentifierColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -129,21 +137,23 @@ class DeadLetterSchemaTest {
                                                   .sequenceIndexColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.sequenceIndexColumn());
+        assertThat(result.sequenceIndexColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullSequenceIndexColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceIndexColumn(null));
+        assertThatThrownBy(() -> testBuilder.sequenceIndexColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptySequenceIndexColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceIndexColumn(""));
+        assertThatThrownBy(() -> testBuilder.sequenceIndexColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -152,21 +162,23 @@ class DeadLetterSchemaTest {
                                                   .messageTypeColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.messageTypeColumn());
+        assertThat(result.messageTypeColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullMessageTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.messageTypeColumn(null));
+        assertThatThrownBy(() -> testBuilder.messageTypeColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyMessageTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.messageTypeColumn(""));
+        assertThatThrownBy(() -> testBuilder.messageTypeColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -175,21 +187,23 @@ class DeadLetterSchemaTest {
                                                   .eventIdentifierColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.eventIdentifierColumn());
+        assertThat(result.eventIdentifierColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullEventIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventIdentifierColumn(null));
+        assertThatThrownBy(() -> testBuilder.eventIdentifierColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyEventIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.eventIdentifierColumn(""));
+        assertThatThrownBy(() -> testBuilder.eventIdentifierColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -198,21 +212,22 @@ class DeadLetterSchemaTest {
                                                   .timestampColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.timestampColumn());
+        assertThat(result.timestampColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullTimeStampColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.timestampColumn(null));
+        assertThatThrownBy(() -> testBuilder.timestampColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyTimeStampColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.timestampColumn(""));
+        assertThatThrownBy(() -> testBuilder.timestampColumn("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -221,21 +236,23 @@ class DeadLetterSchemaTest {
                                                   .payloadTypeColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.payloadTypeColumn());
+        assertThat(result.payloadTypeColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullPayloadTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadTypeColumn(null));
+        assertThatThrownBy(() -> testBuilder.payloadTypeColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyPayloadTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadTypeColumn(""));
+        assertThatThrownBy(() -> testBuilder.payloadTypeColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -244,21 +261,23 @@ class DeadLetterSchemaTest {
                                                   .payloadRevisionColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.payloadRevisionColumn());
+        assertThat(result.payloadRevisionColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullPayloadRevisionColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadRevisionColumn(null));
+        assertThatThrownBy(() -> testBuilder.payloadRevisionColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyPayloadRevisionColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadRevisionColumn(""));
+        assertThatThrownBy(() -> testBuilder.payloadRevisionColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -267,21 +286,21 @@ class DeadLetterSchemaTest {
                                                   .payloadColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.payloadColumn());
+        assertThat(result.payloadColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullPayloadColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadColumn(null));
+        assertThatThrownBy(() -> testBuilder.payloadColumn(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyPayloadColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.payloadColumn(""));
+        assertThatThrownBy(() -> testBuilder.payloadColumn("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -290,21 +309,22 @@ class DeadLetterSchemaTest {
                                                   .metaDataColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.metaDataColumn());
+        assertThat(result.metaDataColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullMetaDataColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.metaDataColumn(null));
+        assertThatThrownBy(() -> testBuilder.metaDataColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyMetaDataColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.metaDataColumn(""));
+        assertThatThrownBy(() -> testBuilder.metaDataColumn("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -313,21 +333,23 @@ class DeadLetterSchemaTest {
                                                   .aggregateTypeColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.aggregateTypeColumn());
+        assertThat(result.aggregateTypeColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullAggregateTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.aggregateTypeColumn(null));
+        assertThatThrownBy(() -> testBuilder.aggregateTypeColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyAggregateTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.aggregateTypeColumn(""));
+        assertThatThrownBy(() -> testBuilder.aggregateTypeColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -336,21 +358,23 @@ class DeadLetterSchemaTest {
                                                   .aggregateIdentifierColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.aggregateIdentifierColumn());
+        assertThat(result.aggregateIdentifierColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullAggregateIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.aggregateIdentifierColumn(null));
+        assertThatThrownBy(() -> testBuilder.aggregateIdentifierColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyAggregateIdentifierColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.aggregateIdentifierColumn(""));
+        assertThatThrownBy(() -> testBuilder.aggregateIdentifierColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -359,21 +383,23 @@ class DeadLetterSchemaTest {
                                                   .sequenceNumberColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.sequenceNumberColumn());
+        assertThat(result.sequenceNumberColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullSequenceNumberColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceNumberColumn(null));
+        assertThatThrownBy(() -> testBuilder.sequenceNumberColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptySequenceNumberColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.sequenceNumberColumn(""));
+        assertThatThrownBy(() -> testBuilder.sequenceNumberColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -382,21 +408,22 @@ class DeadLetterSchemaTest {
                                                   .tokenTypeColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.tokenTypeColumn());
+        assertThat(result.tokenTypeColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullTokenTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.tokenTypeColumn(null));
+        assertThatThrownBy(() -> testBuilder.tokenTypeColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyTokenTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.tokenTypeColumn(""));
+        assertThatThrownBy(() -> testBuilder.tokenTypeColumn("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -405,21 +432,21 @@ class DeadLetterSchemaTest {
                                                   .tokenColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.tokenColumn());
+        assertThat(result.tokenColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullTokenColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.tokenColumn(null));
+        assertThatThrownBy(() -> testBuilder.tokenColumn(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyTokenColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.tokenColumn(""));
+        assertThatThrownBy(() -> testBuilder.tokenColumn("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -428,21 +455,23 @@ class DeadLetterSchemaTest {
                                                   .enqueuedAtColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.enqueuedAtColumn());
+        assertThat(result.enqueuedAtColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullEnqueuedAtColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.enqueuedAtColumn(null));
+        assertThatThrownBy(() -> testBuilder.enqueuedAtColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyEnqueuedAtColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.enqueuedAtColumn(""));
+        assertThatThrownBy(() -> testBuilder.enqueuedAtColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -451,21 +480,23 @@ class DeadLetterSchemaTest {
                                                   .lastTouchedColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.lastTouchedColumn());
+        assertThat(result.lastTouchedColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullLastTouchedColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.lastTouchedColumn(null));
+        assertThatThrownBy(() -> testBuilder.lastTouchedColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyLastTouchedColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.lastTouchedColumn(""));
+        assertThatThrownBy(() -> testBuilder.lastTouchedColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -474,21 +505,23 @@ class DeadLetterSchemaTest {
                                                   .processingStartedColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.processingStartedColumn());
+        assertThat(result.processingStartedColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullProcessingStartedColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingStartedColumn(null));
+        assertThatThrownBy(() -> testBuilder.processingStartedColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyProcessingStartedColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.processingStartedColumn(""));
+        assertThatThrownBy(() -> testBuilder.processingStartedColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -497,21 +530,22 @@ class DeadLetterSchemaTest {
                                                   .causeTypeColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.causeTypeColumn());
+        assertThat(result.causeTypeColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullCauseTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.causeTypeColumn(null));
+        assertThatThrownBy(() -> testBuilder.causeTypeColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyCauseTypeColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.causeTypeColumn(""));
+        assertThatThrownBy(() -> testBuilder.causeTypeColumn("")).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -520,21 +554,23 @@ class DeadLetterSchemaTest {
                                                   .causeMessageColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.causeMessageColumn());
+        assertThat(result.causeMessageColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullCauseMessageColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.causeMessageColumn(null));
+        assertThatThrownBy(() -> testBuilder.causeMessageColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyCauseMessageColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.causeMessageColumn(""));
+        assertThatThrownBy(() -> testBuilder.causeMessageColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -543,20 +579,22 @@ class DeadLetterSchemaTest {
                                                   .diagnosticsColumn(TEST_COLUMN_NAME)
                                                   .build();
 
-        assertEquals(TEST_COLUMN_NAME, result.diagnosticsColumn());
+        assertThat(result.diagnosticsColumn()).isEqualTo(TEST_COLUMN_NAME);
     }
 
     @Test
     void buildWithNullDiagnosticsColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.diagnosticsColumn(null));
+        assertThatThrownBy(() -> testBuilder.diagnosticsColumn(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithEmptyDiagnosticsColumnThrowsSophonConfigurationException() {
         DeadLetterSchema.Builder testBuilder = DeadLetterSchema.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> testBuilder.diagnosticsColumn(""));
+        assertThatThrownBy(() -> testBuilder.diagnosticsColumn(""))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 }

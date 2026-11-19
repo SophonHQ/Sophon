@@ -24,8 +24,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static java.util.Collections.singleton;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -63,7 +62,7 @@ class WeakReferenceCacheTest {
 
         Object value = new Object();
         testSubject.put("test1", value);
-        assertSame(value, testSubject.get("test1"));
+        assertThatObject(testSubject.get("test1")).isSameAs(value);
 
         // dereference
         value = null;
@@ -76,7 +75,7 @@ class WeakReferenceCacheTest {
             Thread.sleep(100);
         }
 
-        assertNull(testSubject.get("test1"));
+        assertThatObject(testSubject.get("test1")).isNull();
 
         // the reference is gone, but it may take a 'while' for the reference to be queued
         for (int i = 0; i < 5 && !expiredEntries.contains("test1"); i++) {
@@ -84,7 +83,7 @@ class WeakReferenceCacheTest {
             Thread.sleep(100);
         }
 
-        assertEquals(singleton("test1"), expiredEntries);
+        assertThat(expiredEntries).containsExactly("test1");
     }
 
     @Test
@@ -103,7 +102,7 @@ class WeakReferenceCacheTest {
         testSubject.remove("test1");
         verify(mockListener).onEntryRemoved("test1");
 
-        assertNull(testSubject.get("test1"));
+        assertThatObject(testSubject.get("test1")).isNull();
         verifyNoMoreInteractions(mockListener);
     }
 
@@ -116,18 +115,18 @@ class WeakReferenceCacheTest {
             return new Object();
         });
 
-        assertSame(concurrentValue, result);
-        assertSame(concurrentValue, testSubject.get("test1"));
+        assertThat(result).isSameAs(concurrentValue);
+        assertThatObject(testSubject.get("test1")).isSameAs(concurrentValue);
     }
 
     @Test
     void shouldThrowIllegalArgumentExceptionWhenKeyIsNullOnGet() {
-        assertThrows(IllegalArgumentException.class, () -> testSubject.get(null));
+        assertThatThrownBy(() -> testSubject.get(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void shouldThrowIllegalArgumentExceptionWhenKeyIsNullOnContainsKey() {
-        assertThrows(IllegalArgumentException.class, () -> testSubject.containsKey(null));
+        assertThatThrownBy(() -> testSubject.containsKey(null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -137,17 +136,17 @@ class WeakReferenceCacheTest {
         testSubject.put("three", new Object());
         testSubject.put("four", new Object());
 
-        assertTrue(testSubject.containsKey("one"));
-        assertTrue(testSubject.containsKey("two"));
-        assertTrue(testSubject.containsKey("three"));
-        assertTrue(testSubject.containsKey("four"));
+        assertThat(testSubject.containsKey("one")).isTrue();
+        assertThat(testSubject.containsKey("two")).isTrue();
+        assertThat(testSubject.containsKey("three")).isTrue();
+        assertThat(testSubject.containsKey("four")).isTrue();
 
         testSubject.removeAll();
 
-        assertFalse(testSubject.containsKey("one"));
-        assertFalse(testSubject.containsKey("two"));
-        assertFalse(testSubject.containsKey("three"));
-        assertFalse(testSubject.containsKey("four"));
+        assertThat(testSubject.containsKey("one")).isFalse();
+        assertThat(testSubject.containsKey("two")).isFalse();
+        assertThat(testSubject.containsKey("three")).isFalse();
+        assertThat(testSubject.containsKey("four")).isFalse();
     }
 
     @Test
@@ -159,7 +158,7 @@ class WeakReferenceCacheTest {
             return v;
         });
 
-        assertFalse(invoked.get());
+        assertThat(invoked.get()).isFalse();
     }
 
     @Test
@@ -174,6 +173,6 @@ class WeakReferenceCacheTest {
             return v;
         });
 
-        assertTrue(invoked.get());
+        assertThat(invoked.get()).isTrue();
     }
 }

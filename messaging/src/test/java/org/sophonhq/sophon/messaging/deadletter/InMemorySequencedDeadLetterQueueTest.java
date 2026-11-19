@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * Test class validating the {@link InMemorySequencedDeadLetterQueue}.
@@ -88,7 +88,7 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
 
     @Test
     void buildDefaultQueue() {
-        assertDoesNotThrow(() -> InMemorySequencedDeadLetterQueue.defaultQueue());
+        assertThatNoException().isThrownBy(InMemorySequencedDeadLetterQueue::defaultQueue);
     }
 
     @Test
@@ -96,7 +96,8 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
         InMemorySequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject =
                 InMemorySequencedDeadLetterQueue.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequences(-1));
+        assertThatThrownBy(() -> builderTestSubject.maxSequences(-1))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -104,7 +105,8 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
         InMemorySequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject =
                 InMemorySequencedDeadLetterQueue.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequences(0));
+        assertThatThrownBy(() -> builderTestSubject.maxSequences(0))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -112,7 +114,8 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
         InMemorySequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject =
                 InMemorySequencedDeadLetterQueue.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(-1));
+        assertThatThrownBy(() -> builderTestSubject.maxSequenceSize(-1))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -120,7 +123,8 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
         InMemorySequencedDeadLetterQueue.Builder<EventMessage<?>> builderTestSubject =
                 InMemorySequencedDeadLetterQueue.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.maxSequenceSize(0));
+        assertThatThrownBy(() -> builderTestSubject.maxSequenceSize(0))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -136,9 +140,9 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
         });
 
         while (!enqueuing.isDone()) {
-            assertDoesNotThrow(() -> queue.process(letter -> false, letter -> Decisions.evict()));
+            assertThatNoException().isThrownBy(() -> queue.process(letter -> false, letter -> Decisions.evict()));
         }
-        assertDoesNotThrow(enqueuing::join);
+        assertThatNoException().isThrownBy(enqueuing::join);
     }
 
     @Test
@@ -163,7 +167,7 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
             release.complete(null);
         }
 
-        assertFalse(result);
+        assertThat(result).isFalse();
     }
 
     @Test
@@ -190,7 +194,7 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
     void requeueKeepsTheLetterWhenAnotherThreadRemovesTheSequence() {
         assertDoesNotFailWhenTheSequenceIsRemovedBeforeAnyRead((queue, letter) -> {
             queue.requeue(letter, l -> l);
-            assertEquals(1, queue.size());
+            assertThat(queue.size()).isOne();
         });
     }
 
@@ -200,7 +204,7 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
                 (queue, letter) -> queue.process(l -> true, l -> Decisions.evict())
         );
     }
-    
+
     private void assertDoesNotFailWhenTheSequenceIsRemovedBeforeAnyRead(
             BiConsumer<InMemorySequencedDeadLetterQueue<EventMessage<?>>, DeadLetter<EventMessage<?>>> action
     ) {
@@ -212,10 +216,11 @@ class InMemorySequencedDeadLetterQueueTest extends SequencedDeadLetterQueueTest<
             deadLetters.removeBeforeRead(read);
 
             int removedBeforeRead = read;
-            assertDoesNotThrow(() -> action.accept(queue, letter),
-                               () -> "The sequence was removed before read " + removedBeforeRead);
+            assertThatNoException()
+                    .as(() -> "The sequence was removed before read " + removedBeforeRead)
+                    .isThrownBy(() -> action.accept(queue, letter));
             if (!deadLetters.removed) {
-                assertTrue(read > 1, "The action does not read the sequence");
+                assertThat(read > 1).as("The action does not read the sequence").isTrue();
                 return;
             }
         }

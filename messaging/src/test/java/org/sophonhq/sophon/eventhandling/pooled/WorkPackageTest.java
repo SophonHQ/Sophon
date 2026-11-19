@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.eventhandling.pooled;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -47,7 +49,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.utils.AssertUtils.assertWithin;
 
@@ -142,7 +145,7 @@ class WorkPackageTest {
 
         testSubject.scheduleEvent(testEvent);
 
-        assertEquals(expectedToken, testSubject.lastDeliveredToken());
+        assertThat(testSubject.lastDeliveredToken()).isEqualTo(expectedToken);
     }
 
     @Test
@@ -159,14 +162,14 @@ class WorkPackageTest {
 
         testSubject.scheduleEvent(testEvent);
 
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertNull(trackerStatus));
-        assertEquals(2, trackerStatusUpdates.size());
-        assertTrue(trackerStatusUpdates.get(0).isErrorState());
-        assertNull(trackerStatusUpdates.get(1));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(trackerStatus).isNull());
+        assertThat(trackerStatusUpdates).hasSize(2);
+        assertThat(trackerStatusUpdates.get(0).isErrorState()).isTrue();
+        assertThat(trackerStatusUpdates.get(1)).isNull();
 
         CompletableFuture<Throwable> abortResult = testSubject.abort(null);
-        assertTrue(abortResult.isDone());
-        assertTrue(abortResult.get().getClass().isAssignableFrom(IllegalStateException.class));
+        assertThat(abortResult.isDone()).isTrue();
+        assertThat(abortResult.get().getClass().isAssignableFrom(IllegalStateException.class)).isTrue();
     }
 
     @Test
@@ -182,17 +185,17 @@ class WorkPackageTest {
             return true;
         };
 
-        assertFalse(testSubject.scheduleEvent(testEvent));
+        assertThat(testSubject.scheduleEvent(testEvent)).isFalse();
 
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertNull(trackerStatus));
-        assertEquals(2, trackerStatusUpdates.size());
-        assertTrue(trackerStatusUpdates.get(0).isErrorState());
-        assertSame(testError, trackerStatusUpdates.get(0).getError());
-        assertNull(trackerStatusUpdates.get(1));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(trackerStatus).isNull());
+        assertThat(trackerStatusUpdates).hasSize(2);
+        assertThat(trackerStatusUpdates.get(0).isErrorState()).isTrue();
+        assertThat(trackerStatusUpdates.get(0).getError()).isSameAs(testError);
+        assertThat(trackerStatusUpdates.get(1)).isNull();
 
         CompletableFuture<Throwable> abortResult = testSubject.abort(null);
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(abortResult.isDone()));
-        assertSame(testError, abortResult.get());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(abortResult.isDone()).isTrue());
+        assertThat(abortResult.get()).isSameAs(testError);
     }
 
     @Test
@@ -209,14 +212,14 @@ class WorkPackageTest {
 
         testSubject.scheduleEvent(testEvent);
 
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertNull(trackerStatus));
-        assertEquals(2, trackerStatusUpdates.size());
-        assertTrue(trackerStatusUpdates.get(0).isErrorState());
-        assertNull(trackerStatusUpdates.get(1));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(trackerStatus).isNull());
+        assertThat(trackerStatusUpdates).hasSize(2);
+        assertThat(trackerStatusUpdates.get(0).isErrorState()).isTrue();
+        assertThat(trackerStatusUpdates.get(1)).isNull();
 
         CompletableFuture<Throwable> abortResult = testSubject.abort(null);
-        assertTrue(abortResult.isDone());
-        assertTrue(abortResult.get().getClass().isAssignableFrom(IllegalStateException.class));
+        assertThat(abortResult.isDone()).isTrue();
+        assertThat(abortResult.get().getClass().isAssignableFrom(IllegalStateException.class)).isTrue();
     }
 
     @Test
@@ -234,15 +237,15 @@ class WorkPackageTest {
 
         testSubject.scheduleEvent(testEvent);
 
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertNull(trackerStatus));
-        assertEquals(2, trackerStatusUpdates.size());
-        assertTrue(trackerStatusUpdates.get(0).isErrorState());
-        assertSame(testError, trackerStatusUpdates.get(0).getError());
-        assertNull(trackerStatusUpdates.get(1));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(trackerStatus).isNull());
+        assertThat(trackerStatusUpdates).hasSize(2);
+        assertThat(trackerStatusUpdates.get(0).isErrorState()).isTrue();
+        assertThat(trackerStatusUpdates.get(0).getError()).isSameAs(testError);
+        assertThat(trackerStatusUpdates.get(1)).isNull();
 
         CompletableFuture<Throwable> abortResult = testSubject.abort(null);
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(abortResult.isDone()));
-        assertSame(testError, abortResult.get());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(abortResult.isDone()).isTrue());
+        assertThat(abortResult.get()).isSameAs(testError);
     }
 
     /**
@@ -258,21 +261,22 @@ class WorkPackageTest {
         testSubject.scheduleEvent(expectedEvent);
 
         List<EventMessage<?>> validatedEvents = eventFilter.getValidatedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(1, validatedEvents.size()));
-        assertEquals(expectedEvent, validatedEvents.get(0));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(validatedEvents).hasSize(1));
+        assertThat(validatedEvents.get(0)).isEqualTo(expectedEvent);
 
         List<EventMessage<?>> processedEvents = batchProcessor.getProcessedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(1, processedEvents.size()));
-        assertEquals(expectedEvent.trackingToken(), ((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(processedEvents).hasSize(1));
+        assertThat(((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken())
+                .isEqualTo(expectedEvent.trackingToken());
 
         ArgumentCaptor<TrackingToken> tokenCaptor = ArgumentCaptor.forClass(TrackingToken.class);
         verify(tokenStore).storeToken(tokenCaptor.capture(), eq(PROCESSOR_NAME), eq(segment.getSegmentId()));
-        assertEquals(expectedToken, tokenCaptor.getValue());
+        assertThat(tokenCaptor.getValue()).isEqualTo(expectedToken);
 
-        assertEquals(1, trackerStatusUpdates.size());
+        assertThat(trackerStatusUpdates).hasSize(1);
         OptionalLong resultPosition = trackerStatusUpdates.get(0).getCurrentPosition();
-        assertTrue(resultPosition.isPresent());
-        assertEquals(1L, resultPosition.getAsLong());
+        assertThat(resultPosition.isPresent()).isTrue();
+        assertThat(resultPosition.getAsLong()).isOne();
     }
 
     @Test
@@ -286,13 +290,13 @@ class WorkPackageTest {
         testSubject.scheduleEvent(expectedEvent);
 
         List<EventMessage<?>> processedEvents = batchProcessor.getProcessedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(1, processedEvents.size()));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(processedEvents).hasSize(1));
 
         ReplayToken expectedAdvancedToken = new ReplayToken(
                 new GlobalSequenceTrackingToken(1L),
                 new GlobalSequenceTrackingToken(1L)
         );
-        assertEquals(expectedAdvancedToken, ((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken());
+        assertThat(((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken()).isEqualTo(expectedAdvancedToken);
     }
 
 
@@ -308,13 +312,13 @@ class WorkPackageTest {
         testSubject.scheduleEvent(expectedEvent);
 
         List<EventMessage<?>> processedEvents = batchProcessor.getProcessedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(1, processedEvents.size()));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(processedEvents).hasSize(1));
 
         ReplayToken expectedAdvancedToken = new ReplayToken(
                 new GlobalSequenceTrackingToken(1L),
                 new GlobalSequenceTrackingToken(1L)
         );
-        assertEquals(expectedAdvancedToken, ((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken());
+        assertThat(((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken()).isEqualTo(expectedAdvancedToken);
     }
 
     @Test
@@ -332,12 +336,13 @@ class WorkPackageTest {
 
         // Should have handled one event, so a subsequent run of WorkPackage#processEvents will extend the claim.
         List<EventMessage<?>> processedEvents = batchProcessor.getProcessedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(1, processedEvents.size()));
-        assertEquals(expectedEvent.trackingToken(), ((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(processedEvents).hasSize(1));
+        assertThat(((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken())
+                .isEqualTo(expectedEvent.trackingToken());
         // We  need to verify the TokenStore#storeToken operation, otherwise the extendClaim verify will not succeed.
         ArgumentCaptor<TrackingToken> tokenCaptor = ArgumentCaptor.forClass(TrackingToken.class);
         verify(tokenStore).storeToken(tokenCaptor.capture(), eq(PROCESSOR_NAME), eq(segment.getSegmentId()));
-        assertEquals(expectedToken, tokenCaptor.getValue());
+        assertThat(tokenCaptor.getValue()).isEqualTo(expectedToken);
 
         assertWithin(
                 500, TimeUnit.MILLISECONDS,
@@ -370,8 +375,8 @@ class WorkPackageTest {
         testSubjectWithShortThreshold.scheduleEvent(expectedEvent);
 
         List<EventMessage<?>> validatedEvents = eventFilter.getValidatedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(1, validatedEvents.size()));
-        assertEquals(expectedEvent, validatedEvents.get(0));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(validatedEvents).hasSize(1));
+        assertThat(validatedEvents.get(0)).isEqualTo(expectedEvent);
 
         ArgumentCaptor<TrackingToken> tokenCaptor = ArgumentCaptor.forClass(TrackingToken.class);
 
@@ -386,7 +391,7 @@ class WorkPackageTest {
                             .storeToken(tokenCaptor.capture(), eq(PROCESSOR_NAME), eq(segment.getSegmentId()));
                 }
         );
-        assertEquals(expectedToken, tokenCaptor.getValue());
+        assertThat(tokenCaptor.getValue()).isEqualTo(expectedToken);
     }
 
     @Test
@@ -395,35 +400,35 @@ class WorkPackageTest {
 
         testSubject.scheduleWorker();
 
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertNull(trackerStatus));
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(result.isDone()));
-        assertNull(result.get());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(trackerStatus).isNull());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(result.isDone()).isTrue());
+        assertThat(result.get()).isNull();
     }
 
     @Test
     void hasRemainingCapacityReturnsTrueForWorkPackageWithoutScheduledEvents() {
-        assertTrue(testSubject.hasRemainingCapacity());
+        assertThat(testSubject.hasRemainingCapacity()).isTrue();
     }
 
     @Test
     void segment() {
-        assertEquals(segment, testSubject.segment());
+        assertThat(testSubject.segment()).isEqualTo(segment);
     }
 
     @Test
     void lastDeliveredTokenEqualsInitialTokenWhenNoEventsHaveBeenScheduled() {
-        assertEquals(initialTrackingToken, testSubject.lastDeliveredToken());
+        assertThat(testSubject.lastDeliveredToken()).isEqualTo(initialTrackingToken);
     }
 
     @Test
     void isAbortTriggeredReturnsFalseInAbsenceOfAbort() {
-        assertFalse(testSubject.isAbortTriggered());
+        assertThat(testSubject.isAbortTriggered()).isFalse();
     }
 
     @Test
     void isAbortTriggeredReturnsTrueAfterAbortInvocation() {
         testSubject.abort(null);
-        assertTrue(testSubject.isAbortTriggered());
+        assertThat(testSubject.isAbortTriggered()).isTrue();
     }
 
     @Test
@@ -432,8 +437,8 @@ class WorkPackageTest {
 
         CompletableFuture<Throwable> result = testSubject.abort(expectedResult);
 
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(result.isDone()));
-        assertEquals(expectedResult, result.get());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(result.isDone()).isTrue());
+        assertThat(result.get()).isEqualTo(expectedResult);
     }
 
     @Test
@@ -444,13 +449,13 @@ class WorkPackageTest {
 
         CompletableFuture<Throwable> result = testSubject.abort(otherAbortReason);
 
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertTrue(result.isDone()));
-        assertEquals(originalAbortReason, result.get());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(result.isDone()).isTrue());
+        assertThat(result.get()).isEqualTo(originalAbortReason);
     }
 
     @Test
     void scheduleEventsReturnsFalseForEmptyList() {
-        assertFalse(testSubject.scheduleEvents(Collections.emptyList()));
+        assertThat(testSubject.scheduleEvents(Collections.emptyList())).isFalse();
     }
 
     @Test
@@ -465,7 +470,8 @@ class WorkPackageTest {
         testEvents.add(testEventOne);
         testEvents.add(testEventTwo);
 
-        assertThrows(IllegalArgumentException.class, () -> testSubject.scheduleEvents(testEvents));
+        assertThatThrownBy(() -> testSubject.scheduleEvents(testEvents))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     /**
@@ -488,7 +494,7 @@ class WorkPackageTest {
 
         boolean result = testSubjectWithCustomInitialToken.scheduleEvents(testEvents);
 
-        assertFalse(result);
+        assertThat(result).isFalse();
         verifyNoInteractions(executorService);
     }
 
@@ -507,24 +513,25 @@ class WorkPackageTest {
 
         boolean result = testSubject.scheduleEvents(testEvents);
 
-        assertTrue(result);
+        assertThat(result).isTrue();
 
         List<EventMessage<?>> validatedEvents = eventFilter.getValidatedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(2, validatedEvents.size()));
-        assertTrue(validatedEvents.containsAll(testEvents));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(validatedEvents).hasSize(2));
+        assertThat(validatedEvents).containsAll(testEvents);
 
         List<EventMessage<?>> processedEvents = batchProcessor.getProcessedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(1, processedEvents.size()));
-        assertEquals(expectedEvent.trackingToken(), ((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(processedEvents).hasSize(1));
+        assertThat(((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken())
+                .isEqualTo(expectedEvent.trackingToken());
 
         ArgumentCaptor<TrackingToken> tokenCaptor = ArgumentCaptor.forClass(TrackingToken.class);
         verify(tokenStore).storeToken(tokenCaptor.capture(), eq(PROCESSOR_NAME), eq(segment.getSegmentId()));
-        assertEquals(expectedToken, tokenCaptor.getValue());
+        assertThat(tokenCaptor.getValue()).isEqualTo(expectedToken);
 
-        assertEquals(1, trackerStatusUpdates.size());
+        assertThat(trackerStatusUpdates).hasSize(1);
         OptionalLong resultPosition = trackerStatusUpdates.get(0).getCurrentPosition();
-        assertTrue(resultPosition.isPresent());
-        assertEquals(1L, resultPosition.getAsLong());
+        assertThat(resultPosition.isPresent()).isTrue();
+        assertThat(resultPosition.getAsLong()).isOne();
     }
 
     @Test
@@ -540,27 +547,27 @@ class WorkPackageTest {
 
         boolean result = testSubject.scheduleEvents(expectedEvents);
 
-        assertTrue(result);
+        assertThat(result).isTrue();
 
         List<EventMessage<?>> validatedEvents = eventFilter.getValidatedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(2, validatedEvents.size()));
-        assertTrue(validatedEvents.containsAll(expectedEvents));
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(validatedEvents).hasSize(2));
+        assertThat(validatedEvents).containsAll(expectedEvents);
 
         List<EventMessage<?>> processedEvents = batchProcessor.getProcessedEvents();
-        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertEquals(2, processedEvents.size()));
-        assertEquals(expectedEventOne.trackingToken(),
-                     ((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken());
-        assertEquals(expectedEventTwo.trackingToken(),
-                     ((TrackedEventMessage<?>) processedEvents.get(1)).trackingToken());
+        assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(processedEvents).hasSize(2));
+        assertThat(((TrackedEventMessage<?>) processedEvents.get(0)).trackingToken())
+                .isEqualTo(expectedEventOne.trackingToken());
+        assertThat(((TrackedEventMessage<?>) processedEvents.get(1)).trackingToken())
+                .isEqualTo(expectedEventTwo.trackingToken());
 
         ArgumentCaptor<TrackingToken> tokenCaptor = ArgumentCaptor.forClass(TrackingToken.class);
         verify(tokenStore).storeToken(tokenCaptor.capture(), eq(PROCESSOR_NAME), eq(segment.getSegmentId()));
-        assertEquals(expectedToken, tokenCaptor.getValue());
+        assertThat(tokenCaptor.getValue()).isEqualTo(expectedToken);
 
-        assertTrue(trackerStatusUpdates.size() >= 1);
+        assertThat(trackerStatusUpdates.size()).isGreaterThanOrEqualTo(1);
         OptionalLong resultPosition = trackerStatusUpdates.get(0).getCurrentPosition();
-        assertTrue(resultPosition.isPresent());
-        assertEquals(1L, resultPosition.getAsLong());
+        assertThat(resultPosition.isPresent()).isTrue();
+        assertThat(resultPosition.getAsLong()).isOne();
     }
 
     private class TestEventFilter implements WorkPackage.EventFilter {

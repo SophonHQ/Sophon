@@ -36,7 +36,8 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 import static java.util.Collections.emptyList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -70,9 +71,9 @@ class AbstractEventBusTest {
         verify(unitOfWork).onCommit(any());
         // the monitor callback is also registered
         verify(unitOfWork, times(2)).afterCommit(any());
-        assertEquals(emptyList(), testSubject.committedEvents);
+        assertThat(testSubject.committedEvents).isEqualTo(emptyList());
         unitOfWork.commit();
-        assertEquals(Collections.singletonList(event), testSubject.committedEvents);
+        assertThat(testSubject.committedEvents).isEqualTo(Collections.singletonList(event));
     }
 
     @Test
@@ -94,7 +95,7 @@ class AbstractEventBusTest {
 
         unitOfWork.commit();
         List<EventMessage<?>> actual = testSubject.committedEvents;
-        assertEquals(Arrays.asList(event, event), actual);
+        assertThat(actual).isEqualTo(Arrays.asList(event, event));
     }
 
     @Test
@@ -102,7 +103,7 @@ class AbstractEventBusTest {
         EventMessage<?> event = newEvent();
         testSubject.publish(event);
         unitOfWork.commit();
-        assertEquals(Collections.singletonList(event), testSubject.committedEvents);
+        assertThat(testSubject.committedEvents).isEqualTo(Collections.singletonList(event));
     }
 
     @Test
@@ -111,15 +112,16 @@ class AbstractEventBusTest {
         testSubject.publish(eventA);
         testSubject.publish(eventB);
         unitOfWork.commit();
-        assertEquals(Arrays.asList(eventA, eventB), testSubject.committedEvents);
+        assertThat(testSubject.committedEvents).isEqualTo(Arrays.asList(eventA, eventB));
     }
 
     @Test
     void publicationWithNestedUow() {
         testSubject.publish(numberedEvent(5));
         unitOfWork.commit();
-        assertEquals(Arrays.asList(numberedEvent(5), numberedEvent(4), numberedEvent(3), numberedEvent(2),
-                                   numberedEvent(1), numberedEvent(0)), testSubject.committedEvents);
+        assertThat(testSubject.committedEvents)
+                .isEqualTo(Arrays.asList(numberedEvent(5), numberedEvent(4), numberedEvent(3), numberedEvent(2),
+                                         numberedEvent(1), numberedEvent(0)));
         verify(testSubject, times(6)).prepareCommit(any());
         verify(testSubject, times(6)).commit(any());
         verify(testSubject, times(6)).afterCommit(any());
@@ -138,7 +140,7 @@ class AbstractEventBusTest {
                               .build()
                               .publish(numberedEvent(5));
 
-        assertThrows(IllegalStateException.class, unitOfWork::commit);
+        assertThatThrownBy(unitOfWork::commit).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -146,7 +148,7 @@ class AbstractEventBusTest {
         testSubject = spy(StubPublishingEventBus.builder().publicationPhase(UnitOfWork.Phase.COMMIT).build());
         testSubject.publish(numberedEvent(1));
 
-        assertThrows(IllegalStateException.class, unitOfWork::commit);
+        assertThatThrownBy(unitOfWork::commit).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -189,9 +191,9 @@ class AbstractEventBusTest {
         //noinspection unchecked
         ArgumentCaptor<List<EventMessage<?>>> argumentCaptor = ArgumentCaptor.forClass(List.class);
         verify(dispatchInterceptorMock).handle(argumentCaptor.capture()); //prepare commit, commit, and after commit
-        assertEquals(1, argumentCaptor.getAllValues().size());
-        assertEquals(2, argumentCaptor.getValue().size());
-        assertEquals(value, argumentCaptor.getValue().get(0).getMetaData().get(key));
+        assertThat(argumentCaptor.getAllValues()).hasSize(1);
+        assertThat(argumentCaptor.getValue()).hasSize(2);
+        assertThat(argumentCaptor.getValue().get(0).getMetaData()).containsEntry(key, value);
     }
 
     private static EventMessage<Object> newEvent() {

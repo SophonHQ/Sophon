@@ -18,7 +18,8 @@
 package org.sophonhq.sophon.config;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.eventhandling.EventHandler;
 import org.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
@@ -31,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the correct registration of command, query and overall message handling beans, through the
@@ -64,8 +65,8 @@ class DefaultConfigurerHandlerRegistrationTest {
 
         CompletableFuture<String> result = config.commandGateway().send(new SomeCommand());
 
-        assertEquals(COMMAND_HANDLING_RESPONSE, result.join());
-        assertTrue(handled.get());
+        assertThat(result.join()).isEqualTo(COMMAND_HANDLING_RESPONSE);
+        assertThat(handled.get()).isTrue();
     }
 
     @Test
@@ -77,8 +78,8 @@ class DefaultConfigurerHandlerRegistrationTest {
 
         CompletableFuture<String> result = config.queryGateway().query(new SomeQuery(), String.class);
 
-        assertEquals(QUERY_HANDLING_RESPONSE, result.join());
-        assertTrue(handled.get());
+        assertThat(result.join()).isEqualTo(QUERY_HANDLING_RESPONSE);
+        assertThat(handled.get()).isTrue();
     }
 
     @Test
@@ -95,14 +96,14 @@ class DefaultConfigurerHandlerRegistrationTest {
         config.eventGateway().publish(new SomeEvent());
         CompletableFuture<String> queryHandling = config.queryGateway().query(new SomeQuery(), String.class);
 
-        assertEquals(COMMAND_HANDLING_RESPONSE, commandHandlingResult.join());
-        assertNotNull(commandHandled.get());
-        assertNotNull(eventHandled.get());
-        assertEquals(QUERY_HANDLING_RESPONSE, queryHandling.join());
-        assertNotNull(queryHandled.get());
+        assertThat(commandHandlingResult.join()).isEqualTo(COMMAND_HANDLING_RESPONSE);
+        assertThat(commandHandled.get()).isNotNull();
+        assertThat(eventHandled.get()).isNotNull();
+        assertThat(queryHandling.join()).isEqualTo(QUERY_HANDLING_RESPONSE);
+        assertThat(queryHandled.get()).isNotNull();
 
-        assertSame(queryHandled.get(), eventHandled.get());
-        assertSame(queryHandled.get(), commandHandled.get());
+        assertThat(eventHandled.get()).isSameAs(queryHandled.get());
+        assertThat(commandHandled.get()).isSameAs(queryHandled.get());
     }
 
     @Test
@@ -133,10 +134,10 @@ class DefaultConfigurerHandlerRegistrationTest {
 
         CompletableFuture<String> result = config.commandGateway().send(new SomeCommand());
 
-        assertEquals(COMMAND_HANDLING_RESPONSE, result.join());
-        assertTrue(handled.get());
-        assertTrue(firstEnhancerInvoked.get());
-        assertTrue(secondEnhancerInvoked.get());
+        assertThat(result.join()).isEqualTo(COMMAND_HANDLING_RESPONSE);
+        assertThat(handled.get()).isTrue();
+        assertThat(firstEnhancerInvoked.get()).isTrue();
+        assertThat(secondEnhancerInvoked.get()).isTrue();
     }
 
     private static class SomeCommand {

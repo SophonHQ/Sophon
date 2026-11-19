@@ -25,9 +25,8 @@ import org.sophonhq.sophon.eventhandling.tokenstore.UnableToClaimTokenException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class InMemoryTokenStoreTest {
 
@@ -44,12 +43,12 @@ class InMemoryTokenStoreTest {
 
         int[] actual = testSubject.fetchSegments("test1");
         Arrays.sort(actual);
-        assertArrayEquals(new int[]{0, 1, 2, 3, 4, 5, 6}, actual);
+        assertThat(actual).containsExactly(0, 1, 2, 3, 4, 5, 6);
     }
 
     @Test
     void identifierIsPresent() {
-        assertTrue(testSubject.retrieveStorageIdentifier().isPresent());
+        assertThat(testSubject.retrieveStorageIdentifier()).isPresent();
     }
 
     @Test
@@ -58,10 +57,10 @@ class InMemoryTokenStoreTest {
 
         int[] actual = testSubject.fetchSegments("test1");
         Arrays.sort(actual);
-        assertArrayEquals(new int[]{0, 1, 2, 3, 4, 5, 6}, actual);
+        assertThat(actual).containsExactly(0, 1, 2, 3, 4, 5, 6);
 
         for (int segment : actual) {
-            assertEquals(new GlobalSequenceTrackingToken(10), testSubject.fetchToken("test1", segment));
+            assertThat(testSubject.fetchToken("test1", segment)).isEqualTo(new GlobalSequenceTrackingToken(10));
         }
     }
 
@@ -70,27 +69,28 @@ class InMemoryTokenStoreTest {
         testSubject.initializeTokenSegments("test1", 1);
         testSubject.storeToken(new GlobalSequenceTrackingToken(1), "test1", 0);
 
-        assertEquals(new GlobalSequenceTrackingToken(1), testSubject.fetchToken("test1", 0));
+        assertThat(testSubject.fetchToken("test1", 0)).isEqualTo(new GlobalSequenceTrackingToken(1));
     }
 
     @Test
     void initializeAtGivenToken() {
         testSubject.initializeTokenSegments("test1", 2, new GlobalSequenceTrackingToken(1));
 
-        assertEquals(new GlobalSequenceTrackingToken(1), testSubject.fetchToken("test1", 0));
-        assertEquals(new GlobalSequenceTrackingToken(1), testSubject.fetchToken("test1", 1));
+        assertThat(testSubject.fetchToken("test1", 0)).isEqualTo(new GlobalSequenceTrackingToken(1));
+        assertThat(testSubject.fetchToken("test1", 1)).isEqualTo(new GlobalSequenceTrackingToken(1));
     }
 
     @Test
     void initializeTokensWhileAlreadyPresent() {
-        assertThrows(UnableToClaimTokenException.class, () -> testSubject.fetchToken("test1", 1));
+        assertThatThrownBy(() -> testSubject.fetchToken("test1", 1))
+                .isInstanceOf(UnableToClaimTokenException.class);
     }
 
     @Test
     void querySegments() {
         testSubject.initializeTokenSegments("test", 1);
 
-        assertNull(testSubject.fetchToken("test", 0));
+        assertThat(testSubject.fetchToken("test", 0)).isNull();
 
         testSubject.storeToken(new GlobalSequenceTrackingToken(1L), "proc1", 0);
         testSubject.storeToken(new GlobalSequenceTrackingToken(2L), "proc1", 1);
@@ -98,15 +98,15 @@ class InMemoryTokenStoreTest {
 
         {
             final int[] segments = testSubject.fetchSegments("proc1");
-            assertThat(segments.length, is(2));
+            assertThat(segments).hasSize(2);
         }
         {
             final int[] segments = testSubject.fetchSegments("proc2");
-            assertThat(segments.length, is(1));
+            assertThat(segments).hasSize(1);
         }
         {
             final int[] segments = testSubject.fetchSegments("proc3");
-            assertThat(segments.length, is(0));
+            assertThat(segments).isEmpty();
         }
     }
 
@@ -118,18 +118,18 @@ class InMemoryTokenStoreTest {
 
         {
             final List<Segment> segments = testSubject.fetchAvailableSegments("proc1");
-            assertThat(segments.size(), is(2));
-            assertThat(segments.get(0).getSegmentId(), is(0));
-            assertThat(segments.get(1).getSegmentId(), is(1));
+            assertThat(segments).hasSize(2);
+            assertThat(segments.get(0).getSegmentId()).isEqualTo(0);
+            assertThat(segments.get(1).getSegmentId()).isEqualTo(1);
         }
         {
             final List<Segment> segments = testSubject.fetchAvailableSegments("proc2");
-            assertThat(segments.size(), is(1));
-            assertThat(segments.get(0).getSegmentId(), is(1));
+            assertThat(segments).hasSize(1);
+            assertThat(segments.get(0).getSegmentId()).isEqualTo(1);
         }
         {
             final List<Segment> segments = testSubject.fetchAvailableSegments("proc3");
-            assertThat(segments.size(), is(0));
+            assertThat(segments).hasSize(0);
         }
     }
 }

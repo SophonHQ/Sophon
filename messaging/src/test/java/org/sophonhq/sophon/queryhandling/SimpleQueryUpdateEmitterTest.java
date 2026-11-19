@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link SimpleQueryUpdateEmitter}.
@@ -242,8 +242,8 @@ class SimpleQueryUpdateEmitterTest {
         result.complete();
 
         StepVerifier.create(result.getUpdates().map(Message::getPayload))
-        			.expectNextMatches(actual -> equalTo(new String[] { "array-item-1", "array-item-2" }).matches(actual) )
-        			.expectNextMatches(actual -> equalTo(Arrays.asList("list-item-1", "list-item-2")).matches(actual) )
+                    .assertNext(actual -> assertThat(actual).isEqualTo(new String[] { "array-item-1", "array-item-2" }))
+                    .assertNext(actual -> assertThat(actual).isEqualTo(Arrays.asList("list-item-1", "list-item-2")))
                     .verifyComplete();
     }
 

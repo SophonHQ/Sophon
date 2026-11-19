@@ -17,12 +17,12 @@
 
 package org.sophonhq.sophon.eventhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link TrackingEventProcessorConfiguration}
@@ -35,14 +35,14 @@ class TrackingEventProcessorConfigurationTest {
     void configuredEventTrackerStatusChangeListener() {
         Map<Integer, EventTrackerStatus> expectedTrackerStatus = Collections.emptyMap();
         EventTrackerStatusChangeListener expectedChangeListener =
-                updatedTrackerStatus -> assertEquals(expectedTrackerStatus, updatedTrackerStatus);
+                updatedTrackerStatus -> assertThat(updatedTrackerStatus).isEqualTo(expectedTrackerStatus);
         TrackingEventProcessorConfiguration testSubject =
                 TrackingEventProcessorConfiguration.forSingleThreadedProcessing();
 
         testSubject.andEventTrackerStatusChangeListener(expectedChangeListener);
 
         EventTrackerStatusChangeListener resultChangeListener = testSubject.getEventTrackerStatusChangeListener();
-        assertEquals(expectedChangeListener, resultChangeListener);
+        assertThat(resultChangeListener).isEqualTo(expectedChangeListener);
         resultChangeListener.onEventTrackerStatusChange(expectedTrackerStatus);
     }
 }

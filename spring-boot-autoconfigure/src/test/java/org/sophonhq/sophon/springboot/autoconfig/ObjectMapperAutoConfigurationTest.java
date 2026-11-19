@@ -19,7 +19,7 @@ package org.sophonhq.sophon.springboot.autoconfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.databind.CBORMapper;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.json.JacksonSerializer;
@@ -32,7 +32,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
@@ -54,9 +54,9 @@ class ObjectMapperAutoConfigurationTest {
         final Serializer eventSerializer = applicationContext.getBean("eventSerializer", Serializer.class);
         final ObjectMapper objectMapper = applicationContext.getBean("defaultSophonObjectMapper", ObjectMapper.class);
 
-        assertTrue(serializer instanceof JacksonSerializer);
-        assertEquals(cborMapper, ((JacksonSerializer) serializer).getObjectMapper());
-        assertTrue(eventSerializer instanceof JacksonSerializer);
-        assertEquals(objectMapper, ((JacksonSerializer) eventSerializer).getObjectMapper());
+        assertThat(serializer).isInstanceOf(JacksonSerializer.class);
+        assertThat(((JacksonSerializer) serializer).getObjectMapper()).isEqualTo(cborMapper);
+        assertThat(eventSerializer).isInstanceOf(JacksonSerializer.class);
+        assertThat(((JacksonSerializer) eventSerializer).getObjectMapper()).isEqualTo(objectMapper);
     }
 }

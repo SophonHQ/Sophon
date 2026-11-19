@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -42,8 +42,8 @@ class AssociationValuesImplTest {
     void addAssociationValue() {
         testSubject.add(associationValue);
 
-        assertEquals(1, testSubject.addedAssociations().size());
-        assertTrue(testSubject.removedAssociations().isEmpty());
+        assertThat(testSubject.addedAssociations()).hasSize(1);
+        assertThat(testSubject.removedAssociations()).isEmpty();
     }
 
     @Test
@@ -51,24 +51,24 @@ class AssociationValuesImplTest {
         testSubject.add(associationValue);
         testSubject.commit();
         testSubject.add(associationValue);
-        assertTrue(testSubject.addedAssociations().isEmpty());
-        assertTrue(testSubject.removedAssociations().isEmpty());
+        assertThat(testSubject.addedAssociations()).isEmpty();
+        assertThat(testSubject.removedAssociations()).isEmpty();
     }
 
     @Test
     void removeAssociationValue() {
-        assertTrue(testSubject.add(associationValue));
+        assertThat(testSubject.add(associationValue)).isTrue();
         testSubject.commit();
-        assertTrue(testSubject.remove(associationValue));
-        assertTrue(testSubject.addedAssociations().isEmpty());
-        assertEquals(1, testSubject.removedAssociations().size());
+        assertThat(testSubject.remove(associationValue)).isTrue();
+        assertThat(testSubject.addedAssociations()).isEmpty();
+        assertThat(testSubject.removedAssociations()).hasSize(1);
     }
 
     @Test
     void removeAssociationValue_NotInContainer() {
         testSubject.remove(associationValue);
-        assertTrue(testSubject.addedAssociations().isEmpty());
-        assertTrue(testSubject.removedAssociations().isEmpty());
+        assertThat(testSubject.addedAssociations()).isEmpty();
+        assertThat(testSubject.removedAssociations()).isEmpty();
     }
 
     @Test
@@ -76,18 +76,18 @@ class AssociationValuesImplTest {
         testSubject.add(associationValue);
         testSubject.remove(associationValue);
 
-        assertTrue(testSubject.addedAssociations().isEmpty());
-        assertTrue(testSubject.removedAssociations().isEmpty());
+        assertThat(testSubject.addedAssociations()).isEmpty();
+        assertThat(testSubject.removedAssociations()).isEmpty();
     }
 
     @Test
     void contains() {
-        assertFalse(testSubject.contains(associationValue));
+        assertThat(testSubject.contains(associationValue)).isFalse();
         testSubject.add(associationValue);
-        assertTrue(testSubject.contains(associationValue));
-        assertTrue(testSubject.contains(new AssociationValue("key", "value")));
+        assertThat(testSubject.contains(associationValue)).isTrue();
+        assertThat(testSubject.contains(new AssociationValue("key", "value"))).isTrue();
         testSubject.remove(associationValue);
-        assertFalse(testSubject.contains(associationValue));
+        assertThat(testSubject.contains(associationValue)).isFalse();
     }
 
     @Test
@@ -95,17 +95,17 @@ class AssociationValuesImplTest {
         testSubject.add(associationValue);
         int t = 0;
         for (AssociationValue actual : testSubject.asSet()) {
-            assertSame(associationValue, actual);
+            assertThat(actual).isSameAs(associationValue);
             t++;
         }
-        assertEquals(1, t);
+        assertThat(t).isOne();
     }
 
     @Test
     void iterator() {
         testSubject.add(associationValue);
         Iterator<AssociationValue> iterator = testSubject.iterator();
-        assertSame(associationValue, iterator.next());
-        assertFalse(iterator.hasNext());
+        assertThat(iterator.next()).isSameAs(associationValue);
+        assertThat(iterator).isExhausted();
     }
 }

@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.tracing.attributes;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -28,7 +28,7 @@ import org.sophonhq.sophon.tracing.SpanAttributesProvider;
 
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MessageNameSpanAttributesProviderTest {
 
@@ -38,7 +38,7 @@ class MessageNameSpanAttributesProviderTest {
     void extractsNothingForEvent() {
         EventMessage<Object> event = GenericEventMessage.asEventMessage("Some event");
         Map<String, String> map = provider.provideForMessage(event);
-        assertEquals(0, map.size());
+        assertThat(map).isEmpty();
     }
 
     @Test
@@ -47,8 +47,9 @@ class MessageNameSpanAttributesProviderTest {
                                                                    "myQueryName",
                                                                    ResponseTypes.instanceOf(String.class));
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
-        assertEquals(1, map.size());
-        assertEquals("myQueryName", map.get("sophon_message_name"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_message_name", "myQueryName");
     }
 
     @Test
@@ -56,8 +57,9 @@ class MessageNameSpanAttributesProviderTest {
         Message<?> genericQueryMessage = new GenericQueryMessage<>("MyQuery",
                                                                    ResponseTypes.instanceOf(String.class));
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
-        assertEquals(1, map.size());
-        assertEquals("java.lang.String", map.get("sophon_message_name"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_message_name", "java.lang.String");
     }
 
     @Test
@@ -65,15 +67,17 @@ class MessageNameSpanAttributesProviderTest {
         Message<?> genericQueryMessage = new GenericCommandMessage<>(new GenericCommandMessage<>("payload"),
                                                                      "MyAwesomeCommand");
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
-        assertEquals(1, map.size());
-        assertEquals("MyAwesomeCommand", map.get("sophon_message_name"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_message_name", "MyAwesomeCommand");
     }
 
     @Test
     void extractsForCommandWithPayloadName() {
         Message<?> genericQueryMessage = new GenericCommandMessage<>("payload");
         Map<String, String> map = provider.provideForMessage(genericQueryMessage);
-        assertEquals(1, map.size());
-        assertEquals("java.lang.String", map.get("sophon_message_name"));
+        assertThat(map)
+                .hasSize(1)
+                .containsEntry("sophon_message_name", "java.lang.String");
     }
 }

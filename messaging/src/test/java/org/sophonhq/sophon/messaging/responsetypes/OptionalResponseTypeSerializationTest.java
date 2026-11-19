@@ -24,7 +24,7 @@ import org.sophonhq.sophon.serialization.TestSerializer;
 import java.util.Collection;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Tests serialization capabilities of {@link OptionalResponseType}.
@@ -45,6 +45,7 @@ class OptionalResponseTypeSerializationTest
     @MethodSource("serializers")
     @ParameterizedTest
     void responseTypeShouldBeSerializable(TestSerializer serializer) {
-        assertEquals(testSubject.getExpectedResponseType(), serializer.serializeDeserialize(testSubject).getExpectedResponseType());
+        assertThat(serializer.serializeDeserialize(testSubject).getExpectedResponseType())
+                .isEqualTo(testSubject.getExpectedResponseType());
     }
 }

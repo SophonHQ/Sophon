@@ -18,7 +18,7 @@
 package org.sophonhq.sophon.serialization.upcasting.event;
 
 import org.dom4j.Document;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventData;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventEntry;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -61,14 +61,14 @@ class SingleEventUpcasterTest {
         Upcaster<IntermediateEventRepresentation> upcaster = new StubEventUpcaster(newValue);
         List<IntermediateEventRepresentation> result =
                 upcaster.upcast(Stream.of(new InitialEventRepresentation(eventData, serializer))).collect(toList());
-        assertFalse(result.isEmpty());
+        assertThat(result).isNotEmpty();
         IntermediateEventRepresentation firstEvent = result.get(0);
-        assertEquals("1", firstEvent.getType().getRevision());
+        assertThat(firstEvent.getType().getRevision()).isEqualTo("1");
         StubDomainEvent upcastedEvent = serializer.deserialize(firstEvent.getData());
-        assertEquals(newValue, upcastedEvent.getName());
-        assertEquals(eventData.getEventIdentifier(), firstEvent.getMessageIdentifier());
-        assertEquals(eventData.getTimestamp(), firstEvent.getTimestamp());
-        assertEquals(metaData, firstEvent.getMetaData().getObject());
+        assertThat(upcastedEvent.getName()).isEqualTo(newValue);
+        assertThat(firstEvent.getMessageIdentifier()).isEqualTo(eventData.getEventIdentifier());
+        assertThat(firstEvent.getTimestamp()).isEqualTo(eventData.getTimestamp());
+        assertThat(firstEvent.getMetaData().getObject()).isEqualTo(metaData);
     }
 
     @Test
@@ -92,12 +92,12 @@ class SingleEventUpcasterTest {
         Upcaster<IntermediateEventRepresentation> upcaster = new StubEventUpcaster("whatever");
         IntermediateEventRepresentation input = new InitialEventRepresentation(eventData, serializer);
         List<IntermediateEventRepresentation> result = upcaster.upcast(Stream.of(input)).collect(toList());
-        assertFalse(result.isEmpty());
+        assertThat(result).isNotEmpty();
         IntermediateEventRepresentation firstEvent = result.get(0);
-        assertEquals(aggregateType, firstEvent.getAggregateType().get());
-        assertEquals(aggregateId, firstEvent.getAggregateIdentifier().get());
-        assertEquals(trackingToken, firstEvent.getTrackingToken().get());
-        assertEquals(Long.valueOf(sequenceNumber), firstEvent.getSequenceNumber().get());
+        assertThat(firstEvent.getAggregateType()).hasValue(aggregateType);
+        assertThat(firstEvent.getAggregateIdentifier()).hasValue(aggregateId);
+        assertThat(firstEvent.getTrackingToken().get()).isEqualTo(trackingToken);
+        assertThat(firstEvent.getSequenceNumber()).hasValue(Long.valueOf(sequenceNumber));
     }
 
     @Test
@@ -108,9 +108,9 @@ class SingleEventUpcasterTest {
         Upcaster<IntermediateEventRepresentation> upcaster = new StubEventUpcaster("whatever");
         IntermediateEventRepresentation input = spy(new InitialEventRepresentation(eventData, serializer));
         List<IntermediateEventRepresentation> result = upcaster.upcast(Stream.of(input)).collect(toList());
-        assertEquals(1, result.size());
+        assertThat(result).hasSize(1);
         IntermediateEventRepresentation output = result.get(0);
-        assertSame(input, output);
+        assertThat(output).isSameAs(input);
         verify(input, never()).getData();
     }
 
@@ -123,11 +123,11 @@ class SingleEventUpcasterTest {
         IntermediateEventRepresentation input = new InitialEventRepresentation(eventData, serializer);
         List<IntermediateEventRepresentation> result = upcaster.upcast(Stream.of(input)).collect(toList());
         input = spy(result.get(0));
-        assertEquals("1", input.getType().getRevision()); //initial upcast was successful
+        assertThat(input.getType().getRevision()).isEqualTo("1"); //initial upcast was successful
         result = upcaster.upcast(Stream.of(input)).collect(toList());
-        assertFalse(result.isEmpty());
+        assertThat(result).isNotEmpty();
         IntermediateEventRepresentation output = result.get(0);
-        assertSame(input, output);
+        assertThat(output).isSameAs(input);
         verify(input, never()).getData();
     }
 

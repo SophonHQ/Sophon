@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.eventhandling.scheduling.quartz;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -42,7 +44,8 @@ import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 /**
@@ -89,8 +92,8 @@ class QuartzEventSchedulerTest {
             return null;
         }).when(eventBus).publish(isA(EventMessage.class));
         ScheduleToken token = testSubject.schedule(Duration.ofMillis(30), buildTestEvent());
-        assertTrue(token.toString().contains("Quartz"));
-        assertTrue(token.toString().contains(GROUP_ID));
+        assertThat(token.toString()).contains("Quartz");
+        assertThat(token.toString()).contains(GROUP_ID);
         latch.await(1, TimeUnit.SECONDS);
         verify(eventBus).publish(isA(EventMessage.class));
     }
@@ -113,8 +116,8 @@ class QuartzEventSchedulerTest {
             return null;
         }).when(mockTransaction).commit();
         ScheduleToken token = testSubject.schedule(Duration.ofMillis(30), buildTestEvent());
-        assertTrue(token.toString().contains("Quartz"));
-        assertTrue(token.toString().contains(GROUP_ID));
+        assertThat(token.toString()).contains("Quartz");
+        assertThat(token.toString()).contains(GROUP_ID);
         latch.await(1, TimeUnit.SECONDS);
 
         AssertUtils.assertWithin(1, TimeUnit.SECONDS, () -> verify(mockTransaction).commit());
@@ -142,8 +145,8 @@ class QuartzEventSchedulerTest {
         testSubject.setGroupIdentifier(GROUP_ID);
 
         ScheduleToken token = testSubject.schedule(Duration.ofMillis(30), buildTestEvent());
-        assertTrue(token.toString().contains("Quartz"));
-        assertTrue(token.toString().contains(GROUP_ID));
+        assertThat(token.toString()).contains("Quartz");
+        assertThat(token.toString()).contains(GROUP_ID);
         latch.await(1, TimeUnit.SECONDS);
 
         AssertUtils.assertWithin(1, TimeUnit.SECONDS, () -> verify(transactionManager).startTransaction());
@@ -151,15 +154,15 @@ class QuartzEventSchedulerTest {
         inOrder.verify(transactionManager).startTransaction();
         inOrder.verifyNoMoreInteractions();
 
-        assertFalse(CurrentUnitOfWork.isStarted());
+        assertThat(CurrentUnitOfWork.isStarted()).isFalse();
     }
 
     @Test
     void cancelJob() throws SchedulerException {
         ScheduleToken token = testSubject.schedule(Duration.ofMillis(1000), buildTestEvent());
-        assertEquals(1, scheduler.getJobKeys(GroupMatcher.groupEquals(GROUP_ID)).size());
+        assertThat(scheduler.getJobKeys(GroupMatcher.groupEquals(GROUP_ID))).hasSize(1);
         testSubject.cancelSchedule(token);
-        assertEquals(0, scheduler.getJobKeys(GroupMatcher.groupEquals(GROUP_ID)).size());
+        assertThat(scheduler.getJobKeys(GroupMatcher.groupEquals(GROUP_ID))).hasSize(0);
         scheduler.shutdown(true);
         verify(eventBus, never()).publish(isA(EventMessage.class));
     }
@@ -183,21 +186,23 @@ class QuartzEventSchedulerTest {
                                                                .serializer(TestSerializer.XSTREAM.getSerializer())
                                                                .build();
 
-        assertThrows(SchedulingException.class, testSubject::shutdown);
+        assertThatThrownBy(testSubject::shutdown).isInstanceOf(SchedulingException.class);
     }
 
     @Test
     void buildWithNullEventJobDataBinderThrowsSophonConfigurationException() {
         QuartzEventScheduler.Builder builderTestSubject = QuartzEventScheduler.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.jobDataBinder(null));
+        assertThatThrownBy(() -> builderTestSubject.jobDataBinder(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void buildWithNullSerializerThrowsSophonConfigurationException() {
         QuartzEventScheduler.Builder builderTestSubject = QuartzEventScheduler.builder();
 
-        assertThrows(SophonConfigurationException.class, () -> builderTestSubject.serializer(null));
+        assertThatThrownBy(() -> builderTestSubject.serializer(null))
+                .isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -208,7 +213,7 @@ class QuartzEventSchedulerTest {
                                     .eventBus(eventBus)
                                     .serializer(TestSerializer.XSTREAM.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
@@ -219,7 +224,7 @@ class QuartzEventSchedulerTest {
                                     .scheduler(scheduler)
                                     .serializer(TestSerializer.XSTREAM.getSerializer());
 
-        assertThrows(SophonConfigurationException.class, builderTestSubject::build);
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 
     private EventMessage<Object> buildTestEvent() {

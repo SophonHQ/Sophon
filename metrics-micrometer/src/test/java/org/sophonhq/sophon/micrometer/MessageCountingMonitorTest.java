@@ -20,7 +20,7 @@ package org.sophonhq.sophon.micrometer;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 
 
@@ -60,11 +60,11 @@ class MessageCountingMonitorTest {
         Counter failureCounter = requireNonNull(meterRegistry.find(PROCESSOR_NAME + ".failureCounter").counter());
         Counter ignoredCounter = requireNonNull(meterRegistry.find(PROCESSOR_NAME + ".ignoredCounter").counter());
 
-        assertEquals(3, ingestedCounter.count(), 0);
-        assertEquals(2, processedCounter.count(), 0);
-        assertEquals(1, successCounter.count(), 0);
-        assertEquals(1, failureCounter.count(), 0);
-        assertEquals(1, ignoredCounter.count(), 0);
+        assertThat(ingestedCounter.count()).isEqualTo(3.0);
+        assertThat(processedCounter.count()).isEqualTo(2.0);
+        assertThat(successCounter.count()).isEqualTo(1.0);
+        assertThat(failureCounter.count()).isEqualTo(1.0);
+        assertThat(ignoredCounter.count()).isEqualTo(1.0);
     }
 
     @Test
@@ -91,51 +91,51 @@ class MessageCountingMonitorTest {
         Collection<Counter> failureCounters = meterRegistry.find(PROCESSOR_NAME + ".failureCounter").counters();
         Collection<Counter> ignoredCounters = meterRegistry.find(PROCESSOR_NAME + ".ignoredCounter").counters();
 
-        assertEquals(2, ingestedCounters.size(), 0);
-        assertEquals(2, processedCounters.size(), 0);
-        assertEquals(2, successCounters.size(), 0);
-        assertEquals(2, failureCounters.size(), 0);
-        assertEquals(2, ignoredCounters.size(), 0);
+        assertThat(ingestedCounters).hasSize(2);
+        assertThat(processedCounters).hasSize(2);
+        assertThat(successCounters).hasSize(2);
+        assertThat(failureCounters).hasSize(2);
+        assertThat(ignoredCounters).hasSize(2);
 
 
-        assertTrue(ingestedCounters.stream()
+        assertThat(ingestedCounters.stream()
                                    .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "Integer"))
-                                   .allMatch(counter -> counter.count() == 1));
-        assertTrue(ingestedCounters.stream()
+                                   .allMatch(counter -> counter.count() == 1)).isTrue();
+        assertThat(ingestedCounters.stream()
                                    .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "String"))
-                                   .allMatch(counter -> counter.count() == 2));
+                                   .allMatch(counter -> counter.count() == 2)).isTrue();
 
 
-        assertTrue(processedCounters.stream()
+        assertThat(processedCounters.stream()
                                     .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "Integer"))
-                                    .allMatch(counter -> counter.count() == 1));
-        assertTrue(processedCounters.stream()
+                                    .allMatch(counter -> counter.count() == 1)).isTrue();
+        assertThat(processedCounters.stream()
                                     .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "String"))
-                                    .allMatch(counter -> counter.count() == 1));
+                                    .allMatch(counter -> counter.count() == 1)).isTrue();
 
 
-        assertTrue(successCounters.stream()
+        assertThat(successCounters.stream()
                                   .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "Integer"))
-                                  .allMatch(counter -> counter.count() == 1));
-        assertTrue(successCounters.stream()
+                                  .allMatch(counter -> counter.count() == 1)).isTrue();
+        assertThat(successCounters.stream()
                                   .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "String"))
-                                  .allMatch(counter -> counter.count() == 0));
+                                  .allMatch(counter -> counter.count() == 0)).isTrue();
 
 
-        assertTrue(failureCounters.stream()
+        assertThat(failureCounters.stream()
                                   .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "Integer"))
-                                  .allMatch(counter -> counter.count() == 0));
-        assertTrue(failureCounters.stream()
+                                  .allMatch(counter -> counter.count() == 0)).isTrue();
+        assertThat(failureCounters.stream()
                                   .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "String"))
-                                  .allMatch(counter -> counter.count() == 1));
+                                  .allMatch(counter -> counter.count() == 1)).isTrue();
 
 
-        assertTrue(ignoredCounters.stream()
+        assertThat(ignoredCounters.stream()
                                   .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "Integer"))
-                                  .allMatch(counter -> counter.count() == 0));
-        assertTrue(ignoredCounters.stream()
+                                  .allMatch(counter -> counter.count() == 0)).isTrue();
+        assertThat(ignoredCounters.stream()
                                   .filter(counter -> Objects.equals(counter.getId().getTag("payloadType"), "String"))
-                                  .allMatch(counter -> counter.count() == 1));
+                                  .allMatch(counter -> counter.count() == 1)).isTrue();
     }
 
     @Test
@@ -168,60 +168,60 @@ class MessageCountingMonitorTest {
         Collection<Counter> failureCounters = meterRegistry.find(PROCESSOR_NAME + ".failureCounter").counters();
         Collection<Counter> ignoredCounters = meterRegistry.find(PROCESSOR_NAME + ".ignoredCounter").counters();
 
-        assertEquals(2, ingestedCounters.size(), 0);
-        assertEquals(2, processedCounters.size(), 0);
-        assertEquals(2, successCounters.size(), 0);
-        assertEquals(2, failureCounters.size(), 0);
-        assertEquals(2, ignoredCounters.size(), 0);
+        assertThat(ingestedCounters).hasSize(2);
+        assertThat(processedCounters).hasSize(2);
+        assertThat(successCounters).hasSize(2);
+        assertThat(failureCounters).hasSize(2);
+        assertThat(ignoredCounters).hasSize(2);
 
 
-        assertTrue(ingestedCounters.stream()
+        assertThat(ingestedCounters.stream()
                                    .filter(counter -> Objects
                                            .equals(counter.getId().getTag("myMetaData"), "myMetadataValue1"))
-                                   .allMatch(counter -> counter.count() == 1));
-        assertTrue(ingestedCounters.stream()
+                                   .allMatch(counter -> counter.count() == 1)).isTrue();
+        assertThat(ingestedCounters.stream()
                                    .filter(counter -> Objects
                                            .equals(counter.getId().getTag("myMetaData"), "myMetadataValue2"))
-                                   .allMatch(counter -> counter.count() == 2));
+                                   .allMatch(counter -> counter.count() == 2)).isTrue();
 
 
-        assertTrue(processedCounters.stream()
+        assertThat(processedCounters.stream()
                                     .filter(counter -> Objects
                                             .equals(counter.getId().getTag("myMetaData"), "myMetadataValue1"))
-                                    .allMatch(counter -> counter.count() == 1));
-        assertTrue(processedCounters.stream()
+                                    .allMatch(counter -> counter.count() == 1)).isTrue();
+        assertThat(processedCounters.stream()
                                     .filter(counter -> Objects
                                             .equals(counter.getId().getTag("payloadType"), "myMetadataValue2"))
-                                    .allMatch(counter -> counter.count() == 1));
+                                    .allMatch(counter -> counter.count() == 1)).isTrue();
 
 
-        assertTrue(successCounters.stream()
+        assertThat(successCounters.stream()
                                   .filter(counter -> Objects
                                           .equals(counter.getId().getTag("payloadType"), "myMetadataValue1"))
-                                  .allMatch(counter -> counter.count() == 1));
-        assertTrue(successCounters.stream()
+                                  .allMatch(counter -> counter.count() == 1)).isTrue();
+        assertThat(successCounters.stream()
                                   .filter(counter -> Objects
                                           .equals(counter.getId().getTag("payloadType"), "myMetadataValue2"))
-                                  .allMatch(counter -> counter.count() == 0));
+                                  .allMatch(counter -> counter.count() == 0)).isTrue();
 
 
-        assertTrue(failureCounters.stream()
+        assertThat(failureCounters.stream()
                                   .filter(counter -> Objects
                                           .equals(counter.getId().getTag("payloadType"), "myMetadataValue1"))
-                                  .allMatch(counter -> counter.count() == 0));
-        assertTrue(failureCounters.stream()
+                                  .allMatch(counter -> counter.count() == 0)).isTrue();
+        assertThat(failureCounters.stream()
                                   .filter(counter -> Objects
                                           .equals(counter.getId().getTag("payloadType"), "myMetadataValue2"))
-                                  .allMatch(counter -> counter.count() == 1));
+                                  .allMatch(counter -> counter.count() == 1)).isTrue();
 
 
-        assertTrue(ignoredCounters.stream()
+        assertThat(ignoredCounters.stream()
                                   .filter(counter -> Objects
                                           .equals(counter.getId().getTag("payloadType"), "myMetadataValue1"))
-                                  .allMatch(counter -> counter.count() == 0));
-        assertTrue(ignoredCounters.stream()
+                                  .allMatch(counter -> counter.count() == 0)).isTrue();
+        assertThat(ignoredCounters.stream()
                                   .filter(counter -> Objects
                                           .equals(counter.getId().getTag("payloadType"), "myMetadataValue2"))
-                                  .allMatch(counter -> counter.count() == 1));
+                                  .allMatch(counter -> counter.count() == 1)).isTrue();
     }
 }

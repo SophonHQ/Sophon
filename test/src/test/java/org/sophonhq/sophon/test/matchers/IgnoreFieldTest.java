@@ -17,10 +17,11 @@
 
 package org.sophonhq.sophon.test.matchers;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.test.FixtureExecutionException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author Allard Buijze
@@ -33,19 +34,20 @@ class IgnoreFieldTest {
     @Test
     void acceptOtherFields_ClassStringConstructor() throws Exception {
         IgnoreField testSubject = new IgnoreField(IgnoreFieldTest.class, "ignoredField");
-        assertTrue(testSubject.accept(IgnoreFieldTest.class.getDeclaredField("field")));
-        assertFalse(testSubject.accept(IgnoreFieldTest.class.getDeclaredField("ignoredField")));
+        assertThat(testSubject.accept(IgnoreFieldTest.class.getDeclaredField("field"))).isTrue();
+        assertThat(testSubject.accept(IgnoreFieldTest.class.getDeclaredField("ignoredField"))).isFalse();
     }
 
     @Test
     void acceptOtherFields_FieldConstructor() throws Exception {
         IgnoreField testSubject = new IgnoreField(IgnoreFieldTest.class.getDeclaredField("ignoredField"));
-        assertTrue(testSubject.accept(IgnoreFieldTest.class.getDeclaredField("field")));
-        assertFalse(testSubject.accept(IgnoreFieldTest.class.getDeclaredField("ignoredField")));
+        assertThat(testSubject.accept(IgnoreFieldTest.class.getDeclaredField("field"))).isTrue();
+        assertThat(testSubject.accept(IgnoreFieldTest.class.getDeclaredField("ignoredField"))).isFalse();
     }
 
     @Test
     void rejectNonExistentField() {
-        assertThrows(FixtureExecutionException.class, () -> new IgnoreField(IgnoreFieldTest.class, "nonExistent"));
+        assertThatThrownBy(() -> new IgnoreField(IgnoreFieldTest.class, "nonExistent"))
+                .isInstanceOf(FixtureExecutionException.class);
     }
 }

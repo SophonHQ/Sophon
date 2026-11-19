@@ -18,8 +18,7 @@ package org.sophonhq.sophon.spring.config;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
 import org.sophonhq.sophon.common.SophonConfigurationException;
@@ -37,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 /**
  * Test class validating that the {@link GenericJpaRepository} which {@link SpringAggregateConfigurer} configures for a
@@ -71,11 +70,12 @@ class AggregateIdentifierConverterAutoConfigurationTest {
             String loadedStringIdentifier =
                     commandGateway.sendAndWait(new LoadStringIdentifiedAggregateCommand(stringIdentifier));
 
-            assertEquals(uuidIdentifier, loadedUuidIdentifier);
-            assertEquals(stringIdentifier, loadedStringIdentifier);
-            assertEquals(List.of(new Conversion(TestContext.UuidIdentifiedAggregate.class, uuidIdentifier.toString()),
-                                 new Conversion(TestContext.StringIdentifiedAggregate.class, stringIdentifier)),
-                         converter.conversions);
+            assertThat(loadedUuidIdentifier).isEqualTo(uuidIdentifier);
+            assertThat(loadedStringIdentifier).isEqualTo(stringIdentifier);
+            assertThat(converter.conversions).containsExactly(
+                    new Conversion(TestContext.UuidIdentifiedAggregate.class, uuidIdentifier.toString()),
+                    new Conversion(TestContext.StringIdentifiedAggregate.class, stringIdentifier)
+            );
         });
     }
 
@@ -89,7 +89,7 @@ class AggregateIdentifierConverterAutoConfigurationTest {
             String loadedStringIdentifier =
                     commandGateway.sendAndWait(new LoadStringIdentifiedAggregateCommand(stringIdentifier));
 
-            assertEquals(stringIdentifier, loadedStringIdentifier);
+            assertThat(loadedStringIdentifier).isEqualTo(stringIdentifier);
         });
     }
 
@@ -109,9 +109,9 @@ class AggregateIdentifierConverterAutoConfigurationTest {
                                           new LoadUuidIdentifiedAggregateCommand(uuidIdentifier)
                                   );
 
-                                  assertEquals(uuidIdentifier, loadedUuidIdentifier);
-                                  assertEquals(1, primaryConverter.conversions.size());
-                                  assertTrue(otherConverter.conversions.isEmpty());
+                                  assertThat(loadedUuidIdentifier).isEqualTo(uuidIdentifier);
+                                  assertThat(primaryConverter.conversions).hasSize(1);
+                                  assertThat(otherConverter.conversions).isEmpty();
                               });
     }
 
@@ -123,10 +123,12 @@ class AggregateIdentifierConverterAutoConfigurationTest {
                                         RecordingAggregateIdentifierConverter::new)
                               .run(context -> {
                                   Throwable startupFailure = context.getStartupFailure();
-                                  assertNotNull(startupFailure);
+                                  assertThat(startupFailure).isNotNull();
                                   SophonConfigurationException cause = findCause(startupFailure);
-                                  assertNotNull(cause, "Expected the startup to fail on the ambiguous converter");
-                                  assertTrue(cause.getMessage().contains("AggregateIdentifierConverter"));
+                                  assertThat(cause)
+                                          .as("Expected the startup to fail on the ambiguous converter")
+                                          .isNotNull();
+                                  assertThat(cause.getMessage()).contains("AggregateIdentifierConverter");
                               });
     }
 
@@ -140,10 +142,10 @@ class AggregateIdentifierConverterAutoConfigurationTest {
                                   org.sophonhq.sophon.config.Configuration configuration =
                                           context.getBean(org.sophonhq.sophon.config.Configuration.class);
 
-                                  assertSame(conventionRepository,
-                                             configuration.repository(TestContext.StringIdentifiedAggregate.class));
-                                  assertSame(context.getBean("customRepository"),
-                                             configuration.repository(TestContext.CustomRepositoryAggregate.class));
+                                  assertThat(configuration.repository(TestContext.StringIdentifiedAggregate.class))
+                                          .isSameAs(conventionRepository);
+                                  assertThat(configuration.repository(TestContext.CustomRepositoryAggregate.class))
+                                          .isSameAs(context.getBean("customRepository"));
                               });
     }
 

@@ -17,28 +17,28 @@
 
 package org.sophonhq.sophon.tracing;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.deadline.GenericDeadlineMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.responsetypes.ResponseTypes;
 import org.sophonhq.sophon.queryhandling.GenericQueryMessage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SpanUtilsTest {
 
     @Test
     void determineMessageNameForEvent() {
         GenericEventMessage<?> message = new GenericEventMessage<>("MyPayload");
-        assertEquals("String", SpanUtils.determineMessageName(message));
+        assertThat(SpanUtils.determineMessageName(message)).isEqualTo("String");
     }
 
     @Test
     void determineMessageNameForQueryWithoutName() {
         GenericQueryMessage<String, String> message = new GenericQueryMessage<>("MyPayload",
                                                                                 ResponseTypes.instanceOf(String.class));
-        assertEquals("String", SpanUtils.determineMessageName(message));
+        assertThat(SpanUtils.determineMessageName(message)).isEqualTo("String");
     }
 
     @Test
@@ -46,7 +46,7 @@ class SpanUtilsTest {
         GenericQueryMessage<String, String> message = new GenericQueryMessage<>("MyPayload",
                                                                                 "SuperString",
                                                                                 ResponseTypes.instanceOf(String.class));
-        assertEquals("SuperString", SpanUtils.determineMessageName(message));
+        assertThat(SpanUtils.determineMessageName(message)).isEqualTo("SuperString");
     }
 
     @Test
@@ -54,31 +54,31 @@ class SpanUtilsTest {
         GenericQueryMessage<String, String> message = new GenericQueryMessage<>("MyPayload",
                                                                                 "java.lang.String",
                                                                                 ResponseTypes.instanceOf(String.class));
-        assertEquals("String", SpanUtils.determineMessageName(message));
+        assertThat(SpanUtils.determineMessageName(message)).isEqualTo("String");
     }
 
     @Test
     void determineMessageNameForCommandWithoutName() {
         GenericCommandMessage<String> message = new GenericCommandMessage<>("MyPayload");
-        assertEquals("String", SpanUtils.determineMessageName(message));
+        assertThat(SpanUtils.determineMessageName(message)).isEqualTo("String");
     }
 
     @Test
     void determineMessageNameForCommandWithName() {
         GenericCommandMessage<String> message = new GenericCommandMessage<>(new GenericCommandMessage<>("MyPayload"),
                                                                             "SuperCommand");
-        assertEquals("SuperCommand", SpanUtils.determineMessageName(message));
+        assertThat(SpanUtils.determineMessageName(message)).isEqualTo("SuperCommand");
     }
 
     @Test
     void determineMessageNameForDeadlineWithoutPayload() {
         GenericDeadlineMessage<String> message = new GenericDeadlineMessage<>("myDeadlineName");
-        assertEquals("myDeadlineName", SpanUtils.determineMessageName(message));
+        assertThat(SpanUtils.determineMessageName(message)).isEqualTo("myDeadlineName");
     }
 
     @Test
     void determineMessageNameForDeadlineWithPayload() {
         GenericDeadlineMessage<String> message = new GenericDeadlineMessage<>("myDeadlineName", "MyPayload");
-        assertEquals("myDeadlineName,String", SpanUtils.determineMessageName(message));
+        assertThat(SpanUtils.determineMessageName(message)).isEqualTo("myDeadlineName,String");
     }
 }

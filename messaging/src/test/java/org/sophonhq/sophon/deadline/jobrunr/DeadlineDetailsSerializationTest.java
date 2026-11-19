@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.deadline.jobrunr;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.deadline.DeadlineMessage;
 import org.sophonhq.sophon.deadline.GenericDeadlineMessage;
 import org.sophonhq.sophon.deadline.TestScopeDescriptor;
@@ -31,7 +32,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DeadlineDetailsSerializationTest {
 
@@ -75,12 +76,12 @@ class DeadlineDetailsSerializationTest {
         );
         DeadlineDetails result = serializer.deserialize(serializedDeadlineMetaData);
 
-        assertEquals(TEST_DEADLINE_NAME, result.getDeadlineName());
-        assertEquals(descriptor, result.getDeserializedScopeDescriptor(serializer));
+        assertThat(result.getDeadlineName()).isEqualTo(TEST_DEADLINE_NAME);
+        assertThat(result.getDeserializedScopeDescriptor(serializer)).isEqualTo(descriptor);
         DeadlineMessage resultMessage = result.asDeadLineMessage(serializer);
 
-        assertNotNull(resultMessage);
-        assertEquals(TEST_DEADLINE_PAYLOAD, resultMessage.getPayload());
-        assertEquals(metaData, resultMessage.getMetaData());
+        assertThat(resultMessage).isNotNull();
+        assertThat(resultMessage.getPayload()).isEqualTo(TEST_DEADLINE_PAYLOAD);
+        assertThat(resultMessage.getMetaData()).isEqualTo(metaData);
     }
 }

@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DbSchedulerHumanReadableEventDataTest {
 
@@ -44,7 +44,7 @@ class DbSchedulerHumanReadableEventDataTest {
         byte[] serialized = serializer.serialize(expected);
         DbSchedulerHumanReadableEventData result = serializer.deserialize(DbSchedulerHumanReadableEventData.class,
                                                                           serialized);
-        assertEquals(expected, result);
+        assertThat(result).isEqualTo(expected);
     }
 
     public static Collection<Serializer> serializers() {

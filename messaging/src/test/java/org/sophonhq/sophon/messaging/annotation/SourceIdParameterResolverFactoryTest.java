@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.messaging.annotation;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.GenericCommandMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -25,7 +26,7 @@ import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SourceIdParameterResolverFactoryTest {
 
@@ -65,8 +66,8 @@ class SourceIdParameterResolverFactoryTest {
                 testSubject.createInstance(sourceIdMethod, sourceIdMethod.getParameters(), 0);
         final GenericDomainEventMessage<Object> eventMessage =
                 new GenericDomainEventMessage<>("test", UUID.randomUUID().toString(), 0L, null);
-        assertTrue(resolver.matches(eventMessage));
-        assertEquals(eventMessage.getAggregateIdentifier(), resolver.resolveParameterValue(eventMessage));
+        assertThat(resolver.matches(eventMessage)).isTrue();
+        assertThat(resolver.resolveParameterValue(eventMessage)).isEqualTo(eventMessage.getAggregateIdentifier());
     }
 
     @Test
@@ -74,20 +75,20 @@ class SourceIdParameterResolverFactoryTest {
         ParameterResolver<String> resolver =
                 testSubject.createInstance(sourceIdMethod, sourceIdMethod.getParameters(), 0);
         CommandMessage<Object> commandMessage = GenericCommandMessage.asCommandMessage("test");
-        assertFalse(resolver.matches(commandMessage));
+        assertThat(resolver.matches(commandMessage)).isFalse();
     }
 
     @Test
     void ignoredWhenNotAnnotated() {
         ParameterResolver<String> resolver =
                 testSubject.createInstance(nonAnnotatedMethod, nonAnnotatedMethod.getParameters(), 0);
-        assertNull(resolver);
+        assertThat(resolver).isNull();
     }
 
     @Test
     void ignoredWhenWrongType() {
         ParameterResolver<String> resolver =
                 testSubject.createInstance(integerMethod, integerMethod.getParameters(), 0);
-        assertNull(resolver);
+        assertThat(resolver).isNull();
     }
 }

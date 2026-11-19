@@ -17,7 +17,10 @@
 
 package org.sophonhq.sophon.eventsourcing.eventstore;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.sophonhq.sophon.common.SophonThreadFactory;
@@ -51,7 +54,8 @@ import java.util.stream.Stream;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.createEvent;
 import static org.sophonhq.sophon.eventsourcing.utils.EventStoreTestUtils.createEvents;
@@ -134,12 +138,13 @@ public abstract class EmbeddedEventStoreTest {
         testSubject.publish(expected);
         //noinspection resource
         TrackingEventStream stream = testSubject.openStream(null);
-        assertTrue(stream.hasNextAvailable());
+        assertThat(stream.hasNextAvailable()).isTrue();
         TrackedEventMessage<?> actual = stream.nextAvailable();
-        assertEquals(expected.getIdentifier(), actual.getIdentifier());
-        assertEquals(expected.getPayload(), actual.getPayload());
-        assertTrue(actual instanceof DomainEventMessage<?>);
-        assertEquals(expected.getAggregateIdentifier(), ((DomainEventMessage<?>) actual).getAggregateIdentifier());
+        assertThat(actual.getIdentifier()).isEqualTo(expected.getIdentifier());
+        assertThat(actual.getPayload()).isEqualTo(expected.getPayload());
+        assertThat(actual).isInstanceOf(DomainEventMessage.class);
+        assertThat(((DomainEventMessage<?>) actual).getAggregateIdentifier())
+                .isEqualTo(expected.getAggregateIdentifier());
     }
 
     @Test
@@ -147,11 +152,11 @@ public abstract class EmbeddedEventStoreTest {
     void eventPublishedAfterOpeningStreamIsPassedToReaderImmediately() throws Exception {
         //noinspection resource
         TrackingEventStream stream = testSubject.openStream(null);
-        assertFalse(stream.hasNextAvailable());
+        assertThat(stream.hasNextAvailable()).isFalse();
         DomainEventMessage<?> expected = createEvent();
         Thread t = new Thread(() -> {
             try {
-                assertEquals(expected.getIdentifier(), stream.nextAvailable().getIdentifier());
+                assertThat(stream.nextAvailable().getIdentifier()).isEqualTo(expected.getIdentifier());
             } catch (InterruptedException e) {
                 fail();
             }
@@ -169,10 +174,10 @@ public abstract class EmbeddedEventStoreTest {
         TrackingEventStream stream = testSubject.openStream(null);
         Thread t = new Thread(() -> stream.asStream().findFirst().ifPresent(event -> lock.countDown()));
         t.start();
-        assertFalse(lock.await(100, MILLISECONDS));
+        assertThat(lock.await(100, MILLISECONDS)).isFalse();
         testSubject.publish(createEvent());
         t.join();
-        assertEquals(0, lock.getCount());
+        assertThat(lock.getCount()).isZero();
     }
 
     @Test
@@ -188,13 +193,13 @@ public abstract class EmbeddedEventStoreTest {
                                           .forEach(event -> lock.countDown()));
         t.start();
 
-        assertFalse(lock.await(100, MILLISECONDS));
-        assertEquals(1, lock.getCount());
+        assertThat(lock.await(100, MILLISECONDS)).isFalse();
+        assertThat(lock.getCount()).isOne();
         testSubject.publish(createEvent("unique-aggregate-id", 0));
 
         t.join();
-        assertFalse(t.isAlive());
-        assertEquals(0, lock.getCount());
+        assertThat(t.isAlive()).isFalse();
+        assertThat(lock.getCount()).isZero();
     }
 
     @Test
@@ -207,8 +212,8 @@ public abstract class EmbeddedEventStoreTest {
         TrackingToken firstToken = first.trackingToken();
         //noinspection resource
         TrackedEventMessage<?> second = testSubject.openStream(firstToken).nextAvailable();
-        assertEquals(events.get(0).getIdentifier(), first.getIdentifier());
-        assertEquals(events.get(1).getIdentifier(), second.getIdentifier());
+        assertThat(first.getIdentifier()).isEqualTo(events.get(0).getIdentifier());
+        assertThat(second.getIdentifier()).isEqualTo(events.get(1).getIdentifier());
     }
 
     @Test
@@ -227,15 +232,15 @@ public abstract class EmbeddedEventStoreTest {
                                                }));
         t.start();
 
-        assertFalse(lock.await(100, MILLISECONDS));
+        assertThat(lock.await(100, MILLISECONDS)).isFalse();
         testSubject.publish(createEvents(2));
         t.join();
-        assertFalse(t.isAlive());
+        assertThat(t.isAlive()).isFalse();
 
         //noinspection resource
         TrackedEventMessage<?> second = testSubject.openStream(events.get(0).trackingToken())
                                                    .nextAvailable();
-        assertSame(events.get(1), second);
+        assertThat(second).isSameAs(events.get(1));
     }
 
     @Test
@@ -251,12 +256,12 @@ public abstract class EmbeddedEventStoreTest {
                                           .ifPresent(event -> lock.countDown()));
         t.start();
 
-        assertFalse(lock.await(100, MILLISECONDS));
+        assertThat(lock.await(100, MILLISECONDS)).isFalse();
         storageEngine.appendEvents(createEvent());
 
         t.join();
-        assertFalse(t.isAlive());
-        assertTrue(lock.await(100, MILLISECONDS));
+        assertThat(t.isAlive()).isFalse();
+        assertThat(lock.await(100, MILLISECONDS)).isTrue();
     }
 
     @Test
@@ -265,7 +270,7 @@ public abstract class EmbeddedEventStoreTest {
         newTestSubject(CACHED_EVENTS, FETCH_DELAY, 20, OPTIMIZE_EVENT_CONSUMPTION);
         //noinspection resource
         TrackingEventStream stream = testSubject.openStream(null);
-        assertFalse(stream.hasNextAvailable()); //now we should be tailing
+        assertThat(stream.hasNextAvailable()).isFalse(); //now we should be tailing
         testSubject.publish(createEvents(CACHED_EVENTS)); //triggers event producer to open a stream
         await().pollDelay(Duration.ofMillis(50))
                .atMost(Duration.ofMillis(500))
@@ -276,7 +281,7 @@ public abstract class EmbeddedEventStoreTest {
         testSubject.publish(createEvent(CACHED_EVENTS), createEvent(CACHED_EVENTS + 1));
         Thread.sleep(100); //allow the cleaner thread to evict the consumer
         reset(storageEngine);
-        assertTrue(stream.hasNextAvailable());
+        assertThat(stream.hasNextAvailable()).isTrue();
         verify(storageEngine).readEvents(firstEvent.trackingToken(), false);
     }
 
@@ -285,8 +290,8 @@ public abstract class EmbeddedEventStoreTest {
         String aggregateId = UUID.randomUUID().toString();
         testSubject.publish(createEvents(() -> aggregateId, 110));
         List<DomainEventMessage<?>> eventMessages = testSubject.readEvents(aggregateId).asStream().collect(toList());
-        assertEquals(110, eventMessages.size());
-        assertEquals(109, eventMessages.get(eventMessages.size() - 1).getSequenceNumber());
+        assertThat(eventMessages).hasSize(110);
+        assertThat(eventMessages.get(eventMessages.size() - 1).getSequenceNumber()).isEqualTo(109);
     }
 
     @Test
@@ -295,9 +300,9 @@ public abstract class EmbeddedEventStoreTest {
         testSubject.publish(createEvents(() -> aggregateId, 110));
         transactionManager.executeInTransaction(() -> storageEngine.storeSnapshot(createEvent(aggregateId, 30)));
         List<DomainEventMessage<?>> eventMessages = testSubject.readEvents(aggregateId).asStream().collect(toList());
-        assertEquals(110 - 30, eventMessages.size());
-        assertEquals(30, eventMessages.get(0).getSequenceNumber());
-        assertEquals(109, eventMessages.get(eventMessages.size() - 1).getSequenceNumber());
+        assertThat(eventMessages).hasSize(110 - 30);
+        assertThat(eventMessages.get(0).getSequenceNumber()).isEqualTo(30);
+        assertThat(eventMessages.get(eventMessages.size() - 1).getSequenceNumber()).isEqualTo(109);
     }
 
     /* Reproduces issue reported in https://github.com/AxonFramework/AxonFramework/issues/485 */
@@ -317,12 +322,12 @@ public abstract class EmbeddedEventStoreTest {
                                                                               createEvent()));
         //noinspection resource
         TrackingEventStream stream = testSubject.openStream(null);
-        assertFalse(stream.hasNextAvailable());
+        assertThat(stream.hasNextAvailable()).isFalse();
         testSubject.publish(createEvent());
         // give some time consumer to consume the event
         Thread.sleep(200);
         // if the stream correctly updates the token internally, it should not find events anymore
-        assertFalse(stream.hasNextAvailable());
+        assertThat(stream.hasNextAvailable()).isFalse();
     }
 
     @Test
@@ -332,9 +337,9 @@ public abstract class EmbeddedEventStoreTest {
         transactionManager.executeInTransaction(() -> storageEngine.storeSnapshot(createEvent(aggregateId, 30)));
         when(storageEngine.readSnapshot(aggregateId)).thenThrow(new MockException());
         List<DomainEventMessage<?>> eventMessages = testSubject.readEvents(aggregateId).asStream().collect(toList());
-        assertEquals(110, eventMessages.size());
-        assertEquals(0, eventMessages.get(0).getSequenceNumber());
-        assertEquals(109, eventMessages.get(eventMessages.size() - 1).getSequenceNumber());
+        assertThat(eventMessages).hasSize(110);
+        assertThat(eventMessages.get(0).getSequenceNumber()).isZero();
+        assertThat(eventMessages.get(eventMessages.size() - 1).getSequenceNumber()).isEqualTo(109);
     }
 
     @Test
@@ -344,10 +349,10 @@ public abstract class EmbeddedEventStoreTest {
         testSubject.publish(events.subList(0, 2));
         DefaultUnitOfWork.startAndGet(null)
                          .execute(() -> {
-                             assertEquals(2, testSubject.readEvents(aggregateId).asStream().count());
+                             assertThat(testSubject.readEvents(aggregateId).asStream().count()).isEqualTo(2);
 
                              testSubject.publish(events.subList(2, events.size()));
-                             assertEquals(10, testSubject.readEvents(aggregateId).asStream().count());
+                             assertThat(testSubject.readEvents(aggregateId).asStream().count()).isEqualTo(10);
                          });
     }
 
@@ -358,10 +363,10 @@ public abstract class EmbeddedEventStoreTest {
         testSubject.publish(events.subList(0, 2));
         DefaultUnitOfWork.startAndGet(null)
                          .execute(() -> {
-                             assertEquals(2, testSubject.readEvents(aggregateId).asStream().count());
+                             assertThat(testSubject.readEvents(aggregateId).asStream().count()).isEqualTo(2);
 
                              testSubject.publish(events.subList(2, events.size()));
-                             assertEquals(8, testSubject.readEvents(aggregateId, 2).asStream().count());
+                             assertThat(testSubject.readEvents(aggregateId, 2).asStream().count()).isEqualTo(8);
                          });
     }
 
@@ -375,14 +380,14 @@ public abstract class EmbeddedEventStoreTest {
 
         CurrentUnitOfWork.clear(unitOfWork);
         // working outside the context of the UoW now
-        assertEquals(2, testSubject.readEvents(aggregateId).asStream().count());
+        assertThat(testSubject.readEvents(aggregateId).asStream().count()).isEqualTo(2);
 
         CurrentUnitOfWork.set(unitOfWork);
         // Back in the context
-        assertEquals(10, testSubject.readEvents(aggregateId).asStream().count());
+        assertThat(testSubject.readEvents(aggregateId).asStream().count()).isEqualTo(10);
         unitOfWork.rollback();
 
-        assertEquals(2, testSubject.readEvents(aggregateId).asStream().count());
+        assertThat(testSubject.readEvents(aggregateId).asStream().count()).isEqualTo(2);
     }
 
     @Test
@@ -413,7 +418,7 @@ public abstract class EmbeddedEventStoreTest {
         testSubject.publish(events.subList(4, events.size()));
 
         Consumer<UnitOfWork<Message<?>>> assertCorrectEventCount =
-                uow -> assertEquals(10, testSubject.readEvents(aggregateId).asStream().count());
+                uow -> assertThat(testSubject.readEvents(aggregateId).asStream().count()).isEqualTo(10);
 
         innerUoW.onPrepareCommit(assertCorrectEventCount);
         innerUoW.afterCommit(assertCorrectEventCount);
@@ -438,12 +443,12 @@ public abstract class EmbeddedEventStoreTest {
                                           .ifPresent(event -> lock.countDown()));
         t.start();
 
-        assertFalse(lock.await(100, MILLISECONDS));
+        assertThat(lock.await(100, MILLISECONDS)).isFalse();
         testSubject.publish(createEvent());
 
         t.join();
-        assertFalse(t.isAlive());
-        assertEquals(0, lock.getCount());
+        assertThat(t.isAlive()).isFalse();
+        assertThat(lock.getCount()).isZero();
 
         verify(threadFactory, atLeastOnce()).newThread(any(Runnable.class));
     }
@@ -453,18 +458,18 @@ public abstract class EmbeddedEventStoreTest {
         //noinspection resource
         TrackingEventStream eventStream = testSubject.openStream(null);
 
-        assertFalse(eventStream.hasNextAvailable()); // There are no events published yet, so stream will tail
+        assertThat(eventStream.hasNextAvailable()).isFalse(); // There are no events published yet, so stream will tail
         testSubject.publish(createEvents(5));// Publish some events which should be returned to the stream by a producer
 
         Thread.sleep(100); // Give the Event Producer thread time to fill the cache
-        assertTrue(eventStream.hasNextAvailable()); // Stream should contain events again, from the producer
+        assertThat(eventStream.hasNextAvailable()).isTrue(); // Stream should contain events again, from the producer
 
         // Consume events until the end
         while (eventStream.hasNextAvailable()) {
             eventStream.nextAvailable();
         }
 
-        assertFalse(eventStream.hasNextAvailable()); // Should have reached the end, hence returned false
+        assertThat(eventStream.hasNextAvailable()).isFalse(); // Should have reached the end, hence returned false
 
         verify(threadFactory, atLeastOnce()).newThread(any(Runnable.class)); // Verify a producer thread was created
     }
@@ -497,16 +502,16 @@ public abstract class EmbeddedEventStoreTest {
         //noinspection resource
         TrackingEventStream eventStream = testSubject.openStream(null);
 
-        assertFalse(eventStream.hasNextAvailable()); // There are no events published yet, so should be false
+        assertThat(eventStream.hasNextAvailable()).isFalse(); // There are no events published yet, so should be false
 
         testSubject.publish(createEvents(5)); // Publish some events which should be returned to the stream
 
-        assertTrue(eventStream.hasNextAvailable()); // There are new events, so should be true
+        assertThat(eventStream.hasNextAvailable()).isTrue(); // There are new events, so should be true
         // Consume until the end
         while (eventStream.hasNextAvailable()) {
             eventStream.nextAvailable();
         }
-        assertFalse(eventStream.hasNextAvailable()); // Should have no events anymore
+        assertThat(eventStream.hasNextAvailable()).isFalse(); // Should have no events anymore
     }
 
     private static class SynchronizedBooleanAnswer implements Answer<Boolean> {

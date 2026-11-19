@@ -17,9 +17,9 @@
 
 package org.sophonhq.sophon.test.matchers;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.test.matchers.Matchers.nothing;
 
 /**
@@ -29,8 +29,8 @@ class NullOrVoidMatcherTest {
 
     @Test
     void matcherMatchesVoidAndNull() {
-        assertTrue(nothing().matches(Void.class));
-        assertTrue(nothing().matches(null));
-        assertFalse(nothing().matches(new Object()));
+        assertThat(nothing().matches(Void.class)).isTrue();
+        assertThat(nothing().matches(null)).isTrue();
+        assertThat(nothing().matches(new Object())).isFalse();
     }
 }

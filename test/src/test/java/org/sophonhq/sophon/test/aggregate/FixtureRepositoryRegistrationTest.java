@@ -35,7 +35,7 @@ import org.sophonhq.sophon.modelling.command.RepositoryProvider;
 import org.sophonhq.sophon.modelling.saga.SagaMethodMessageHandlerDefinition;
 import org.sophonhq.sophon.test.FixtureExecutionException;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
@@ -90,26 +90,24 @@ class FixtureRepositoryRegistrationTest {
                                     .build();
         testSubject.registerRepository(testRepository);
 
-        assertThrows(FixtureExecutionException.class,
-                     () -> testSubject.registerRepositoryProvider(new RepositoryProvider() {
-                         @Override
-                         public <T> Repository<T> repositoryFor(@NonNull Class<T> aggregateType) {
-                             return null;
-                         }
-                     }));
+        assertThatThrownBy(() -> testSubject.registerRepositoryProvider(new RepositoryProvider() {
+            @Override
+            public <T> Repository<T> repositoryFor(@NonNull Class<T> aggregateType) {
+                return null;
+            }
+        })).isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
     void registeringTheRepositoryProviderThrowsFixtureExecutionExceptionAfterRetrievingTheRepository() {
         testSubject.getRepository();
 
-        assertThrows(FixtureExecutionException.class,
-                     () -> testSubject.registerRepositoryProvider(new RepositoryProvider() {
-                         @Override
-                         public <T> Repository<T> repositoryFor(@NonNull Class<T> aggregateType) {
-                             return null;
-                         }
-                     }));
+        assertThatThrownBy(() -> testSubject.registerRepositoryProvider(new RepositoryProvider() {
+            @Override
+            public <T> Repository<T> repositoryFor(@NonNull Class<T> aggregateType) {
+                return null;
+            }
+        })).isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
@@ -121,16 +119,18 @@ class FixtureRepositoryRegistrationTest {
                                     .build();
         testSubject.registerRepository(testRepository);
 
-        assertThrows(FixtureExecutionException.class,
-                     () -> testSubject.registerParameterResolverFactory(new TimestampParameterResolverFactory()));
+        assertThatThrownBy(
+                () -> testSubject.registerParameterResolverFactory(new TimestampParameterResolverFactory())
+        ).isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
     void registeringParameterResolversThrowsFixtureExecutionExceptionAfterRetrievingTheRepository() {
         testSubject.getRepository();
 
-        assertThrows(FixtureExecutionException.class,
-                     () -> testSubject.registerParameterResolverFactory(new TimestampParameterResolverFactory()));
+        assertThatThrownBy(
+                () -> testSubject.registerParameterResolverFactory(new TimestampParameterResolverFactory())
+        ).isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
@@ -142,16 +142,18 @@ class FixtureRepositoryRegistrationTest {
                                     .build();
         testSubject.registerRepository(testRepository);
 
-        assertThrows(FixtureExecutionException.class,
-                     () -> testSubject.registerHandlerDefinition(new AnnotatedMessageHandlingMemberDefinition()));
+        assertThatThrownBy(
+                () -> testSubject.registerHandlerDefinition(new AnnotatedMessageHandlingMemberDefinition())
+        ).isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
     void registeringHandlerDefinitionThrowsFixtureExecutionExceptionAfterRetrievingTheRepository() {
         testSubject.getRepository();
 
-        assertThrows(FixtureExecutionException.class,
-                     () -> testSubject.registerHandlerDefinition(new AnnotatedMessageHandlingMemberDefinition()));
+        assertThatThrownBy(
+                () -> testSubject.registerHandlerDefinition(new AnnotatedMessageHandlingMemberDefinition())
+        ).isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
@@ -163,16 +165,18 @@ class FixtureRepositoryRegistrationTest {
                                     .build();
         testSubject.registerRepository(testRepository);
 
-        assertThrows(FixtureExecutionException.class,
-                     () -> testSubject.registerHandlerEnhancerDefinition(new SagaMethodMessageHandlerDefinition()));
+        assertThatThrownBy(
+                () -> testSubject.registerHandlerEnhancerDefinition(new SagaMethodMessageHandlerDefinition())
+        ).isInstanceOf(FixtureExecutionException.class);
     }
 
     @Test
     void registeringHandlerEnhancersThrowsFixtureExecutionExceptionAfterRetrievingTheRepository() {
         testSubject.getRepository();
 
-        assertThrows(FixtureExecutionException.class,
-                     () -> testSubject.registerHandlerEnhancerDefinition(new SagaMethodMessageHandlerDefinition()));
+        assertThatThrownBy(
+                () -> testSubject.registerHandlerEnhancerDefinition(new SagaMethodMessageHandlerDefinition())
+        ).isInstanceOf(FixtureExecutionException.class);
     }
 
     private static class MyAggregate {

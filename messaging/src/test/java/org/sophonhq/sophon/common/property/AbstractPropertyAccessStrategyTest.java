@@ -17,11 +17,10 @@
 
 package org.sophonhq.sophon.common.property;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 public abstract class AbstractPropertyAccessStrategyTest<T> {
@@ -29,32 +28,35 @@ public abstract class AbstractPropertyAccessStrategyTest<T> {
     @Test
     void getValue() {
         final Property<T> actualProperty = getProperty(regularPropertyName());
-        assertNotNull(actualProperty);
-        assertNotNull(actualProperty.<String>getValue(propertyHoldingInstance()));
+        assertThat(actualProperty).isNotNull();
+        assertThat(actualProperty.<String>getValue(propertyHoldingInstance())).isNotNull();
     }
 
     @Test
     void getValue_BogusProperty() {
-        assertNull(getProperty(unknownPropertyName()));
+        assertThat(getProperty(unknownPropertyName())).isNull();
     }
 
     @Test
     void getValue_ExceptionOnAccess() {
         Property<T> property = getProperty(exceptionPropertyName());
 
-        assertThrows(PropertyAccessException.class, () -> property.getValue(propertyHoldingInstance()));
+        assertThatThrownBy(() -> property.getValue(propertyHoldingInstance()))
+                .isInstanceOf(PropertyAccessException.class);
     }
 
     @Test
     void voidReturnTypeRejected() {
-        Property property = getProperty(voidPropertyName());
-        assertNull(property, "void methods should not be accepted as property");
+        Property<T> property = getProperty(voidPropertyName());
+        assertThat(property).as("void methods should not be accepted as property").isNull();
     }
 
     protected abstract String voidPropertyName();
 
     protected abstract String exceptionPropertyName();
+
     protected abstract String regularPropertyName();
+
     protected abstract String unknownPropertyName();
 
     protected abstract T propertyHoldingInstance();

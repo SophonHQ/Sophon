@@ -24,7 +24,7 @@ import org.sophonhq.sophon.messaging.annotation.ClasspathParameterResolverFactor
 import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.sophonhq.sophon.messaging.annotation.ParameterResolverFactory;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class TimeoutWrappedMessageHandlingMemberTest {
 
@@ -49,9 +49,11 @@ class TimeoutWrappedMessageHandlingMemberTest {
                 original, 300, 200, 50
         );
 
-        assertThrows(SophonTimeoutException.class,
-                     () -> wrappedHandler.handle(GenericEventMessage.asEventMessage("my-message"),
-                                                 new TestMessageHandler()));
+        assertThatThrownBy(() -> wrappedHandler.handle(
+                GenericEventMessage.asEventMessage("my-message"),
+                new TestMessageHandler())
+        )
+                .isInstanceOf(SophonTimeoutException.class);
     }
 
     public static class TestMessageHandler {

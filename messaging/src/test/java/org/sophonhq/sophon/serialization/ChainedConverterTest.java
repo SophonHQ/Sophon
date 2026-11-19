@@ -30,7 +30,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -80,15 +82,15 @@ class ChainedConverterTest {
         target = InputStream.class;
         source = 1L;
         testSubject = ChainedConverter.calculateChain(Number.class, target, candidates);
-        assertNotNull(testSubject);
+        assertThat(testSubject).isNotNull();
         verify(numberToStringConverter, never()).convert(any());
         verify(stringToReaderConverter, never()).convert(any());
         verify(bytesToInputStreamConverter, never()).convert(any());
         verify(stringToByteConverter, never()).convert(any());
 
         InputStream actual = convertSource();
-        assertNotNull(actual);
-        assertArrayEquals("hello".getBytes(), IOUtils.toByteArray(actual));
+        assertThat(actual).isNotNull();
+        assertThat(IOUtils.toByteArray(actual)).containsExactly("hello".getBytes());
 
         verify(numberToStringConverter).convert(any());
         verify(stringToByteConverter).convert(any());
@@ -105,14 +107,14 @@ class ChainedConverterTest {
         target = String.class;
         source = 1L;
         testSubject = ChainedConverter.calculateChain(Number.class, target, candidates);
-        assertNotNull(testSubject);
+        assertThat(testSubject).isNotNull();
         verify(numberToStringConverter, never()).convert(any());
         verify(stringToReaderConverter, never()).convert(any());
         verify(bytesToInputStreamConverter, never()).convert(any());
         verify(stringToByteConverter, never()).convert(any());
 
         String actual = convertSource();
-        assertEquals("hello", actual);
+        assertThat(actual).isEqualTo("hello");
 
         verify(numberToStringConverter).convert(any());
         verify(stringToReaderConverter, never()).convert(any());
@@ -124,7 +126,8 @@ class ChainedConverterTest {
     void inexistentRoute() {
         target = InputStream.class;
         source = new StringReader("hello");
-        assertThrows(CannotConvertBetweenTypesException.class, () -> ChainedConverter.calculateChain(Reader.class, target, candidates));
+        assertThatThrownBy(() -> ChainedConverter.calculateChain(Reader.class, target, candidates))
+                .isInstanceOf(CannotConvertBetweenTypesException.class);
     }
 
     // Detects an issue where the ChainedConverter hangs as it evaluates a recursive route
@@ -132,15 +135,17 @@ class ChainedConverterTest {
     void anotherInexistentRoute() {
         target = Number.class;
         source = "hello";
-        assertFalse(ChainedConverter.canConvert(String.class, target, candidates));
-        assertThrows(CannotConvertBetweenTypesException.class, () -> ChainedConverter.calculateChain(String.class, target, candidates));
+        assertThat(ChainedConverter.canConvert(String.class, target, candidates)).isFalse();
+        assertThatThrownBy(() -> ChainedConverter.calculateChain(String.class, target, candidates))
+                .isInstanceOf(CannotConvertBetweenTypesException.class);
     }
 
     @Test
     void aThirdInexistentRoute() {
         target = Documented.class;
         source = "hello".getBytes();
-        assertThrows(CannotConvertBetweenTypesException.class, () -> ChainedConverter.calculateChain(byte[].class, target, candidates));
+        assertThatThrownBy(() -> ChainedConverter.calculateChain(byte[].class, target, candidates))
+                .isInstanceOf(CannotConvertBetweenTypesException.class);
     }
 
     @Test
@@ -150,7 +155,7 @@ class ChainedConverterTest {
                                                                                    bytesToInputStreamConverter));
             fail("Expected IllegalArgumentException");
         } catch (IllegalArgumentException e) {
-            assertTrue(e.getMessage().contains("continuous chain"), "Wrong message: " + e.getMessage());
+            assertThat(e.getMessage()).as("Wrong message: " + e.getMessage()).contains("continuous chain");
         }
     }
 }

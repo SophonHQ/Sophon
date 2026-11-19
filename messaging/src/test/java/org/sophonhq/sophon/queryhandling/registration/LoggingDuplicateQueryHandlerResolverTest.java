@@ -17,13 +17,13 @@
 
 package org.sophonhq.sophon.queryhandling.registration;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.queryhandling.QuerySubscription;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class LoggingDuplicateQueryHandlerResolverTest {
@@ -48,9 +48,9 @@ class LoggingDuplicateQueryHandlerResolverTest {
         List<QuerySubscription<?>> resolvedList =
                 resolver.resolve("com.example.MyQuery", MyQuery.class, existingHandlers, addedHandler);
 
-        assertEquals(2, resolvedList.size());
-        assertTrue(resolvedList.contains(existingHandler));
-        assertTrue(resolvedList.contains(addedHandler));
+        assertThat(resolvedList).hasSize(2);
+        assertThat(resolvedList).contains(existingHandler);
+        assertThat(resolvedList).contains(addedHandler);
     }
 
     private QuerySubscription<?> mockSubscription() {

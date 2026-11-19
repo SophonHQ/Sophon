@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.commandhandling.CommandBus;
 import org.sophonhq.sophon.commandhandling.SimpleCommandBus;
 import org.sophonhq.sophon.messaging.GenericMessage;
@@ -26,7 +27,7 @@ import org.sophonhq.sophon.messaging.annotation.ParameterResolver;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class ConfigurationParameterResolverFactoryTest {
@@ -50,7 +51,7 @@ class ConfigurationParameterResolverFactoryTest {
 
     @Test
     void returnsNullOnUnavailableParameter() {
-        assertNull(testSubject.createInstance(method, parameters, 0));
+        assertThat(testSubject.createInstance(method, parameters, 0)).isNull();
 
         verify(configuration).getComponent(String.class);
     }
@@ -58,8 +59,8 @@ class ConfigurationParameterResolverFactoryTest {
     @Test
     void configurationContainsRequestedParameter() {
         ParameterResolver<?> actual = testSubject.createInstance(method, parameters, 1);
-        assertNotNull(actual);
-        assertSame(commandBus, actual.resolveParameterValue(new GenericMessage<>("test")));
+        assertThat(actual).isNotNull();
+        assertThat(actual.resolveParameterValue(new GenericMessage<>("test"))).isSameAs(commandBus);
 
         verify(configuration).getComponent(CommandBus.class);
     }

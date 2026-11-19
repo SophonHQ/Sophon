@@ -20,7 +20,8 @@ package org.sophonhq.sophon.test.saga;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.junit.jupiter.*;
@@ -50,8 +51,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.test.matchers.Matchers.*;
 
@@ -105,8 +108,8 @@ class FixtureExecutionResultImplTest {
                 new GenericEventMessage<>(new TriggerSagaStartEvent(identifier));
         eventBus.publish(firstEventMessage);
         Exception testException = new IllegalArgumentException("First");
-        assertThrows(IllegalArgumentException.class,
-                     () -> errorHandler.onError(testException, firstEventMessage, eventMessageHandler));
+        assertThatThrownBy(() -> errorHandler.onError(testException, firstEventMessage, eventMessageHandler))
+                .isInstanceOf(IllegalArgumentException.class);
 
         testSubject.startRecording();
 
@@ -123,9 +126,10 @@ class FixtureExecutionResultImplTest {
         testSubject.expectDispatchedCommands("Second");
         testSubject.expectDispatchedCommandsMatching(payloadsMatching(exactSequenceOf(deepEquals("Second"), andNoMore())));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectSuccessfulHandlerExecution());
-        assertTrue(errorHandler.getException().isPresent());
-        assertEquals(secondException, errorHandler.getException().get());
+        assertThatThrownBy(() -> testSubject.expectSuccessfulHandlerExecution())
+                .isInstanceOf(SophonAssertionError.class);
+        assertThat(errorHandler.getException()).isPresent();
+        assertThat(errorHandler.getException()).contains(secondException);
     }
 
     @Test
@@ -152,31 +156,27 @@ class FixtureExecutionResultImplTest {
     void expectPublishedEvents_WrongCount() {
         eventBus.publish(new GenericEventMessage<>(new TriggerSagaEndEvent(identifier)));
 
-        assertThrows(
-                SophonAssertionError.class,
+        assertThatThrownBy(
                 () -> testSubject.expectPublishedEvents(
                         new TriggerSagaEndEvent(identifier), new TriggerExistingSagaEvent(identifier)
                 )
-        );
+        ).isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
     void expectPublishedEvents_WrongType() {
         eventBus.publish(new GenericEventMessage<>(new TriggerSagaEndEvent(identifier)));
 
-        assertThrows(
-                SophonAssertionError.class,
-                () -> testSubject.expectPublishedEvents(new TriggerExistingSagaEvent(identifier))
-        );
+        assertThatThrownBy(() -> testSubject.expectPublishedEvents(new TriggerExistingSagaEvent(identifier)))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
     void expectPublishedEvents_FailedMatcher() {
         eventBus.publish(new GenericEventMessage<>(new TriggerSagaEndEvent(identifier)));
 
-        assertThrows(
-                SophonAssertionError.class, () -> testSubject.expectPublishedEvents(new FailingMatcher<EventMessage<?>>())
-        );
+        assertThatThrownBy(() -> testSubject.expectPublishedEvents(new FailingMatcher<EventMessage<?>>()))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -186,7 +186,8 @@ class FixtureExecutionResultImplTest {
         commandBus.dispatch(GenericCommandMessage.asCommandMessage("Third"));
         commandBus.dispatch(GenericCommandMessage.asCommandMessage("Fourth"));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectDispatchedCommands("First", "Second", "Third"));
+        assertThatThrownBy(() -> testSubject.expectDispatchedCommands("First", "Second", "Third"))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -194,7 +195,8 @@ class FixtureExecutionResultImplTest {
         commandBus.dispatch(GenericCommandMessage.asCommandMessage("First"));
         commandBus.dispatch(GenericCommandMessage.asCommandMessage("Second"));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectDispatchedCommands("First", "Third"));
+        assertThatThrownBy(() -> testSubject.expectDispatchedCommands("First", "Third"))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -218,11 +220,13 @@ class FixtureExecutionResultImplTest {
         commandBus.dispatch(GenericCommandMessage.asCommandMessage(new SimpleCommand("First")));
         commandBus.dispatch(GenericCommandMessage.asCommandMessage(new SimpleCommand("Second")));
 
-        SophonAssertionError e = assertThrows(
-                SophonAssertionError.class,
-                () -> testSubject.expectDispatchedCommands(new SimpleCommand("Second"), new SimpleCommand("Third"))
-        );
-        assertTrue(e.getMessage().contains("Expected <SimpleCommand{content='Second'"), "Wrong message: " + e.getMessage());
+        SophonAssertionError e = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> testSubject.expectDispatchedCommands(new SimpleCommand("Second"),
+                                                                       new SimpleCommand("Third")))
+                .actual();
+        assertThat(e.getMessage())
+                .as("Wrong message: " + e.getMessage())
+                .contains("Expected <SimpleCommand{content='Second'");
     }
 
     @Test
@@ -230,17 +234,16 @@ class FixtureExecutionResultImplTest {
         commandBus.dispatch(GenericCommandMessage.asCommandMessage(new SimpleCommand("First")));
         commandBus.dispatch(GenericCommandMessage.asCommandMessage(new SimpleCommand("Second")));
 
-        SophonAssertionError e = assertThrows(
-                SophonAssertionError.class,
-                () -> testSubject.expectDispatchedCommands("Second", new SimpleCommand("Third"))
-        );
-        assertTrue(e.getMessage().contains("Expected <String>"), "Wrong message: " + e.getMessage());
+        SophonAssertionError e = assertThatExceptionOfType(SophonAssertionError.class)
+                .isThrownBy(() -> testSubject.expectDispatchedCommands("Second", new SimpleCommand("Third")))
+                .actual();
+        assertThat(e.getMessage()).as("Wrong message: " + e.getMessage()).contains("Expected <String>");
     }
 
     @Test
     void expectNoDispatchedCommands_Failed() {
         commandBus.dispatch(GenericCommandMessage.asCommandMessage("First"));
-        assertThrows(SophonAssertionError.class, testSubject::expectNoDispatchedCommands);
+        assertThatThrownBy(testSubject::expectNoDispatchedCommands).isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -250,15 +253,14 @@ class FixtureExecutionResultImplTest {
 
     @Test
     void expectDispatchedCommands_FailedMatcher() {
-        assertThrows(
-                SophonAssertionError.class, () -> testSubject.expectDispatchedCommands(new FailingMatcher<String>())
-        );
+        assertThatThrownBy(() -> testSubject.expectDispatchedCommands(new FailingMatcher<String>()))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
     void expectNoScheduledEvents_EventIsScheduled() {
         eventScheduler.schedule(Duration.ofSeconds(1), new GenericEventMessage<>(applicationEvent));
-        assertThrows(SophonAssertionError.class, testSubject::expectNoScheduledEvents);
+        assertThatThrownBy(testSubject::expectNoScheduledEvents).isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -278,10 +280,8 @@ class FixtureExecutionResultImplTest {
         eventScheduler.schedule(Duration.ofSeconds(1), new GenericEventMessage<>(applicationEvent));
         eventScheduler.advanceTimeBy(Duration.ofMillis(500), i -> {
         });
-        assertThrows(
-                SophonAssertionError.class,
-                () -> testSubject.expectScheduledEvent(Duration.ofSeconds(1), applicationEvent)
-        );
+        assertThatThrownBy(() -> testSubject.expectScheduledEvent(Duration.ofSeconds(1), applicationEvent))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -289,10 +289,8 @@ class FixtureExecutionResultImplTest {
         eventScheduler.schedule(Duration.ofSeconds(1), new GenericEventMessage<>(applicationEvent));
         eventScheduler.advanceTimeBy(Duration.ofMillis(500), i -> {
         });
-        assertThrows(
-                SophonAssertionError.class,
-                () -> testSubject.expectScheduledEventOfType(Duration.ofSeconds(1), Object.class)
-        );
+        assertThatThrownBy(() -> testSubject.expectScheduledEventOfType(Duration.ofSeconds(1), Object.class))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -300,12 +298,11 @@ class FixtureExecutionResultImplTest {
         eventScheduler.schedule(Duration.ofSeconds(1), new GenericEventMessage<>(applicationEvent));
         eventScheduler.advanceTimeBy(Duration.ofMillis(500), i -> {
         });
-        assertThrows(
-                SophonAssertionError.class,
+        assertThatThrownBy(
                 () -> testSubject.expectScheduledEvent(
                         Duration.ofSeconds(1), new GenericEventMessage<>(new TimerTriggeredEvent("unexpected"))
                 )
-        );
+        ).isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -313,10 +310,8 @@ class FixtureExecutionResultImplTest {
         eventScheduler.schedule(Duration.ofSeconds(1), new GenericEventMessage<>(applicationEvent));
         eventScheduler.advanceTimeBy(Duration.ofMillis(500), i -> {
         });
-        assertThrows(
-                SophonAssertionError.class,
-                () -> testSubject.expectScheduledEvent(Duration.ofSeconds(1), new FailingMatcher<>())
-        );
+        assertThatThrownBy(() -> testSubject.expectScheduledEvent(Duration.ofSeconds(1), new FailingMatcher<>()))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -345,7 +340,8 @@ class FixtureExecutionResultImplTest {
                 StubSaga.class, "test", new StubSaga(), Collections.singleton(new AssociationValue("key", "value"))
         );
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectAssociationWith("key", "value2"));
+        assertThatThrownBy(() -> testSubject.expectAssociationWith("key", "value2"))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -354,7 +350,8 @@ class FixtureExecutionResultImplTest {
                 StubSaga.class, "test", new StubSaga(), Collections.singleton(new AssociationValue("key", "value"))
         );
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectAssociationWith("key2", "value"));
+        assertThatThrownBy(() -> testSubject.expectAssociationWith("key2", "value"))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -390,14 +387,15 @@ class FixtureExecutionResultImplTest {
                 StubSaga.class, "test", new StubSaga(), Collections.singleton(new AssociationValue("key", "value"))
         );
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoAssociationWith("key", "value"));
+        assertThatThrownBy(() -> testSubject.expectNoAssociationWith("key", "value"))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
     void expectActiveSagas_WrongCount() {
         sagaStore.insertSaga(StubSaga.class, "test", new StubSaga(), Collections.emptySet());
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectActiveSagas(2));
+        assertThatThrownBy(() -> testSubject.expectActiveSagas(2)).isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -415,7 +413,7 @@ class FixtureExecutionResultImplTest {
         testSubject.registerStartRecordingCallback(startRecordingCallbackInvocations::incrementAndGet);
         testSubject.startRecording();
 
-        assertThat(startRecordingCallbackInvocations.get(), deepEquals(1));
+        assertThat(startRecordingCallbackInvocations.get()).isEqualTo(1);
     }
 
     @Test
@@ -423,7 +421,10 @@ class FixtureExecutionResultImplTest {
         Instant expiryTime = deadlineWindowFrom.plus(1, ChronoUnit.DAYS);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(expiryTime)));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom, deadlineWindowTo, Matchers.anything()));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom,
+                                                                               deadlineWindowTo,
+                                                                               Matchers.anything()))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -431,21 +432,30 @@ class FixtureExecutionResultImplTest {
         Instant expiryTime = deadlineWindowFrom.plus(1, ChronoUnit.DAYS);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(expiryTime)));
 
-        assertDoesNotThrow(() -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom, deadlineWindowTo, Matchers.nullValue()));
+        assertThatNoException()
+                .isThrownBy(() -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom,
+                                                                                deadlineWindowTo,
+                                                                                Matchers.nullValue()));
     }
 
     @Test
     void noDeadlineMatchingInTimeframeWithDeadlineAtFrom() {
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(deadlineWindowFrom)));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom, deadlineWindowTo, Matchers.anything()));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom,
+                                                                               deadlineWindowTo,
+                                                                               Matchers.anything()))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
     void noDeadlineMatchingInTimeframeWithDeadlineAtTo() {
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(deadlineWindowTo)));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom, deadlineWindowTo, Matchers.anything()));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom,
+                                                                               deadlineWindowTo,
+                                                                               Matchers.anything()))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -454,7 +464,10 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadlineAfter = createDeadline(deadlineWindowTo.plus(1, ChronoUnit.DAYS));
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Arrays.asList(deadlineBefore, deadlineAfter));
 
-        assertDoesNotThrow(() -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom, deadlineWindowTo, Matchers.anything()));
+        assertThatNoException()
+                .isThrownBy(() -> testSubject.expectNoScheduledDeadlineMatching(deadlineWindowFrom,
+                                                                                deadlineWindowTo,
+                                                                                Matchers.anything()));
     }
 
     @Test
@@ -464,7 +477,10 @@ class FixtureExecutionResultImplTest {
         Object deadline = deadlineInfo.deadlineMessage().getPayload();
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadlineInfo));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom, deadlineWindowTo, deadline));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom,
+                                                                       deadlineWindowTo,
+                                                                       deadline))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -472,7 +488,10 @@ class FixtureExecutionResultImplTest {
         Instant expiryTime = deadlineWindowFrom.plus(1, ChronoUnit.DAYS);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(expiryTime)));
 
-        assertDoesNotThrow(() -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom, deadlineWindowTo, new Object()));
+        assertThatNoException()
+                .isThrownBy(() -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom,
+                                                                        deadlineWindowTo,
+                                                                        new Object()));
     }
 
     @Test
@@ -481,7 +500,10 @@ class FixtureExecutionResultImplTest {
         Object deadline = deadlineInfo.deadlineMessage().getPayload();
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadlineInfo));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom, deadlineWindowTo, deadline));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom,
+                                                                       deadlineWindowTo,
+                                                                       deadline))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -490,7 +512,10 @@ class FixtureExecutionResultImplTest {
         Object deadline = deadlineInfo.deadlineMessage().getPayload();
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadlineInfo));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom, deadlineWindowTo, deadline));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom,
+                                                                       deadlineWindowTo,
+                                                                       deadline))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -499,8 +524,14 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadlineAfter = createDeadline(deadlineWindowTo.plus(1, ChronoUnit.DAYS));
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Arrays.asList(deadlineBefore, deadlineAfter));
 
-        assertDoesNotThrow(() -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom, deadlineWindowTo, deadlineBefore.deadlineMessage().getPayload()));
-        assertDoesNotThrow(() -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom, deadlineWindowTo, deadlineAfter.deadlineMessage().getPayload()));
+        assertThatNoException()
+                .isThrownBy(() -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom,
+                                                                        deadlineWindowTo,
+                                                                        deadlineBefore.deadlineMessage().getPayload()));
+        assertThatNoException()
+                .isThrownBy(() -> testSubject.expectNoScheduledDeadline(deadlineWindowFrom,
+                                                                        deadlineWindowTo,
+                                                                        deadlineAfter.deadlineMessage().getPayload()));
     }
 
     @Test
@@ -509,7 +540,10 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(expiryTime);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom, deadlineWindowTo, String.class));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom,
+                                                                             deadlineWindowTo,
+                                                                             String.class))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -517,7 +551,10 @@ class FixtureExecutionResultImplTest {
         Instant expiryTime = deadlineWindowFrom.plus(1, ChronoUnit.DAYS);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(expiryTime)));
 
-        assertDoesNotThrow(() -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom, deadlineWindowTo, Integer.class));
+        assertThatNoException()
+                .isThrownBy(() -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom,
+                                                                              deadlineWindowTo,
+                                                                              Integer.class));
     }
 
     @Test
@@ -525,7 +562,10 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(deadlineWindowFrom);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom, deadlineWindowTo, String.class));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom,
+                                                                             deadlineWindowTo,
+                                                                             String.class))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -533,7 +573,10 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(deadlineWindowTo);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom, deadlineWindowTo, String.class));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom,
+                                                                             deadlineWindowTo,
+                                                                             String.class))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -542,7 +585,10 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadlineAfter = createDeadline(deadlineWindowTo.plus(1, ChronoUnit.DAYS));
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Arrays.asList(deadlineBefore, deadlineAfter));
 
-        assertDoesNotThrow(() -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom, deadlineWindowTo, String.class));
+        assertThatNoException()
+                .isThrownBy(() -> testSubject.expectNoScheduledDeadlineOfType(deadlineWindowFrom,
+                                                                              deadlineWindowTo,
+                                                                              String.class));
     }
 
     @Test
@@ -551,7 +597,10 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(expiryTime);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom, deadlineWindowTo, "deadlineName"));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom,
+                                                                               deadlineWindowTo,
+                                                                               "deadlineName"))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -559,7 +608,10 @@ class FixtureExecutionResultImplTest {
         Instant expiryTime = deadlineWindowFrom.plus(1, ChronoUnit.DAYS);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(createDeadline(expiryTime)));
 
-        assertDoesNotThrow(() -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom, deadlineWindowTo, "otherName"));
+        assertThatNoException()
+                .isThrownBy(() -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom,
+                                                                                deadlineWindowTo,
+                                                                                "otherName"));
     }
 
     @Test
@@ -567,7 +619,10 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(deadlineWindowFrom);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom, deadlineWindowTo, "deadlineName"));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom,
+                                                                               deadlineWindowTo,
+                                                                               "deadlineName"))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -575,7 +630,10 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadline = createDeadline(deadlineWindowTo);
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Collections.singletonList(deadline));
 
-        assertThrows(SophonAssertionError.class, () -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom, deadlineWindowTo, "deadlineName"));
+        assertThatThrownBy(() -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom,
+                                                                               deadlineWindowTo,
+                                                                               "deadlineName"))
+                .isInstanceOf(SophonAssertionError.class);
     }
 
     @Test
@@ -584,7 +642,10 @@ class FixtureExecutionResultImplTest {
         ScheduledDeadlineInfo deadlineAfter = createDeadline(deadlineWindowTo.plus(1, ChronoUnit.DAYS));
         when(deadlineManager.getScheduledDeadlines()).thenReturn(Arrays.asList(deadlineBefore, deadlineAfter));
 
-        assertDoesNotThrow(() -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom, deadlineWindowTo, "deadlineName"));
+        assertThatNoException()
+                .isThrownBy(() -> testSubject.expectNoScheduledDeadlineWithName(deadlineWindowFrom,
+                                                                                deadlineWindowTo,
+                                                                                "deadlineName"));
     }
 
     private ScheduledDeadlineInfo createDeadline(Instant expiryTime) {

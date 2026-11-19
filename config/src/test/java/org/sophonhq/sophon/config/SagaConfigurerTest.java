@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.junit.jupiter.*;
@@ -38,7 +39,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 @ExtendWith(MockitoExtension.class)
 class SagaConfigurerTest {
@@ -74,10 +76,10 @@ class SagaConfigurerTest {
         SagaConfiguration<Object> sagaConfiguration = configuration.eventProcessingConfiguration().sagaConfiguration(
                 Object.class);
 
-        assertEquals("ObjectProcessor", sagaConfiguration.processingGroup());
-        assertEquals(Object.class, sagaConfiguration.type());
-        assertEquals(store, sagaConfiguration.store());
-        assertEquals(listenerInvocationErrorHandler, sagaConfiguration.listenerInvocationErrorHandler());
+        assertThat(sagaConfiguration.processingGroup()).isEqualTo("ObjectProcessor");
+        assertThat(sagaConfiguration.type()).isEqualTo(Object.class);
+        assertThat(sagaConfiguration.store()).isEqualTo(store);
+        assertThat(sagaConfiguration.listenerInvocationErrorHandler()).isEqualTo(listenerInvocationErrorHandler);
     }
 
     @Test
@@ -100,11 +102,11 @@ class SagaConfigurerTest {
         SagaConfiguration<Object> sagaConfiguration = configuration.eventProcessingConfiguration().sagaConfiguration(
                 Object.class);
 
-        assertEquals(Object.class, sagaConfiguration.type());
-        assertEquals(processingGroup, sagaConfiguration.processingGroup());
-        assertEquals(manager, sagaConfiguration.manager());
-        assertEquals(repository, sagaConfiguration.repository());
-        assertEquals(sagaStore, sagaConfiguration.store());
+        assertThat(sagaConfiguration.type()).isEqualTo(Object.class);
+        assertThat(sagaConfiguration.processingGroup()).isEqualTo(processingGroup);
+        assertThat(sagaConfiguration.manager()).isEqualTo(manager);
+        assertThat(sagaConfiguration.repository()).isEqualTo(repository);
+        assertThat(sagaConfiguration.store()).isEqualTo(sagaStore);
     }
 
     @Test
@@ -127,8 +129,8 @@ class SagaConfigurerTest {
         TestEvent testEvent = new TestEvent();
         eventStore.publish(GenericEventMessage.asEventMessage(testEvent));
         Set<String> sagas = sagaStore.findSagas(TestSaga.class, new AssociationValue("id", testEvent.id.toString()));
-        assertEquals(1, sagas.size());
-        assertEquals(1, TestSaga.counter.get());
+        assertThat(sagas).hasSize(1);
+        assertThat(TestSaga.counter.get()).isOne();
     }
 
     private void assertConfigurerNullCheck(Runnable r, String message) {

@@ -19,7 +19,7 @@ package org.sophonhq.sophon.eventsourcing;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class NoSnapshotTriggerDefinitionTest {
 
@@ -29,9 +29,9 @@ class NoSnapshotTriggerDefinitionTest {
         SnapshotTrigger instance2 = NoSnapshotTriggerDefinition.INSTANCE.prepareTrigger(Object.class);
         SnapshotTrigger instance3 = NoSnapshotTriggerDefinition.INSTANCE.prepareTrigger(Object.class);
 
-        assertSame(instance1, instance2);
-        assertSame(instance1, instance3);
-        assertSame(instance2, instance3);
+        assertThat(instance2).isSameAs(instance1);
+        assertThat(instance3).isSameAs(instance1);
+        assertThat(instance3).isSameAs(instance2);
 
     }
 }

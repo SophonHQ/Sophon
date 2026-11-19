@@ -17,14 +17,14 @@
 
 package org.sophonhq.sophon.spring.config;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.config.Configuration;
 import org.sophonhq.sophon.config.Configurer;
 import org.sophonhq.sophon.spring.event.SophonStartedEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.SmartLifecycle;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class SpringSophonConfigurationTest {
@@ -50,6 +50,6 @@ class SpringSophonConfigurationTest {
 
         SpringSophonConfiguration springSophonConfiguration = new SpringSophonConfiguration(mock(Configurer.class));
 
-        assertTrue(springSophonConfiguration.getPhase() < webServerDefaultLifecyclePhase);
+        assertThat(springSophonConfiguration.getPhase()).isLessThan(webServerDefaultLifecyclePhase);
     }
 }

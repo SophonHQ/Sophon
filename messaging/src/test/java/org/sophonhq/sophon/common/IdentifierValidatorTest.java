@@ -19,8 +19,7 @@ package org.sophonhq.sophon.common;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class IdentifierValidatorTest {
 
@@ -28,25 +27,25 @@ class IdentifierValidatorTest {
 
     @Test
     void boxedPrimitivesAreValidIdentifiers() {
-        assertTrue(validator.isValidIdentifier(Long.class));
-        assertTrue(validator.isValidIdentifier(Integer.class));
-        assertTrue(validator.isValidIdentifier(Double.class));
-        assertTrue(validator.isValidIdentifier(Short.class));
+        assertThat(validator.isValidIdentifier(Long.class)).isTrue();
+        assertThat(validator.isValidIdentifier(Integer.class)).isTrue();
+        assertThat(validator.isValidIdentifier(Double.class)).isTrue();
+        assertThat(validator.isValidIdentifier(Short.class)).isTrue();
     }
 
     @Test
     void stringIsValidIdentifier() {
-        assertTrue(validator.isValidIdentifier(CharSequence.class));
+        assertThat(validator.isValidIdentifier(CharSequence.class)).isTrue();
     }
 
     @Test
     void typeWithoutToStringIsNotAccepted() {
-        assertFalse(validator.isValidIdentifier(CustomType.class));
+        assertThat(validator.isValidIdentifier(CustomType.class)).isFalse();
     }
 
     @Test
     void typeWithOverriddenToString() {
-        assertTrue(validator.isValidIdentifier(CustomType2.class));
+        assertThat(validator.isValidIdentifier(CustomType2.class)).isTrue();
     }
 
     private static class CustomType {

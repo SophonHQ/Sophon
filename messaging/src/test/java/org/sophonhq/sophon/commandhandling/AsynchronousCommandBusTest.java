@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.commandhandling;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.sophonhq.sophon.commandhandling.callbacks.NoOpCallback;
 import org.sophonhq.sophon.messaging.InterceptorChain;
@@ -30,7 +31,7 @@ import org.sophonhq.sophon.tracing.TestSpanFactory;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.commandhandling.GenericCommandMessage.asCommandMessage;
 
@@ -96,8 +97,8 @@ class AsynchronousCommandBusTest {
         ArgumentCaptor<CommandResultMessage<Object>> responseCaptor = ArgumentCaptor
                 .forClass(CommandResultMessage.class);
         inOrder.verify(mockCallback).onResult(commandCaptor.capture(), responseCaptor.capture());
-        assertEquals(command, commandCaptor.getValue());
-        assertNull(responseCaptor.getValue().getPayload());
+        assertThat(commandCaptor.getValue()).isEqualTo(command);
+        assertThat(responseCaptor.getValue().getPayload()).isNull();
     }
 
     @SuppressWarnings("unchecked")
@@ -139,9 +140,9 @@ class AsynchronousCommandBusTest {
         ArgumentCaptor<CommandResultMessage> commandResultMessageCaptor =
                 ArgumentCaptor.forClass(CommandResultMessage.class);
         verify(callback).onResult(eq(command), commandResultMessageCaptor.capture());
-        assertTrue(commandResultMessageCaptor.getValue().isExceptional());
-        assertEquals(NoHandlerForCommandException.class,
-                     commandResultMessageCaptor.getValue().exceptionResult().getClass());
+        assertThat(commandResultMessageCaptor.getValue().isExceptional()).isTrue();
+        assertThat(commandResultMessageCaptor.getValue().exceptionResult().getClass())
+                .isEqualTo(NoHandlerForCommandException.class);
         spanFactory.verifySpanHasException("CommandBus.dispatchCommand", NoHandlerForCommandException.class);
     }
 

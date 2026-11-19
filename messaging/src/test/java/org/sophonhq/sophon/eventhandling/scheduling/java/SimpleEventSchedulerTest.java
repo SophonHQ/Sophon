@@ -17,7 +17,9 @@
 
 package org.sophonhq.sophon.eventhandling.scheduling.java;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.mockito.*;
 import org.mockito.junit.jupiter.*;
@@ -37,7 +39,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -113,8 +115,9 @@ class SimpleEventSchedulerTest {
                 && event2.getPayload().equals(item.getPayload())
                 && event2.getMetaData().equals(item.getMetaData())));
         scheduledExecutorService.shutdown();
-        assertTrue(scheduledExecutorService.awaitTermination(1, TimeUnit.SECONDS),
-                   "Executor refused to shutdown within a second");
+        assertThat(scheduledExecutorService.awaitTermination(1, TimeUnit.SECONDS))
+                .as("Executor refused to shutdown within a second")
+                .isTrue();
     }
 
     @Test

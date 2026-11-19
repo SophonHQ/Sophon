@@ -17,7 +17,8 @@
 
 package org.sophonhq.sophon.eventsourcing;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericDomainEventMessage;
@@ -30,7 +31,7 @@ import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
 import java.util.UUID;
 
 import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.markDeleted;
@@ -68,7 +69,7 @@ public class AggregateSnapshotterTest {
                                                                  aggregateIdentifier, eventStream);
 
         verify(mockAggregateFactory).createAggregateRoot(aggregateIdentifier, firstEvent);
-        assertSame(aggregate, snapshot.getPayload());
+        assertThat(snapshot.getPayload()).isSameAs(aggregate);
     }
 
     @Test
@@ -88,7 +89,9 @@ public class AggregateSnapshotterTest {
 
         DomainEventMessage snapshot = testSubject.createSnapshot(StubAggregate.class,
                                                                  aggregateIdentifier.toString(), eventStream);
-        assertSame(aggregate, snapshot.getPayload(), "Snapshotter did not recognize the aggregate snapshot");
+        assertThat(snapshot.getPayload())
+                .as("Snapshotter did not recognize the aggregate snapshot")
+                .isSameAs(aggregate);
 
         verify(mockAggregateFactory).createAggregateRoot(any(), any(DomainEventMessage.class));
     }
@@ -109,7 +112,7 @@ public class AggregateSnapshotterTest {
                                                                  aggregateIdentifier, eventStream);
 
         verify(mockAggregateFactory).createAggregateRoot(aggregateIdentifier, firstEvent);
-        assertNull(snapshot, "Snapshotter shouldn't have created snapshot of deleted aggregate");
+        assertThat(snapshot).as("Snapshotter shouldn't have created snapshot of deleted aggregate").isNull();
     }
 
     public static class StubAggregate {

@@ -30,7 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
@@ -46,7 +46,8 @@ class SophonAutoConfigurationWithoutObjectMapperTest {
 
     @Test
     void noObjectMapperBeanIsCreatedIfNoJacksonSerializerIsSpecified() {
-        assertThrows(NoSuchBeanDefinitionException.class, () -> applicationContext.getBean(ObjectMapper.class));
+        assertThatThrownBy(() -> applicationContext.getBean(ObjectMapper.class))
+                .isInstanceOf(NoSuchBeanDefinitionException.class);
 
     }
 }

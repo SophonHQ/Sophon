@@ -18,7 +18,7 @@
 package org.sophonhq.sophon.springboot;
 
 import org.jobrunr.scheduling.JobScheduler;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.deadline.DeadlineManager;
 import org.sophonhq.sophon.deadline.jobrunr.JobRunrDeadlineManager;
 import org.sophonhq.sophon.eventhandling.scheduling.EventScheduler;
@@ -28,7 +28,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class JobRunrAutoConfigurationTest {
@@ -39,11 +39,11 @@ class JobRunrAutoConfigurationTest {
                 .withUserConfiguration(DefaultContext.class)
                 .run(context -> {
                     EventScheduler eventScheduler = context.getBean(EventScheduler.class);
-                    assertNotNull(eventScheduler);
-                    assertTrue(eventScheduler instanceof JobRunrEventScheduler);
+                    assertThat(eventScheduler).isNotNull();
+                    assertThat(eventScheduler).isInstanceOf(JobRunrEventScheduler.class);
                     DeadlineManager deadlineManager = context.getBean(DeadlineManager.class);
-                    assertNotNull(deadlineManager);
-                    assertTrue(deadlineManager instanceof JobRunrDeadlineManager);
+                    assertThat(deadlineManager).isNotNull();
+                    assertThat(deadlineManager).isInstanceOf(JobRunrDeadlineManager.class);
                 });
     }
 

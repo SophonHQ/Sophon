@@ -17,11 +17,12 @@
 
 package org.sophonhq.sophon.tracing.opentelemetry;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MetadataContextSetterTest {
 
@@ -29,14 +30,15 @@ class MetadataContextSetterTest {
     void shouldSetValue() {
         HashMap<String, String> subject = new HashMap<>();
         MetadataContextSetter.INSTANCE.set(subject, "myKeyOneThree", "myValueThree");
-        assertTrue(subject.containsKey("myKeyOneThree"));
-        assertEquals("myValueThree", subject.get("myKeyOneThree"));
+        assertThat(subject)
+                .containsKey("myKeyOneThree")
+                .containsEntry("myKeyOneThree", "myValueThree");
     }
 
     @Test
     void shouldRejectNulls() {
-        assertThrows(IllegalArgumentException.class, () ->
+        assertThatThrownBy(() ->
                 MetadataContextSetter.INSTANCE.set(null, "", "")
-        );
+        ).isInstanceOf(IllegalArgumentException.class);
     }
 }

@@ -31,9 +31,8 @@ import org.sophonhq.sophon.serialization.xml.XStreamSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessage;
 import static org.sophonhq.sophon.messaging.Headers.*;
 
@@ -56,42 +55,42 @@ class HeadersTests {
 
     @Test
     void messageIdText() {
-        assertThat(MESSAGE_ID, is("sophon-message-id"));
+        assertThat(MESSAGE_ID).isEqualTo("sophon-message-id");
     }
 
     @Test
     void messageTypeText() {
-        assertThat(MESSAGE_TYPE, is("sophon-message-type"));
+        assertThat(MESSAGE_TYPE).isEqualTo("sophon-message-type");
     }
 
     @Test
     void messageRevisionText() {
-        assertThat(MESSAGE_REVISION, is("sophon-message-revision"));
+        assertThat(MESSAGE_REVISION).isEqualTo("sophon-message-revision");
     }
 
     @Test
     void messageTimeStampText() {
-        assertThat(MESSAGE_TIMESTAMP, is("sophon-message-timestamp"));
+        assertThat(MESSAGE_TIMESTAMP).isEqualTo("sophon-message-timestamp");
     }
 
     @Test
     void messageAggregateIdText() {
-        assertThat(AGGREGATE_ID, is("sophon-message-aggregate-id"));
+        assertThat(AGGREGATE_ID).isEqualTo("sophon-message-aggregate-id");
     }
 
     @Test
     void messageAggregateSeqText() {
-        assertThat(AGGREGATE_SEQ, is("sophon-message-aggregate-seq"));
+        assertThat(AGGREGATE_SEQ).isEqualTo("sophon-message-aggregate-seq");
     }
 
     @Test
     void messageAggregateTypeText() {
-        assertThat(AGGREGATE_TYPE, is("sophon-message-aggregate-type"));
+        assertThat(AGGREGATE_TYPE).isEqualTo("sophon-message-aggregate-type");
     }
 
     @Test
     void messageMetadataText() {
-        assertThat(MESSAGE_METADATA, is("sophon-metadata"));
+        assertThat(MESSAGE_METADATA).isEqualTo("sophon-metadata");
     }
 
     @Test
@@ -105,13 +104,13 @@ class HeadersTests {
             put(MESSAGE_TIMESTAMP, message.getTimestamp());
         }};
 
-        assertThat(defaultHeaders(message, serializedObject), is(expected));
+        assertThat(defaultHeaders(message, serializedObject)).isEqualTo(expected);
     }
 
     @Test
     void generatingDefaultMessagingHeaders_InvalidSerializedObject() {
         EventMessage<Object> message = asEventMessage("foo");
-        assertThrows(IllegalArgumentException.class, () -> defaultHeaders(message, null));
+        assertThatThrownBy(() -> defaultHeaders(message, null)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -129,7 +128,7 @@ class HeadersTests {
             put(AGGREGATE_TYPE, message.getType());
         }};
 
-        assertThat(defaultHeaders(message, serializedObject), is(expected));
+        assertThat(defaultHeaders(message, serializedObject)).isEqualTo(expected);
     }
 
     private GenericDomainEventMessage<String> domainMessage() {

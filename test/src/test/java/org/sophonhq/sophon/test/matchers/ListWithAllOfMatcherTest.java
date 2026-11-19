@@ -20,7 +20,8 @@ package org.sophonhq.sophon.test.matchers;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.invocation.*;
 import org.mockito.stubbing.*;
 import org.sophonhq.sophon.eventhandling.EventMessage;
@@ -28,7 +29,7 @@ import org.sophonhq.sophon.eventhandling.EventMessage;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.sophonhq.sophon.test.matchers.Matchers.listWithAllOf;
 
@@ -60,7 +61,7 @@ class ListWithAllOfMatcherTest {
 
     @Test
     void match_FullMatch() {
-        assertTrue(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2)));
+        assertThat(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2))).isTrue();
 
         verify(mockMatcher1).matches(stubEvent1);
         verify(mockMatcher1).matches(stubEvent2);
@@ -76,7 +77,7 @@ class ListWithAllOfMatcherTest {
         when(mockMatcher2.matches(stubEvent1)).thenReturn(false);
         when(mockMatcher3.matches(stubEvent1)).thenReturn(false);
 
-        assertTrue(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2)));
+        assertThat(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2))).isTrue();
 
         verify(mockMatcher1).matches(stubEvent1);
         verify(mockMatcher1).matches(stubEvent2);
@@ -92,7 +93,7 @@ class ListWithAllOfMatcherTest {
         when(mockMatcher2.matches(stubEvent1)).thenReturn(false);
         when(mockMatcher3.matches(stubEvent1)).thenReturn(false);
 
-        assertFalse(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2)));
+        assertThat(testSubject.matches(Arrays.asList(stubEvent1, stubEvent2))).isFalse();
 
         verify(mockMatcher1).matches(stubEvent1);
         verify(mockMatcher1).matches(stubEvent2);
@@ -108,7 +109,7 @@ class ListWithAllOfMatcherTest {
         StringDescription description = new StringDescription();
         testSubject.describeTo(description);
         String actual = description.toString();
-        assertEquals("list with all of: <A>, <B> and <C>", actual);
+        assertThat(actual).isEqualTo("list with all of: <A>, <B> and <C>");
     }
 
     @Test
@@ -123,7 +124,7 @@ class ListWithAllOfMatcherTest {
         StringDescription description = new StringDescription();
         testSubject.describeTo(description);
         String actual = description.toString();
-        assertEquals("list with all of: <A>, <B> (FAILED!) and <C>", actual);
+        assertThat(actual).isEqualTo("list with all of: <A>, <B> (FAILED!) and <C>");
     }
 
     private static class DescribingAnswer implements Answer<Object> {

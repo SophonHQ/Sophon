@@ -27,7 +27,8 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 class TracingHandlerEnhancerDefinitionTest {
@@ -72,7 +73,7 @@ class TracingHandlerEnhancerDefinitionTest {
         });
         messageHandlingMember.handle(message, this);
 
-        assertTrue(invoked);
+        assertThat(invoked).isTrue();
         spanFactory.verifySpanCompleted("TracingHandlerEnhancerDefinitionTest.executable(MyEvent,CommandGateway)");
     }
 
@@ -86,7 +87,7 @@ class TracingHandlerEnhancerDefinitionTest {
                                                                                       .build();
         MessageHandlingMember<TracingHandlerEnhancerDefinitionTest> messageHandlingMember = definition.wrapHandler(
                 original);
-        assertSame(original, messageHandlingMember);
+        assertThat(messageHandlingMember).isSameAs(original);
     }
 
     @Test
@@ -107,23 +108,23 @@ class TracingHandlerEnhancerDefinitionTest {
         });
         messageHandlingMember.handle(message, this);
 
-        assertTrue(invoked);
+        assertThat(invoked).isTrue();
         spanFactory.verifySpanCompleted("TracingHandlerEnhancerDefinitionTest.executable(MyEvent,CommandGateway)");
     }
 
     @Test
     void canNotSetSpanFactoryToNull() {
         TracingHandlerEnhancerDefinition.Builder builder = TracingHandlerEnhancerDefinition.builder();
-        assertThrows(SophonConfigurationException.class, () -> builder.spanFactory(null));
+        assertThatThrownBy(() -> builder.spanFactory(null)).isInstanceOf(SophonConfigurationException.class);
     }
 
     @Test
     void canNotBuildeWithoutSpanFactory() {
         TracingHandlerEnhancerDefinition.Builder builder = TracingHandlerEnhancerDefinition.builder();
-        assertThrows(SophonConfigurationException.class, builder::build);
+        assertThatThrownBy(builder::build).isInstanceOf(SophonConfigurationException.class);
     }
 
-    private class MyEvent {
+    private static class MyEvent {
 
     }
 

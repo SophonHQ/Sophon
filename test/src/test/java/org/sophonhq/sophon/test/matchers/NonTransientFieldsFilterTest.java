@@ -17,9 +17,9 @@
 
 package org.sophonhq.sophon.test.matchers;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Allard Buijze
@@ -33,13 +33,13 @@ class NonTransientFieldsFilterTest {
 
     @Test
     void acceptNonTransientField() throws Exception {
-        assertTrue(NonTransientFieldsFilter.instance()
-                                           .accept(getClass().getDeclaredField("nonTransientField")));
+        assertThat(NonTransientFieldsFilter.instance()
+                                           .accept(getClass().getDeclaredField("nonTransientField"))).isTrue();
     }
 
     @Test
     void rejectTransientField() throws Exception {
-        assertFalse(NonTransientFieldsFilter.instance()
-                                            .accept(getClass().getDeclaredField("transientField")));
+        assertThat(NonTransientFieldsFilter.instance()
+                                           .accept(getClass().getDeclaredField("transientField"))).isFalse();
     }
 }

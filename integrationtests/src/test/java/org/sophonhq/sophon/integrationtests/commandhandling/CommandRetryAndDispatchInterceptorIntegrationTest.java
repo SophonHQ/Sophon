@@ -18,7 +18,10 @@
 package org.sophonhq.sophon.integrationtests.commandhandling;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.slf4j.LoggerFactory;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.SimpleCommandBus;
@@ -38,7 +41,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.BiFunction;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * @author <a href="https://github.com/davispw">Peter Davis</a>
@@ -117,7 +121,7 @@ class CommandRetryAndDispatchInterceptorIntegrationTest {
         // wait, but hopefully not forever...
         // per documentation, an unchecked exception (theoretically the only kind throwable by an interceptor)
         // is returned unwrapped
-        assertThrows(SecurityException.class, () -> commandGateway.sendAndWait("command"));
+        assertThatThrownBy(() -> commandGateway.sendAndWait("command")).isInstanceOf(SecurityException.class);
     }
 
     /**
@@ -158,8 +162,7 @@ class CommandRetryAndDispatchInterceptorIntegrationTest {
             }
         });
 
-        assertEquals("myUserSession",
-                     ((MetaData) commandGateway.sendAndWait("command")).get("gatewayMetaData"));
+        assertThat((MetaData) commandGateway.sendAndWait("command")).containsEntry("gatewayMetaData", "myUserSession");
     }
 
     /**
@@ -199,6 +202,7 @@ class CommandRetryAndDispatchInterceptorIntegrationTest {
             }
         });
 
-        assertEquals("noUserSession", ((MetaData) commandGateway.sendAndWait("command")).get("commandBusMetaData"));
+        assertThat((MetaData) commandGateway.sendAndWait("command"))
+                .containsEntry("commandBusMetaData", "noUserSession");
     }
 }

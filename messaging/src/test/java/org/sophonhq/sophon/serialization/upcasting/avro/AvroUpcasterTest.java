@@ -21,7 +21,9 @@ import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.message.SchemaStore;
 import org.apache.avro.util.ClassSecurityValidator;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.eventhandling.AbstractSequencedDomainEventEntry;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
 import org.sophonhq.sophon.eventhandling.EventData;
@@ -48,7 +50,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 /**
@@ -114,12 +117,12 @@ public class AvroUpcasterTest {
         List<IntermediateEventRepresentation> collect = setValue2OnComplexObjectUpcaster.upcast(Stream.of(
                 new InitialEventRepresentation(eventData, serializer)
         )).collect(Collectors.toList());
-        Assertions.assertFalse(collect.isEmpty());
+        assertThat(collect).isNotEmpty();
         IntermediateEventRepresentation r = collect.get(0);
 
         ComplexObject upcasted = serializer.deserialize(r.getData());
 
-        assertEquals("helloWorld", upcasted.getValue2());
+        assertThat(upcasted.getValue2()).isEqualTo("helloWorld");
     }
 
     /**
@@ -139,7 +142,7 @@ public class AvroUpcasterTest {
         SerializedObject<byte[]> oldPayload = createSingleObjectEncodedSerializedObject(record, "1");
 
         // Then: we fail to deserialize without upcaster: incompatible schema, missing default for "value1"
-        assertThrows(SerializationException.class, () -> serializer.deserialize(oldPayload));
+        assertThatThrownBy(() -> serializer.deserialize(oldPayload)).isInstanceOf(SerializationException.class);
 
         // When we implement an upcaster that knows the new reader Schema and can provide the missing field value
         SingleEventUpcaster setMissingValue1Upcaster = new SingleEventUpcaster() {
@@ -175,7 +178,7 @@ public class AvroUpcasterTest {
 
         // Then: we can successfully deserialize to reader Class
         ComplexObject upcasted = serializer.deserialize(dataAfterUpcast);
-        assertEquals("foo", upcasted.getValue1());
+        assertThat(upcasted.getValue1()).isEqualTo("foo");
     }
 
     private static class SetValue2OnComplexObjectUpcaster extends SingleEventUpcaster {

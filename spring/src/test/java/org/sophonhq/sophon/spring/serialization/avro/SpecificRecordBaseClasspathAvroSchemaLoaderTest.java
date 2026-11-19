@@ -18,13 +18,13 @@
 package org.sophonhq.sophon.spring.serialization.avro;
 
 import org.apache.avro.Schema;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Finds schemas declared in {@link org.apache.avro.specific.SpecificRecordBase} classes in test packages 1 and 2.
@@ -46,11 +46,11 @@ class SpecificRecordBaseClasspathAvroSchemaLoaderTest {
         packages.add("org.sophonhq.sophon.spring.serialization.avro.test2");
         packages.add("org.sophonhq.sophon.spring.serialization.avro.doesntexist");
         List<Schema> schemas = testSubject.load(packages);
-        assertEquals(2, schemas.size());
+        assertThat(schemas).hasSize(2);
 
         List<Schema> expected = new ArrayList<>();
         expected.add(org.sophonhq.sophon.spring.serialization.avro.test1.ComplexObject.getClassSchema());
         expected.add(org.sophonhq.sophon.spring.serialization.avro.test2.ComplexObject.getClassSchema());
-        assertIterableEquals(schemas, expected);
+        assertThat(schemas).containsExactlyElementsOf(expected);
     }
 }

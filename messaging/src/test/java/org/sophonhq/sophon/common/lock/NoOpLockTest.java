@@ -17,9 +17,9 @@
 
 package org.sophonhq.sophon.common.lock;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test class validating the {@link NoOpLock}.
@@ -30,6 +30,6 @@ class NoOpLockTest {
 
     @Test
     void isHeldReturnsTrue() {
-        assertTrue(NoOpLock.INSTANCE.isHeld());
+        assertThat(NoOpLock.INSTANCE.isHeld()).isTrue();
     }
 }

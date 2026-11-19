@@ -24,7 +24,9 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.core.Ehcache;
 import org.ehcache.core.EhcacheManager;
 import org.ehcache.core.config.DefaultConfiguration;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.caching.Cache;
 import org.sophonhq.sophon.common.caching.EhCache3Adapter;
 import org.sophonhq.sophon.common.caching.NoCache;
@@ -51,7 +53,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 
 /**
@@ -210,8 +212,9 @@ class CachingRepositoryWithNestedUnitOfWorkTest {
         uow.commit();
 
         TestAggregate verify = loadAggregate(id);
-        assertEquals(2, verify.tokens.size());
-        assertTrue(verify.tokens.containsAll(asList("1", "2")));
+        assertThat(verify.tokens)
+                .hasSize(2)
+                .containsAll(asList("1", "2"));
     }
 
     private void executeComplexScenario(String id) throws Exception {
@@ -257,13 +260,15 @@ class CachingRepositoryWithNestedUnitOfWorkTest {
 
         TestAggregate verify = loadAggregate(id);
 
-        assertEquals(id, verify.id);
-        assertTrue(verify.tokens.containsAll(asList(//
-                                                    "UOW3", "UOW4", "UOW5", "UOW6", "UOW7", "UOW8", "UOW9")));
-        assertFalse(verify.tokens.contains("UOW10"));
-        assertEquals(7, verify.tokens.size());
+        assertThat(verify.id).isEqualTo(id);
+        assertThat(verify.tokens)
+                .containsAll(asList("UOW3", "UOW4", "UOW5", "UOW6", "UOW7", "UOW8", "UOW9"))
+                .doesNotContain("UOW10")
+                .hasSize(7);
         for (int i = 0; i < verify.tokens.size(); i++) {
-            assertTrue(events.get(i).startsWith(i + " "), "Expected event with sequence number " + i + " but got :" + events.get(i));
+            assertThat(events.get(i))
+                    .as("Expected event with sequence number " + i + " but got :" + events.get(i))
+                    .startsWith(i + " ");
         }
     }
 

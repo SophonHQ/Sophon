@@ -21,8 +21,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.dialect.H2Dialect;
 import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import org.sophonhq.sophon.common.jpa.SimpleEntityManagerProvider;
 import org.sophonhq.sophon.common.transaction.Transaction;
@@ -54,7 +54,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 @ContextConfiguration
 @ExtendWith(SpringExtension.class)
@@ -96,14 +97,14 @@ class JpaTokenStoreTest {
             } catch (TimeoutException e) {
                 // we expect this;
             }
-            assertFalse(result.isDone());
+            assertThat(result.isDone()).isFalse();
 
             // we cancel the task
             result.cancel(true);
 
             // and make sure the token is still owned
             TokenEntry tokenEntry = entityManager.find(TokenEntry.class, new TokenEntry.PK("processor", 0));
-            assertEquals("local", tokenEntry.getOwner());
+            assertThat(tokenEntry.getOwner()).isEqualTo("local");
         } finally {
             executor.shutdown();
         }

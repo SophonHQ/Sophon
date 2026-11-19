@@ -20,7 +20,7 @@ package org.sophonhq.sophon.config;
 import java.util.List;
 
 import static java.util.Arrays.stream;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Assertion utils for Sophon {@link Configuration}.
