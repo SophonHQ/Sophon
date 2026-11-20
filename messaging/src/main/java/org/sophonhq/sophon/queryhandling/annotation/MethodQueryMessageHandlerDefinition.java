@@ -19,19 +19,18 @@ package org.sophonhq.sophon.queryhandling.annotation;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.sophonhq.sophon.messaging.HandlerAttributes;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
 import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.sophonhq.sophon.messaging.annotation.UnsupportedHandlerException;
 import org.sophonhq.sophon.messaging.annotation.WrappedMessageHandlingMember;
-import org.sophonhq.sophon.queryhandling.QueryHandler;
 import org.sophonhq.sophon.queryhandling.QueryMessage;
 
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Future;
 
@@ -50,10 +49,10 @@ public class MethodQueryMessageHandlerDefinition implements HandlerEnhancerDefin
     @Override
     public @NonNull
     <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
-        return original.annotationAttributes(QueryHandler.class)
-                       .map(attr -> (MessageHandlingMember<T>)
+        return original.<String>attribute(HandlerAttributes.QUERY_NAME)
+                       .map(queryName -> (MessageHandlingMember<T>)
                                new MethodQueryMessageHandlerDefinition.MethodQueryMessageHandlingMember<>(
-                                       original, attr
+                                       original, queryName
                                )
                        )
                        .orElse(original);
@@ -66,14 +65,10 @@ public class MethodQueryMessageHandlerDefinition implements HandlerEnhancerDefin
         private final String queryName;
         private final Type resultType;
 
-        public MethodQueryMessageHandlingMember(MessageHandlingMember<T> original, Map<String, Object> attr) {
+        public MethodQueryMessageHandlingMember(MessageHandlingMember<T> original, String queryName) {
             super(original);
 
-            String queryNameAttribute = (String) attr.get("queryName");
-            if ("".equals(queryNameAttribute)) {
-                queryNameAttribute = original.payloadType().getName();
-            }
-            queryName = queryNameAttribute;
+            this.queryName = "".equals(queryName) ? original.payloadType().getName() : queryName;
 
             resultType = original.unwrap(Method.class)
                                  .map(this::queryResultType)

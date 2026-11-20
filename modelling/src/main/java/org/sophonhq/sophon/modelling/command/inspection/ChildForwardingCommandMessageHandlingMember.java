@@ -30,7 +30,6 @@ import org.sophonhq.sophon.modelling.command.AggregateEntityNotFoundException;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -143,13 +142,13 @@ public class ChildForwardingCommandMessageHandlingMember<P, C> implements Forwar
     }
 
     @Override
-    public boolean hasAnnotation(Class<? extends Annotation> annotationType) {
+    public boolean hasAnnotation(@NonNull Class<? extends Annotation> annotationType) {
         return childHandler.hasAnnotation(annotationType);
     }
 
     @Override
-    public Optional<Map<String, Object>> annotationAttributes(Class<? extends Annotation> annotationType) {
-        return childHandler.annotationAttributes(annotationType);
+    public <A extends Annotation> Optional<A> annotation(@NonNull Class<A> annotationType) {
+        return childHandler.annotation(annotationType);
     }
 
     @Override

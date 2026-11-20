@@ -18,9 +18,7 @@
 package org.sophonhq.sophon.messaging.annotation;
 
 import org.jspecify.annotations.NonNull;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.messaging.Message;
 
 import java.lang.annotation.Annotation;
@@ -29,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -165,25 +162,8 @@ class HandlerComparatorTest {
                 .isTrue();
     }
 
-    private static class StubMessageHandlingMember implements MessageHandlingMember<Object> {
-
-        private final Class<?> payloadType;
-        private final int priority;
-
-        StubMessageHandlingMember(Class<?> payloadType, int priority) {
-            this.payloadType = payloadType;
-            this.priority = priority;
-        }
-
-        @Override
-        public Class<?> payloadType() {
-            return payloadType;
-        }
-
-        @Override
-        public int priority() {
-            return priority;
-        }
+    private record StubMessageHandlingMember(Class<?> payloadType, int priority)
+            implements MessageHandlingMember<Object> {
 
         @Override
         public boolean canHandle(@NonNull Message<?> message) {
@@ -207,13 +187,8 @@ class HandlerComparatorTest {
         }
 
         @Override
-        public boolean hasAnnotation(Class<? extends Annotation> annotationType) {
+        public boolean hasAnnotation(@NonNull Class<? extends Annotation> annotationType) {
             return false;
-        }
-
-        @Override
-        public Optional<Map<String, Object>> annotationAttributes(Class<? extends Annotation> annotationType) {
-            return Optional.empty();
         }
 
         @Override
@@ -230,25 +205,8 @@ class HandlerComparatorTest {
         }
     }
 
-    private static class ReversedOrderMessageHandlingMember implements MessageHandlingMember<Object> {
-
-        private final Class<?> payloadType;
-        private final int priority;
-
-        ReversedOrderMessageHandlingMember(Class<?> payloadType, int priority) {
-            this.payloadType = payloadType;
-            this.priority = priority;
-        }
-
-        @Override
-        public Class<?> payloadType() {
-            return payloadType;
-        }
-
-        @Override
-        public int priority() {
-            return priority;
-        }
+    private record ReversedOrderMessageHandlingMember(Class<?> payloadType, int priority)
+            implements MessageHandlingMember<Object> {
 
         @Override
         public boolean canHandle(@NonNull Message<?> message) {
@@ -272,13 +230,8 @@ class HandlerComparatorTest {
         }
 
         @Override
-        public boolean hasAnnotation(Class<? extends Annotation> annotationType) {
+        public boolean hasAnnotation(@NonNull Class<? extends Annotation> annotationType) {
             return false;
-        }
-
-        @Override
-        public Optional<Map<String, Object>> annotationAttributes(Class<? extends Annotation> annotationType) {
-            return Optional.empty();
         }
 
         @Override

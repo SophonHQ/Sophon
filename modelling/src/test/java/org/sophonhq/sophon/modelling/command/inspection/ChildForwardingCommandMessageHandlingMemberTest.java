@@ -71,6 +71,16 @@ class ChildForwardingCommandMessageHandlingMemberTest {
     }
 
     @Test
+    void annotationIsDelegatedToChildHandler() {
+        CommandHandler expectedAnnotation = mock(CommandHandler.class);
+        when(childMember.annotation(CommandHandler.class)).thenReturn(Optional.of(expectedAnnotation));
+
+        assertThat(testSubject.annotation(CommandHandler.class)).containsSame(expectedAnnotation);
+
+        verify(childMember).annotation(CommandHandler.class);
+    }
+
+    @Test
     void attributeIsDelegatedToChildHandler() {
         AggregateCreationPolicy expectedPolicy = AggregateCreationPolicy.NEVER;
         when(childMember.attribute(HandlerAttributes.AGGREGATE_CREATION_POLICY))

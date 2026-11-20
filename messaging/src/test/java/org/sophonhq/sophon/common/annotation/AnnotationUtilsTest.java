@@ -17,7 +17,7 @@
 
 package org.sophonhq.sophon.common.annotation;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.commandhandling.RoutingKey;
 
 import java.lang.annotation.Annotation;
@@ -134,6 +134,56 @@ class AnnotationUtilsTest {
     }
 
     @Test
+    void findAnnotationOnDirectAnnotation() throws NoSuchMethodException {
+        Optional<TheTarget> result =
+                findAnnotation(getClass().getDeclaredMethod("directAnnotated"), TheTarget.class);
+
+        assertThat(result).hasValueSatisfying(annotation -> assertThat(annotation.property()).isEqualTo("value"));
+    }
+
+    @Test
+    void findAnnotationOnMetaAnnotation() throws NoSuchMethodException {
+        Optional<TheTarget> result =
+                findAnnotation(getClass().getDeclaredMethod("staticallyOverridden"), TheTarget.class);
+
+        assertThat(result).hasValueSatisfying(
+                annotation -> assertThat(annotation.property()).isEqualTo("overridden_statically")
+        );
+    }
+
+    @Test
+    void findAnnotationOnMetaAnnotationTwoLevelsDeep() throws NoSuchMethodException {
+        Optional<TheTarget> result =
+                findAnnotation(getClass().getDeclaredMethod("someAnnotatedMethod"), TheTarget.class);
+
+        assertThat(result).hasValueSatisfying(annotation -> assertThat(annotation.property()).isEqualTo("value"));
+    }
+
+    @Test
+    void findAnnotationReturnsEmptyForAbsentAnnotationThroughMetaAnnotationCycle() throws NoSuchMethodException {
+        Optional<RoutingKey> result =
+                findAnnotation(getClass().getDeclaredMethod("someAnnotatedMethod"), RoutingKey.class);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void findAnnotationPrefersDirectAnnotationOverMetaAnnotation() throws NoSuchMethodException {
+        Optional<TheTarget> result =
+                findAnnotation(getClass().getDeclaredMethod("directAndMetaAnnotated"), TheTarget.class);
+
+        assertThat(result).hasValueSatisfying(annotation -> assertThat(annotation.property()).isEqualTo("direct"));
+    }
+
+    @Test
+    void findAnnotationDoesNotApplyAttributeOverrides() throws NoSuchMethodException {
+        Optional<TheTarget> result =
+                findAnnotation(getClass().getDeclaredMethod("dynamicallyOverridden"), TheTarget.class);
+
+        assertThat(result).hasValueSatisfying(annotation -> assertThat(annotation.property()).isEqualTo("value"));
+    }
+
+    @Test
     void isAnnotatedWithReturnsTrue() {
         Set<Class<? extends Annotation>> expectedAnnotatedWithSubject = new HashSet<>();
         expectedAnnotatedWithSubject.add(DynamicOverrideAnnotated.class);
@@ -192,6 +242,11 @@ class AnnotationUtilsTest {
 
     @AnotherMetaAnnotation
     public void someAnnotatedMethod() {
+    }
+
+    @TheTarget(property = "direct")
+    @StaticOverrideAnnotated
+    public void directAndMetaAnnotated() {
     }
 
     @Retention(RetentionPolicy.RUNTIME)

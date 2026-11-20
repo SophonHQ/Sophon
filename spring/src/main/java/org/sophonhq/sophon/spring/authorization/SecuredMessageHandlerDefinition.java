@@ -41,9 +41,8 @@ public class SecuredMessageHandlerDefinition implements HandlerEnhancerDefinitio
 
     @Override
     public <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
-        return original.annotationAttributes(Secured.class)
-                       .filter(attributes -> attributes.containsKey("secured"))
-                       .map(attributes -> (String[]) attributes.get("secured"))
+        return original.annotation(Secured.class)
+                       .map(Secured::value)
                        .map(securityConfiguration -> (MessageHandlingMember<T>) new SecuredMessageHandlingMember<>(
                                original, securityConfiguration
                        ))

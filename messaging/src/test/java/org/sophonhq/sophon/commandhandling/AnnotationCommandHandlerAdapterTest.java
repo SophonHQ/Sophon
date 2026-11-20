@@ -29,6 +29,10 @@ import org.sophonhq.sophon.messaging.interceptors.MessageHandlerInterceptor;
 import org.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -97,6 +101,20 @@ class AnnotationCommandHandlerAdapterTest {
         assertThat(mockTarget.voidHandlerInvoked).isZero();
         assertThat(mockTarget.returningHandlerInvoked).isZero();
         assertThat(mockTarget.almostDuplicateReturningHandlerInvoked).isOne();
+    }
+
+    @Test
+    void handlerDispatchingWithCommandNameOverriddenByCustomAnnotation() throws Exception {
+        CustomAnnotatedCommandHandler target = new CustomAnnotatedCommandHandler();
+        AnnotationCommandHandlerAdapter<CustomAnnotatedCommandHandler> customTestSubject =
+                new AnnotationCommandHandlerAdapter<>(target);
+
+        Object actualReturnValue =
+                customTestSubject.handle(new GenericCommandMessage<>(new GenericMessage<>(1L), "customName"));
+
+        assertThat(actualReturnValue).isEqualTo(1L);
+        assertThat(target.handlerInvoked).isOne();
+        assertThat(customTestSubject.supportedCommandNames()).containsExactly("customName");
     }
 
     @Test
@@ -203,6 +221,26 @@ class AnnotationCommandHandlerAdapterTest {
         @CommandHandler
         public void exceptionThrowingHandler(ArrayList<Object> o) {
             throw new RuntimeException("Some exception");
+        }
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    @CommandHandler
+    public @interface CustomCommandHandler {
+
+        String commandName();
+    }
+
+    private static class CustomAnnotatedCommandHandler {
+
+        private int handlerInvoked;
+
+        @SuppressWarnings("unused")
+        @CustomCommandHandler(commandName = "customName")
+        public Long handle(Long longCommand) {
+            handlerInvoked++;
+            return longCommand;
         }
     }
 

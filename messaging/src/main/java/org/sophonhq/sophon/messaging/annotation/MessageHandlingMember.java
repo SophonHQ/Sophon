@@ -19,12 +19,12 @@ package org.sophonhq.sophon.messaging.annotation;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import org.sophonhq.sophon.common.annotation.AnnotationUtils;
 import org.sophonhq.sophon.messaging.Message;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Member;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -139,35 +139,54 @@ public interface MessageHandlingMember<T> {
     }
 
     /**
-     * Checks whether the method of the target entity contains the given {@code annotationType}.
+     * Checks whether the handler carries an annotation of the given {@code annotationType}, either directly or as a
+     * meta-annotation on any level.
      *
-     * @param annotationType Annotation to check for on the target method
-     * @return {@code true} if the annotation is present on the target method, {@code false} otherwise
-     * @deprecated in favor of {@link #attribute(String)}
+     * @param annotationType the type of annotation to check for on the handler
+     * @return {@code true} if the annotation is present on the handler, {@code false} otherwise
+     * @see #annotation(Class)
      */
-    @Deprecated
-    boolean hasAnnotation(Class<? extends Annotation> annotationType);
+    default boolean hasAnnotation(@NonNull Class<? extends Annotation> annotationType) {
+        return annotation(annotationType).isPresent();
+    }
 
     /**
-     * Get the attributes of an annotation of given {@code annotationType} on the method of the target entity. If the
-     * annotation is present on the target method an Optional is returned containing the properties mapped by their
-     * name. If the annotation is not present an empty Optional is returned.
+     * Returns the annotation of the given {@code annotationType} on the handler, if it is present directly or as a
+     * meta-annotation on any level.
+     * <p>
+     * Attribute overrides from meta-annotations are not applied: the annotation is returned as declared. Read the
+     * attributes of Sophon handler annotations, and of other annotations meta-annotated with
+     * {@link HasHandlerAttributes}, through {@link #attribute(String)} instead, which applies those overrides.
      *
-     * @param annotationType The annotation to check for on the target method
-     * @return An optional containing a map of the properties of the annotation, or an empty optional if the annotation
-     * is missing on the method
-     * @deprecated in favor of {@link #attribute(String)}
+     * @param annotationType the type of annotation to find on the handler
+     * @param <A>            the type of annotation to find
+     * @return an {@link Optional} containing the annotation, or an empty {@link Optional} if the handler does not carry
+     * the annotation
+     * @since sophon-2.0.0
      */
-    @Deprecated
-    Optional<Map<String, Object>> annotationAttributes(Class<? extends Annotation> annotationType);
+    default <A extends Annotation> Optional<A> annotation(@NonNull Class<A> annotationType) {
+        return unwrap(Executable.class)
+                .flatMap(executable -> AnnotationUtils.findAnnotation(executable, annotationType));
+    }
 
     /**
      * Retrieve a single attributes for the given {@code attributeKey}. If this {@link MessageHandlingMember} does not
      * hold a value referencing the {@code attributeKey}, an {@link Optional#empty()} is returned. Otherwise a non-empty
      * {@link Optional} containing the attribute will be provided.
      * <p>
-     * When using the method, consider checking the {@link org.sophonhq.sophon.messaging.HandlerAttributes} for a list of
-     * common handler attributes.
+     * Use this method to read the attribute values of Sophon handler annotations, such as
+     * {@link org.sophonhq.sophon.commandhandling.CommandHandler}, and of custom annotations meta-annotated with
+     * {@link HasHandlerAttributes}. The key has the format {@code "<SimpleName>.<attribute>"}, where
+     * {@code <SimpleName>} is the simple name of the annotation, for example {@code "CommandHandler.commandName"}.
+     * Attribute overrides are applied: if a custom annotation uses a handler annotation as a meta-annotation and
+     * declares an attribute with the same name, the value of the custom annotation is returned.
+     * <p>
+     * Annotations without {@link HasHandlerAttributes} add no keys, and neither do annotations without attributes. Use
+     * {@link #annotation(Class)} to read those annotations, and {@link #hasAnnotation(Class)} to check for their
+     * presence.
+     * <p>
+     * When using the method, consider checking the {@link org.sophonhq.sophon.messaging.HandlerAttributes} for a list
+     * of common handler attributes.
      *
      * @param attributeKey the key to retrieve an attribute for
      * @return a non-empty {@link Optional} of the attribute referencing the given {@code attributeKey}. Otherwise an

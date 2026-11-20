@@ -24,8 +24,6 @@ import org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
 import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.sophonhq.sophon.messaging.annotation.WrappedMessageHandlingMember;
 
-import java.util.Map;
-
 /**
  * Implementation of a {@link HandlerEnhancerDefinition} that is used for {@link DeadlineHandler} annotated methods.
  *
@@ -37,9 +35,10 @@ public class DeadlineMethodMessageHandlerDefinition implements HandlerEnhancerDe
 
     @Override
     public <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
-        return original.annotationAttributes(DeadlineHandler.class)
-                       .map(attr -> (MessageHandlingMember<T>) new DeadlineMethodMessageHandlingMember<>(original,
-                                                                                                         attr))
+        return original.<String>attribute("DeadlineHandler.deadlineName")
+                       .map(deadlineName -> (MessageHandlingMember<T>) new DeadlineMethodMessageHandlingMember<>(
+                               original, deadlineName
+                       ))
                        .orElse(original);
     }
 
@@ -48,10 +47,9 @@ public class DeadlineMethodMessageHandlerDefinition implements HandlerEnhancerDe
 
         private final String deadlineName;
 
-        private DeadlineMethodMessageHandlingMember(MessageHandlingMember<T> delegate,
-                                                    Map<String, Object> annotationAttributes) {
+        private DeadlineMethodMessageHandlingMember(MessageHandlingMember<T> delegate, String deadlineName) {
             super(delegate);
-            deadlineName = (String) annotationAttributes.get("deadlineName");
+            this.deadlineName = deadlineName;
         }
 
         @Override

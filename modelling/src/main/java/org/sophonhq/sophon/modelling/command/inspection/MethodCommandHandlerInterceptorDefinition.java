@@ -25,7 +25,6 @@ import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.sophonhq.sophon.messaging.annotation.WrappedMessageHandlingMember;
 import org.sophonhq.sophon.modelling.command.CommandHandlerInterceptor;
 
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -39,9 +38,9 @@ public class MethodCommandHandlerInterceptorDefinition implements HandlerEnhance
     @Override
     public @NonNull
     <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
-        return original.annotationAttributes(CommandHandlerInterceptor.class)
-                       .map(attr -> (MessageHandlingMember<T>) new MethodCommandHandlerInterceptorHandlingMember<>(
-                               original, attr))
+        return original.<String>attribute("CommandHandlerInterceptor.commandNamePattern")
+                       .map(commandNamePattern -> (MessageHandlingMember<T>)
+                               new MethodCommandHandlerInterceptorHandlingMember<>(original, commandNamePattern))
                        .orElse(original);
     }
 
@@ -55,15 +54,15 @@ public class MethodCommandHandlerInterceptorDefinition implements HandlerEnhance
          * @param delegate the actual message handling member to delegate to
          */
         private MethodCommandHandlerInterceptorHandlingMember(MessageHandlingMember<T> delegate,
-                                                              Map<String, Object> annotationAttributes) {
+                                                              String commandNamePattern) {
             super(delegate);
-            commandNamePattern = Pattern.compile((String) annotationAttributes.get("commandNamePattern"));
+            this.commandNamePattern = Pattern.compile(commandNamePattern);
         }
 
         @Override
         public boolean canHandle(@NonNull Message<?> message) {
-            return super.canHandle(message) && commandNamePattern.matcher(((CommandMessage) message).getCommandName())
-                                                                 .matches();
+            return super.canHandle(message)
+                    && commandNamePattern.matcher(((CommandMessage<?>) message).getCommandName()).matches();
         }
     }
 }
