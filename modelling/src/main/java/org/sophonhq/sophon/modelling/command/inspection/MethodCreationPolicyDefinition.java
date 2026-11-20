@@ -18,13 +18,12 @@
 package org.sophonhq.sophon.modelling.command.inspection;
 
 import org.jspecify.annotations.NonNull;
+import org.sophonhq.sophon.messaging.HandlerAttributes;
 import org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
 import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 import org.sophonhq.sophon.messaging.annotation.WrappedMessageHandlingMember;
 import org.sophonhq.sophon.modelling.command.AggregateCreationPolicy;
 import org.sophonhq.sophon.modelling.command.CreationPolicy;
-
-import java.util.Map;
 
 /**
  * Implementation of {@link HandlerEnhancerDefinition} used for {@link CreationPolicy} annotated methods.
@@ -37,9 +36,9 @@ public class MethodCreationPolicyDefinition implements HandlerEnhancerDefinition
     @Override
     public @NonNull
     <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
-        return original.annotationAttributes(CreationPolicy.class)
-                       .map(attr -> (MessageHandlingMember<T>) new MethodCreationPolicyHandlingMember<>(
-                               original, attr))
+        return original.<AggregateCreationPolicy>attribute(HandlerAttributes.AGGREGATE_CREATION_POLICY)
+                       .map(creationPolicy -> (MessageHandlingMember<T>) new MethodCreationPolicyHandlingMember<>(
+                               original, creationPolicy))
                        .orElse(original);
     }
 
@@ -49,9 +48,9 @@ public class MethodCreationPolicyDefinition implements HandlerEnhancerDefinition
         private final AggregateCreationPolicy creationPolicy;
 
         private MethodCreationPolicyHandlingMember(
-                MessageHandlingMember<T> delegate, Map<String, Object> attr) {
+                MessageHandlingMember<T> delegate, AggregateCreationPolicy creationPolicy) {
             super(delegate);
-            creationPolicy = (AggregateCreationPolicy) attr.get("creationPolicy");
+            this.creationPolicy = creationPolicy;
         }
 
         @Override

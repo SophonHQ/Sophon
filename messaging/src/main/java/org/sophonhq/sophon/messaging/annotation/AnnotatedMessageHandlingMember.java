@@ -21,18 +21,15 @@ import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sophonhq.sophon.common.ReflectionUtils;
-import org.sophonhq.sophon.common.annotation.AnnotationUtils;
 import org.sophonhq.sophon.messaging.HandlerAttributes;
 import org.sophonhq.sophon.messaging.Message;
 
-import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -178,16 +175,6 @@ public class AnnotatedMessageHandlingMember<T> implements MessageHandlingMember<
             params[i] = parameterResolvers[i].resolveParameterValue(message);
         }
         return params;
-    }
-
-    @Override
-    public boolean hasAnnotation(Class<? extends Annotation> annotationType) {
-        return AnnotationUtils.isAnnotationPresent(executable, annotationType);
-    }
-
-    @Override
-    public Optional<Map<String, Object>> annotationAttributes(Class<? extends Annotation> annotationType) {
-        return AnnotationUtils.findAnnotationAttributes(executable, annotationType);
     }
 
     @Override

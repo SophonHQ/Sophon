@@ -19,13 +19,11 @@ package org.sophonhq.sophon.modelling.saga;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
 
-import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -61,25 +59,12 @@ class PayloadAssociationResolverTest {
         assertThat(result).isEqualTo(TEST_PROPERTY_VALUE);
     }
 
-    private class TestEvent {
+    private record TestEvent(int testProperty) {
 
-        private final int testProperty;
-
-        public TestEvent(int testProperty) {
-            this.testProperty = testProperty;
-        }
-
-        public int getTestProperty() {
-            return testProperty;
-        }
     }
 
-    /**
-     * Sleep added to {@link #payloadType()} such that the
-     * {@link PayLoadAssociationResolverTest#resolveWorksThreadSafe()} test would always fail with a non thread safe
-     * map.
-     */
-    private class TestHandlingMember implements MessageHandlingMember {
+    @SuppressWarnings("rawtypes")
+    private static class TestHandlingMember implements MessageHandlingMember {
 
         @Override
         public Class<?> payloadType() {
@@ -92,12 +77,7 @@ class PayloadAssociationResolverTest {
         }
 
         @Override
-        public Optional<Map<String, Object>> annotationAttributes(Class annotationType) {
-            return Optional.empty();
-        }
-
-        @Override
-        public boolean hasAnnotation(Class annotationType) {
+        public boolean hasAnnotation(@NonNull Class annotationType) {
             return false;
         }
 
@@ -107,7 +87,7 @@ class PayloadAssociationResolverTest {
         }
 
         @Override
-        public Object handle(@NonNull Message message, @Nullable Object target) throws Exception {
+        public Object handle(@NonNull Message message, @Nullable Object target) {
             return null;
         }
 

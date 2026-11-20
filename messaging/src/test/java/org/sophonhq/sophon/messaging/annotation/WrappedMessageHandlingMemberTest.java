@@ -53,4 +53,10 @@ class WrappedMessageHandlingMemberTest {
         testSubject.attribute(HandlerAttributes.COMMAND_ROUTING_KEY);
         verify(mockedHandlingMember).attribute(HandlerAttributes.COMMAND_ROUTING_KEY);
     }
+
+    @Test
+    void annotation() {
+        testSubject.annotation(MessageHandler.class);
+        verify(mockedHandlingMember).annotation(MessageHandler.class);
+    }
 }

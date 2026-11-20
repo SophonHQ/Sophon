@@ -17,14 +17,17 @@
 
 package org.sophonhq.sophon.messaging.annotation;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.eventhandling.EventHandler;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.messaging.HandlerAttributes;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,6 +69,38 @@ class AnnotatedMessageHandlingMemberTest {
     }
 
     @Test
+    void hasAnnotationDetectsMarkerAnnotation() {
+        assertThat(testSubject.hasAnnotation(MarkerAnnotation.class)).isTrue();
+    }
+
+    @Test
+    void annotationReturnsDirectlyPresentAnnotation() {
+        assertThat(testSubject.annotation(EventHandler.class)).isPresent();
+    }
+
+    @Test
+    void annotationReturnsMetaAnnotation() {
+        Optional<MessageHandler> result = testSubject.annotation(MessageHandler.class);
+
+        assertThat(result).hasValueSatisfying(
+                annotation -> assertThat(annotation.messageType()).isEqualTo(EventMessage.class)
+        );
+    }
+
+    @Test
+    void annotationReturnsAnnotationWithoutHandlerAttributes() {
+        Optional<ThirdPartyAnnotation> result = testSubject.annotation(ThirdPartyAnnotation.class);
+
+        assertThat(result).hasValueSatisfying(annotation -> assertThat(annotation.value()).isEqualTo("third-party"));
+        assertThat(testSubject.attribute("ThirdPartyAnnotation.thirdPartyAnnotation")).isEmpty();
+    }
+
+    @Test
+    void annotationReturnsEmptyOptionalForAbsentAnnotation() {
+        assertThat(testSubject.annotation(CommandHandler.class)).isEmpty();
+    }
+
+    @Test
     void attributeReturnsNonEmptyOptionalForMatchingAttributeKey() {
         Optional<Object> resultMessageType = testSubject.attribute(HandlerAttributes.MESSAGE_TYPE);
         Optional<Object> resultPayloadType = testSubject.attribute(HandlerAttributes.PAYLOAD_TYPE);
@@ -81,8 +116,23 @@ class AnnotatedMessageHandlingMemberTest {
     private static class AnnotatedHandler {
 
         @EventHandler
+        @MarkerAnnotation
+        @ThirdPartyAnnotation("third-party")
         public void handlingMethod(String event) {
 
         }
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    private @interface MarkerAnnotation {
+
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    private @interface ThirdPartyAnnotation {
+
+        String value();
     }
 }

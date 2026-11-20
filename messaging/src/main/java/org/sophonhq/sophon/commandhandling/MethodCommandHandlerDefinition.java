@@ -19,6 +19,7 @@ package org.sophonhq.sophon.commandhandling;
 
 import org.jspecify.annotations.NonNull;
 import org.sophonhq.sophon.common.SophonConfigurationException;
+import org.sophonhq.sophon.messaging.HandlerAttributes;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.annotation.HandlerEnhancerDefinition;
 import org.sophonhq.sophon.messaging.annotation.MessageHandlingMember;
@@ -28,7 +29,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Map;
 
 /**
  * Implementation of a {@link HandlerEnhancerDefinition} that is used for {@link CommandHandler} annotated methods.
@@ -40,8 +40,12 @@ public class MethodCommandHandlerDefinition implements HandlerEnhancerDefinition
 
     @Override
     public <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
-        return original.annotationAttributes(CommandHandler.class)
-                       .map(attr -> (MessageHandlingMember<T>) new MethodCommandMessageHandlingMember<>(original, attr))
+        return original.<String>attribute(HandlerAttributes.COMMAND_NAME)
+                       .map(commandName -> (MessageHandlingMember<T>) new MethodCommandMessageHandlingMember<>(
+                               original,
+                               commandName,
+                               original.<String>attribute(HandlerAttributes.COMMAND_ROUTING_KEY).orElse("")
+                       ))
                        .orElse(original);
     }
 
@@ -54,18 +58,14 @@ public class MethodCommandHandlerDefinition implements HandlerEnhancerDefinition
         private final String routingKey;
 
         private MethodCommandMessageHandlingMember(MessageHandlingMember<T> delegate,
-                                                   Map<String, Object> annotationAttributes) {
+                                                   String commandName,
+                                                   String routingKey) {
             super(delegate);
-            this.routingKey = "".equals(annotationAttributes.get("routingKey")) ? null :
-                    (String) annotationAttributes.get("routingKey");
+            this.routingKey = "".equals(routingKey) ? null : routingKey;
             Executable executable = delegate.unwrap(Executable.class).orElseThrow(() -> new SophonConfigurationException(
                     "The @CommandHandler annotation must be put on an Executable (either directly or as Meta " +
                             "Annotation)"));
-            if ("".equals(annotationAttributes.get("commandName"))) {
-                commandName = delegate.payloadType().getName();
-            } else {
-                commandName = (String) annotationAttributes.get("commandName");
-            }
+            this.commandName = "".equals(commandName) ? delegate.payloadType().getName() : commandName;
             final boolean factoryMethod = executable instanceof Method && Modifier.isStatic(executable.getModifiers());
             if (factoryMethod && !executable.getDeclaringClass()
                                             .isAssignableFrom(((Method) executable).getReturnType())) {

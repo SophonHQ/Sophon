@@ -205,6 +205,55 @@ public abstract class AnnotationUtils {
                 .map(attribute -> (T) attribute);
     }
 
+    /**
+     * Find the annotation of type {@code annotationType} on the given {@code element}. The annotation is found if it is
+     * present directly on the {@code element}, or as a meta-annotation on any level. A directly present annotation
+     * takes precedence over meta-annotations.
+     * <p>
+     * Attribute overrides from meta-annotations are not applied. The returned annotation is the instance as declared,
+     * also when an annotation that uses it as a meta-annotation declares an attribute with the same name.
+     *
+     * @param element        the element to find the annotation on
+     * @param annotationType the type of the annotation to find
+     * @param <A>            the type of the annotation to find
+     * @return an optional containing the annotation, or an empty optional if the annotation is not found
+     * @since sophon-2.0.0
+     */
+    public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element,
+                                                                    Class<A> annotationType) {
+        A annotation = element.getAnnotation(annotationType);
+        if (annotation != null) {
+            return Optional.of(annotation);
+        }
+        Set<Class<? extends Annotation>> visited = new HashSet<>();
+        for (Annotation candidate : element.getAnnotations()) {
+            A metaAnnotation = findMetaAnnotation(candidate.annotationType(), annotationType, visited);
+            if (metaAnnotation != null) {
+                return Optional.of(metaAnnotation);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private static <A extends Annotation> A findMetaAnnotation(Class<? extends Annotation> target,
+                                                               Class<A> annotationType,
+                                                               Set<Class<? extends Annotation>> visited) {
+        if (!visited.add(target)) {
+            return null;
+        }
+        A annotation = target.getAnnotation(annotationType);
+        if (annotation != null) {
+            return annotation;
+        }
+        for (Annotation metaAnnotation : target.getAnnotations()) {
+            A found = findMetaAnnotation(metaAnnotation.annotationType(), annotationType, visited);
+            if (found != null) {
+                return found;
+            }
+        }
+        return null;
+    }
+
     private static boolean collectAnnotationAttributes(Class<? extends Annotation> target,
                                                        String annotationType,
                                                        Set<String> visited,
@@ -272,18 +321,18 @@ public abstract class AnnotationUtils {
     }
 
     /**
-     * Validate whether the given {@code target} annotation {@link Class} is meta-annotated with the given {@code
-     * subject}. If this is the case for the {@code target} itself or any meta-annotation on any level of the {@code
-     * target}, {@code true} will be returned.
+     * Validate whether the given {@code target} annotation {@link Class} is meta-annotated with the given
+     * {@code subject}. If this is the case for the {@code target} itself or any meta-annotation on any level of the
+     * {@code target}, {@code true} will be returned.
      * <p>
      * Any {@link Annotation} classes which are directly annotated or meta-annotated with the given {@code subject} will
      * be stored in the {@code annotatedWithSubject} {@link Set}. The {@code visited} {@code Set} is used to ignore
      * annotations which have already been validated.
      *
-     * @param target               the annotation {@link Class} to validate if it is annotated with the given {@code
-     *                             subject}
-     * @param subject              the annotation {@link Class} to check whether it is present on the given {@code
-     *                             target}, directly or through meta-annotations
+     * @param target               the annotation {@link Class} to validate if it is annotated with the given
+     *                             {@code subject}
+     * @param subject              the annotation {@link Class} to check whether it is present on the given
+     *                             {@code target}, directly or through meta-annotations
      * @param annotatedWithSubject a {@link Set} to store all class' in which are annotated with the {@code subject},
      *                             either directly or through meta-annotations
      * @param visited              a {@link Set} containing all annotation class' which have been visited in the process

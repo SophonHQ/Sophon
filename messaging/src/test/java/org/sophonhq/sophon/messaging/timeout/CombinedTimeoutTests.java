@@ -18,8 +18,7 @@ package org.sophonhq.sophon.messaging.timeout;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.Message;
@@ -29,7 +28,6 @@ import org.sophonhq.sophon.messaging.unitofwork.BatchingUnitOfWork;
 import java.lang.annotation.Annotation;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -218,49 +216,37 @@ class CombinedTimeoutTests {
         );
     }
 
-    private static class SimpleMessageHandlingMember implements MessageHandlingMember<Object> {
-
-        private final Callable<Object> callable;
-
-        private SimpleMessageHandlingMember(Callable<Object> callable) {
-            this.callable = callable;
-        }
+    private record SimpleMessageHandlingMember(Callable<Object> callable) implements MessageHandlingMember<Object> {
 
         @Override
-        public Class<?> payloadType() {
-            return String.class;
-        }
+            public Class<?> payloadType() {
+                return String.class;
+            }
 
-        @Override
-        public boolean canHandle(@NonNull Message<?> message) {
-            return true;
-        }
+            @Override
+            public boolean canHandle(@NonNull Message<?> message) {
+                return true;
+            }
 
-        @Override
-        public boolean canHandleMessageType(@NonNull Class<? extends Message> messageType) {
-            return true;
-        }
+            @Override
+            public boolean canHandleMessageType(@NonNull Class<? extends Message> messageType) {
+                return true;
+            }
 
-        @Override
-        public Object handle(@NonNull Message<?> message, @Nullable Object target) throws Exception {
-            callable.call();
-            return null;
-        }
+            @Override
+            public Object handle(@NonNull Message<?> message, @Nullable Object target) throws Exception {
+                callable.call();
+                return null;
+            }
 
-        @Override
-        public <HT> Optional<HT> unwrap(Class<HT> handlerType) {
-            return Optional.empty();
-        }
+            @Override
+            public <HT> Optional<HT> unwrap(Class<HT> handlerType) {
+                return Optional.empty();
+            }
 
-        @Override
-        public boolean hasAnnotation(Class<? extends Annotation> annotationType) {
-            return false;
+            @Override
+            public boolean hasAnnotation(@NonNull Class<? extends Annotation> annotationType) {
+                return false;
+            }
         }
-
-        @Override
-        public Optional<Map<String, Object>> annotationAttributes(
-                Class<? extends Annotation> annotationType) {
-            return Optional.empty();
-        }
-    }
 }

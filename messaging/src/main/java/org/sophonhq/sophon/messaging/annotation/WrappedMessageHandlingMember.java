@@ -21,7 +21,6 @@ import org.jspecify.annotations.NonNull;
 import org.sophonhq.sophon.messaging.Message;
 
 import java.lang.annotation.Annotation;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -88,13 +87,13 @@ public abstract class WrappedMessageHandlingMember<T> implements MessageHandling
     }
 
     @Override
-    public Optional<Map<String, Object>> annotationAttributes(Class<? extends Annotation> annotationType) {
-        return delegate.annotationAttributes(annotationType);
+    public boolean hasAnnotation(@NonNull Class<? extends Annotation> annotationType) {
+        return delegate.hasAnnotation(annotationType);
     }
 
     @Override
-    public boolean hasAnnotation(Class<? extends Annotation> annotationType) {
-        return delegate.hasAnnotation(annotationType);
+    public <A extends Annotation> Optional<A> annotation(@NonNull Class<A> annotationType) {
+        return delegate.annotation(annotationType);
     }
 
     @Override

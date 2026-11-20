@@ -20,6 +20,7 @@ package org.sophonhq.sophon.messaging.annotation;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.sophonhq.sophon.common.SophonConfigurationException;
+import org.sophonhq.sophon.messaging.HandlerAttributes;
 import org.sophonhq.sophon.messaging.InterceptorChain;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.interceptors.MessageHandlerInterceptor;
@@ -27,7 +28,6 @@ import org.sophonhq.sophon.messaging.interceptors.ResultHandler;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -47,10 +47,10 @@ public class MessageHandlerInterceptorDefinition implements HandlerEnhancerDefin
     public @NonNull
     <T> MessageHandlingMember<T> wrapHandler(@NonNull MessageHandlingMember<T> original) {
 
-        if (original.annotationAttributes(MessageHandlerInterceptor.class).isPresent()) {
-            Optional<Map<String, Object>> attributes = original.annotationAttributes(ResultHandler.class);
-            if (attributes.isPresent()) {
-                return new ResultHandlingInterceptorMember<>(original, (Class<?>) attributes.get().get("resultType"));
+        if (original.hasAnnotation(MessageHandlerInterceptor.class)) {
+            Optional<Class<?>> resultType = original.attribute(HandlerAttributes.RESULT_TYPE);
+            if (resultType.isPresent()) {
+                return new ResultHandlingInterceptorMember<>(original, resultType.get());
             }
             return new InterceptedMessageHandlingMember<>(original);
         }
