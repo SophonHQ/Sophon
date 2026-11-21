@@ -207,20 +207,6 @@ public class JobRunrDeadlineManager extends AbstractDeadlineManager implements L
      *
      * @param serializedDeadlineDetails {@code byte[]} containing the serialized {@link DeadlineDetails} object with all
      *                                  the needed details to execute.
-     * @deprecated Kept for backwards compatibility, use {@link #execute(String, String)} instead.
-     */
-    @Deprecated
-    public void execute(@NonNull String serializedDeadlineDetails) {
-        execute(serializedDeadlineDetails, null);
-    }
-
-    /**
-     * This function should only be called via JobRunr when a deadline was triggered. It will try to execute the
-     * scheduled deadline on the set scope. It will throw a {@link DeadlineException} in case of errors such that they
-     * will be optionally retried by JobRunr.
-     *
-     * @param serializedDeadlineDetails {@code byte[]} containing the serialized {@link DeadlineDetails} object with all
-     *                                  the needed details to execute.
      * @param deadlineId                The {@link UUID} of the deadline.
      */
     @SuppressWarnings({"unchecked", "rawtypes"})

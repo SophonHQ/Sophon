@@ -72,6 +72,9 @@ such a span factory from a `SpanFactory`, use the builder of its default impleme
 | `serialization.JavaSerializer`                                                                                                      | `serialization.xml.XStreamSerializer`, `serialization.json.JacksonSerializer` or `serialization.jackson3.Jackson3Serializer`. For data that `JavaSerializer` wrote, see [Stored data](#stored-data)           |
 | `queryhandling.SubscriptionQueryBackpressure`, and the methods of `QueryBus`, `QueryGateway` and `QueryUpdateEmitter` that take one | The same methods without the `SubscriptionQueryBackpressure` parameter. To control backpressure, use an `onBackpressure...` operator on the updates, for example `result.updates().onBackpressureBuffer(100)` |
 | `tracing.NestingSpanFactory`                                                                                                        | The `distributedInSameTrace` setting of `DefaultCommandBusSpanFactory`, `DefaultQueryBusSpanFactory` and `DefaultEventProcessorSpanFactory`                                                                   |
+| `deadline.quartz.DeadlineJob.DeadlineJobDataBinder.SERIALIZED_DEADLINE_MESSAGE` and `SERIALIZED_DEADLINE_MESSAGE_CLASS_NAME`        | None. No Sophon version writes deadline jobs with these keys                                                                                                                                                  |
+| `eventhandling.scheduling.quartz.QuartzEventScheduler.DirectEventJobDataBinder.EVENT_KEY`                                           | None. No Sophon version writes event jobs with this key                                                                                                                                                       |
+| `deadline.jobrunr.JobRunrDeadlineManager.execute(String)`                                                                           | `execute(String, String)`. No Sophon version schedules JobRunr jobs that call the one-argument method                                                                                                         |
 
 #### `sophon-modelling`
 
@@ -114,6 +117,7 @@ Sophon 2.0 removes the classic Spring configuration. Use the Spring Boot auto-co
 that replace it, as the table shows.
 
 The replacement beans treat some beans differently:
+
 * `MessageHandlerLookup` registers every singleton bean that has message handler methods as a handler. Make sure
   that each aggregate class, including each subtype of a polymorphic aggregate, is a prototype bean. The `@Aggregate`
   stereotype does this for you.
@@ -203,24 +207,29 @@ steps to keep reading it:
    `eventSerializer` or `messageSerializer`.
 3. To move away from Java serialization, convert the stored data to another format with a one-time migration.
 
+Sophon 2.0 also stops reading the oldest formats of scheduled Quartz jobs, and JobRunr jobs that call
+`JobRunrDeadlineManager.execute(String)`. No Sophon version writes these formats. Only jobs that Axon Framework
+scheduled can contain them, and [MIGRATING.md](MIGRATING.md) already says let those complete or schedule them
+again.
+
 ### Behavior changes
 
 * Sophon no longer finds `javax.persistence` annotations by name:
-  * An aggregate whose identifier carries only `javax.persistence.Id` has no identifier. Use `jakarta.persistence.Id`
-    or `@AggregateIdentifier`.
-  * In a Spring application, an aggregate class with `javax.persistence.Entity` no longer gets a JPA repository. Use
-    `jakarta.persistence.Entity`.
+    * An aggregate whose identifier carries only `javax.persistence.Id` has no identifier. Use `jakarta.persistence.Id`
+      or `@AggregateIdentifier`.
+    * In a Spring application, an aggregate class with `javax.persistence.Entity` no longer gets a JPA repository. Use
+      `jakarta.persistence.Entity`.
 * Sophon's JPA entity classes, such as `eventhandling.tokenstore.jpa.TokenEntry`,
   `eventsourcing.eventstore.jpa.DomainEventEntry` and `modelling.saga.repository.jpa.SagaEntry`, carry only Jakarta
   Persistence annotations. A `javax.persistence` provider no longer maps them. The table and column definitions do
   not change.
 * These builders no longer fall back to an XStream serializer that allows every type. Set a serializer, or `build()`
   fails with a `SophonConfigurationException`:
-  * `deadline.quartz.QuartzDeadlineManager`.
-  * `eventhandling.scheduling.quartz.QuartzEventScheduler`, unless you set an `EventJobDataBinder`.
-  * `modelling.saga.repository.jdbc.JdbcSagaStore` and `modelling.saga.repository.jpa.JpaSagaStore`.
-  * `eventsourcing.eventstore.jdbc.JdbcEventStorageEngine` and `eventsourcing.eventstore.jpa.JpaEventStorageEngine`,
-    for both the event and the snapshot serializer.
+    * `deadline.quartz.QuartzDeadlineManager`.
+    * `eventhandling.scheduling.quartz.QuartzEventScheduler`, unless you set an `EventJobDataBinder`.
+    * `modelling.saga.repository.jdbc.JdbcSagaStore` and `modelling.saga.repository.jpa.JpaSagaStore`.
+    * `eventsourcing.eventstore.jdbc.JdbcEventStorageEngine` and `eventsourcing.eventstore.jpa.JpaEventStorageEngine`,
+      for both the event and the snapshot serializer.
 
   The `Configurer` and the Spring Boot auto-configuration set these serializers for you.
 * `test.aggregate.TestExecutor.whenTimeElapses(Duration)` and `whenTimeAdvancesTo(Instant)` are abstract. A custom
