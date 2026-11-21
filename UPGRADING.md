@@ -40,35 +40,38 @@ such a span factory from a `SpanFactory`, use the builder of its default impleme
 
 #### `sophon-messaging`
 
-| Removed                                                                                                                   | Use instead                                                                     |
-|---------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
-| `common.legacyjpa.EntityManagerProvider`                                                                                  | `common.jpa.EntityManagerProvider`                                              |
-| `common.legacyjpa.SimpleEntityManagerProvider`                                                                            | `common.jpa.SimpleEntityManagerProvider`                                        |
-| `common.legacyjpa.PagingJpaQueryIterable`                                                                                 | `common.jpa.PagingJpaQueryIterable`                                             |
-| `eventhandling.deadletter.legacyjpa.DeadLetterJpaConverter`                                                               | `eventhandling.deadletter.jpa.DeadLetterJpaConverter`                           |
-| `eventhandling.deadletter.legacyjpa.EventMessageDeadLetterJpaConverter`                                                   | `eventhandling.deadletter.jpa.EventMessageDeadLetterJpaConverter`               |
-| `eventhandling.deadletter.legacyjpa.JpaDeadLetter`                                                                        | `eventhandling.deadletter.jpa.JpaDeadLetter`                                    |
-| `eventhandling.deadletter.legacyjpa.JpaSequencedDeadLetterQueue`                                                          | `eventhandling.deadletter.jpa.JpaSequencedDeadLetterQueue`                      |
-| `eventhandling.tokenstore.legacyjpa.JpaTokenStore`                                                                        | `eventhandling.tokenstore.jpa.JpaTokenStore`                                    |
-| `messaging.interceptors.legacyvalidation.BeanValidationInterceptor`                                                       | `messaging.interceptors.BeanValidationInterceptor`                              |
-| `messaging.interceptors.legacyvalidation.JSR303ViolationException`                                                        | `messaging.interceptors.JSR303ViolationException`                               |
-| `common.caching.EhCacheAdapter`                                                                                           | `common.caching.EhCache3Adapter`                                                |
-| The `eventhandling.ReplayToken` constructors                                                                              | `ReplayToken.createReplayToken(...)` with the same arguments                    |
-| `eventhandling.EventUtils.asDomainEventMessage(EventMessage)`                                                             | None, the method was for internal use                                           |
-| `eventhandling.TrackingEventProcessorConfiguration.andWorkerTerminationTimeout(long)`                                     | `andWorkerTerminationTimeout(long, TimeUnit)`                                   |
-| `eventhandling.pooled.PooledStreamingEventProcessor.Builder.workerExecutorService(ScheduledExecutorService)`              | `workerExecutor(ScheduledExecutorService)`                                      |
-| `eventhandling.tokenstore.jdbc.TokenSchema.ownerColum()` and `TokenSchema.Builder.setOwnerColum(String)`                  | `ownerColumn()` and `setOwnerColumn(String)`                                    |
-| `eventhandling.scheduling.quartz.QuartzEventScheduler.DirectEventJobDataBinder()`                                         | `DirectEventJobDataBinder(Serializer)`                                          |
-| `messaging.annotation.AnnotatedHandlerInspector.getHandlers()`                                                            | `getAllHandlers()` or `getHandlers(Class)`                                      |
-| `messaging.annotation.InterceptorChainParameterResolverFactory.initialize(InterceptorChain)`                              | `callWithInterceptorChain(InterceptorChain, Callable)`                          |
-| `messaging.responsetypes.AbstractResponseType.unwrapIfTypeFuture(Type)`                                                   | `common.ReflectionUtils.unwrapIfType(Type, Class...)`                           |
-| `commandhandling.distributed.AbstractRoutingStrategy(UnresolvedRoutingKeyPolicy)`                                         | `AbstractRoutingStrategy(RoutingStrategy)`                                      |
-| The constructors of `commandhandling.distributed.AnnotationRoutingStrategy` and `MetaDataRoutingStrategy`                 | Their `builder()`                                                               |
-| `commandhandling.distributed.CommandCallbackRepository.cancelCallbacks(Object)`                                           | `cancelCallbacksForChannel(Object)`                                             |
-| `commandhandling.callbacks.FailureLoggingCallback(CommandCallback)` and `FailureLoggingCallback(Logger, CommandCallback)` | `new FailureLoggingCallback<>(logger).wrap(callback)`                           |
-| `queryhandling.SubscriptionQueryResult.handle(Consumer, Consumer)`                                                        | `handle(Consumer, Consumer, Consumer)`, with a consumer for errors              |
-| `serialization.xml.XStreamSerializer.defaultSerializer()`                                                                 | `XStreamSerializer.builder()` with an `XStream` instance that allows your types |
-| `deadline.GenericDeadlineMessage.asDeadlineMessage(String, Object)`                                                       | `asDeadlineMessage(String, Object, Instant)`                                    |
+| Removed                                                                                                                             | Use instead                                                                                                                                                                                                   |
+|-------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `common.legacyjpa.EntityManagerProvider`                                                                                            | `common.jpa.EntityManagerProvider`                                                                                                                                                                            |
+| `common.legacyjpa.SimpleEntityManagerProvider`                                                                                      | `common.jpa.SimpleEntityManagerProvider`                                                                                                                                                                      |
+| `common.legacyjpa.PagingJpaQueryIterable`                                                                                           | `common.jpa.PagingJpaQueryIterable`                                                                                                                                                                           |
+| `eventhandling.deadletter.legacyjpa.DeadLetterJpaConverter`                                                                         | `eventhandling.deadletter.jpa.DeadLetterJpaConverter`                                                                                                                                                         |
+| `eventhandling.deadletter.legacyjpa.EventMessageDeadLetterJpaConverter`                                                             | `eventhandling.deadletter.jpa.EventMessageDeadLetterJpaConverter`                                                                                                                                             |
+| `eventhandling.deadletter.legacyjpa.JpaDeadLetter`                                                                                  | `eventhandling.deadletter.jpa.JpaDeadLetter`                                                                                                                                                                  |
+| `eventhandling.deadletter.legacyjpa.JpaSequencedDeadLetterQueue`                                                                    | `eventhandling.deadletter.jpa.JpaSequencedDeadLetterQueue`                                                                                                                                                    |
+| `eventhandling.tokenstore.legacyjpa.JpaTokenStore`                                                                                  | `eventhandling.tokenstore.jpa.JpaTokenStore`                                                                                                                                                                  |
+| `messaging.interceptors.legacyvalidation.BeanValidationInterceptor`                                                                 | `messaging.interceptors.BeanValidationInterceptor`                                                                                                                                                            |
+| `messaging.interceptors.legacyvalidation.JSR303ViolationException`                                                                  | `messaging.interceptors.JSR303ViolationException`                                                                                                                                                             |
+| `common.caching.EhCacheAdapter`                                                                                                     | `common.caching.EhCache3Adapter`                                                                                                                                                                              |
+| The `eventhandling.ReplayToken` constructors                                                                                        | `ReplayToken.createReplayToken(...)` with the same arguments                                                                                                                                                  |
+| `eventhandling.EventUtils.asDomainEventMessage(EventMessage)`                                                                       | None, the method was for internal use                                                                                                                                                                         |
+| `eventhandling.TrackingEventProcessorConfiguration.andWorkerTerminationTimeout(long)`                                               | `andWorkerTerminationTimeout(long, TimeUnit)`                                                                                                                                                                 |
+| `eventhandling.pooled.PooledStreamingEventProcessor.Builder.workerExecutorService(ScheduledExecutorService)`                        | `workerExecutor(ScheduledExecutorService)`                                                                                                                                                                    |
+| `eventhandling.tokenstore.jdbc.TokenSchema.ownerColum()` and `TokenSchema.Builder.setOwnerColum(String)`                            | `ownerColumn()` and `setOwnerColumn(String)`                                                                                                                                                                  |
+| `eventhandling.scheduling.quartz.QuartzEventScheduler.DirectEventJobDataBinder()`                                                   | `DirectEventJobDataBinder(Serializer)`                                                                                                                                                                        |
+| `messaging.annotation.AnnotatedHandlerInspector.getHandlers()`                                                                      | `getAllHandlers()` or `getHandlers(Class)`                                                                                                                                                                    |
+| `messaging.annotation.InterceptorChainParameterResolverFactory.initialize(InterceptorChain)`                                        | `callWithInterceptorChain(InterceptorChain, Callable)`                                                                                                                                                        |
+| `messaging.responsetypes.AbstractResponseType.unwrapIfTypeFuture(Type)`                                                             | `common.ReflectionUtils.unwrapIfType(Type, Class...)`                                                                                                                                                         |
+| `commandhandling.distributed.AbstractRoutingStrategy(UnresolvedRoutingKeyPolicy)`                                                   | `AbstractRoutingStrategy(RoutingStrategy)`                                                                                                                                                                    |
+| The constructors of `commandhandling.distributed.AnnotationRoutingStrategy` and `MetaDataRoutingStrategy`                           | Their `builder()`                                                                                                                                                                                             |
+| `commandhandling.distributed.CommandCallbackRepository.cancelCallbacks(Object)`                                                     | `cancelCallbacksForChannel(Object)`                                                                                                                                                                           |
+| `commandhandling.callbacks.FailureLoggingCallback(CommandCallback)` and `FailureLoggingCallback(Logger, CommandCallback)`           | `new FailureLoggingCallback<>(logger).wrap(callback)`                                                                                                                                                         |
+| `queryhandling.SubscriptionQueryResult.handle(Consumer, Consumer)`                                                                  | `handle(Consumer, Consumer, Consumer)`, with a consumer for errors                                                                                                                                            |
+| `serialization.xml.XStreamSerializer.defaultSerializer()`                                                                           | `XStreamSerializer.builder()` with an `XStream` instance that allows your types                                                                                                                               |
+| `deadline.GenericDeadlineMessage.asDeadlineMessage(String, Object)`                                                                 | `asDeadlineMessage(String, Object, Instant)`                                                                                                                                                                  |
+| `serialization.JavaSerializer`                                                                                                      | `serialization.xml.XStreamSerializer`, `serialization.json.JacksonSerializer` or `serialization.jackson3.Jackson3Serializer`. For data that `JavaSerializer` wrote, see [Stored data](#stored-data)           |
+| `queryhandling.SubscriptionQueryBackpressure`, and the methods of `QueryBus`, `QueryGateway` and `QueryUpdateEmitter` that take one | The same methods without the `SubscriptionQueryBackpressure` parameter. To control backpressure, use an `onBackpressure...` operator on the updates, for example `result.updates().onBackpressureBuffer(100)` |
+| `tracing.NestingSpanFactory`                                                                                                        | The `distributedInSameTrace` setting of `DefaultCommandBusSpanFactory`, `DefaultQueryBusSpanFactory` and `DefaultEventProcessorSpanFactory`                                                                   |
 
 #### `sophon-modelling`
 
@@ -155,11 +158,12 @@ The JPA auto-configuration needs Jakarta Persistence on the classpath.
 
 #### `sophon-metrics` and `sophon-micrometer`
 
-| Removed                                                                                                      | Use instead                                                                                     |
-|--------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
-| The constructors of `metrics.MessageTimerMonitor`                                                            | `MessageTimerMonitor.builder()`                                                                 |
-| The `buildMonitor` methods of `micrometer.MessageTimerMonitor` and `micrometer.EventProcessorLatencyMonitor` | Their `builder()`                                                                               |
-| `micrometer.GlobalMetricRegistry.registerEventProcessor(String, Function)`                                   | `registerEventProcessor(String, Function, Function)`, with separate tags for the latency metric |
+| Removed                                                                                                      | Use instead                                                                                                                     |
+|--------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| The constructors of `metrics.MessageTimerMonitor`                                                            | `MessageTimerMonitor.builder()`                                                                                                 |
+| The `buildMonitor` methods of `micrometer.MessageTimerMonitor` and `micrometer.EventProcessorLatencyMonitor` | Their `builder()`                                                                                                               |
+| `micrometer.GlobalMetricRegistry.registerEventProcessor(String, Function)`                                   | `registerEventProcessor(String, Function, Function)`, with separate tags for the latency metric                                 |
+| `micrometer.PayloadTypeMessageMonitorWrapper`                                                                | Tags on the monitors. `micrometer.GlobalMetricRegistry.registerWithConfigurerWithDefaultTags(Configurer)` gives the same result |
 
 #### `sophon-test`
 
@@ -177,7 +181,27 @@ The JPA auto-configuration needs Jakarta Persistence on the classpath.
 
 ### Removed configuration properties and values
 
+| Removed                                                                                                      | Use instead                                                                                                               |
+|--------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| The `java` value of `sophon.serializer.general`, `sophon.serializer.messages` and `sophon.serializer.events` | `xstream`, `jackson`, `jackson3`, `cbor` or `avro`. For data that `JavaSerializer` wrote, see [Stored data](#stored-data) |
+| `sophon.tracing.nested-handlers`                                                                             | `sophon.tracing.event-processor.distributed-in-same-trace`                                                                |
+| `sophon.tracing.nested-time-limit`                                                                           | `sophon.tracing.event-processor.distributed-in-same-trace-time-limit`                                                     |
+
+If a serializer property is still set to `java`, the application fails at startup with an error that names the
+property. Spring Boot ignores unknown properties, so the two `nested-*` properties have no effect anymore and cause no
+error. Replace them with the new properties to keep the same behavior.
+
 ### Stored data
+
+Sophon 2.0 has no `JavaSerializer`. If your event store, token store, saga store, dead-letter queue or scheduled
+deadlines contain data that `JavaSerializer` wrote, Sophon 2.0 cannot read that data out of the box. Follow these
+steps to keep reading it:
+
+1. Copy the `JavaSerializer` class of Sophon 1.2.x into your application, in your own package.
+2. Configure your copy as the serializer for the components that read the old data. In Spring Boot, define your copy
+   as a `Serializer` bean. To replace only the event or the message serializer, give the bean the qualifier
+   `eventSerializer` or `messageSerializer`.
+3. To move away from Java serialization, convert the stored data to another format with a one-time migration.
 
 ### Behavior changes
 

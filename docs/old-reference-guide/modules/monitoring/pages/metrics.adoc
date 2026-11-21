@@ -20,6 +20,7 @@ Note that xref:events:event-processors/streaming.adoc#replaying-events[triggerin
 . `MessageCountingMonitor` - Counts the number of ingested, successful, failed, ignored and processed messages.
 . `MessageTimerMonitor` - Keeps a timer for all successful, failed and ignored messages, as well as an overall timer for all three combined.
 . `PayloadTypeMessageMonitorWrapper` - A special `MessageMonitor` implementation which allows setting a monitor per message type instead of per message publishing/handling component.
+Only `sophon-metrics` provides it. With `sophon-micrometer`, add a payload type tag to the monitors instead.
 
 You are free to configure any combination of `MessageMonitors` through constructors on your messaging components, simply by using the Configuration API.
 The `GlobalMetricRegistry` contained in the `sophon-metrics` and `sophon-micrometer` modules provides a set of sensible defaults per type of messaging component.

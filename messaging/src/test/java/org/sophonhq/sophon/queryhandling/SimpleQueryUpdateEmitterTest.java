@@ -54,29 +54,6 @@ class SimpleQueryUpdateEmitterTest {
                                                                                  .build();
 
     @Test
-    void completingRegistrationOldApi() {
-        SubscriptionQueryMessage<String, List<String>, String> queryMessage = new GenericSubscriptionQueryMessage<>(
-                "some-payload",
-                "chatMessages",
-                ResponseTypes.multipleInstancesOf(String.class),
-                ResponseTypes.instanceOf(String.class)
-        );
-
-        UpdateHandlerRegistration<Object> result = testSubject.registerUpdateHandler(
-                queryMessage,
-                SubscriptionQueryBackpressure.defaultBackpressure(),
-                1024
-        );
-
-        testSubject.emit(any -> true, "some-awesome-text");
-        result.complete();
-
-        StepVerifier.create(result.getUpdates().map(Message::getPayload))
-                    .expectNext("some-awesome-text")
-                    .verifyComplete();
-    }
-
-    @Test
     void concurrentUpdateEmitting() {
         SubscriptionQueryMessage<String, List<String>, String> queryMessage = new GenericSubscriptionQueryMessage<>(
                 "some-payload",
@@ -96,53 +73,6 @@ class SimpleQueryUpdateEmitterTest {
                     .expectNextCount(100)
                     .then(() -> testSubject.complete(q -> true))
                     .verifyComplete();
-    }
-
-    @Test
-    void concurrentUpdateEmitting_WithBackpressure() {
-        SubscriptionQueryMessage<String, List<String>, String> queryMessage = new GenericSubscriptionQueryMessage<>(
-                "some-payload",
-                "chatMessages",
-                ResponseTypes.multipleInstancesOf(String.class),
-                ResponseTypes.instanceOf(String.class)
-        );
-
-        UpdateHandlerRegistration<Object> registration = testSubject.registerUpdateHandler(queryMessage, SubscriptionQueryBackpressure.defaultBackpressure(), 128);
-
-        ExecutorService executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-        for (int i = 0; i < 100; i++) {
-            executors.submit(() -> {
-                testSubject.emit(q -> true, "Update");
-            });
-        }
-        executors.shutdown();
-        StepVerifier.create(registration.getUpdates())
-                    .expectNextCount(100)
-                    .then(() -> testSubject.complete(q -> true))
-                    .verifyComplete();
-    }
-
-    @Test
-    void cancelingRegistrationDoesNotCompleteFluxOfUpdatesOldApi() {
-        SubscriptionQueryMessage<String, List<String>, String> queryMessage = new GenericSubscriptionQueryMessage<>(
-                "some-payload",
-                "chatMessages",
-                ResponseTypes.multipleInstancesOf(String.class),
-                ResponseTypes.instanceOf(String.class)
-        );
-
-        UpdateHandlerRegistration<Object> result = testSubject.registerUpdateHandler(
-                queryMessage,
-                SubscriptionQueryBackpressure.defaultBackpressure(),
-                1024
-        );
-
-        testSubject.emit(any -> true, "some-awesome-text");
-        result.getRegistration().cancel();
-
-        StepVerifier.create(result.getUpdates().map(Message::getPayload))
-                    .expectNext("some-awesome-text")
-                    .verifyTimeout(Duration.ofMillis(500));
     }
 
     @Test

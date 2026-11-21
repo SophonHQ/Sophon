@@ -466,7 +466,7 @@ You can specify a serializer in your `application.properties`:
 # somewhere in your `application.properties`
 
 sophon.serializer.events=jackson
-# possible values: java, xstream, jackson
+# possible values: xstream, jackson, jackson3, cbor, avro
 ----
 
 Alternatively, you can explicitly define your Serializer in the Spring context:

@@ -30,7 +30,6 @@ import org.sophonhq.sophon.serialization.jackson3.Jackson3Serializer;
 import org.sophonhq.sophon.serialization.json.JacksonSerializer;
 import org.sophonhq.sophon.serialization.xml.XStreamSerializer;
 
-import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -73,7 +72,6 @@ class LegacyClassNameDeserializationTest {
                                                     .build());
         serializers.put("Jackson", JacksonSerializer.builder().translateLegacyClassNames().build());
         serializers.put("Jackson 3", Jackson3Serializer.builder().translateLegacyClassNames().build());
-        serializers.put("Java", JavaSerializer.builder().translateLegacyClassNames().build());
         return serializers.entrySet().stream().flatMap(
                 serializer -> objects.stream().map(o -> Arguments.of(serializer.getKey(), serializer.getValue(), o))
         );
@@ -106,50 +104,8 @@ class LegacyClassNameDeserializationTest {
         SerializedType type = serialized.getType();
         SerializedType legacyType = new SimpleSerializedType(type.getName().replace(PACKAGE, LEGACY_PACKAGE),
                                                              type.getRevision());
-        byte[] data = serialized.getData();
-        byte[] legacyData = isJavaSerialization(data)
-                ? withLegacyJavaSerializedClassNames(data)
-                : new String(data, StandardCharsets.UTF_8).replace(PACKAGE, LEGACY_PACKAGE)
-                                                          .getBytes(StandardCharsets.UTF_8);
+        byte[] legacyData = new String(serialized.getData(), StandardCharsets.UTF_8).replace(PACKAGE, LEGACY_PACKAGE)
+                                                                                .getBytes(StandardCharsets.UTF_8);
         return new SimpleSerializedObject<>(legacyData, byte[].class, legacyType);
-    }
-
-    private static boolean isJavaSerialization(byte[] data) {
-        return data.length > 1 && data[0] == (byte) 0xAC && data[1] == (byte) 0xED;
-    }
-
-    /**
-     * Rewrites the class names and field signatures in a Java serialization stream. Both are written as UTF strings
-     * prefixed with their length, so the length is adjusted along with the name.
-     */
-    private static byte[] withLegacyJavaSerializedClassNames(byte[] data) {
-        String latin = new String(data, StandardCharsets.ISO_8859_1);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        int position = 0;
-        int match;
-        while ((match = nextName(latin, position)) >= 0) {
-            int start = latin.charAt(match - 1) == 'L' && latin.startsWith(PACKAGE.replace('.', '/'), match)
-                    ? match - 1 : match;
-            int length = ((data[start - 2] & 0xFF) << 8) | (data[start - 1] & 0xFF);
-            String original = latin.substring(start, start + length);
-            String legacy = original.replace(PACKAGE, LEGACY_PACKAGE)
-                                    .replace(PACKAGE.replace('.', '/'), LEGACY_PACKAGE.replace('.', '/'));
-            out.write(data, position, start - 2 - position);
-            out.write(legacy.length() >> 8);
-            out.write(legacy.length() & 0xFF);
-            out.write(legacy.getBytes(StandardCharsets.ISO_8859_1), 0, legacy.length());
-            position = start + length;
-        }
-        out.write(data, position, data.length - position);
-        return out.toByteArray();
-    }
-
-    private static int nextName(String serialized, int from) {
-        int dotted = serialized.indexOf(PACKAGE, from);
-        int slashed = serialized.indexOf(PACKAGE.replace('.', '/'), from);
-        if (dotted < 0) {
-            return slashed;
-        }
-        return slashed < 0 ? dotted : Math.min(dotted, slashed);
     }
 }
