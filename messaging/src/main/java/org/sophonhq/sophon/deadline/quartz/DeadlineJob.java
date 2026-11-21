@@ -200,20 +200,6 @@ public class DeadlineJob implements Job {
     public static class DeadlineJobDataBinder {
 
         /**
-         * Key pointing to the serialized {@link DeadlineMessage}.
-         *
-         * @deprecated in favor of the separate DeadlineMessage keys | only maintained for backwards compatibility
-         */
-        @Deprecated
-        public static final String SERIALIZED_DEADLINE_MESSAGE = "serializedDeadlineMessage";
-        /**
-         * Key pointing to the class name of the serialized {@link DeadlineMessage}.
-         *
-         * @deprecated in favor of the separate DeadlineMessage keys | only maintained for backwards compatibility
-         */
-        @Deprecated
-        public static final String SERIALIZED_DEADLINE_MESSAGE_CLASS_NAME = "serializedDeadlineMessageClassName";
-        /**
          * Key pointing to the serialized deadline {@link ScopeDescriptor} in the {@link JobDataMap}
          */
         public static final String SERIALIZED_DEADLINE_SCOPE = "serializedDeadlineScope";
@@ -268,13 +254,8 @@ public class DeadlineJob implements Job {
         }
 
         /**
-         * Extracts a {@link DeadlineMessage} from provided {@code jobDataMap}.
-         *
-         * <b>Note</b> that this function is able to retrieve two different formats of DeadlineMessage. The first being
-         * a now deprecated solution which used to serialized the entire {@link DeadlineMessage} into the
-         * {@link JobDataMap}. This is only kept for backwards compatibility. The second is the new solution which
-         * stores all the required deadline fields separately, only de-/serializing the payload and metadata of a
-         * DeadlineMessage instead of the entire message.
+         * Extracts a {@link DeadlineMessage} from provided {@code jobDataMap}. The {@code jobDataMap} stores the
+         * deadline fields separately, with only the payload and metadata of the DeadlineMessage serialized.
          *
          * @param serializer the {@link Serializer} used to deserialize the contents of the given {@code} jobDataMap}
          *                   into a {@link DeadlineMessage}
@@ -282,14 +263,6 @@ public class DeadlineJob implements Job {
          * @return the {@link DeadlineMessage} pulled from the {@code jobDataMap}
          */
         public static DeadlineMessage deadlineMessage(Serializer serializer, JobDataMap jobDataMap) {
-            if (jobDataMap.containsKey(SERIALIZED_DEADLINE_MESSAGE)) {
-                SimpleSerializedObject<byte[]> serializedDeadlineMessage = new SimpleSerializedObject<>(
-                        (byte[]) jobDataMap.get(SERIALIZED_DEADLINE_MESSAGE), byte[].class,
-                        (String) jobDataMap.get(SERIALIZED_DEADLINE_MESSAGE_CLASS_NAME), null
-                );
-                return serializer.deserialize(serializedDeadlineMessage);
-            }
-
             return new GenericDeadlineMessage<>((String) jobDataMap.get(DEADLINE_NAME),
                                                 (String) jobDataMap.get(MESSAGE_ID),
                                                 deserializeDeadlinePayload(serializer, jobDataMap),
