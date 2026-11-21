@@ -24,7 +24,6 @@ import org.quartz.JobDataMap;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.messaging.MetaData;
-import org.sophonhq.sophon.serialization.JavaSerializer;
 import org.sophonhq.sophon.serialization.SerializedType;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.SimpleSerializedObject;
@@ -56,11 +55,6 @@ class DirectEventJobDataBinderTest {
 
     static Stream<Arguments> serializerImplementationAndAssertionSpecifics() {
         return Stream.of(
-                Arguments.arguments(
-                        spy(JavaSerializer.builder().build()),
-                        (Function<Class, String>) Class::getName,
-                        (Predicate<Object>) Objects::nonNull
-                ),
                 Arguments.arguments(
                         spy(TestSerializer.XSTREAM.getSerializer()),
                         (Function<Class, String>) clazz -> clazz.getSimpleName().toLowerCase(),

@@ -26,7 +26,6 @@ import org.sophonhq.sophon.deadline.GenericDeadlineMessage;
 import org.sophonhq.sophon.deadline.TestScopeDescriptor;
 import org.sophonhq.sophon.messaging.MetaData;
 import org.sophonhq.sophon.messaging.ScopeDescriptor;
-import org.sophonhq.sophon.serialization.JavaSerializer;
 import org.sophonhq.sophon.serialization.SerializedType;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.SimpleSerializedObject;
@@ -63,11 +62,6 @@ class DeadlineJobDataBinderTest {
 
     public static Stream<Arguments> serializerImplementationAndAssertionSpecifics() {
         return Stream.of(
-                Arguments.arguments(
-                        spy(JavaSerializer.builder().build()),
-                        (Function<Class, String>) Class::getName,
-                        (Predicate<Object>) Objects::nonNull
-                ),
                 Arguments.arguments(
                         spy(TestSerializer.XSTREAM.getSerializer()),
                         (Function<Class, String>) clazz -> clazz.getSimpleName().toLowerCase(),

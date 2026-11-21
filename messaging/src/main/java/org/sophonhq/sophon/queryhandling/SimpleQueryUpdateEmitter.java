@@ -33,10 +33,7 @@ import org.sophonhq.sophon.monitoring.MessageMonitor;
 import org.sophonhq.sophon.monitoring.NoOpMessageMonitor;
 import org.sophonhq.sophon.tracing.NoOpSpanFactory;
 import org.sophonhq.sophon.tracing.Span;
-import org.sophonhq.sophon.tracing.SpanFactory;
-import reactor.core.publisher.EmitterProcessor;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Sinks;
 
 import java.util.ArrayList;
@@ -49,7 +46,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 
-import static java.lang.String.format;
 import static org.sophonhq.sophon.common.BuilderUtils.assertNonNull;
 
 /**
@@ -101,32 +97,6 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
         return updateHandlers.keySet()
                              .stream()
                              .anyMatch(m -> m.getIdentifier().equals(query.getIdentifier()));
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated in favour of using {{@link #registerUpdateHandler(SubscriptionQueryMessage, int)}}
-     */
-    @Deprecated
-    @Override
-    public <U> UpdateHandlerRegistration<U> registerUpdateHandler(SubscriptionQueryMessage<?, ?, ?> query,
-                                                                  SubscriptionQueryBackpressure backpressure,
-                                                                  int updateBufferSize) {
-        EmitterProcessor<SubscriptionQueryUpdateMessage<U>> processor = EmitterProcessor.create(updateBufferSize);
-        FluxSink<SubscriptionQueryUpdateMessage<U>> sink = processor.sink(backpressure.getOverflowStrategy());
-        sink.onDispose(() -> updateHandlers.remove(query));
-        FluxSinkWrapper<SubscriptionQueryUpdateMessage<U>> fluxSinkWrapper = new FluxSinkWrapper<>(sink);
-        updateHandlers.put(query, fluxSinkWrapper);
-
-        Registration registration = () -> {
-            updateHandlers.remove(query);
-            return true;
-        };
-
-        return new UpdateHandlerRegistration<>(registration,
-                                               processor.replay(updateBufferSize).autoConnect(),
-                                               fluxSinkWrapper::complete);
     }
 
     @Override
@@ -250,8 +220,7 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
         try {
             updateHandler.error(cause);
         } catch (Exception e) {
-            logger.error("An error happened while trying to inform update handler about the error. Query: {}",
-                                query);
+            logger.error("An error happened while trying to inform update handler about the error. Query: {}", query);
         }
     }
 
@@ -281,7 +250,7 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
         if (inStartedPhaseOfUnitOfWork()) {
             UnitOfWork<?> unitOfWork = CurrentUnitOfWork.get();
             unitOfWork.getOrComputeResource(
-                    this.toString() + QUERY_UPDATE_TASKS_RESOURCE_KEY,
+                    this + QUERY_UPDATE_TASKS_RESOURCE_KEY,
                     resourceKey -> {
                         List<Runnable> queryUpdateTasks = new ArrayList<>();
                         unitOfWork.afterCommit(uow -> queryUpdateTasks.forEach(Runnable::run));
@@ -339,10 +308,10 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
             return this;
         }
 
-
         /**
-         * Sets the {@link QueryUpdateEmitterSpanFactory} implementation to use for providing tracing capabilities. Defaults to a
-         * {@link DefaultQueryUpdateEmitterSpanFactory} backed by a {@link NoOpSpanFactory} by default, which provides no tracing capabilities.
+         * Sets the {@link QueryUpdateEmitterSpanFactory} implementation to use for providing tracing capabilities.
+         * Defaults to a {@link DefaultQueryUpdateEmitterSpanFactory} backed by a {@link NoOpSpanFactory} by default,
+         * which provides no tracing capabilities.
          *
          * @param spanFactory The {@link QueryUpdateEmitterSpanFactory} implementation.
          * @return The current Builder instance, for fluent interfacing.
@@ -366,7 +335,7 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
          * Validates whether the fields contained in this Builder are set accordingly.
          *
          * @throws SophonConfigurationException if one field is asserted to be incorrect according to the Builder's
-         *                                    specifications
+         *                                      specifications
          */
         protected void validate() throws SophonConfigurationException {
             // Method kept for overriding

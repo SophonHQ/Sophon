@@ -32,9 +32,9 @@ import org.sophonhq.sophon.eventhandling.gateway.EventGateway;
 import org.sophonhq.sophon.eventhandling.tokenstore.TokenStore;
 import org.sophonhq.sophon.eventsourcing.eventstore.jpa.JpaEventStorageEngine;
 import org.sophonhq.sophon.eventsourcing.eventstore.jpa.SQLErrorCodesResolver;
-import org.sophonhq.sophon.serialization.JavaSerializer;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.json.JacksonSerializer;
+import org.sophonhq.sophon.serialization.xml.XStreamSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -94,7 +94,7 @@ class SophonAutoConfigurationWithEventSerializerPropertiesTest {
         final Serializer messageSerializer = applicationContext.getBean("messageSerializer", Serializer.class);
         final JpaEventStorageEngine engine = applicationContext.getBean(JpaEventStorageEngine.class);
 
-        assertThat(messageSerializer).isInstanceOf(JavaSerializer.class);
+        assertThat(messageSerializer).isInstanceOf(XStreamSerializer.class);
         assertThat(engine.getSnapshotSerializer()).isEqualTo(serializer);
         assertThat(engine.getEventSerializer()).isEqualTo(eventSerializer);
     }

@@ -17,7 +17,6 @@
 package org.sophonhq.sophon.queryhandling;
 
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import org.reactivestreams.Publisher;
 import org.sophonhq.sophon.common.Registration;
 import org.sophonhq.sophon.common.SophonConfigurationException;
@@ -120,26 +119,6 @@ public class DefaultQueryGateway implements QueryGateway {
         GenericQueryMessage<?, R> queryMessage = new GenericQueryMessage<>(asMessage(query), queryName, responseType);
         return queryBus.scatterGather(processInterceptors(queryMessage), timeout, timeUnit)
                        .map(QueryResponseMessage::getPayload);
-    }
-
-    /**
-     * @deprecated in favour of the {{@link #subscriptionQuery(String, Object, ResponseType, ResponseType, int)}}
-     */
-    @Deprecated
-    @Override
-    public <Q, I, U> SubscriptionQueryResult<I, U> subscriptionQuery(@NonNull String queryName,
-                                                                     @NonNull Q query,
-                                                                     @NonNull ResponseType<I> initialResponseType,
-                                                                     @NonNull ResponseType<U> updateResponseType,
-                                                                     @Nullable SubscriptionQueryBackpressure backpressure,
-                                                                     int updateBufferSize) {
-        SubscriptionQueryMessage<?, I, U> interceptedQuery =
-                getSubscriptionQueryMessage(queryName, query, initialResponseType, updateResponseType);
-
-        SubscriptionQueryResult<QueryResponseMessage<I>, SubscriptionQueryUpdateMessage<U>> result =
-                queryBus.subscriptionQuery(interceptedQuery, backpressure, updateBufferSize);
-
-        return getSubscriptionQueryResult(result);
     }
 
     @Override

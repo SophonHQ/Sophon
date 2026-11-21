@@ -69,7 +69,6 @@ import org.sophonhq.sophon.queryhandling.SimpleQueryBus;
 import org.sophonhq.sophon.queryhandling.SimpleQueryUpdateEmitter;
 import org.sophonhq.sophon.serialization.AnnotationRevisionResolver;
 import org.sophonhq.sophon.serialization.ChainingConverter;
-import org.sophonhq.sophon.serialization.JavaSerializer;
 import org.sophonhq.sophon.serialization.RevisionResolver;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.avro.AvroSerializer;
@@ -277,12 +276,6 @@ public class SophonAutoConfiguration implements BeanClassLoaderAware {
                     cborBuilder.translateLegacyClassNames();
                 }
                 return cborBuilder.build();
-            case JAVA:
-                JavaSerializer.Builder javaBuilder = JavaSerializer.builder().revisionResolver(revisionResolver);
-                if (serializerProperties.isTranslateLegacyClassNames()) {
-                    javaBuilder.translateLegacyClassNames();
-                }
-                return javaBuilder.build();
             case XSTREAM:
             case DEFAULT:
             default:

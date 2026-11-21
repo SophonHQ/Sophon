@@ -34,8 +34,8 @@ import java.util.stream.Stream;
 
 /**
  * The mechanism that dispatches Query objects to their appropriate QueryHandlers. QueryHandlers can subscribe and
- * un-subscribe to specific queries (identified by their {@link QueryMessage#getQueryName()} and {@link
- * QueryMessage#getResponseType()} on the query bus. There may be multiple handlers for each combination of
+ * un-subscribe to specific queries (identified by their {@link QueryMessage#getQueryName()} and
+ * {@link QueryMessage#getResponseType()} on the query bus. There may be multiple handlers for each combination of
  * queryName/responseType.
  *
  * @author Marc Gathier
@@ -150,42 +150,6 @@ public interface QueryBus extends MessageHandlerInterceptorSupport<QueryMessage<
      * <p>
      * If there is an error during retrieving or consuming initial result, stream for incremental updates is NOT
      * interrupted.
-     * </p>
-     * <p>
-     * If there is an error during emitting an update, subscription is cancelled causing further emits not reaching the
-     * destination.
-     * </p>
-     * <p>
-     * Provided backpressure mechanism will be used to deal with fast emitters.
-     * </p>
-     *
-     * @param query            the query
-     * @param backpressure     the backpressure mechanism to be used for emitting updates
-     * @param updateBufferSize the size of buffer which accumulates updates before subscription to the {@code flux} is
-     *                         made
-     * @param <Q>              the payload type of the query
-     * @param <I>              the response type of the query
-     * @param <U>              the incremental response types of the query
-     * @return query result containing initial result and incremental updates
-     * @deprecated in favour of using {{@link #subscriptionQuery(SubscriptionQueryMessage, int)}}
-     */
-    @Deprecated
-    default <Q, I, U> SubscriptionQueryResult<QueryResponseMessage<I>, SubscriptionQueryUpdateMessage<U>> subscriptionQuery(
-            @NonNull SubscriptionQueryMessage<Q, I, U> query, SubscriptionQueryBackpressure backpressure,
-            int updateBufferSize
-    ) {
-        return subscriptionQuery(query, updateBufferSize);
-    }
-
-    /**
-     * Dispatch the given {@code query} to a single QueryHandler subscribed to the given {@code query}'s
-     * queryName/initialResponseType/updateResponseType. The result is lazily created and there will be no execution of
-     * the query handler before there is a subscription to the initial result. In order not to miss updates, the query
-     * bus will queue all updates which happen after the subscription query is done and once the subscription to the
-     * flux is made, these updates will be emitted.
-     * <p>
-     * If there is an error during retrieving or consuming initial result, stream for incremental updates is NOT
-     * interrupted.
      * <p>
      * If there is an error during emitting an update, subscription is cancelled causing further emits not reaching the
      * destination.
@@ -201,7 +165,7 @@ public interface QueryBus extends MessageHandlerInterceptorSupport<QueryMessage<
     default <Q, I, U> SubscriptionQueryResult<QueryResponseMessage<I>, SubscriptionQueryUpdateMessage<U>> subscriptionQuery(
             @NonNull SubscriptionQueryMessage<Q, I, U> query, int updateBufferSize
     ) {
-        return new SubscriptionQueryResult<QueryResponseMessage<I>, SubscriptionQueryUpdateMessage<U>>() {
+        return new SubscriptionQueryResult<>() {
 
             @Override
             public Mono<QueryResponseMessage<I>> initialResult() {

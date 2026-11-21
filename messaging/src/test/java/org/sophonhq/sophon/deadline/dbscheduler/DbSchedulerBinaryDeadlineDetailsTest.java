@@ -92,7 +92,6 @@ class DbSchedulerBinaryDeadlineDetailsTest {
 
     public static Collection<TestSerializer> sophonSerializers() {
         List<TestSerializer> testSerializerList = new ArrayList<>();
-        testSerializerList.add(TestSerializer.JAVA);
         testSerializerList.add(TestSerializer.JACKSON);
         testSerializerList.add(TestSerializer.XSTREAM);
         return testSerializerList;
