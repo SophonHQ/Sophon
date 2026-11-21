@@ -28,6 +28,7 @@ import org.sophonhq.sophon.config.ProcessingGroup;
 import org.sophonhq.sophon.eventhandling.EventHandler;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.gateway.EventGateway;
+import org.sophonhq.sophon.eventsourcing.utils.TestSerializer;
 import org.sophonhq.sophon.messaging.InterceptorChain;
 import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.MessageDispatchInterceptor;
@@ -36,7 +37,6 @@ import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 import org.sophonhq.sophon.queryhandling.QueryGateway;
 import org.sophonhq.sophon.queryhandling.QueryHandler;
 import org.sophonhq.sophon.queryhandling.QueryMessage;
-import org.sophonhq.sophon.springboot.utils.TestSerializer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -375,7 +375,7 @@ class InterceptorConfigurationTest {
 
         @Bean
         @Order(100)
-        public MyGenericDispatchInterceptor myFirstGenericDispatcherInterceptor(
+        public MyGenericDispatchInterceptor<Message<?>> myFirstGenericDispatcherInterceptor(
                 @Qualifier("commandDispatchInterceptorInvocations") CountDownLatch commandDispatchInterceptorInvocations,
                 @Qualifier("queryDispatchInterceptorInvocations") CountDownLatch queryDispatchInterceptorInvocations,
                 @Qualifier("eventDispatchInterceptorInvocations") CountDownLatch eventDispatchInterceptorInvocations,
@@ -383,7 +383,7 @@ class InterceptorConfigurationTest {
                 @Qualifier("queryDispatchingInterceptingOutcome") Queue<String> queryDispatchingInterceptingOutcome,
                 @Qualifier("eventDispatchingInterceptingOutcome") Queue<String> eventDispatchingInterceptingOutcome
         ) {
-            return new MyGenericDispatchInterceptor("Order-100",
+            return new MyGenericDispatchInterceptor<>("Order-100",
                                                     commandDispatchInterceptorInvocations,
                                                     queryDispatchInterceptorInvocations,
                                                     eventDispatchInterceptorInvocations,

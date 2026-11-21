@@ -32,8 +32,6 @@ import org.sophonhq.sophon.serialization.Serializer;
  */
 @Entity
 @Table(indexes = @Index(columnList = "aggregateIdentifier,sequenceNumber", unique = true))
-@javax.persistence.Entity
-@javax.persistence.Table(indexes = @javax.persistence.Index(columnList = "aggregateIdentifier,sequenceNumber", unique = true))
 public class DomainEventEntry extends AbstractSequencedDomainEventEntry<byte[]> {
 
     /**

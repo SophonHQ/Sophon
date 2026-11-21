@@ -208,7 +208,6 @@ public class AnnotatedAggregateMetaModelFactory implements AggregateMetaModelFac
     private class AnnotatedAggregateModel<T> implements AggregateModel<T> {
 
         private static final String JAKARTA_PERSISTENCE_ID = "jakarta.persistence.Id";
-        private static final String JAVAX_PERSISTENCE_ID = "javax.persistence.Id";
 
         private final Class<? extends T> inspectedType;
         private final Map<Class<?>, List<ChildEntity<T>>> children;
@@ -368,9 +367,6 @@ public class AnnotatedAggregateMetaModelFactory implements AggregateMetaModelFac
                     findAnnotationAttributes(field, JAKARTA_PERSISTENCE_ID).ifPresent(
                             attributes -> persistenceIdMembers.add(field)
                     );
-                    findAnnotationAttributes(field, JAVAX_PERSISTENCE_ID).ifPresent(
-                            attributes -> persistenceIdMembers.add(field)
-                    );
                     findAnnotationAttributes(field, AggregateVersion.class).ifPresent(
                             attributes -> aggregateVersionMembers.add(field)
                     );
@@ -384,10 +380,6 @@ public class AnnotatedAggregateMetaModelFactory implements AggregateMetaModelFac
                     });
                     findAnnotationAttributes(method, JAKARTA_PERSISTENCE_ID).ifPresent(attributes -> {
                         assertValidValueProvidingMethod(method, JAKARTA_PERSISTENCE_ID);
-                        persistenceIdMembers.add(method);
-                    });
-                    findAnnotationAttributes(method, JAVAX_PERSISTENCE_ID).ifPresent(attributes -> {
-                        assertValidValueProvidingMethod(method, JAVAX_PERSISTENCE_ID);
                         persistenceIdMembers.add(method);
                     });
                     findAnnotationAttributes(method, AggregateVersion.class).ifPresent(attributes -> {

@@ -23,6 +23,7 @@ import org.sophonhq.sophon.common.transaction.TransactionManager;
 import org.sophonhq.sophon.config.EventProcessingModule;
 import org.sophonhq.sophon.eventhandling.EventBus;
 import org.sophonhq.sophon.eventhandling.TrackingEventProcessorConfiguration;
+import org.sophonhq.sophon.eventsourcing.utils.TestSerializer;
 import org.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import org.sophonhq.sophon.messaging.unitofwork.DefaultUnitOfWork;
 import org.sophonhq.sophon.modelling.saga.SagaEventHandler;
@@ -30,10 +31,8 @@ import org.sophonhq.sophon.modelling.saga.StartSaga;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.spring.stereotype.Saga;
 import org.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration;
-import org.sophonhq.sophon.springboot.utils.TestSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,7 +61,7 @@ import static org.sophonhq.sophon.eventhandling.GenericEventMessage.asEventMessa
 @SpringBootTest(properties = {
         "spring.main.banner-mode=off"
 })
-@SpringBootConfiguration
+@Configuration
 @EnableAutoConfiguration
 class SagaCustomizeIntegrationTest {
 

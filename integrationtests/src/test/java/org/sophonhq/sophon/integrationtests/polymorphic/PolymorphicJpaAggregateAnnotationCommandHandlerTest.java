@@ -17,13 +17,13 @@
 
 package org.sophonhq.sophon.integrationtests.polymorphic;
 
+import jakarta.persistence.EntityManager;
 import org.jspecify.annotations.NonNull;
 import org.sophonhq.sophon.eventhandling.EventBus;
+import org.sophonhq.sophon.modelling.command.GenericJpaRepository;
 import org.sophonhq.sophon.modelling.command.Repository;
 import org.sophonhq.sophon.modelling.command.RepositoryProvider;
-import org.sophonhq.sophon.modelling.command.legacyjpa.GenericJpaRepository;
 
-import javax.persistence.EntityManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

@@ -29,13 +29,10 @@ import org.sophonhq.sophon.serialization.Serializer;
  * @author Rene de Waele
  */
 @MappedSuperclass
-@javax.persistence.MappedSuperclass
 public abstract class AbstractSequencedDomainEventEntry<T> extends AbstractDomainEventEntry<T> implements DomainEventData<T> {
 
     @Id
     @GeneratedValue
-    @javax.persistence.Id
-    @javax.persistence.GeneratedValue
     @SuppressWarnings("unused")
     private long globalIndex;
 

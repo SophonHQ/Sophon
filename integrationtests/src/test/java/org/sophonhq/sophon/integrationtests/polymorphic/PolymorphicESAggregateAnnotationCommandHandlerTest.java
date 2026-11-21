@@ -17,6 +17,7 @@
 
 package org.sophonhq.sophon.integrationtests.polymorphic;
 
+import jakarta.persistence.EntityManager;
 import org.jspecify.annotations.NonNull;
 import org.sophonhq.sophon.eventsourcing.EventSourcingRepository;
 import org.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStore;
@@ -27,7 +28,6 @@ import org.sophonhq.sophon.modelling.command.RepositoryProvider;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.persistence.EntityManager;
 
 /**
  * Tests for ES aggregate polymorphism.

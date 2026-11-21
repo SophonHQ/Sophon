@@ -45,7 +45,7 @@ import java.util.Optional;
  * Note: This class use a hack approach! Because some gateways/buses (or custom interceptors provided by the framework
  * user) need an sophonConfiguration to initialize, the usual way of registering interceptors in the
  * ConfigurerModule.onInitialize method does not work for them. This is due to a circular reference caused e.g. by
- * JpaJavaxEventStoreAutoConfiguration. So we register them by injecting gateway/bus components in to the
+ * JpaEventStoreAutoConfiguration. So we register them by injecting gateway/bus components in to the
  * InitializingBean function and register the interceptors there.
  *
  * @author Christian Thiel

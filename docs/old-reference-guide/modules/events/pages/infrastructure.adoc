@@ -34,8 +34,6 @@ The `JpaEventStorageEngine` stores events in a JPA-compatible data source.
 The JPA event store stores events in entries.
 These entries contain the serialized form of an event, as well as some fields where metadata is stored for fast lookup of these entries.
 To use the `JpaEventStorageEngine`, you must have the JPA (`jakarta.persistence`) annotations on your classpath.
-The old, javax JPA (`javax.persistence`) annotations are also still supported.
-This will use an instance of the `JpaEventStorageEngine` using the `legacyjpa` namespace.
 
 By default, the event store needs you to configure your persistence context (for example, as defined in the `META-INF/persistence.xml` file) to contain the classes `DomainEventEntry` and `SnapshotEventEntry` (both of these classes are located in the `org.sophonhq.sophon.eventsourcing.eventstore.jpa` package).
 
@@ -82,13 +80,6 @@ There are a few implementations of the `EntityManagerProvider` available, each f
 The `SimpleEntityManagerProvider` simply returns the `EntityManager` instance which is given to it at construction time.
 This makes the implementation a simple option for container managed contexts.
 Alternatively, there is the `ContainerManagedEntityManagerProvider`, which returns the default persistence context, and is used by default by the JPA event store.
-
-[NOTE]
-.Move from javax.persistence to jakarta.persistence
-====
-Since version 4.6.0, we moved to using the jakarta namespace by default.
-This means some classes like the `JpaTokenStore` are duplicated to accommodate for the `javax` to `jakarta` namespace change.
-====
 
 If you have a persistence unit called `"myPersistenceUnit"` which you wish to use in the `JpaEventStorageEngine`, the `EntityManagerProvider` implementation could look like this:
 

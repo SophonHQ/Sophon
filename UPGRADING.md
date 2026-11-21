@@ -17,7 +17,52 @@ In the tables below, class names are relative to the `org.sophonhq.sophon` packa
 
 ### Removed dependencies
 
+Sophon 2.0 no longer works with these libraries. Move your application to the replacement before you upgrade.
+
+| Removed library                            | Use instead                                                                              |
+|--------------------------------------------|------------------------------------------------------------------------------------------|
+| Java Persistence API (`javax.persistence`) | Jakarta Persistence (`jakarta.persistence`)                                              |
+| Bean Validation (`javax.validation`)       | Jakarta Bean Validation (`jakarta.validation`)                                           |
+| Ehcache 2 (`net.sf.ehcache`)               | Ehcache 3 with `common.caching.EhCache3Adapter`, or JCache with `common.caching.JCacheAdapter` |
+| JUnit 4                                    | JUnit 5                                                                                  |
+
 ### Removed API
+
+Sophon 2.0 removes the `legacyjpa` and `legacyvalidation` packages. Each class in them has a Jakarta replacement with
+the same simple name. To move to the replacement, change your `javax.persistence` and `javax.validation` imports to
+`jakarta.persistence` and `jakarta.validation`. Then import the replacement class that the tables below name.
+
+#### `sophon-messaging`
+
+| Removed                                                                | Use instead                                                    |
+|------------------------------------------------------------------------|----------------------------------------------------------------|
+| `common.legacyjpa.EntityManagerProvider`                               | `common.jpa.EntityManagerProvider`                             |
+| `common.legacyjpa.SimpleEntityManagerProvider`                         | `common.jpa.SimpleEntityManagerProvider`                       |
+| `common.legacyjpa.PagingJpaQueryIterable`                              | `common.jpa.PagingJpaQueryIterable`                            |
+| `eventhandling.deadletter.legacyjpa.DeadLetterJpaConverter`            | `eventhandling.deadletter.jpa.DeadLetterJpaConverter`          |
+| `eventhandling.deadletter.legacyjpa.EventMessageDeadLetterJpaConverter` | `eventhandling.deadletter.jpa.EventMessageDeadLetterJpaConverter` |
+| `eventhandling.deadletter.legacyjpa.JpaDeadLetter`                     | `eventhandling.deadletter.jpa.JpaDeadLetter`                   |
+| `eventhandling.deadletter.legacyjpa.JpaSequencedDeadLetterQueue`       | `eventhandling.deadletter.jpa.JpaSequencedDeadLetterQueue`     |
+| `eventhandling.tokenstore.legacyjpa.JpaTokenStore`                     | `eventhandling.tokenstore.jpa.JpaTokenStore`                   |
+| `messaging.interceptors.legacyvalidation.BeanValidationInterceptor`    | `messaging.interceptors.BeanValidationInterceptor`             |
+| `messaging.interceptors.legacyvalidation.JSR303ViolationException`     | `messaging.interceptors.JSR303ViolationException`              |
+| `common.caching.EhCacheAdapter`                                        | `common.caching.EhCache3Adapter`                               |
+
+#### `sophon-modelling`
+
+| Removed                                            | Use instead                                                                  |
+|----------------------------------------------------|------------------------------------------------------------------------------|
+| `modelling.command.legacyjpa.GenericJpaRepository` | `modelling.command.GenericJpaRepository`                                     |
+| `modelling.saga.repository.legacyjpa.JpaSagaStore` | `modelling.saga.repository.jpa.JpaSagaStore`                                 |
+| `modelling.saga.repository.jpa.AbstractSagaEntry`  | `modelling.saga.repository.jpa.SagaEntry`, which does not extend a base class |
+
+#### `sophon-eventsourcing`
+
+| Removed                                                    | Use instead                                         |
+|------------------------------------------------------------|-----------------------------------------------------|
+| `eventsourcing.eventstore.legacyjpa.EmbeddedEventStore`    | `eventsourcing.eventstore.EmbeddedEventStore`       |
+| `eventsourcing.eventstore.legacyjpa.JpaEventStorageEngine` | `eventsourcing.eventstore.jpa.JpaEventStorageEngine` |
+| `eventsourcing.eventstore.legacyjpa.SQLErrorCodesResolver` | `eventsourcing.eventstore.jpa.SQLErrorCodesResolver` |
 
 #### `sophon-spring`
 
@@ -56,8 +101,36 @@ The replacement beans treat some beans differently:
 | `spring.config.NoBeanOfType`                                     | Spring Boot's `@ConditionalOnMissingBean`                                                                                                            |
 | `spring.config.TransactionManagerFactoryBean`                    | A bean of `spring.messaging.unitofwork.SpringTransactionManager`                                                                                     |
 
+#### `sophon-spring-boot-autoconfigure`
+
+The JPA auto-configuration needs Jakarta Persistence on the classpath.
+
+| Removed                                                               | Use instead                                                  |
+|-----------------------------------------------------------------------|--------------------------------------------------------------|
+| `springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration`           | `springboot.autoconfig.JpaAutoConfiguration`                 |
+| `springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration` | `springboot.autoconfig.JpaEventStoreAutoConfiguration`       |
+| `springboot.util.legacyjpa.ContainerManagedEntityManagerProvider`     | `springboot.util.jpa.ContainerManagedEntityManagerProvider`  |
+
+#### `sophon-test`
+
+| Removed                                     | Use instead                                                          |
+|---------------------------------------------|----------------------------------------------------------------------|
+| `test.aggregate.StubAggregateLifecycleRule` | `test.aggregate.StubAggregateLifecycleExtension`, with JUnit 5       |
+
 ### Removed configuration properties and values
 
 ### Stored data
 
 ### Behavior changes
+
+* Sophon no longer finds `javax.persistence` annotations by name:
+  * An aggregate whose identifier carries only `javax.persistence.Id` has no identifier. Use `jakarta.persistence.Id`
+    or `@AggregateIdentifier`.
+  * In a Spring application, an aggregate class with `javax.persistence.Entity` no longer gets a JPA repository. Use
+    `jakarta.persistence.Entity`.
+* Sophon's JPA entity classes, such as `eventhandling.tokenstore.jpa.TokenEntry`,
+  `eventsourcing.eventstore.jpa.DomainEventEntry` and `modelling.saga.repository.jpa.SagaEntry`, carry only Jakarta
+  Persistence annotations. A `javax.persistence` provider no longer maps them. The table and column definitions do
+  not change.
+* `eventhandling.tokenstore.AbstractTokenEntry` is no longer a JPA mapped superclass. The JPA token store uses
+  `eventhandling.tokenstore.jpa.TokenEntry`, which does not extend it.

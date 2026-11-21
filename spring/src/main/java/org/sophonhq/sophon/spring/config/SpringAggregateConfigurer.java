@@ -217,8 +217,7 @@ public class SpringAggregateConfigurer<T> implements ConfigurerModule, Applicati
     }
 
     private boolean isEntityManagerAnnotationPresent(Class<T> type) {
-        return AnnotationUtils.isAnnotationPresent(type, "javax.persistence.Entity")
-                || AnnotationUtils.isAnnotationPresent(type, "jakarta.persistence.Entity");
+        return AnnotationUtils.isAnnotationPresent(type, "jakarta.persistence.Entity");
     }
 
     @Override
