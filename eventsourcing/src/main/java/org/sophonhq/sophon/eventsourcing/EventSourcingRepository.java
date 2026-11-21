@@ -36,7 +36,6 @@ import org.sophonhq.sophon.modelling.command.Repository;
 import org.sophonhq.sophon.modelling.command.RepositoryProvider;
 import org.sophonhq.sophon.modelling.command.RepositorySpanFactory;
 import org.sophonhq.sophon.modelling.command.inspection.AggregateModel;
-import org.sophonhq.sophon.tracing.SpanFactory;
 
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -294,13 +293,6 @@ public class EventSourcingRepository<T> extends LockingRepository<T, EventSource
         @Override
         public Builder<T> subtype(@NonNull Class<? extends T> subtype) {
             super.subtype(subtype);
-            return this;
-        }
-
-        @Override
-        @Deprecated
-        public Builder<T> spanFactory(SpanFactory spanFactory) {
-            super.spanFactory(spanFactory);
             return this;
         }
 

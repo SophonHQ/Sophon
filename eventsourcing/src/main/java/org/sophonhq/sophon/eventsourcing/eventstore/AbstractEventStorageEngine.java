@@ -32,11 +32,9 @@ import org.sophonhq.sophon.modelling.command.ConcurrencyException;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.upcasting.event.EventUpcaster;
 import org.sophonhq.sophon.serialization.upcasting.event.NoOpEventUpcaster;
-import org.sophonhq.sophon.serialization.xml.XStreamSerializer;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -319,20 +317,6 @@ public abstract class AbstractEventStorageEngine implements EventStorageEngine {
 
         /**
          * Sets the {@code snapshotFilter} deciding whether to take a snapshot into account. Can be set to filter out
-         * specific snapshot revisions which should not be applied. Defaults to a {@link Predicate} which returns
-         * {@code true} regardless.
-         *
-         * @param snapshotFilter a {@link Predicate} which decides whether to take a snapshot into account
-         * @return the current Builder instance, for fluent interfacing
-         * @deprecated in favor of {@link #snapshotFilter(SnapshotFilter)}
-         */
-        @Deprecated
-        public Builder snapshotFilter(Predicate<? super DomainEventData<?>> snapshotFilter) {
-            return snapshotFilter(snapshotFilter::test);
-        }
-
-        /**
-         * Sets the {@code snapshotFilter} deciding whether to take a snapshot into account. Can be set to filter out
          * specific snapshot revisions which should not be applied. Defaults to {@link SnapshotFilter#allowAll()}.
          * <p>
          * Note that {@link SnapshotFilter} instances can be combined and should return {@code true} if they handle a
@@ -354,12 +338,8 @@ public abstract class AbstractEventStorageEngine implements EventStorageEngine {
          *                                    specifications
          */
         protected void validate() throws SophonConfigurationException {
-            if (snapshotSerializer == null) {
-                snapshotSerializer = XStreamSerializer::defaultSerializer;
-            }
-            if (eventSerializer == null) {
-                eventSerializer = XStreamSerializer::defaultSerializer;
-            }
+            assertNonNull(snapshotSerializer, "The snapshot Serializer is a hard requirement and should be provided");
+            assertNonNull(eventSerializer, "The event Serializer is a hard requirement and should be provided");
         }
     }
 }

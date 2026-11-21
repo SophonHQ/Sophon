@@ -281,7 +281,7 @@ class WorkPackageTest {
 
     @Test
     void replayTokenIsPropagatedAndAdvancedWithoutCurrent() {
-        testSubjectBuilder.initialToken(new ReplayToken(new GlobalSequenceTrackingToken(1L)));
+        testSubjectBuilder.initialToken(ReplayToken.createReplayToken(new GlobalSequenceTrackingToken(1L)));
         testSubject = testSubjectBuilder.build();
         TrackingToken expectedToken = new GlobalSequenceTrackingToken(1L);
         TrackedEventMessage<String> expectedEvent =
@@ -292,7 +292,7 @@ class WorkPackageTest {
         List<EventMessage<?>> processedEvents = batchProcessor.getProcessedEvents();
         assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(processedEvents).hasSize(1));
 
-        ReplayToken expectedAdvancedToken = new ReplayToken(
+        ReplayToken expectedAdvancedToken = (ReplayToken) ReplayToken.createReplayToken(
                 new GlobalSequenceTrackingToken(1L),
                 new GlobalSequenceTrackingToken(1L)
         );
@@ -302,7 +302,7 @@ class WorkPackageTest {
 
     @Test
     void replayTokenIsPropagatedAndAdvancedWithCurrent() {
-        testSubjectBuilder.initialToken(new ReplayToken(new GlobalSequenceTrackingToken(1L),
+        testSubjectBuilder.initialToken(ReplayToken.createReplayToken(new GlobalSequenceTrackingToken(1L),
                                                         new GlobalSequenceTrackingToken(0L)));
         testSubject = testSubjectBuilder.build();
         TrackingToken expectedToken = new GlobalSequenceTrackingToken(1L);
@@ -314,7 +314,7 @@ class WorkPackageTest {
         List<EventMessage<?>> processedEvents = batchProcessor.getProcessedEvents();
         assertWithin(500, TimeUnit.MILLISECONDS, () -> assertThat(processedEvents).hasSize(1));
 
-        ReplayToken expectedAdvancedToken = new ReplayToken(
+        ReplayToken expectedAdvancedToken = (ReplayToken) ReplayToken.createReplayToken(
                 new GlobalSequenceTrackingToken(1L),
                 new GlobalSequenceTrackingToken(1L)
         );

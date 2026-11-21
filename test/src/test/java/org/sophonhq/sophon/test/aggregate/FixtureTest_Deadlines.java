@@ -98,29 +98,11 @@ class FixtureTest_Deadlines {
     }
 
     @Test
-    void deadlineMetMatching() {
-        //noinspection deprecation
-        fixture.givenNoPriorActivity()
-               .andGivenCommands(CREATE_COMMAND)
-               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1))
-               .expectDeadlinesMetMatching(payloadsMatching(exactSequenceOf(deepEquals(DEADLINE_PAYLOAD))));
-    }
-
-    @Test
     void triggeredDeadlinesMatching() {
         fixture.givenNoPriorActivity()
                .andGivenCommands(CREATE_COMMAND)
                .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1))
                .expectTriggeredDeadlinesMatching(payloadsMatching(exactSequenceOf(deepEquals(DEADLINE_PAYLOAD))));
-    }
-
-    @Test
-    void deadlinesMet() {
-        //noinspection deprecation
-        fixture.givenNoPriorActivity()
-               .andGivenCommands(CREATE_COMMAND)
-               .whenTimeElapses(Duration.ofMinutes(TRIGGER_DURATION_MINUTES + 1))
-               .expectDeadlinesMet(DEADLINE_PAYLOAD);
     }
 
     @Test

@@ -359,11 +359,11 @@ This means each matcher must match against the event directly following the even
 
 For convenience, a few commonly required event matchers are provided. They match against a single event instance:
 
-* *Equal event*: `Matchers.equalTo(instance...)`
+* *Equal event*: `Matchers.deepEquals(instance...)`
 
 Verifies that the given object is semantically equal to the given event.
 
-This matcher will compare all values in the fields of both actual and expected objects using a null-safe equals method.
+This matcher first compares both objects with their equals method. If that fails and the type does not override equals, the matcher compares the values in the fields of both objects.
 
 This means that events can be compared, even if they do not implement the equals method.
 
@@ -404,7 +404,7 @@ Below is a small code sample displaying the usage of these matchers. In this exa
 import org.sophonhq.sophon.test.aggregate.FixtureConfiguration;
 
 import static org.sophonhq.sophon.test.matchers.Matchers.andNoMore;
-import static org.sophonhq.sophon.test.matchers.Matchers.equalTo;
+import static org.sophonhq.sophon.test.matchers.Matchers.deepEquals;
 import static org.sophonhq.sophon.test.matchers.Matchers.exactSequenceOf;
 import static org.sophonhq.sophon.test.matchers.Matchers.messageWithPayload;
 import static org.sophonhq.sophon.test.matchers.Matchers.payloadsMatching;
@@ -418,7 +418,7 @@ class MyCommandModelTest {
                .when(new DoSomethingCommand("aggregateId"))
                .expectEventsMatching(exactSequenceOf(
                    // we can match against the payload only:
-                   messageWithPayload(equalTo(new ThirdEvent())),
+                   messageWithPayload(deepEquals(new ThirdEvent())),
                    // this will match against a Message
                    aFourthEventWithSomeSpecialThings(),
                    // this will ensure that there are no more events
@@ -428,8 +428,8 @@ class MyCommandModelTest {
                // or if we prefer to match on payloads only:
                .expectEventsMatching(payloadsMatching(
                    exactSequenceOf(
-                       // we only have payloads, so we can equalTo directly
-                       equalTo(new ThirdEvent()),
+                       // we only have payloads, so we can use deepEquals directly
+                       deepEquals(new ThirdEvent()),
                        // now, this matcher matches against the payload too
                        aFourthEventWithSomeSpecialThings(),
                        // this still requires that there is no more events
@@ -543,10 +543,10 @@ Expect no deadline matching the given type to be scheduled at the specified `Ins
 
 Expect no deadline matching the given deadline name to be scheduled at the specified `Instant`.`
 
-* `expectDeadlinesMet(Object...)`:
+* `expectTriggeredDeadlines(Object...)`:
 
-Explicitly expect a `deadline` or several deadlines to have been met.
+Explicitly expect a `deadline` or several deadlines to have been triggered.
 
-* `expectDeadlinesMetMatching(Matcher&lt;List&lt;DeadlineMessage&gt;&gt;)`:
+* `expectTriggeredDeadlinesMatching(Matcher&lt;List&lt;DeadlineMessage&gt;&gt;)`:
 
-Expect a matching deadline or several matching deadlines to have been met.
+Expect a matching deadline or several matching deadlines to have been triggered.

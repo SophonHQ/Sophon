@@ -39,7 +39,6 @@ import org.sophonhq.sophon.messaging.unitofwork.RollbackConfigurationType;
 import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
 import org.sophonhq.sophon.monitoring.NoOpMessageMonitor;
-import org.sophonhq.sophon.tracing.SpanFactory;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -1002,13 +1001,6 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
             return this;
         }
 
-        @Override
-        @Deprecated
-        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
-            super.spanFactory(spanFactory);
-            return this;
-        }
-
         /**
          * Sets the {@link StreamableMessageSource} (e.g. the {@link EventBus}) which this {@link EventProcessor} will
          * track.
@@ -1430,7 +1422,6 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
             }
         }
     }
-
 
     private class ClaimSegmentInstruction extends Instruction {
 

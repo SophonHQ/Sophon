@@ -19,23 +19,21 @@ package org.sophonhq.sophon.commandhandling.callbacks;
 
 import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sophonhq.sophon.commandhandling.CommandCallback;
 import org.sophonhq.sophon.commandhandling.CommandMessage;
 import org.sophonhq.sophon.commandhandling.CommandResultMessage;
 
 /**
- * A {@link CommandCallback} implementation wrapping another, that concisely logs failed commands. Since the full
- * exception is being reported to the delegate callback, the full stacktrace is not logged.
+ * A {@link CommandCallback} implementation that concisely logs failed commands. The full stacktrace is not logged.
+ * Use {@link CommandCallback#wrap(CommandCallback)} to combine it with another callback that receives the full
+ * exception.
  *
  * @param <C> The type of payload of the command
  * @param <R> The return value of the command handler
  */
 public class FailureLoggingCallback<C, R> implements CommandCallback<C, R> {
 
-    private final CommandCallback<C, R> delegate;
     private final Logger logger;
-
 
     /**
      * Initialize the callback to log failures on the given {@code logger} (on warn level).
@@ -44,37 +42,6 @@ public class FailureLoggingCallback<C, R> implements CommandCallback<C, R> {
      */
     public FailureLoggingCallback(Logger logger) {
         this.logger = logger;
-        this.delegate = null;
-    }
-
-    /**
-     * Initialize the callback to delegate calls to the given {@code delegate}, logging failures on a logger
-     * for this class (on warn level).
-     *
-     * @deprecated Please use {@link CommandCallback#wrap(CommandCallback)} to wrap a command with a delegate and use
-     * the {@link FailureLoggingCallback#FailureLoggingCallback} to create this callback
-     *
-     * @param delegate The command callback to forward invocations to
-     */
-    @Deprecated
-    public FailureLoggingCallback(CommandCallback<C, R> delegate) {
-        this(LoggerFactory.getLogger(FailureLoggingCallback.class), delegate);
-    }
-
-    /**
-     * Initialize the callback to delegate calls to the given {@code delegate}, logging failures on the given {@code
-     * logger} (on warn level).
-     *
-     * @deprecated Please use {@link CommandCallback#wrap(CommandCallback)} to wrap a command with a delegate and use
-     * the {@link FailureLoggingCallback#FailureLoggingCallback(Logger)} to specify you custom logger.
-     *
-     * @param logger   The logger to log exceptions on
-     * @param delegate The command callback to forward invocations to
-     */
-    @Deprecated
-    public FailureLoggingCallback(@NonNull Logger logger, @NonNull CommandCallback<C, R> delegate) {
-        this.logger = logger;
-        this.delegate = delegate;
     }
 
     @Override
@@ -86,8 +53,5 @@ public class FailureLoggingCallback<C, R> implements CommandCallback<C, R> {
                                                            commandMessage.getCommandName(),
                                                            cause.getClass().getName(),
                                                            cause.getMessage()));
-        if (delegate != null) {
-            delegate.onResult(commandMessage, commandResultMessage);
-        }
     }
 }

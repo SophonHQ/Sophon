@@ -39,7 +39,7 @@ class EqualFieldsMatcherTest {
     @BeforeEach
     void setUp() {
         expectedEvent = new MyEvent(aggregateId, 1);
-        testSubject = Matchers.equalTo(expectedEvent);
+        testSubject = new EqualFieldsMatcher<>(expectedEvent);
     }
 
     @Test
@@ -65,7 +65,7 @@ class EqualFieldsMatcherTest {
 
     @Test
     void matches_WrongFieldValueInIgnoredField() {
-        testSubject = Matchers.equalTo(expectedEvent, field -> !field.getName().equals("someValue"));
+        testSubject = new EqualFieldsMatcher<>(expectedEvent, field -> !field.getName().equals("someValue"));
         assertThat(testSubject.matches(new MyEvent(aggregateId, 2))).isTrue();
     }
 

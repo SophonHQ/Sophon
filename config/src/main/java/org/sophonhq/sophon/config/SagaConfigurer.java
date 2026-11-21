@@ -186,7 +186,6 @@ public class SagaConfigurer<T> {
         }
 
         @Override
-        @Deprecated
         public <T extends EventProcessor> T eventProcessor() {
             ensureInitialized();
             //noinspection unchecked

@@ -164,10 +164,11 @@ public class MetricsConfig {
             );
             // Naming the Timer monitor/meter with the name of the component (eventStore)
             // Registering the Timer with custom tags: payloadType.
-            MessageTimerMonitor messageTimer = MessageTimerMonitor.buildMonitor(
-                    componentName, meterRegistry,
-                    message -> Tags.of(TagsUtil.PAYLOAD_TYPE_TAG, message.getPayloadType().getSimpleName())
-            );
+            MessageTimerMonitor messageTimer = MessageTimerMonitor.builder()
+                    .meterNamePrefix(componentName)
+                    .meterRegistry(meterRegistry)
+                    .tagsBuilder(message -> Tags.of(TagsUtil.PAYLOAD_TYPE_TAG, message.getPayloadType().getSimpleName()))
+                    .build();
             return new MultiMessageMonitor<>(messageCounter, messageTimer);
         };
         configurer.configureMessageMonitor(EventStore.class, messageMonitorFactory);
@@ -187,13 +188,14 @@ public class MetricsConfig {
             );
             // Naming the Timer monitor/meter with the fixed name `eventProcessor`.
             // Registering the Timer with custom tags: payloadType and processorName.
-            MessageTimerMonitor messageTimer = MessageTimerMonitor.buildMonitor(
-                    "eventProcessor", meterRegistry,
-                    message -> Tags.of(
+            MessageTimerMonitor messageTimer = MessageTimerMonitor.builder()
+                    .meterNamePrefix("eventProcessor")
+                    .meterRegistry(meterRegistry)
+                    .tagsBuilder(message -> Tags.of(
                             TagsUtil.PAYLOAD_TYPE_TAG, message.getPayloadType().getSimpleName(),
                             TagsUtil.PROCESSOR_NAME_TAG, componentName
-                    )
-            );
+                    ))
+                    .build();
             // Naming the Capacity/Gauge monitor/meter with the fixed name `eventProcessor`.
             // Registering the Capacity/Gauge with custom tags: payloadType and processorName.
             CapacityMonitor capacityMonitor1Minute = CapacityMonitor.buildMonitor(
@@ -218,10 +220,11 @@ public class MetricsConfig {
                             "messageId", message.getIdentifier()
                     )
             );
-            MessageTimerMonitor messageTimer = MessageTimerMonitor.buildMonitor(
-                    componentName, meterRegistry,
-                    message -> Tags.of(TagsUtil.PAYLOAD_TYPE_TAG, message.getPayloadType().getSimpleName())
-            );
+            MessageTimerMonitor messageTimer = MessageTimerMonitor.builder()
+                    .meterNamePrefix(componentName)
+                    .meterRegistry(meterRegistry)
+                    .tagsBuilder(message -> Tags.of(TagsUtil.PAYLOAD_TYPE_TAG, message.getPayloadType().getSimpleName()))
+                    .build();
 
             CapacityMonitor capacityMonitor1Minute = CapacityMonitor.buildMonitor(
                     componentName, meterRegistry,
@@ -242,10 +245,11 @@ public class MetricsConfig {
                             "messageId", message.getIdentifier()
                     )
             );
-            MessageTimerMonitor messageTimer = MessageTimerMonitor.buildMonitor(
-                    componentName, meterRegistry,
-                    message -> Tags.of(TagsUtil.PAYLOAD_TYPE_TAG, message.getPayloadType().getSimpleName())
-            );
+            MessageTimerMonitor messageTimer = MessageTimerMonitor.builder()
+                    .meterNamePrefix(componentName)
+                    .meterRegistry(meterRegistry)
+                    .tagsBuilder(message -> Tags.of(TagsUtil.PAYLOAD_TYPE_TAG, message.getPayloadType().getSimpleName()))
+                    .build();
             CapacityMonitor capacityMonitor1Minute = CapacityMonitor.buildMonitor(
                     componentName, meterRegistry,
                     message -> Tags.of(TagsUtil.PAYLOAD_TYPE_TAG, message.getPayloadType().getSimpleName())

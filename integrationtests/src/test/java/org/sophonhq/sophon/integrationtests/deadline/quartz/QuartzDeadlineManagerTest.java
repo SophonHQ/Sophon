@@ -111,4 +111,16 @@ class QuartzDeadlineManagerTest extends AbstractDeadlineManagerTestSuite {
 
         assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
+
+    @Test
+    void buildWithoutSerializerThrowsSophonConfigurationException() {
+        Scheduler scheduler = mock(Scheduler.class);
+        ScopeAwareProvider scopeAwareProvider = mock(ScopeAwareProvider.class);
+        QuartzDeadlineManager.Builder builderTestSubject =
+                QuartzDeadlineManager.builder()
+                                     .scheduler(scheduler)
+                                     .scopeAwareProvider(scopeAwareProvider);
+
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
+    }
 }

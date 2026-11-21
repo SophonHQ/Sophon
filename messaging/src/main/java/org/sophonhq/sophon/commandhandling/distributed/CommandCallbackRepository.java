@@ -38,17 +38,6 @@ public class CommandCallbackRepository<A> {
      * {@link CommandBusConnectorCommunicationException}.
      *
      * @param channelId the channel identifier
-     * @deprecated use {@link #cancelCallbacksForChannel(Object)} instead
-     */
-    public void cancelCallbacks(A channelId) {
-        cancelCallbacksForChannel(channelId);
-    }
-
-    /**
-     * Removes all callbacks for a given channel. Registered callbacks will receive a failure response containing a
-     * {@link CommandBusConnectorCommunicationException}.
-     *
-     * @param channelId the channel identifier
      * @return the collection of removed callbacks
      */
     public Collection<CommandCallbackWrapper> cancelCallbacksForChannel(A channelId) {

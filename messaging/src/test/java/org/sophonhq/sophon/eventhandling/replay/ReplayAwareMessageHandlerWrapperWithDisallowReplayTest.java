@@ -54,7 +54,7 @@ class ReplayAwareMessageHandlerWrapperWithDisallowReplayTest {
         testSubject = new AnnotationEventHandlerAdapter(handler);
         testMethodSubject = new AnnotationEventHandlerAdapter(methodHandler);
         testDisallowingSubject = new AnnotationEventHandlerAdapter(disallowingHandler);
-        replayToken = new ReplayToken(new GlobalSequenceTrackingToken(1L));
+        replayToken = (ReplayToken) ReplayToken.createReplayToken(new GlobalSequenceTrackingToken(1L));
     }
 
     @Test

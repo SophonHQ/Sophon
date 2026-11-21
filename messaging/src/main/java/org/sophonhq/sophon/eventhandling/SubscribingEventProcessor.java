@@ -31,7 +31,6 @@ import org.sophonhq.sophon.messaging.unitofwork.RollbackConfiguration;
 import org.sophonhq.sophon.messaging.unitofwork.RollbackConfigurationType;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
 import org.sophonhq.sophon.monitoring.NoOpMessageMonitor;
-import org.sophonhq.sophon.tracing.SpanFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -237,13 +236,6 @@ public class SubscribingEventProcessor extends AbstractEventProcessor implements
 
         @Override
         public Builder spanFactory(@NonNull EventProcessorSpanFactory spanFactory) {
-            super.spanFactory(spanFactory);
-            return this;
-        }
-
-        @Override
-        @Deprecated
-        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
         }

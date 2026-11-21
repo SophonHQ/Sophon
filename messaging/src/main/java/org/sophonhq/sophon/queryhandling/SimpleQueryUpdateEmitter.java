@@ -341,20 +341,6 @@ public class SimpleQueryUpdateEmitter implements QueryUpdateEmitter {
 
 
         /**
-         * Sets the {@link SpanFactory} implementation to use for providing tracing capabilities. Defaults to a
-         * {@link NoOpSpanFactory} by default, which provides no tracing capabilities.
-         *
-         * @param spanFactory The {@link SpanFactory} implementation.
-         * @return The current Builder instance, for fluent interfacing.
-         * @deprecated Use {@link #spanFactory(QueryUpdateEmitterSpanFactory)}  instead as it provides more configurability.
-         */
-        @Deprecated
-        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
-            assertNonNull(spanFactory, "SpanFactory may not be null");
-            this.spanFactory = DefaultQueryUpdateEmitterSpanFactory.builder().spanFactory(spanFactory).build();
-            return this;
-        }
-        /**
          * Sets the {@link QueryUpdateEmitterSpanFactory} implementation to use for providing tracing capabilities. Defaults to a
          * {@link DefaultQueryUpdateEmitterSpanFactory} backed by a {@link NoOpSpanFactory} by default, which provides no tracing capabilities.
          *

@@ -30,7 +30,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -53,36 +52,6 @@ public class SpringPrototypeAggregateFactory<T>
     private ApplicationContext applicationContext;
     private String beanName;
     private AggregateFactory<T> delegate;
-
-    /**
-     * Initializes the factory to create beans instances for the bean with given {@code prototypeBeanName}.
-     * <p>
-     * Note that the bean should have the prototype scope.
-     *
-     * @param prototypeBeanName the name of the prototype bean this repository serves.
-     * @deprecated In favor of {@link #SpringPrototypeAggregateFactory(Class, String, Map)} to ensure all required
-     * fields are present for both polymorphic and non-polymorphic aggregates.
-     */
-    @Deprecated
-    public SpringPrototypeAggregateFactory(String prototypeBeanName) {
-        this(prototypeBeanName, new HashMap<>());
-    }
-
-    /**
-     * Initializes the factory to create beans instances for the bean with given {@code prototypeBeanName} and its
-     * {@code subtypes}.
-     * <p>
-     * Note that the bean should have the prototype scope.
-     *
-     * @param prototypeBeanName the name of the prototype bean this repository serves.
-     * @param subtypes          the map of subtype of this aggregate to its spring prototype name
-     * @deprecated In favor of {@link #SpringPrototypeAggregateFactory(Class, String, Map)} to ensure all required
-     * fields are present for both polymorphic and non-polymorphic aggregates.
-     */
-    @Deprecated
-    public SpringPrototypeAggregateFactory(String prototypeBeanName, Map<Class<? extends T>, String> subtypes) {
-        this(null, prototypeBeanName, subtypes);
-    }
 
     /**
      * Initializes the factory to create bean instances from the given {@code prototypeBeanName} or its

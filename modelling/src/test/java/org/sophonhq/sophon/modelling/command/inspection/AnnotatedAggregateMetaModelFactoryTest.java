@@ -40,6 +40,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -430,7 +431,8 @@ class AnnotatedAggregateMetaModelFactoryTest {
 
     @SuppressWarnings("unchecked")
     private <T> MessageHandlingMember<T> getHandler(AggregateModel<?> members, CommandMessage<?> message) {
-        return (MessageHandlingMember<T>) members.commandHandlers()
+        return (MessageHandlingMember<T>) members.allCommandHandlers()
+                                                 .getOrDefault(members.entityClass(), Collections.emptyList())
                                                  .stream()
                                                  .filter(ch -> ch.canHandle(message))
                                                  .findFirst()

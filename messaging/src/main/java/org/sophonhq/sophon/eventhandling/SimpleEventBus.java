@@ -68,12 +68,6 @@ public class SimpleEventBus extends AbstractEventBus {
         }
 
         @Override
-        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
-            super.spanFactory(spanFactory);
-            return this;
-        }
-
-        @Override
         public Builder spanFactory(@NonNull EventBusSpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;

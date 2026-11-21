@@ -29,7 +29,6 @@ import org.sophonhq.sophon.modelling.saga.AssociationValues;
 import org.sophonhq.sophon.modelling.saga.repository.SagaStore;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.SimpleSerializedObject;
-import org.sophonhq.sophon.serialization.xml.XStreamSerializer;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
@@ -406,9 +405,7 @@ public class JpaSagaStore implements SagaStore<Object> {
         protected void validate() throws SophonConfigurationException {
             assertNonNull(entityManagerProvider,
                           "The EntityManagerProvider is a hard requirement and should be provided");
-            if (serializer == null) {
-                serializer = XStreamSerializer::defaultSerializer;
-            }
+            assertNonNull(serializer, "The Serializer is a hard requirement and should be provided");
         }
     }
 

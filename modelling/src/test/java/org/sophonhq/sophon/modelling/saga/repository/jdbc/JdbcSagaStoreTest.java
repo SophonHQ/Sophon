@@ -21,6 +21,7 @@ import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.modelling.saga.AssociationValue;
 import org.sophonhq.sophon.modelling.saga.AssociationValues;
 import org.sophonhq.sophon.modelling.saga.AssociationValuesImpl;
@@ -34,6 +35,7 @@ import java.util.Set;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link JdbcSagaStore}.
@@ -111,5 +113,14 @@ class JdbcSagaStoreTest {
         AssociationValues associationsValues = new AssociationValuesImpl(singleton(new AssociationValue("key", "value")));
         testSubject.updateSaga(StubSaga.class, "123456", new StubSaga(), associationsValues);
         assertThat(testSubject.loadSaga(StubSaga.class, "123456")).isNull();
+    }
+
+    @Test
+    void buildWithoutSerializerThrowsSophonConfigurationException() {
+        JdbcSagaStore.Builder builderTestSubject = JdbcSagaStore.builder()
+                                                                .dataSource(dataSource)
+                                                                .sqlSchema(new GenericSagaSqlSchema());
+
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 }

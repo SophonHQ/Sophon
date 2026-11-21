@@ -372,13 +372,6 @@ public class FixtureExecutionResultImpl<T> implements FixtureExecutionResult {
     }
 
     @Override
-    public FixtureExecutionResult expectDeadlinesMetMatching(
-            Matcher<? extends List<? super DeadlineMessage<?>>> matcher
-    ) {
-        return expectTriggeredDeadlinesMatching(matcher);
-    }
-
-    @Override
     public FixtureExecutionResult expectTriggeredDeadlinesMatching(
             Matcher<? extends List<? super DeadlineMessage<?>>> matcher
     ) {
@@ -390,11 +383,6 @@ public class FixtureExecutionResultImpl<T> implements FixtureExecutionResult {
     public FixtureExecutionResult expectPublishedEvents(Object... expected) {
         eventValidator.assertPublishedEvents(expected);
         return this;
-    }
-
-    @Override
-    public FixtureExecutionResult expectDeadlinesMet(Object... expected) {
-        return expectTriggeredDeadlines(expected);
     }
 
     @Override

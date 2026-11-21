@@ -58,24 +58,6 @@ public interface SubscriptionQueryResult<I, U> extends Registration {
      * <p>
      * Subscription to the incremental updates is done after the initial result is retrieved and its consumer is
      * invoked. If anything goes wrong during invoking or consuming initial result or incremental updates, subscription
-     * is cancelled.
-     *
-     * @param initialResultConsumer The {@link Consumer} to be invoked when the initial result is retrieved.
-     * @param updateConsumer        The {@link Consumer} to be invoked when incremental updates are emitted.
-     * @deprecated Please use {@link #handle(Consumer, Consumer, Consumer)} instead, to consciously deal with any
-     * exceptions with the {@code errorConsumer}.
-     */
-    @Deprecated
-    default void handle(Consumer<? super I> initialResultConsumer, Consumer<? super U> updateConsumer) {
-        handle(initialResultConsumer, updateConsumer,
-               error -> logger.warn("Failed handle the initial result or an update", error));
-    }
-
-    /**
-     * Delegates handling of initial result and incremental updates to the provided consumers.
-     * <p>
-     * Subscription to the incremental updates is done after the initial result is retrieved and its consumer is
-     * invoked. If anything goes wrong during invoking or consuming initial result or incremental updates, subscription
      * is cancelled <em>after</em> invoking the given {@code errorConsumer}.
      *
      * @param initialResultConsumer The {@link Consumer} to be invoked when the initial result is retrieved.

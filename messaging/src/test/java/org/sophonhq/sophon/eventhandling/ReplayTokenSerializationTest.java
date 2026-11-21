@@ -41,7 +41,7 @@ class ReplayTokenSerializationTest {
     @ParameterizedTest
     void tokenShouldBeSerializable(TestSerializer serializer) {
         TrackingToken innerToken = GapAwareTrackingToken.newInstance(10, Collections.singleton(9L));
-        ReplayToken token = new ReplayToken(innerToken);
+        ReplayToken token = new ReplayToken(innerToken, null, null);
         assertThat(serializer.serializeDeserialize(token)).isEqualTo(token);
     }
 }

@@ -44,7 +44,7 @@ class ReplayTokenTest {
 
     @Test
     void advanceReplayTokenWithinReplaySegment() {
-        ReplayToken testSubject = new ReplayToken(innerToken);
+        ReplayToken testSubject = new ReplayToken(innerToken, null, null);
         TrackingToken actual = testSubject.advancedTo(GapAwareTrackingToken.newInstance(8, emptySet()));
         assertThat(actual).isInstanceOf(ReplayToken.class);
         assertThat(ReplayToken.isReplay(actual)).isTrue();
@@ -72,7 +72,7 @@ class ReplayTokenTest {
     @Test
     void serializationDeserialization() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        ReplayToken replayToken = new ReplayToken(innerToken);
+        ReplayToken replayToken = new ReplayToken(innerToken, null, null);
         String serializedReplayToken = objectMapper.writer().writeValueAsString(replayToken);
         ReplayToken deserializedReplayToken = objectMapper.readerFor(ReplayToken.class)
                 .readValue(serializedReplayToken);

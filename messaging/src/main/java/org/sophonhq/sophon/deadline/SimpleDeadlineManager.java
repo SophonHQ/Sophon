@@ -116,7 +116,8 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
                            @NonNull String deadlineName,
                            Object messageOrPayload,
                            @NonNull ScopeDescriptor deadlineScope) {
-        DeadlineMessage<?> deadlineMessage = asDeadlineMessage(deadlineName, messageOrPayload);
+        DeadlineMessage<?> deadlineMessage =
+                asDeadlineMessage(deadlineName, messageOrPayload, GenericDeadlineMessage.clock.instant());
         String deadlineMessageId = deadlineMessage.getIdentifier();
         DeadlineId deadlineId = new DeadlineId(deadlineName, deadlineScope, deadlineMessageId);
         Span span = spanFactory.createScheduleSpan(deadlineName, deadlineMessageId, deadlineMessage);
@@ -296,22 +297,6 @@ public class SimpleDeadlineManager extends AbstractDeadlineManager implements Li
         public Builder transactionManager(@NonNull TransactionManager transactionManager) {
             assertNonNull(transactionManager, "TransactionManager may not be null");
             this.transactionManager = transactionManager;
-            return this;
-        }
-
-        /**
-         * Sets the {@link SpanFactory} implementation to use for providing tracing capabilities. Defaults to a
-         * {@link NoOpSpanFactory} by default, which provides no tracing capabilities.
-         *
-         * @param spanFactory The {@link SpanFactory} implementation
-         * @return The current Builder instance, for fluent interfacing.
-         * @deprecated Use {@link #spanFactory(DeadlineManagerSpanFactory)} instead as it provides more configuration
-         * options.
-         */
-        @Deprecated
-        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
-            assertNonNull(spanFactory, "SpanFactory may not be null");
-            this.spanFactory = DefaultDeadlineManagerSpanFactory.builder().spanFactory(spanFactory).build();
             return this;
         }
 

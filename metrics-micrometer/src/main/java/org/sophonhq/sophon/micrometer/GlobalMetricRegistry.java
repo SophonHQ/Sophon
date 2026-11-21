@@ -149,7 +149,10 @@ public class GlobalMetricRegistry {
      */
     public MessageMonitor<? super EventMessage<?>> registerEventProcessor(String eventProcessorName) {
         List<MessageMonitor<? super EventMessage<?>>> monitors = new ArrayList<>();
-        monitors.add(MessageTimerMonitor.buildMonitor(eventProcessorName, registry));
+        monitors.add(MessageTimerMonitor.builder()
+                                        .meterNamePrefix(eventProcessorName)
+                                        .meterRegistry(registry)
+                                        .build());
         monitors.add(EventProcessorLatencyMonitor.builder()
                                                  .meterNamePrefix(eventProcessorName)
                                                  .meterRegistry(registry)
@@ -181,7 +184,10 @@ public class GlobalMetricRegistry {
      */
     public MessageMonitor<? super EventMessage<?>> registerEventBus(String eventBusName) {
         MessageCountingMonitor messageCountingMonitor = MessageCountingMonitor.buildMonitor(eventBusName, registry);
-        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.buildMonitor(eventBusName, registry);
+        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.builder()
+                                                                     .meterNamePrefix(eventBusName)
+                                                                     .meterRegistry(registry)
+                                                                     .build();
 
         return new MultiMessageMonitor<>(Arrays.asList(messageCountingMonitor, messageTimerMonitor));
     }
@@ -258,23 +264,6 @@ public class GlobalMetricRegistry {
      * Registers new metrics to the registry to monitor an {@link EventProcessor} using {@link Tag}s through the given
      * {@code tagsBuilder}. The monitor will be registered with the registry under the given {@code eventProcessorName}.
      * The returned {@link MessageMonitor} can be installed on the {@code EventProcessor} to initiate the monitoring.
-     *
-     * @param eventProcessorName the name under which the {@link EventProcessor} should be registered to the registry
-     * @param tagsBuilder        the function used to construct the list of {@link Tag}, based on the ingested message
-     * @return a {@link MessageMonitor} to monitor the behavior of an {@link EventProcessor}
-     * @deprecated Please use the {@link #registerEventProcessor(String, Function, Function)} instead, which has
-     * separate tags for the latency metric.
-     */
-    @Deprecated
-    public MessageMonitor<? super EventMessage<?>> registerEventProcessor(String eventProcessorName,
-                                                                          Function<Message<?>, Iterable<Tag>> tagsBuilder) {
-        return registerEventProcessor(eventProcessorName, tagsBuilder, tagsBuilder);
-    }
-
-    /**
-     * Registers new metrics to the registry to monitor an {@link EventProcessor} using {@link Tag}s through the given
-     * {@code tagsBuilder}. The monitor will be registered with the registry under the given {@code eventProcessorName}.
-     * The returned {@link MessageMonitor} can be installed on the {@code EventProcessor} to initiate the monitoring.
      * <p>
      * The second tags builder parameter is specifically for the latency metric. These tags might be wanted to be less
      * specific than the others. For example, the {@link MessageTimerMonitor} makes sense per payload type, but the
@@ -290,7 +279,11 @@ public class GlobalMetricRegistry {
                                                                           Function<Message<?>, Iterable<Tag>> latencyTagsBuilder
                                                                           ) {
         List<MessageMonitor<? super EventMessage<?>>> monitors = new ArrayList<>();
-        monitors.add(MessageTimerMonitor.buildMonitor(eventProcessorName, registry, tagsBuilder));
+        monitors.add(MessageTimerMonitor.builder()
+                                        .meterNamePrefix(eventProcessorName)
+                                        .meterRegistry(registry)
+                                        .tagsBuilder(tagsBuilder)
+                                        .build());
         monitors.add(EventProcessorLatencyMonitor.builder()
                                                  .meterNamePrefix(eventProcessorName)
                                                  .meterRegistry(registry)
@@ -327,7 +320,11 @@ public class GlobalMetricRegistry {
     public MessageMonitor<? super EventMessage<?>> registerEventBus(String eventBusName,
                                                                     Function<Message<?>, Iterable<Tag>> tagsBuilder) {
         MessageCountingMonitor messageCountingMonitor = MessageCountingMonitor.buildMonitor(eventBusName, registry);
-        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.buildMonitor(eventBusName, registry, tagsBuilder);
+        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.builder()
+                                                                     .meterNamePrefix(eventBusName)
+                                                                     .meterRegistry(registry)
+                                                                     .tagsBuilder(tagsBuilder)
+                                                                     .build();
 
         return new MultiMessageMonitor<>(Arrays.asList(messageCountingMonitor, messageTimerMonitor));
     }
@@ -363,7 +360,10 @@ public class GlobalMetricRegistry {
     }
 
     private MessageMonitor<Message<?>> registerDefaultHandlerMessageMonitor(String name) {
-        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.buildMonitor(name, registry);
+        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.builder()
+                                                                     .meterNamePrefix(name)
+                                                                     .meterRegistry(registry)
+                                                                     .build();
         CapacityMonitor capacityMonitor = CapacityMonitor.buildMonitor(name, registry);
         MessageCountingMonitor messageCountingMonitor = MessageCountingMonitor.buildMonitor(name, registry);
 
@@ -372,7 +372,11 @@ public class GlobalMetricRegistry {
 
     private MessageMonitor<Message<?>> registerDefaultHandlerMessageMonitor(String name,
                                                                             Function<Message<?>, Iterable<Tag>> tagsBuilder) {
-        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.buildMonitor(name, registry, tagsBuilder);
+        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.builder()
+                                                                     .meterNamePrefix(name)
+                                                                     .meterRegistry(registry)
+                                                                     .tagsBuilder(tagsBuilder)
+                                                                     .build();
         CapacityMonitor capacityMonitor = CapacityMonitor.buildMonitor(name, registry, tagsBuilder);
         MessageCountingMonitor messageCountingMonitor = MessageCountingMonitor.buildMonitor(name,
                                                                                             registry,

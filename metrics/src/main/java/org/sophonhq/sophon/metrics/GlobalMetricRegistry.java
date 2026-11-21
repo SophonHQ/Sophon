@@ -124,7 +124,7 @@ public class GlobalMetricRegistry {
      * @return a {@link MessageMonitor} to monitor the behavior of an {@link EventProcessor}
      */
     public MessageMonitor<? super EventMessage<?>> registerEventProcessor(String eventProcessorName) {
-        MessageTimerMonitor messageTimerMonitor = new MessageTimerMonitor();
+        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.builder().build();
         EventProcessorLatencyMonitor eventProcessorLatencyMonitor = new EventProcessorLatencyMonitor();
         CapacityMonitor capacityMonitor = new CapacityMonitor(1, TimeUnit.MINUTES);
         MessageCountingMonitor messageCountingMonitor = new MessageCountingMonitor();
@@ -166,7 +166,7 @@ public class GlobalMetricRegistry {
      */
     public MessageMonitor<? super EventMessage<?>> registerEventBus(String eventBusName) {
         MessageCountingMonitor messageCounterMonitor = new MessageCountingMonitor();
-        MessageTimerMonitor messageTimerMonitor = new MessageTimerMonitor();
+        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.builder().build();
 
         MetricRegistry eventProcessingRegistry = new MetricRegistry();
         eventProcessingRegistry.register("messageCounter", messageCounterMonitor);
@@ -202,7 +202,7 @@ public class GlobalMetricRegistry {
     }
 
     private MessageMonitor<Message<?>> registerDefaultHandlerMessageMonitor(String name) {
-        MessageTimerMonitor messageTimerMonitor = new MessageTimerMonitor();
+        MessageTimerMonitor messageTimerMonitor = MessageTimerMonitor.builder().build();
         CapacityMonitor capacityMonitor = new CapacityMonitor(1, TimeUnit.MINUTES);
         MessageCountingMonitor messageCountingMonitor = new MessageCountingMonitor();
 

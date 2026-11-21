@@ -34,7 +34,6 @@ import org.sophonhq.sophon.messaging.unitofwork.DefaultUnitOfWork;
 import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 import org.sophonhq.sophon.modelling.command.inspection.AggregateModel;
 import org.sophonhq.sophon.modelling.command.inspection.AnnotatedAggregate;
-import org.sophonhq.sophon.tracing.SpanFactory;
 import org.sophonhq.sophon.tracing.TestSpanFactory;
 
 import java.util.HashMap;
@@ -400,12 +399,6 @@ class LockingRepositoryTest {
             @Override
             public Builder lockFactory(LockFactory lockFactory) {
                 super.lockFactory(lockFactory);
-                return this;
-            }
-
-            @Override
-            public Builder spanFactory(SpanFactory spanFactory) {
-                super.spanFactory(spanFactory);
                 return this;
             }
 
