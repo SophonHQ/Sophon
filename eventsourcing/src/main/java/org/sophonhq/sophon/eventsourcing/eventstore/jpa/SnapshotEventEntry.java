@@ -30,7 +30,6 @@ import org.sophonhq.sophon.serialization.Serializer;
  * @author Rene de Waele
  */
 @Entity
-@javax.persistence.Entity
 public class SnapshotEventEntry extends AbstractSnapshotEventEntry<byte[]> {
 
     /**

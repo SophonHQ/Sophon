@@ -26,7 +26,7 @@ Since the unit of testing here is the aggregate, `AggregateTestFixture` is meant
 
 ____
 
-The following example shows the usage of the "given-when-then" test fixture with JUnit 4 on the `GiftCard` aggregate (as defined xref:commands:modeling/aggregate.adoc#_basic_aggregate_structure[earlier]):
+The following example shows the usage of the "given-when-then" test fixture with JUnit 5 on the `GiftCard` aggregate (as defined xref:commands:modeling/aggregate.adoc#_basic_aggregate_structure[earlier]):
 
 [source,java]
 ----
@@ -37,7 +37,7 @@ public class GiftCardTest {
 
     private FixtureConfiguration<GiftCard> fixture;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         fixture = new AggregateTestFixture<>(GiftCard.class);
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2023. Axon Framework
+ * Copyright (c) 2010-2026. Axon Framework
  * Modifications Copyright (c) 2026. SophonHQ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,15 +17,18 @@
 
 package org.sophonhq.sophon.integrationtests.eventsourcing.eventstore.jpa;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.sophonhq.sophon.common.legacyjpa.EntityManagerProvider;
-import org.sophonhq.sophon.common.legacyjpa.SimpleEntityManagerProvider;
+import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
+import org.sophonhq.sophon.common.jpa.SimpleEntityManagerProvider;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
-import org.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStoreTest;
 import org.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngine;
-import org.sophonhq.sophon.eventsourcing.eventstore.legacyjpa.JpaEventStorageEngine;
+import org.sophonhq.sophon.eventsourcing.eventstore.jpa.JpaEventStorageEngine;
+import org.sophonhq.sophon.integrationtests.eventsourcing.eventstore.EmbeddedEventStoreTest;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.TestSerializer;
 import org.sophonhq.sophon.spring.messaging.unitofwork.SpringTransactionManager;
@@ -44,9 +47,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 /**
@@ -55,9 +55,9 @@ import javax.sql.DataSource;
  * @author Steven van Beelen
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = JpaEmbeddedEventStoreTest.TestContext.class)
+@ContextConfiguration(classes = JpaEmbeddedCborEventStoreTest.TestContext.class)
 @TestPropertySource("classpath:h2.database.properties")
-class JpaEmbeddedEventStoreTest extends EmbeddedEventStoreTest {
+class JpaEmbeddedCborEventStoreTest extends EmbeddedEventStoreTest {
 
     @Autowired
     private PlatformTransactionManager platformTransactionManager;
@@ -67,8 +67,8 @@ class JpaEmbeddedEventStoreTest extends EmbeddedEventStoreTest {
     @BeforeEach
     public void clearEventStore() {
         transactionManager.executeInTransaction(() -> entityManagerProvider.getEntityManager()
-                                                                           .createQuery("DELETE FROM DomainEventEntry e")
-                                                                           .executeUpdate());
+                .createQuery("DELETE FROM DomainEventEntry e")
+                .executeUpdate());
     }
 
     @Override
@@ -79,13 +79,13 @@ class JpaEmbeddedEventStoreTest extends EmbeddedEventStoreTest {
 
     @Override
     public EventStorageEngine createStorageEngine() {
-        Serializer testSerializer = TestSerializer.JACKSON.getSerializer();
+        Serializer testSerializer = TestSerializer.CBOR.getSerializer();
         return JpaEventStorageEngine.builder()
-                                    .eventSerializer(testSerializer)
-                                    .snapshotSerializer(testSerializer)
-                                    .entityManagerProvider(entityManagerProvider)
-                                    .transactionManager(transactionManager)
-                                    .build();
+                .eventSerializer(testSerializer)
+                .snapshotSerializer(testSerializer)
+                .entityManagerProvider(entityManagerProvider)
+                .transactionManager(transactionManager)
+                .build();
     }
 
     @Configuration
@@ -122,7 +122,7 @@ class JpaEmbeddedEventStoreTest extends EmbeddedEventStoreTest {
         ) {
             LocalContainerEntityManagerFactoryBean entityManagerFactoryBean =
                     new LocalContainerEntityManagerFactoryBean();
-            entityManagerFactoryBean.setPersistenceUnitName("integrationtest");
+            entityManagerFactoryBean.setPersistenceUnitName("sb4eventStore");
 
             HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
             jpaVendorAdapter.setDatabasePlatform(dialect);

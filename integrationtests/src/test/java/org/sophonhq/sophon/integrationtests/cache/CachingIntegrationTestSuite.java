@@ -502,7 +502,7 @@ public abstract class CachingIntegrationTestSuite {
 
         @Override
         public void onEntryRead(Object key, Object value) {
-            // Not used for validation, as the EhCacheAdapter does not support this.
+            // Not used for validation, as the Ehcache and JCache adapters do not support this.
         }
 
         @Override

@@ -28,17 +28,13 @@ import org.sophonhq.sophon.serialization.Serializer;
  * @author Rene de Waele
  */
 @MappedSuperclass
-@javax.persistence.MappedSuperclass
 public abstract class AbstractDomainEventEntry<T> extends AbstractEventEntry<T> implements DomainEventData<T> {
 
     @Basic
-    @javax.persistence.Basic
     private String type;
     @Basic(optional = false)
-    @javax.persistence.Basic(optional = false)
     private String aggregateIdentifier;
     @Basic(optional = false)
-    @javax.persistence.Basic(optional = false)
     private long sequenceNumber;
 
     /**

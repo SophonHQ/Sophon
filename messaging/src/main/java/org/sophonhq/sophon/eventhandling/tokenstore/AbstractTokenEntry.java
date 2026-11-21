@@ -29,21 +29,15 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.Objects;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Lob;
-import javax.persistence.MappedSuperclass;
 
 import static org.sophonhq.sophon.common.DateTimeUtils.formatInstant;
 
 /**
- * Abstract base class of a JPA entry containing a serialized tracking token belonging to a given process.
- * For use with Jakarta/Hibernate 6 use {@link org.sophonhq.sophon.eventhandling.tokenstore.jpa.TokenEntry} instead.
+ * Abstract base class of an entry containing a serialized tracking token belonging to a given process.
  *
  * @param <T> The serialized data type of the token
  * @author Rene de Waele
  */
-@MappedSuperclass
 public abstract class AbstractTokenEntry<T> {
 
     /**
@@ -51,16 +45,9 @@ public abstract class AbstractTokenEntry<T> {
      */
     public static Clock clock = Clock.systemUTC();
 
-    @Lob
-    @Column(length = 10000)
     private T token;
-    @Basic
     private String tokenType;
-
-    @Basic(optional = false)
     private String timestamp;
-
-    @Basic
     private String owner;
 
     /**
@@ -96,7 +83,7 @@ public abstract class AbstractTokenEntry<T> {
     }
 
     /**
-     * Default constructor required for JPA
+     * Default constructor for subclasses.
      */
     protected AbstractTokenEntry() {
     }

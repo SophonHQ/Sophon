@@ -17,11 +17,10 @@
 
 package org.sophonhq.sophon.integrationtests.polymorphic;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.eventsourcing.EventSourcingHandler;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.createNew;

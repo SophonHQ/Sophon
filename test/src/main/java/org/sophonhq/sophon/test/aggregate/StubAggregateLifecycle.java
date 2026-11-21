@@ -37,8 +37,9 @@ import java.util.stream.Collectors;
  * applied while it is active are stored and can be retrieved using {@link #getAppliedEvents()} or
  * {@link #getAppliedEventPayloads()}.
  * <p>
- * When using with JUnit, consider using the {@link StubAggregateLifecycleRule} with {@link org.junit.Rule &#064;Rule}
- * instead, as it is easier and safer to use.
+ * When using with JUnit, consider using the {@link StubAggregateLifecycleExtension} with
+ * {@link org.junit.jupiter.api.extension.RegisterExtension &#064;RegisterExtension} instead, as it is easier and safer
+ * to use.
  */
 public class StubAggregateLifecycle extends AggregateLifecycle {
 

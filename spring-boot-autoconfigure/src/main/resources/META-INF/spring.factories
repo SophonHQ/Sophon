@@ -7,8 +7,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration, \
   org.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration,\
   org.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration,\
   org.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration,\
   org.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration,\
   org.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration,\

@@ -8,8 +8,6 @@ org.sophonhq.sophon.springboot.autoconfig.EventProcessingAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.InfraConfiguration
 org.sophonhq.sophon.springboot.autoconfig.InterceptorAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration
-org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration
-org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.MetricsAutoConfiguration

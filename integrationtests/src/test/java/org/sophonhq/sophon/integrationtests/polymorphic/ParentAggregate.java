@@ -17,15 +17,14 @@
 
 package org.sophonhq.sophon.integrationtests.polymorphic;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
 import org.sophonhq.sophon.eventhandling.EventHandler;
 import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
 import org.sophonhq.sophon.modelling.command.CommandHandlerInterceptor;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
 import static org.sophonhq.sophon.modelling.command.AggregateLifecycle.apply;
 

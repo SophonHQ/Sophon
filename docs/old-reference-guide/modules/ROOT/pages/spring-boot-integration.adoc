@@ -36,7 +36,7 @@ sagas.
 
 === JPA and persistence contexts
 
-With Spring Data-JPA, a JPA Persistence Context is automatically configured. Sophon's Spring Boot Autoconfiguration module will make sure Sophon's JPA Entities are automatically registered with this default context. Since 4.6.0. we use the `jakarta.persistence` namespace by default, for backwards compatibility classes using the `javax.persistence` are available in the new `legacyjpa` namespace.
+With Spring Data-JPA, a JPA Persistence Context is automatically configured. Sophon's Spring Boot Autoconfiguration module will make sure Sophon's JPA Entities are automatically registered with this default context.
 
 However, when you explicitly include certain packages, for example using an `@EntityScan` annotation, this
 autoconfiguration will not happen anymore. If you then wish to use JPA based components from Sophon, you will need to make
@@ -73,8 +73,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   org.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration, \
   org.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration,\
   org.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration,\
   org.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration,\
   org.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration,\
   org.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration,\
@@ -111,8 +109,6 @@ org.sophonhq.sophon.springboot.autoconfig.EventProcessingAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.InfraConfiguration
 org.sophonhq.sophon.springboot.autoconfig.InterceptorAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration
-org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxAutoConfiguration
-org.sophonhq.sophon.springboot.autoconfig.legacyjpa.JpaJavaxEventStoreAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration
 org.sophonhq.sophon.springboot.autoconfig.MetricsAutoConfiguration
