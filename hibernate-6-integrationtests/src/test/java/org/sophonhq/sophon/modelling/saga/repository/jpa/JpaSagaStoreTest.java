@@ -26,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.sophonhq.sophon.common.Assert;
 import org.sophonhq.sophon.common.IdentifierFactory;
+import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import org.sophonhq.sophon.common.jpa.SimpleEntityManagerProvider;
 import org.sophonhq.sophon.messaging.Message;
@@ -40,6 +41,7 @@ import org.sophonhq.sophon.modelling.utils.TestSerializer;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /**
  * Test class validating the {@link JpaSagaStore}.
@@ -197,5 +199,13 @@ class JpaSagaStoreTest {
         assertThat(entityManager.find(SagaEntry.class, identifier)).isNull();
         assertThat(entityManager.createQuery("SELECT ae FROM AssociationValueEntry ae WHERE ae.sagaId = :id")
                 .setParameter("id", identifier).getResultList()).isEmpty();
+    }
+
+    @Test
+    void buildWithoutSerializerThrowsSophonConfigurationException() {
+        JpaSagaStore.Builder builderTestSubject = JpaSagaStore.builder()
+                                                              .entityManagerProvider(entityManagerProvider);
+
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 }

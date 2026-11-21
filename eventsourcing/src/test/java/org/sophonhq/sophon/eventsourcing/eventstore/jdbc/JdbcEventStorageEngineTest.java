@@ -20,6 +20,7 @@ package org.sophonhq.sophon.eventsourcing.eventstore.jdbc;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.sophonhq.sophon.common.SophonConfigurationException;
 import org.sophonhq.sophon.common.jdbc.PersistenceExceptionResolver;
 import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
@@ -56,6 +57,7 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -482,5 +484,27 @@ class JdbcEventStorageEngineTest
         } catch (SQLException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    @Test
+    void buildWithoutEventSerializerThrowsSophonConfigurationException() {
+        JdbcEventStorageEngine.Builder builderTestSubject =
+                JdbcEventStorageEngine.builder()
+                                      .snapshotSerializer(TestSerializer.xStreamSerializer())
+                                      .connectionProvider(dataSource::getConnection)
+                                      .transactionManager(NoTransactionManager.INSTANCE);
+
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
+    }
+
+    @Test
+    void buildWithoutSnapshotSerializerThrowsSophonConfigurationException() {
+        JdbcEventStorageEngine.Builder builderTestSubject =
+                JdbcEventStorageEngine.builder()
+                                      .eventSerializer(TestSerializer.xStreamSerializer())
+                                      .connectionProvider(dataSource::getConnection)
+                                      .transactionManager(NoTransactionManager.INSTANCE);
+
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
     }
 }

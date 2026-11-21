@@ -49,7 +49,7 @@ class MultiEventHandlerInvokerTest {
     void setUp() {
         testEventMessage = GenericEventMessage.asEventMessage("some-event");
         replayMessage = new GenericTrackedEventMessage<>(new ReplayToken(new GlobalSequenceTrackingToken(10),
-                                                                         new GlobalSequenceTrackingToken(0)),
+                                                                         new GlobalSequenceTrackingToken(0), null),
                                                          GenericEventMessage.asEventMessage("replay-event"));
         testSegment = new Segment(1, 1);
 

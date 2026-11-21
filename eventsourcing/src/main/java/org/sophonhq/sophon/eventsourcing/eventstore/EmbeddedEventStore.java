@@ -32,7 +32,6 @@ import org.sophonhq.sophon.lifecycle.Lifecycle;
 import org.sophonhq.sophon.lifecycle.Phase;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
 import org.sophonhq.sophon.monitoring.NoOpMessageMonitor;
-import org.sophonhq.sophon.tracing.SpanFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -521,12 +520,6 @@ public class EmbeddedEventStore extends AbstractEventStore implements Lifecycle 
         @Override
         public Builder messageMonitor(@NonNull MessageMonitor<? super EventMessage<?>> messageMonitor) {
             super.messageMonitor(messageMonitor);
-            return this;
-        }
-
-        @Override
-        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
-            super.spanFactory(spanFactory);
             return this;
         }
 

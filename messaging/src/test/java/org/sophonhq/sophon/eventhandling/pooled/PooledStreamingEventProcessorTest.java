@@ -17,9 +17,7 @@
 
 package org.sophonhq.sophon.eventhandling.pooled;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +39,6 @@ import org.sophonhq.sophon.messaging.Message;
 import org.sophonhq.sophon.messaging.StreamableMessageSource;
 import org.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import org.sophonhq.sophon.messaging.unitofwork.RollbackConfigurationType;
-import org.sophonhq.sophon.tracing.SpanFactory;
 import org.sophonhq.sophon.tracing.TestSpanFactory;
 import org.sophonhq.sophon.utils.DelegateScheduledExecutorService;
 import org.sophonhq.sophon.utils.InMemoryStreamableEventSource;
@@ -72,9 +69,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -1043,7 +1038,7 @@ class PooledStreamingEventProcessorTest {
         PooledStreamingEventProcessor.Builder builderTestSubject = PooledStreamingEventProcessor.builder();
 
         //noinspection ConstantConditions
-        assertThatThrownBy(() -> builderTestSubject.spanFactory((SpanFactory) null))
+        assertThatThrownBy(() -> builderTestSubject.spanFactory(null))
                 .isInstanceOf(SophonConfigurationException.class);
     }
 

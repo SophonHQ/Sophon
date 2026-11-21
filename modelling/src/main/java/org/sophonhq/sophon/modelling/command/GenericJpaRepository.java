@@ -29,7 +29,6 @@ import org.sophonhq.sophon.messaging.annotation.HandlerDefinition;
 import org.sophonhq.sophon.messaging.annotation.ParameterResolverFactory;
 import org.sophonhq.sophon.modelling.command.inspection.AggregateModel;
 import org.sophonhq.sophon.modelling.command.inspection.AnnotatedAggregate;
-import org.sophonhq.sophon.tracing.SpanFactory;
 
 import java.util.Optional;
 import java.util.Set;
@@ -263,13 +262,6 @@ public class GenericJpaRepository<T> extends LockingRepository<T, AnnotatedAggre
         @Override
         public Builder<T> subtype(@NonNull Class<? extends T> subtype) {
             super.subtype(subtype);
-            return this;
-        }
-
-        @Override
-        @Deprecated
-        public Builder<T> spanFactory(SpanFactory spanFactory) {
-            super.spanFactory(spanFactory);
             return this;
         }
 

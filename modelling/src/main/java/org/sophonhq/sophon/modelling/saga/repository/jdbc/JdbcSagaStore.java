@@ -30,7 +30,6 @@ import org.sophonhq.sophon.modelling.saga.repository.SagaStore;
 import org.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry;
 import org.sophonhq.sophon.serialization.SerializedObject;
 import org.sophonhq.sophon.serialization.Serializer;
-import org.sophonhq.sophon.serialization.xml.XStreamSerializer;
 
 import java.nio.charset.Charset;
 import java.sql.Connection;
@@ -279,7 +278,7 @@ public class JdbcSagaStore implements SagaStore<Object> {
     }
 
     /**
-     * Sets the Serializer instance to serialize Sagas with. Defaults to the XStream Serializer.
+     * Sets the Serializer instance to serialize Sagas with.
      *
      * @param serializer the Serializer instance to serialize Sagas with
      */
@@ -393,9 +392,7 @@ public class JdbcSagaStore implements SagaStore<Object> {
          */
         protected void validate() throws SophonConfigurationException {
             assertNonNull(connectionProvider, "The ConnectionProvider is a hard requirement and should be provided");
-            if (serializer == null) {
-                serializer = XStreamSerializer::defaultSerializer;
-            }
+            assertNonNull(serializer, "The Serializer is a hard requirement and should be provided");
         }
     }
 

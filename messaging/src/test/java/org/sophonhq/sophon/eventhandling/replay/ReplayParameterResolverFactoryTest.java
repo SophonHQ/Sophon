@@ -46,7 +46,7 @@ class ReplayParameterResolverFactoryTest {
         handler = new SomeHandler();
         testSubject = new AnnotationEventHandlerAdapter(handler);
         regularToken = new GlobalSequenceTrackingToken(1L);
-        replayToken = new ReplayToken(regularToken);
+        replayToken = (ReplayToken) ReplayToken.createReplayToken(regularToken);
     }
 
     @Test

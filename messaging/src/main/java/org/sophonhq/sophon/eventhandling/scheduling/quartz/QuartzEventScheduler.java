@@ -44,7 +44,6 @@ import org.sophonhq.sophon.messaging.MetaData;
 import org.sophonhq.sophon.serialization.SerializedObject;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.SimpleSerializedObject;
-import org.sophonhq.sophon.serialization.xml.XStreamSerializer;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -245,18 +244,6 @@ public class QuartzEventScheduler implements EventScheduler, Lifecycle {
         private final Serializer serializer;
 
         /**
-         * Instantiate a {@link DirectEventJobDataBinder} which defaults to a {@link XStreamSerializer} for
-         * de-/serializing event messages.
-         *
-         * @deprecated in favor of {@link DirectEventJobDataBinder#DirectEventJobDataBinder(Serializer)}, as the {@link
-         * Serializer} is a hard requirement.
-         */
-        @Deprecated
-        public DirectEventJobDataBinder() {
-            this(XStreamSerializer.defaultSerializer());
-        }
-
-        /**
          * Instantiate a {@link DirectEventJobDataBinder} with the provided {@link Serializer} for
          * de-/serializing event messages.
          *
@@ -447,9 +434,7 @@ public class QuartzEventScheduler implements EventScheduler, Lifecycle {
             assertNonNull(scheduler, "The Scheduler is a hard requirement and should be provided");
             assertNonNull(eventBus, "The EventBus is a hard requirement and should be provided");
             if (jobDataBinderSupplier == null) {
-                if (serializer == null) {
-                    serializer = XStreamSerializer::defaultSerializer;
-                }
+                assertNonNull(serializer, "The Serializer is a hard requirement and should be provided");
                 jobDataBinderSupplier = () -> new DirectEventJobDataBinder(serializer.get());
             }
         }

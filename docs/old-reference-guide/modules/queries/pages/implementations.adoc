@@ -56,7 +56,7 @@ public class SophonConfig {
     // omitting other configuration methods...
     @Bean
     public QueryBus queryBus(GlobalMetricRegistry metricRegistry,
-                             SpanFactory spanFactory,
+                             QueryBusSpanFactory spanFactory,
                              TransactionManager transactionManager,
                              QueryUpdateEmitter updateEmitter) {
         return SimpleQueryBus.builder()

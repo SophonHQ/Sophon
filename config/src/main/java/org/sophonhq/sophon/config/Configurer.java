@@ -228,30 +228,6 @@ public interface Configurer extends LifecycleOperations {
     Configurer registerCommandHandler(@NonNull Function<Configuration, Object> commandHandlerBuilder);
 
     /**
-     * Registers a command handler bean with this {@link Configurer}. The bean may be of any type. The actual command
-     * handler methods will be detected based on the annotations present on the bean's methods. Message handling
-     * functions annotated with {@link org.sophonhq.sophon.commandhandling.CommandHandler} will be taken into account.
-     * <p>
-     * The builder function receives the {@link Configuration} as input, and is expected to return a fully initialized
-     * instance of the command handler bean.
-     *
-     * @param commandHandlerBuilder the builder function of the command handler bean
-     * @param phase                 defines a phase in which the command handler builder will be invoked during {@link
-     *                              Configuration#start()} and {@link Configuration#shutdown()}. When starting the
-     *                              configuration handlers are ordered in ascending, when shutting down the
-     *                              configuration, descending order is used.
-     * @return the current instance of the {@link Configurer}, for chaining purposes
-     * @deprecated in favor of {@link #registerCommandHandler(Function)}, since the {@code phase} of an annotated
-     * handler should be defined through the {@link org.sophonhq.sophon.lifecycle.StartHandler}/{@link
-     * org.sophonhq.sophon.lifecycle.ShutdownHandler} annotation.
-     */
-    @Deprecated
-    default Configurer registerCommandHandler(int phase,
-                                              @NonNull Function<Configuration, Object> commandHandlerBuilder) {
-        return registerCommandHandler(commandHandlerBuilder);
-    }
-
-    /**
      * Registers a query handler bean with this {@link Configurer}. The bean may be of any type. The actual query
      * handler methods will be detected based on the annotations present on the bean's methods. Message handling
      * functions annotated with {@link org.sophonhq.sophon.queryhandling.QueryHandler} will be taken into account.
@@ -263,29 +239,6 @@ public interface Configurer extends LifecycleOperations {
      * @return the current instance of the {@link Configurer}, for chaining purposes
      */
     Configurer registerQueryHandler(@NonNull Function<Configuration, Object> queryHandlerBuilder);
-
-    /**
-     * Registers a query handler bean with this {@link Configurer}. The bean may be of any type. The actual query
-     * handler methods will be detected based on the annotations present on the bean's methods. Message handling
-     * functions annotated with {@link org.sophonhq.sophon.queryhandling.QueryHandler} will be taken into account.
-     * <p>
-     * The builder function receives the {@link Configuration} as input, and is expected to return a fully initialized
-     * instance of the query handler bean.
-     *
-     * @param queryHandlerBuilder the builder function of the query handler bean
-     * @param phase               defines a phase in which the query handler builder will be invoked during {@link
-     *                            Configuration#start()} and {@link Configuration#shutdown()}. When starting the
-     *                            configuration handlers are ordered in ascending, when shutting down the configuration,
-     *                            descending order is used.
-     * @return the current instance of the {@link Configurer}, for chaining purposes
-     * @deprecated in favor of {@link #registerQueryHandler(Function)}, since the {@code phase} of an annotated handler
-     * should be defined through the {@link org.sophonhq.sophon.lifecycle.StartHandler}/{@link
-     * org.sophonhq.sophon.lifecycle.ShutdownHandler} annotation.
-     */
-    @Deprecated
-    default Configurer registerQueryHandler(int phase, @NonNull Function<Configuration, Object> queryHandlerBuilder) {
-        return registerQueryHandler(queryHandlerBuilder);
-    }
 
     /**
      * Registers a message handler bean with this configuration. The bean may be of any type. The actual message handler

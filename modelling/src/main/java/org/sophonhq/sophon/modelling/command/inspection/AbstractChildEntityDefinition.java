@@ -75,18 +75,6 @@ public abstract class AbstractChildEntityDefinition implements ChildEntityDefini
     }
 
     /**
-     * Check whether the given {@link Field} is of a type supported by this definition.
-     *
-     * @param field a {@link Field} containing a Child Entity
-     * @return true if the type is as required by the implementation and false if it is not
-     * @deprecated in favour of {@link #isMemberTypeSupported(Member)}
-     */
-    @Deprecated
-    protected boolean isFieldTypeSupported(Field field) {
-        return isMemberTypeSupported(field);
-    }
-
-    /**
      * Check whether the given {@link Member} is of a type supported by this definition.
      *
      * @param member a {@link Member} containing or returning a Child Entity
@@ -151,8 +139,7 @@ public abstract class AbstractChildEntityDefinition implements ChildEntityDefini
      */
     protected Map<String, Property<Object>> extractCommandHandlerRoutingKeys(Member member,
                                                                              EntityModel<Object> childEntityModel) {
-        return childEntityModel.commandHandlers()
-                               .stream()
+        return childEntityModel.commandHandlers(childEntityModel.entityClass())
                                .map(commandHandler -> commandHandler.unwrap(CommandMessageHandlingMember.class)
                                                                     .orElse(null))
                                .filter(Objects::nonNull)

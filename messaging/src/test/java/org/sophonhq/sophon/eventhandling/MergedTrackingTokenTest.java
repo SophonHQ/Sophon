@@ -84,8 +84,8 @@ class MergedTrackingTokenTest {
         TrackingToken incomingMessage = new GlobalSequenceTrackingToken(0);
 
         MergedTrackingToken currentToken = new MergedTrackingToken(
-                new ReplayToken(new GlobalSequenceTrackingToken(9), new GlobalSequenceTrackingToken(9)),
-                new ReplayToken(new GlobalSequenceTrackingToken(9), new GlobalSequenceTrackingToken(-1))
+                new ReplayToken(new GlobalSequenceTrackingToken(9), new GlobalSequenceTrackingToken(9), null),
+                new ReplayToken(new GlobalSequenceTrackingToken(9), new GlobalSequenceTrackingToken(-1), null)
         );
 
         TrackingToken advancedToken = currentToken.advancedTo(incomingMessage);

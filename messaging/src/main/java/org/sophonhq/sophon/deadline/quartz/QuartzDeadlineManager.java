@@ -44,7 +44,6 @@ import org.sophonhq.sophon.lifecycle.Phase;
 import org.sophonhq.sophon.messaging.ScopeAwareProvider;
 import org.sophonhq.sophon.messaging.ScopeDescriptor;
 import org.sophonhq.sophon.serialization.Serializer;
-import org.sophonhq.sophon.serialization.xml.XStreamSerializer;
 import org.sophonhq.sophon.tracing.NoOpSpanFactory;
 import org.sophonhq.sophon.tracing.Span;
 import org.sophonhq.sophon.tracing.SpanFactory;
@@ -330,22 +329,6 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
 
         /**
          * Sets the {@link SpanFactory} implementation to use for providing tracing capabilities. Defaults to a
-         * {@link NoOpSpanFactory} by default, which provides no tracing capabilities.
-         *
-         * @param spanFactory The {@link SpanFactory} implementation
-         * @return The current Builder instance, for fluent interfacing.
-         * @deprecated Use {@link #spanFactory(DeadlineManagerSpanFactory)} which provides more configuration options.
-         */
-        @Deprecated
-        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
-            assertNonNull(spanFactory, "SpanFactory may not be null");
-            this.spanFactory = DefaultDeadlineManagerSpanFactory.builder()
-                                                                .spanFactory(spanFactory).build();
-            return this;
-        }
-
-        /**
-         * Sets the {@link SpanFactory} implementation to use for providing tracing capabilities. Defaults to a
          * {@link DefaultDeadlineManagerSpanFactory} backed by a {@link NoOpSpanFactory} by default, which provides no
          * tracing capabilities.
          *
@@ -391,9 +374,7 @@ public class QuartzDeadlineManager extends AbstractDeadlineManager implements Li
         protected void validate() throws SophonConfigurationException {
             assertNonNull(scheduler, "The Scheduler is a hard requirement and should be provided");
             assertNonNull(scopeAwareProvider, "The ScopeAwareProvider is a hard requirement and should be provided");
-            if (serializer == null) {
-                serializer = XStreamSerializer::defaultSerializer;
-            }
+            assertNonNull(serializer, "The Serializer is a hard requirement and should be provided");
         }
     }
 }

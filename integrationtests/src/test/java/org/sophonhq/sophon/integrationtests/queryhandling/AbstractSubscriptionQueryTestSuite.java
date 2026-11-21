@@ -835,6 +835,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
                                                         update -> {
                                                             updates.add(update.getPayload());
                                                             latch.countDown();
+                                                        },
+                                                        error -> {
                                                         });
 
         // then
@@ -866,42 +868,14 @@ public abstract class AbstractSubscriptionQueryTestSuite {
                                                         update -> {
                                                             updates.add(update.getPayload());
                                                             latch.countDown();
+                                                        },
+                                                        error -> {
                                                         });
 
         // then
         latch.await(500, TimeUnit.MILLISECONDS);
         assertThat(initialResult).containsExactly("Initial");
         assertThat(updates).isEmpty();
-    }
-
-    @Deprecated
-    @Test
-    void subscriptionQueryResultHandleWhenThereIsAnErrorConsumingAnUpdateDeprecated() {
-        // given
-        SubscriptionQueryMessage<String, List<String>, String> queryMessage = new GenericSubscriptionQueryMessage<>(
-                TEST_PAYLOAD,
-                "chatMessages",
-                ResponseTypes.multipleInstancesOf(String.class),
-                ResponseTypes.instanceOf(String.class)
-        );
-
-        // when
-        List<String> initialResult = new ArrayList<>();
-        List<String> updates = new ArrayList<>();
-        queryBus.subscriptionQuery(queryMessage, new SubscriptionQueryBackpressure(FluxSink.OverflowStrategy.DROP), 1)
-                .handle(initial -> initialResult.addAll(initial.getPayload()),
-                        update -> {
-                            updates.add(update.getPayload());
-                            throw new IllegalStateException("oops");
-                        });
-        chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update1");
-        chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
-
-        // then
-        assertThat(initialResult).containsExactly("Message1", "Message2", "Message3");
-        assertThat(updates).containsExactly("Update1");
-
-        assertThat(queryUpdateEmitter.activeSubscriptions()).as("Expected subscriptions to be cancelled").isEmpty();
     }
 
     @Deprecated
@@ -933,39 +907,6 @@ public abstract class AbstractSubscriptionQueryTestSuite {
                     .verify(TIMEOUT);
     }
 
-    @Deprecated
-    @Test
-    void subscriptionQueryResultHandleWhenThereIsAnErrorConsumingABufferedUpdateDeprecated() {
-        // given
-        SubscriptionQueryMessage<String, List<String>, String> queryMessage = new GenericSubscriptionQueryMessage<>(
-                TEST_PAYLOAD,
-                "chatMessages",
-                ResponseTypes.multipleInstancesOf(String.class),
-                ResponseTypes.instanceOf(String.class)
-        );
-
-        // when
-        List<String> initialResult = new ArrayList<>();
-        List<String> updates = new ArrayList<>();
-        queryBus.subscriptionQuery(queryMessage, new SubscriptionQueryBackpressure(FluxSink.OverflowStrategy.DROP), 1)
-                .handle(initial -> {
-                            // make sure the update is emitted before subscribing to updates
-                            chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update1");
-                            initialResult.addAll(initial.getPayload());
-                        },
-                        update -> {
-                            updates.add(update.getPayload());
-                            throw new IllegalStateException("oops");
-                        });
-        chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
-
-        // then
-        assertThat(initialResult).containsExactly("Message1", "Message2", "Message3");
-        assertThat(updates).containsExactly("Update1");
-
-        assertThat(queryUpdateEmitter.activeSubscriptions()).as("Expected subscriptions to be cancelled").isEmpty();
-    }
-
     @Test
     void subscriptionQueryResultHandleWhenThereIsAnErrorConsumingAnUpdate() {
         // given
@@ -984,6 +925,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
                         update -> {
                             updates.add(update.getPayload());
                             throw new IllegalStateException("oops");
+                        },
+                        error -> {
                         });
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update1");
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
@@ -1017,6 +960,8 @@ public abstract class AbstractSubscriptionQueryTestSuite {
                         update -> {
                             updates.add(update.getPayload());
                             throw new IllegalStateException("oops");
+                        },
+                        error -> {
                         });
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
 
@@ -1041,7 +986,9 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         List<String> initialResult = new ArrayList<>();
         List<String> updates = new ArrayList<>();
         queryBus.subscriptionQuery(queryMessage).handle(initial -> initialResult.add(initial.getPayload()),
-                                                        update -> updates.add(update.getPayload()));
+                                                        update -> updates.add(update.getPayload()),
+                                                        error -> {
+                                                        });
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update1");
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update2");
         chatQueryHandler.emitter.complete(String.class, TEST_PAYLOAD::equals);
@@ -1065,7 +1012,9 @@ public abstract class AbstractSubscriptionQueryTestSuite {
         List<String> initialResult = new ArrayList<>();
         List<String> updates = new ArrayList<>();
         queryBus.subscriptionQuery(queryMessage)
-                .handle(initial -> initialResult.add(initial.getPayload()), update -> updates.add(update.getPayload()));
+                .handle(initial -> initialResult.add(initial.getPayload()), update -> updates.add(update.getPayload()),
+                                                                            error -> {
+                                                                            });
         chatQueryHandler.emitter.completeExceptionally(String.class, TEST_PAYLOAD::equals, new RuntimeException());
         chatQueryHandler.emitter.emit(String.class, TEST_PAYLOAD::equals, "Update1");
 

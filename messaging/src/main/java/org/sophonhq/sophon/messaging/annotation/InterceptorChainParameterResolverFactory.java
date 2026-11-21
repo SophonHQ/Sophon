@@ -17,7 +17,6 @@
 
 package org.sophonhq.sophon.messaging.annotation;
 
-import org.sophonhq.sophon.common.Assert;
 import org.sophonhq.sophon.common.Priority;
 import org.sophonhq.sophon.messaging.InterceptorChain;
 import org.sophonhq.sophon.messaging.Message;
@@ -43,19 +42,6 @@ public class InterceptorChainParameterResolverFactory
     private static final String INTERCEPTOR_CHAIN_EMITTER_KEY = InterceptorChain.class.getName();
 
     private static final ThreadLocal<InterceptorChain> CURRENT = new ThreadLocal<>();
-    /**
-     * Initializes current unit of work with interceptor chain.
-     *
-     * @param interceptorChain the interceptor chain
-     *
-     * @deprecated in favor of {@link #callWithInterceptorChain(InterceptorChain, Callable)}
-     */
-    @Deprecated
-    public static void initialize(InterceptorChain interceptorChain) {
-        Assert.state(CurrentUnitOfWork.isStarted(),
-                     () -> "An active Unit of Work is required for injecting interceptor chain");
-        CurrentUnitOfWork.get().resources().put(INTERCEPTOR_CHAIN_EMITTER_KEY, interceptorChain);
-    }
 
     /**
      * Invoke the given {@code action} with the given {@code interceptorChain} being available

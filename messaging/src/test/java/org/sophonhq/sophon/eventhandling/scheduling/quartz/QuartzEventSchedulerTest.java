@@ -217,6 +217,18 @@ class QuartzEventSchedulerTest {
     }
 
     @Test
+    void buildWithoutSerializerAndJobDataBinderThrowsSophonConfigurationException() {
+        Scheduler scheduler = mock(Scheduler.class);
+        EventBus eventBus = SimpleEventBus.builder().build();
+        QuartzEventScheduler.Builder builderTestSubject =
+                QuartzEventScheduler.builder()
+                                    .scheduler(scheduler)
+                                    .eventBus(eventBus);
+
+        assertThatThrownBy(builderTestSubject::build).isInstanceOf(SophonConfigurationException.class);
+    }
+
+    @Test
     void buildWithoutEventBusThrowsSophonConfigurationException() {
         Scheduler scheduler = mock(Scheduler.class);
         QuartzEventScheduler.Builder builderTestSubject =

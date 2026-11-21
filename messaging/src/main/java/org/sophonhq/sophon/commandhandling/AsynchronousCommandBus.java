@@ -27,7 +27,6 @@ import org.sophonhq.sophon.messaging.unitofwork.RollbackConfiguration;
 import org.sophonhq.sophon.messaging.unitofwork.RollbackConfigurationType;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
 import org.sophonhq.sophon.monitoring.NoOpMessageMonitor;
-import org.sophonhq.sophon.tracing.SpanFactory;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -158,12 +157,6 @@ public class AsynchronousCommandBus extends SimpleCommandBus {
         public Builder duplicateCommandHandlerResolver(
                 @NonNull DuplicateCommandHandlerResolver duplicateCommandHandlerResolver) {
             super.duplicateCommandHandlerResolver(duplicateCommandHandlerResolver);
-            return this;
-        }
-
-        @Override
-        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
-            super.spanFactory(spanFactory);
             return this;
         }
 

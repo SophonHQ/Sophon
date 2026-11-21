@@ -46,7 +46,6 @@ import org.sophonhq.sophon.messaging.unitofwork.RollbackConfiguration;
 import org.sophonhq.sophon.messaging.unitofwork.RollbackConfigurationType;
 import org.sophonhq.sophon.monitoring.MessageMonitor;
 import org.sophonhq.sophon.monitoring.NoOpMessageMonitor;
-import org.sophonhq.sophon.tracing.SpanFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Clock;
@@ -491,13 +490,6 @@ public class PooledStreamingEventProcessor extends AbstractEventProcessor
             return this;
         }
 
-        @Override
-        @Deprecated
-        public Builder spanFactory(@NonNull SpanFactory spanFactory) {
-            super.spanFactory(spanFactory);
-            return this;
-        }
-
         /**
          * Sets the {@link StreamableMessageSource} (e.g. the {@code EventStore}) which this {@link EventProcessor} will
          * track.
@@ -566,20 +558,6 @@ public class PooledStreamingEventProcessor extends AbstractEventProcessor
                           "The Coordinator's ScheduledExecutorService builder may not be null");
             this.coordinatorExecutorBuilder = coordinatorExecutorBuilder;
             return this;
-        }
-
-        /**
-         * Specifies the {@link ScheduledExecutorService} to be provided to the {@link WorkPackage}s created by this
-         * {@link PooledStreamingEventProcessor}.
-         *
-         * @param workerExecutor the {@link ScheduledExecutorService} to be provided to the {@link WorkPackage}s created
-         *                       by this {@link PooledStreamingEventProcessor}
-         * @return the current Builder instance, for fluent interfacing
-         * @deprecated in favor of {@link #workerExecutor(ScheduledExecutorService)}
-         */
-        @Deprecated
-        public Builder workerExecutorService(@NonNull ScheduledExecutorService workerExecutor) {
-            return workerExecutor(workerExecutor);
         }
 
         /**

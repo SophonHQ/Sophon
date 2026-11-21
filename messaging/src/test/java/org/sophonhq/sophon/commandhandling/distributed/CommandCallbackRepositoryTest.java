@@ -77,10 +77,10 @@ class CommandCallbackRepositoryTest {
 
         assertThat(repository.callbacks()).hasSize(4);
 
-        repository.cancelCallbacks("C");
+        repository.cancelCallbacksForChannel("C");
         assertThat(repository.callbacks()).hasSize(4);
 
-        repository.cancelCallbacks("A");
+        repository.cancelCallbacksForChannel("A");
         assertThat(repository.callbacks()).hasSize(1);
 
         assertThat(failCounter).isEqualTo(3);

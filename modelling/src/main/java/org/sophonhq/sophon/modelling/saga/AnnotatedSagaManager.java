@@ -171,13 +171,6 @@ public class AnnotatedSagaManager<T> extends AbstractSagaManager<T> {
         }
 
         @Override
-        @Deprecated
-        public Builder<T> spanFactory(SpanFactory spanFactory) {
-            super.spanFactory(spanFactory);
-            return this;
-        }
-
-        @Override
         public Builder<T> spanFactory(SagaManagerSpanFactory spanFactory) {
             super.spanFactory(spanFactory);
             return this;
