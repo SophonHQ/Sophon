@@ -32,6 +32,12 @@
         code.
     </description>
 
+    <properties>
+        <spring.version>6.2.19</spring.version>
+        <spring-security.version>6.5.11</spring-security.version>
+        <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
+    </properties>
+
     <dependencies>
         <!-- Sophon Dependencies -->
         <dependency>
@@ -177,14 +183,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core-jakarta</artifactId>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>c3p0</groupId>
+            <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
+            <version>0.14.2</version>
             <scope>test</scope>
         </dependency>
 

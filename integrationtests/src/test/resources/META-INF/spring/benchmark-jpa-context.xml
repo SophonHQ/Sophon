@@ -22,14 +22,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="eventStoreBenchMark"
-          class="org.sophonhq.sophon.integrationtests.eventsourcing.eventstore.benchmark.jpa.JpaEventStoreBenchMark">
-        <constructor-arg index="0" ref="eventStorageEngine"/>
+          class="org.sophonhq.sophon.integrationtests.eventsourcing.eventstore.benchmark.jpa.JpaEventStoreBenchmark">
+        <constructor-arg index="0" ref="entityManagerProvider"/>
         <constructor-arg index="1" ref="transactionManager"/>
-    </bean>
-
-    <bean id="eventStorageEngine" class="org.sophonhq.sophon.eventsourcing.eventstore.jpa.JpaEventStorageEngine">
-        <constructor-arg name="entityManagerProvider" ref="entityManagerProvider"/>
-        <constructor-arg name="transactionManager" ref="sophonTransactionManager"/>
     </bean>
 
     <!-- Infrastructure configuration -->
@@ -49,20 +44,23 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="jpaPropertyMap">
             <map>
-                <entry key="javax.persistence.schema-generation.database.action" value="${javax.schema.generation}"/>
+                <entry key="jakarta.persistence.schema-generation.database.action"
+                       value="${jakarta.schema.generation}"/>
                 <entry key="hibernate.jdbc.batch_size" value="20"/>
             </map>
         </property>
     </bean>
 
-    <bean id="entityManagerProvider" class="org.sophonhq.sophon.springboot.util.jpa.ContainerManagedEntityManagerProvider"/>
+    <bean id="entityManagerProvider" class="org.sophonhq.sophon.common.jpa.SimpleEntityManagerProvider">
+        <constructor-arg>
+            <bean class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+                <property name="entityManagerFactory" ref="entityManagerFactory"/>
+            </bean>
+        </constructor-arg>
+    </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
-
-    <bean id="sophonTransactionManager" class="org.sophonhq.sophon.spring.messaging.unitofwork.SpringTransactionManager">
-        <constructor-arg name="transactionManager" ref="transactionManager"/>
     </bean>
 
     <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
