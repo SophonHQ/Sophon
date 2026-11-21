@@ -24,16 +24,17 @@ import org.sophonhq.sophon.commandhandling.gateway.CommandGateway;
 import org.sophonhq.sophon.config.AggregateConfigurer;
 import org.sophonhq.sophon.config.EventProcessingModule;
 import org.sophonhq.sophon.eventsourcing.EventSourcingHandler;
-import org.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngine;
+import org.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStore;
 import org.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
 import org.sophonhq.sophon.modelling.command.AggregateIdentifier;
 import org.sophonhq.sophon.modelling.command.TargetAggregateIdentifier;
-import org.sophonhq.sophon.spring.config.SpringSophonAutoConfigurer;
+import org.sophonhq.sophon.spring.config.InfraTestConfiguration;
 import org.sophonhq.sophon.spring.stereotype.Aggregate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -52,11 +53,10 @@ public class AggregatePolymorphismTest {
 
     @Autowired
     private org.sophonhq.sophon.config.Configuration configuration;
-    @Autowired
-    private CommandGateway commandGateway;
 
     @Test
     void config() {
+        CommandGateway commandGateway = configuration.commandGateway();
         List<AggregateConfigurer> configurers = configuration.findModules(AggregateConfigurer.class);
         assertThat(configurers).hasSize(3);
 
@@ -203,7 +203,7 @@ public class AggregatePolymorphismTest {
         }
     }
 
-    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
+    @Import(InfraTestConfiguration.class)
     @Configuration
     public static class Context {
 
@@ -226,6 +226,7 @@ public class AggregatePolymorphismTest {
         }
 
         @Component
+        @Scope("prototype")
         public static class B extends A {
 
             public B() {
@@ -327,8 +328,10 @@ public class AggregatePolymorphismTest {
         }
 
         @Bean
-        public EventStorageEngine eventStorageEngine() {
-            return new InMemoryEventStorageEngine();
+        public EmbeddedEventStore eventStore() {
+            return EmbeddedEventStore.builder()
+                                     .storageEngine(new InMemoryEventStorageEngine())
+                                     .build();
         }
     }
 }

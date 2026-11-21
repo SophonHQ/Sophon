@@ -21,7 +21,6 @@ import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.*;
 import org.sophonhq.sophon.config.EventProcessingModule;
-import org.sophonhq.sophon.eventhandling.EventBus;
 import org.sophonhq.sophon.eventhandling.EventHandler;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventhandling.GenericEventMessage;
@@ -49,17 +48,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class EventProcessingModuleWithInterceptorsTest {
 
     @Autowired
-    private EventBus eventBus;
+    private org.sophonhq.sophon.config.Configuration configuration;
     @Autowired
     private Context.MyEventHandler myEventHandler;
 
     @Test
     void interceptorRegistration() {
-        eventBus.publish(GenericEventMessage.asEventMessage("myEvent"));
+        configuration.eventBus().publish(GenericEventMessage.asEventMessage("myEvent"));
         assertThat(myEventHandler.getMetaDataValue()).isEqualTo("myMetaDataValue");
     }
 
-    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
+    @Import(InfraTestConfiguration.class)
     @Configuration
     public static class Context {
 

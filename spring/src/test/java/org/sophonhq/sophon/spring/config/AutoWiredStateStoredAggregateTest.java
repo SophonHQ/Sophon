@@ -17,16 +17,18 @@
 
 package org.sophonhq.sophon.spring.config;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.sophonhq.sophon.commandhandling.CommandHandler;
-import org.sophonhq.sophon.common.legacyjpa.EntityManagerProvider;
+import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import org.sophonhq.sophon.config.EventProcessingModule;
 import org.sophonhq.sophon.eventsourcing.EventSourcingHandler;
 import org.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngine;
 import org.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
+import org.sophonhq.sophon.modelling.command.GenericJpaRepository;
 import org.sophonhq.sophon.modelling.command.Repository;
-import org.sophonhq.sophon.modelling.command.legacyjpa.GenericJpaRepository;
 import org.sophonhq.sophon.spring.stereotype.Aggregate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,9 +37,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Scope;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -56,7 +55,7 @@ class AutoWiredStateStoredAggregateTest {
         assertThat(myAggregateRepository.getClass()).isEqualTo(GenericJpaRepository.class);
     }
 
-    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
+    @Import(InfraTestConfiguration.class)
     @Scope
     @Configuration
     public static class Context {
