@@ -18,7 +18,6 @@
 
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
     <persistence-unit name="integrationtest" transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.DomainEventEntry</class>
         <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.AssociationValueEntry</class>

@@ -23,13 +23,13 @@ import org.sophonhq.sophon.integrationtests.eventsourcing.eventstore.benchmark.A
 /**
  * @author Rene de Waele
  */
-public class InMemoryEventStoreBenchMark extends AbstractEventStoreBenchmark {
+public class InMemoryEventStoreBenchmark extends AbstractEventStoreBenchmark {
 
     public static void main(String[] args) {
-        new InMemoryEventStoreBenchMark().start();
+        new InMemoryEventStoreBenchmark().start();
     }
 
-    public InMemoryEventStoreBenchMark() {
+    public InMemoryEventStoreBenchmark() {
         super(new InMemoryEventStorageEngine());
     }
 }

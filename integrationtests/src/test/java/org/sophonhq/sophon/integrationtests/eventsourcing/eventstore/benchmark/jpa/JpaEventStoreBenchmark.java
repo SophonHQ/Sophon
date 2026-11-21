@@ -17,11 +17,13 @@
 
 package org.sophonhq.sophon.integrationtests.eventsourcing.eventstore.benchmark.jpa;
 
+import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import org.sophonhq.sophon.common.transaction.Transaction;
 import org.sophonhq.sophon.common.transaction.TransactionManager;
 import org.sophonhq.sophon.eventhandling.EventMessage;
 import org.sophonhq.sophon.eventsourcing.eventstore.jpa.JpaEventStorageEngine;
 import org.sophonhq.sophon.integrationtests.eventsourcing.eventstore.benchmark.AbstractEventStoreBenchmark;
+import org.sophonhq.sophon.integrationtests.utils.TestSerializer;
 import org.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 import org.sophonhq.sophon.messaging.unitofwork.UnitOfWork;
 import org.sophonhq.sophon.spring.messaging.unitofwork.SpringTransactionManager;
@@ -32,7 +34,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 /**
  * @author Jettro Coenradie
  */
-public class JpaEventStoreBenchMark extends AbstractEventStoreBenchmark {
+public class JpaEventStoreBenchmark extends AbstractEventStoreBenchmark {
 
     private final TransactionManager transactionManager;
 
@@ -42,8 +44,14 @@ public class JpaEventStoreBenchMark extends AbstractEventStoreBenchmark {
         benchmark.start();
     }
 
-    public JpaEventStoreBenchMark(JpaEventStorageEngine storageEngine, PlatformTransactionManager transactionManager) {
-        super(storageEngine);
+    public JpaEventStoreBenchmark(EntityManagerProvider entityManagerProvider,
+                                  PlatformTransactionManager transactionManager) {
+        super(JpaEventStorageEngine.builder()
+                                   .entityManagerProvider(entityManagerProvider)
+                                   .transactionManager(new SpringTransactionManager(transactionManager))
+                                   .eventSerializer(TestSerializer.xStreamSerializer())
+                                   .snapshotSerializer(TestSerializer.xStreamSerializer())
+                                   .build());
         this.transactionManager = new SpringTransactionManager(transactionManager);
     }
 

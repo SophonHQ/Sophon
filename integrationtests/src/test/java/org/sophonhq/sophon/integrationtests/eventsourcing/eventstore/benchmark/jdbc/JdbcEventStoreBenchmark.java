@@ -23,6 +23,7 @@ import org.sophonhq.sophon.common.transaction.NoTransactionManager;
 import org.sophonhq.sophon.eventsourcing.eventstore.jdbc.JdbcEventStorageEngine;
 import org.sophonhq.sophon.eventsourcing.eventstore.jdbc.MySqlEventTableFactory;
 import org.sophonhq.sophon.integrationtests.eventsourcing.eventstore.benchmark.AbstractEventStoreBenchmark;
+import org.sophonhq.sophon.integrationtests.utils.TestSerializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -52,6 +53,8 @@ public class JdbcEventStoreBenchmark extends AbstractEventStoreBenchmark {
         super(JdbcEventStorageEngine.builder()
                                     .connectionProvider(new UnitOfWorkAwareConnectionProviderWrapper(dataSource::getConnection))
                                     .transactionManager(NoTransactionManager.INSTANCE)
+                                    .eventSerializer(TestSerializer.xStreamSerializer())
+                                    .snapshotSerializer(TestSerializer.xStreamSerializer())
                                     .build());
         this.dataSource = dataSource;
         this.transactionManager = transactionManager;
