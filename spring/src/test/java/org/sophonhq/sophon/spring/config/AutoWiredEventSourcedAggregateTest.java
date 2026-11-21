@@ -25,7 +25,7 @@ import org.sophonhq.sophon.common.jpa.EntityManagerProvider;
 import org.sophonhq.sophon.config.EventProcessingModule;
 import org.sophonhq.sophon.eventsourcing.EventSourcingHandler;
 import org.sophonhq.sophon.eventsourcing.EventSourcingRepository;
-import org.sophonhq.sophon.eventsourcing.eventstore.EventStorageEngine;
+import org.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStore;
 import org.sophonhq.sophon.eventsourcing.eventstore.inmemory.InMemoryEventStorageEngine;
 import org.sophonhq.sophon.modelling.command.Repository;
 import org.sophonhq.sophon.spring.stereotype.Aggregate;
@@ -54,14 +54,16 @@ public class AutoWiredEventSourcedAggregateTest {
         assertThat(myAggregateRepository.getClass()).isEqualTo(EventSourcingRepository.class);
     }
 
-    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
+    @Import(InfraTestConfiguration.class)
     @Scope
     @Configuration
     public static class Context {
 
         @Bean
-        public EventStorageEngine eventStorageEngine() {
-            return new InMemoryEventStorageEngine();
+        public EmbeddedEventStore eventStore() {
+            return EmbeddedEventStore.builder()
+                                     .storageEngine(new InMemoryEventStorageEngine())
+                                     .build();
         }
 
         @Bean

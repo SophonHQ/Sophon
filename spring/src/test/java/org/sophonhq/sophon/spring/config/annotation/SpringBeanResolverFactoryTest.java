@@ -27,7 +27,6 @@ import org.sophonhq.sophon.eventhandling.EventBus;
 import org.sophonhq.sophon.eventhandling.EventHandler;
 import org.sophonhq.sophon.eventhandling.SimpleEventBus;
 import org.sophonhq.sophon.messaging.annotation.ParameterResolverFactory;
-import org.sophonhq.sophon.spring.config.AnnotationDriven;
 import org.sophonhq.sophon.test.FixtureExecutionException;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -195,9 +194,13 @@ public class SpringBeanResolverFactoryTest {
 
     }
 
-    @AnnotationDriven
     @Configuration
     public static class AppContext {
+
+        @Bean
+        public SpringParameterResolverFactoryBean parameterResolverFactory() {
+            return new SpringParameterResolverFactoryBean();
+        }
 
         @Bean(name = "annotatedHandler")
         public AnnotatedEventHandlerWithResources createHandler() {

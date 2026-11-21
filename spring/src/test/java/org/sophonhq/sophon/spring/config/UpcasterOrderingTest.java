@@ -72,7 +72,7 @@ class UpcasterOrderingTest {
     }
 
     @Scope
-    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
+    @Import(InfraTestConfiguration.class)
     @org.springframework.context.annotation.Configuration
     public static class TestContext {
 

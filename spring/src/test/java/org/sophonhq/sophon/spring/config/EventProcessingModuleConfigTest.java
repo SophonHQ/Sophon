@@ -74,7 +74,7 @@ public class EventProcessingModuleConfigTest {
                 .isEqualTo("processor4");
     }
 
-    @Import(SpringSophonAutoConfigurer.ImportSelector.class)
+    @Import(InfraTestConfiguration.class)
     @Configuration
     public static class Context {
 
