@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - java-version: 17
-            deploy-enabled: false
           - java-version: 21
+            deploy-enabled: false
+          - java-version: 25
             deploy-enabled: false
 
     steps:
