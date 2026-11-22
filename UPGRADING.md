@@ -7,6 +7,7 @@ application from Axon Framework 4 to Sophon, read [MIGRATING.md](MIGRATING.md) f
 
 ### Before you start
 
+* Move your application to Java 21 or newer.
 * Upgrade to the latest 1.2.x release first.
 * Compile your application with deprecation warnings enabled (`-Xlint:deprecation`), and replace every deprecated
   Sophon API that it uses. Sophon 2.0 removes every API that 1.x marks as deprecated.
