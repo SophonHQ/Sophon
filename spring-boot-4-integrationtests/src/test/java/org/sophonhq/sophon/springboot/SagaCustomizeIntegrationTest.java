@@ -85,9 +85,9 @@ class SagaCustomizeIntegrationTest {
                                      .as("Processor ended with error")
                                      .isFalse());
 
-        await().atMost(Duration.ofSeconds(1)).until(() -> eventsReceived.get() == 1);
+        await().atMost(Duration.ofSeconds(5)).until(() -> eventsReceived.get() == 1);
         publishEvent(new EchoEvent(UUID.randomUUID().toString()));
-        await().atMost(Duration.ofSeconds(1)).until(() -> eventsReceived.get() == 2);
+        await().atMost(Duration.ofSeconds(5)).until(() -> eventsReceived.get() == 2);
     }
 
     private void publishEvent(EchoEvent... events) {

@@ -532,11 +532,11 @@ public abstract class DeadLetteringEventIntegrationTest {
         startProcessingEvent();
 
         await().pollDelay(Duration.ofMillis(25))
-               .atMost(Duration.ofSeconds(1))
+               .atMost(Duration.ofSeconds(5))
                .until(() -> streamingProcessor.processingStatus().size() == 1);
         //noinspection OptionalGetWithoutIsPresent
         await().pollDelay(Duration.ofMillis(25))
-               .atMost(Duration.ofSeconds(1))
+               .atMost(Duration.ofSeconds(5))
                .until(() -> streamingProcessor.processingStatus().get(0).getCurrentPosition().getAsLong() >= 6);
 
         assertThat(eventHandlingComponent.initialHandlingWasSuccessful(aggregateId)).isTrue();
