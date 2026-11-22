@@ -1440,8 +1440,9 @@ class TrackingEventProcessorTest {
         AtomicReference<Thread> shutdownThread = new AtomicReference<>();
         // Shut down while the worker launcher claims the segment, so the launcher never starts the segment worker
         doAnswer(invocation -> {
-            shutdownThread.set(new Thread(testSubject::shutDown));
-            shutdownThread.get().start();
+            Thread thread = new Thread(testSubject::shutDown);
+            thread.start();
+            shutdownThread.set(thread);
             assertWithin(1, TimeUnit.SECONDS, () -> assertThat(testSubject.isRunning()).isFalse());
             return invocation.callRealMethod();
         }).doCallRealMethod().when(tokenStore).fetchToken(eq("test"), any(Segment.class));

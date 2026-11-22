@@ -78,8 +78,8 @@ public class MergedTrackingToken implements TrackingToken, Serializable, Wrapped
     /**
      * Initialize a Merged Token, with the {@code lowerSegmentToken} representing the progress of the segment with the
      * lower segmentId, and {@code upperSegmentToken} representing the progress of the segment with the higher
-     * segmentId, additionally indicating if either of these segments were advanced by the latest call to {@link
-     * #advancedTo(TrackingToken)}
+     * segmentId, additionally indicating if either of these segments were advanced by the latest call to
+     * {@link #advancedTo(TrackingToken)}
      *
      * @param lowerSegmentToken    the token of the half with the lower segment ID
      * @param upperSegmentToken    the token of the half with the higher segment ID
@@ -121,9 +121,15 @@ public class MergedTrackingToken implements TrackingToken, Serializable, Wrapped
     }
 
     private long mergePosition() {
-        if (lowerSegmentToken.position().isPresent() && upperSegmentToken.position().isPresent()) {
-            return Math.max(mergePosition(lowerSegmentToken).orElse(lowerSegmentToken.position().getAsLong()),
-                            mergePosition(upperSegmentToken).orElse(upperSegmentToken.position().getAsLong()));
+        if (lowerSegmentToken != null
+                && upperSegmentToken != null
+                && lowerSegmentToken.position().isPresent()
+                && upperSegmentToken.position().isPresent()) {
+
+            return Math.max(
+                    mergePosition(lowerSegmentToken).orElse(lowerSegmentToken.position().getAsLong()),
+                    mergePosition(upperSegmentToken).orElse(upperSegmentToken.position().getAsLong())
+            );
         }
         return Long.MIN_VALUE;
     }
@@ -140,7 +146,8 @@ public class MergedTrackingToken implements TrackingToken, Serializable, Wrapped
 
     @Override
     public OptionalLong position() {
-        if (lowerSegmentToken.position().isPresent() && upperSegmentToken.position().isPresent()) {
+        if (lowerSegmentToken != null && upperSegmentToken != null
+                && lowerSegmentToken.position().isPresent() && upperSegmentToken.position().isPresent()) {
             return OptionalLong.of(Math.min(
                     lowerSegmentToken.position().getAsLong(), upperSegmentToken.position().getAsLong()
             ));

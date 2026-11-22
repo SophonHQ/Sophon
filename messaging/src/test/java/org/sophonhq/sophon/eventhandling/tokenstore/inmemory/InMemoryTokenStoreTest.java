@@ -132,4 +132,30 @@ class InMemoryTokenStoreTest {
             assertThat(segments).hasSize(0);
         }
     }
+
+    @Test
+    void fetchTokenBySegment() {
+        testSubject.initializeTokenSegments("test", 2, new GlobalSequenceTrackingToken(1));
+
+        assertThat(testSubject.fetchToken("test", Segment.computeSegment(1, 0, 1)))
+                .isEqualTo(new GlobalSequenceTrackingToken(1));
+    }
+
+    @Test
+    void fetchTokenBySegmentFailsDuringMerge() {
+        testSubject.initializeTokenSegments("test", 1);
+        Segment segmentToFetch = Segment.computeSegment(0, 0, 1);
+
+        assertThatThrownBy(() -> testSubject.fetchToken("test", segmentToFetch))
+                .isInstanceOf(UnableToClaimTokenException.class);
+    }
+
+    @Test
+    void fetchTokenBySegmentFailsDuringSplit() {
+        testSubject.initializeTokenSegments("test", 2);
+        Segment segmentToFetch = Segment.computeSegment(0, 0);
+
+        assertThatThrownBy(() -> testSubject.fetchToken("test", segmentToFetch))
+                .isInstanceOf(UnableToClaimTokenException.class);
+    }
 }

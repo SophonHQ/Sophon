@@ -359,14 +359,15 @@ public class TrackingEventProcessor extends AbstractEventProcessor implements St
 
     private boolean processInstructions(int segmentId) {
         List<Instruction> toExecute = instructions.getOrDefault(segmentId, Collections.emptyList());
-        boolean instructionsPresent = !toExecute.isEmpty();
+        boolean instructionsExecuted = false;
         for (Instruction instruction : toExecute) {
             toExecute.remove(instruction);
 
             instruction.run();
+            instructionsExecuted = true;
         }
 
-        return instructionsPresent;
+        return instructionsExecuted;
     }
 
     private void releaseToken(Segment segment) {
