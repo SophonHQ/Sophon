@@ -70,7 +70,7 @@
     <properties>
         <!-- Main -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <sonar.coverage.jacoco.xmlReportPaths>
             ${project.basedir}/coverage-report/target/site/jacoco-aggregate/jacoco.xml,
             ${project.basedir}/../coverage-report/target/site/jacoco-aggregate/jacoco.xml
@@ -578,8 +578,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler.version}</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <release>${java.version}</release>
                     <encoding>UTF-8</encoding>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
@@ -656,7 +655,7 @@
                 </configuration>
             </plugin>
             <plugin>
-                <!-- just to make sure deployed artifacts are always built (and tested) using JDK 17+ -->
+                <!-- just to make sure deployed artifacts are always built (and tested) using JDK 21+ -->
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
                     <execution>
@@ -668,7 +667,7 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>17</version>
+                                    <version>21</version>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
                                     <version>3.5</version>
