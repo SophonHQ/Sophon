@@ -136,6 +136,12 @@ class MergedTrackingTokenTest {
     }
 
     @Test
+    void positionIsNotPresentWhenSegmentTokenIsNull() {
+        MergedTrackingToken merged = new MergedTrackingToken(null, token(3));
+        assertFalse(merged.position().isPresent());
+    }
+
+    @Test
     void isMergeInProgress() {
         MergedTrackingToken testSubject = new MergedTrackingToken(token(1), token(3));
         assertTrue(MergedTrackingToken.isMergeInProgress(testSubject));
@@ -147,6 +153,13 @@ class MergedTrackingTokenTest {
 
         assertTrue(MergedTrackingToken.mergePosition(testSubject).isPresent());
         assertEquals(MergedTrackingToken.mergePosition(testSubject).getAsLong(), 5);
+    }
+
+    @Test
+    void mergePositionIsNotPresentWhenSegmentTokenIsNull() {
+        MergedTrackingToken testSubject = new MergedTrackingToken(null, token(3));
+
+        assertFalse(MergedTrackingToken.mergePosition(testSubject).isPresent());
     }
 
     @Test

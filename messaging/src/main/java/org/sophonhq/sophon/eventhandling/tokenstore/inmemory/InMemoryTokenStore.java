@@ -21,6 +21,7 @@ import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sophonhq.sophon.eventhandling.GlobalSequenceTrackingToken;
+import org.sophonhq.sophon.eventhandling.Segment;
 import org.sophonhq.sophon.eventhandling.TrackingToken;
 import org.sophonhq.sophon.eventhandling.tokenstore.TokenStore;
 import org.sophonhq.sophon.eventhandling.tokenstore.UnableToClaimTokenException;
@@ -29,7 +30,6 @@ import org.sophonhq.sophon.messaging.unitofwork.CurrentUnitOfWork;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,7 +54,8 @@ public class InMemoryTokenStore implements TokenStore {
      * No-arg constructor for the {@link InMemoryTokenStore} which will log a warning on initialization.
      */
     public InMemoryTokenStore() {
-        logger.warn("An in memory token store is being created.\nThis means the event processor using this token store might process the same events again when the application is restarted.\nIf the use of an in memory token store is intentional, this warning can be ignored.\nIf the tokens should be persisted, use the JPA, JDBC or MongoDB token store instead.");
+        logger.warn(
+                "An in memory token store is being created.\nThis means the event processor using this token store might process the same events again when the application is restarted.\nIf the use of an in memory token store is intentional, this warning can be ignored.\nIf the tokens should be persisted, use the JPA, JDBC or MongoDB token store instead.");
     }
 
     @Override
@@ -96,6 +97,25 @@ public class InMemoryTokenStore implements TokenStore {
         return trackingToken;
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Throws an {@link UnableToClaimTokenException} when the given {@code segment} no longer matches the segments in
+     * this store, because another thread split or merged it after the caller computed it.
+     */
+    @Override
+    public TrackingToken fetchToken(@NonNull String processorName, @NonNull Segment segment)
+            throws UnableToClaimTokenException {
+        TrackingToken trackingToken = fetchToken(processorName, segment.getSegmentId());
+        if (!segment.equals(Segment.computeSegment(segment.getSegmentId(), fetchSegments(processorName)))) {
+            throw new UnableToClaimTokenException(
+                    "Unable to claim segment " + segment
+                            + " for processor " + processorName
+                            + ". It has been split or merged concurrently.");
+        }
+        return trackingToken;
+    }
+
     @Override
     public void releaseClaim(@NonNull String processorName, int segment) {
         // no-op, the in-memory implementation isn't accessible by multiple processes
@@ -125,7 +145,7 @@ public class InMemoryTokenStore implements TokenStore {
     public int[] fetchSegments(@NonNull String processorName) {
         return tokens.keySet().stream()
                      .filter(ps -> ps.processorName.equals(processorName))
-                     .map(ProcessAndSegment::getSegment)
+                     .map(ProcessAndSegment::segment)
                      .distinct()
                      .mapToInt(Number::intValue)
                      .sorted().toArray();
@@ -136,36 +156,7 @@ public class InMemoryTokenStore implements TokenStore {
         return Optional.of(identifier);
     }
 
-    private static class ProcessAndSegment {
+    private record ProcessAndSegment(String processorName, int segment) {
 
-        private final String processorName;
-
-        private final int segment;
-
-        public ProcessAndSegment(String processorName, int segment) {
-            this.processorName = processorName;
-            this.segment = segment;
-        }
-
-        public int getSegment() {
-            return segment;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            ProcessAndSegment that = (ProcessAndSegment) o;
-            return segment == that.segment && Objects.equals(processorName, that.processorName);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(processorName, segment);
-        }
     }
 }
