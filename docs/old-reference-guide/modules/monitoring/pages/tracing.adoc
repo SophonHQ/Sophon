@@ -316,7 +316,7 @@ There are three common ways to put an OpenTelemetry SDK in place. They all work 
 |The application calls `OpenTelemetrySdk.builder()…buildAndRegisterGlobal()`, populating `GlobalOpenTelemetry` programmatically.
 |Same as the Java agent: builder defaults find the SDK via `GlobalOpenTelemetry`. Works out of the box.
 
-|*Spring Boot 3 with `micrometer-tracing-bridge-otel`* (the path Spring Boot's https://docs.spring.io/spring-boot/reference/actuator/observability.html[observability documentation] recommends)
+|*Spring Boot 4 with `micrometer-tracing-bridge-otel`* (the path Spring Boot's https://docs.spring.io/spring-boot/reference/actuator/observability.html[observability documentation] recommends)
 |Spring Boot creates an `OpenTelemetry` bean and exposes it via dependency injection. It is intentionally **not** registered on `GlobalOpenTelemetry` to avoid hidden static state in the container.
 |The auto-configuration injects the Spring-managed `OpenTelemetry` bean and wires its `Tracer` and `TextMapPropagator` into the `OpenTelemetrySpanFactory` builder explicitly. If no such bean is present, the builder falls back to `GlobalOpenTelemetry` (compatible with the previous two paths).
 |===

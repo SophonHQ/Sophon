@@ -8,6 +8,7 @@ application from Axon Framework 4 to Sophon, read [MIGRATING.md](MIGRATING.md) f
 ### Before you start
 
 * Move your application to Java 21 or newer.
+* Move your application to Spring Boot 4. If you use `sophon-spring` without Spring Boot, move to Spring Framework 7.
 * Upgrade to the latest 1.2.x release first.
 * Compile your application with deprecation warnings enabled (`-Xlint:deprecation`), and replace every deprecated
   Sophon API that it uses. Sophon 2.0 removes every API that 1.x marks as deprecated.
@@ -26,6 +27,9 @@ Sophon 2.0 no longer works with these libraries. Move your application to the re
 | Bean Validation (`javax.validation`)       | Jakarta Bean Validation (`jakarta.validation`)                                                 |
 | Ehcache 2 (`net.sf.ehcache`)               | Ehcache 3 with `common.caching.EhCache3Adapter`, or JCache with `common.caching.JCacheAdapter` |
 | JUnit 4                                    | JUnit 5                                                                                        |
+| Spring Boot 2 and 3                        | Spring Boot 4                                                                                  |
+| Spring Framework 5 and 6                   | Spring Framework 7                                                                             |
+| Spring Security 5 and 6                    | Spring Security 7                                                                              |
 
 ### Removed API
 
@@ -198,9 +202,9 @@ error. Replace them with the new properties to keep the same behavior.
 
 ### Stored data
 
-Sophon 2.0 has no `JavaSerializer`. If your event store, token store, saga store, dead-letter queue or scheduled
-deadlines contain data that `JavaSerializer` wrote, Sophon 2.0 cannot read that data out of the box. Follow these
-steps to keep reading it:
+Sophon 2.0 has no `JavaSerializer`. Your event store, token store, saga store, dead-letter queue or scheduled
+deadlines can contain data that `JavaSerializer` wrote. If they do, Sophon 2.0 cannot read that data out of the box.
+Follow these steps to keep reading it:
 
 1. Copy the `JavaSerializer` class of Sophon 1.2.x into your application, in your own package.
 2. Configure your copy as the serializer for the components that read the old data. In Spring Boot, define your copy
