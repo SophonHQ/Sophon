@@ -11,19 +11,14 @@ The following table shows which Spring Boot versions are supported by each Sopho
 |===
 |Sophon Version |Spring Boot 2 |Spring Boot 3 |Spring Boot 4
 
-|4.0 - 4.6
+|1.x
 |✓
-|
-|
+|✓
+|✓
 
-|4.7 - 4.12
-|✓
-|✓
+|2.x
 |
-
-|4.13
-|✓
-|✓
+|
 |✓
 |===
 
@@ -54,41 +49,6 @@ To register Sophon's JPA Entities, include the relevant packages, as described b
 
 With a lot of things happening in the background, it sometimes becomes difficult to understand how an annotation or just
 including a dependency enables so many features.
-
-=== Auto configuration with Spring Boot 2
-
-`sophon-spring-boot-starter` follows general Spring boot convention in structuring the starter. It depends
-on `sophon-spring-boot-autoconfigure` which holds concrete implementation of Sophon auto-configuration. When Sophon Spring
-Boot application starts up, it looks for a file named `spring.factories` in the `classpath`. This file is located in
-the `META-INF` directory of `sophon-spring-boot-autoconfigure` module:
-
-[source,text]
-----
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.sophonhq.sophon.springboot.autoconfig.MetricsAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.MicrometerMetricsAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.EventProcessingAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.AvroSerializerAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.SophonAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.SophonTimeoutAutoConfiguration, \
-  org.sophonhq.sophon.springboot.autoconfig.SophonJobRunrAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.SophonDbSchedulerAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.JpaAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.JpaEventStoreAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.JdbcAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.TransactionAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.NoOpTransactionAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.InfraConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.InterceptorAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.ObjectMapperAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.CBORMapperAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.XStreamAutoConfiguration,\
-  org.sophonhq.sophon.springboot.autoconfig.SophonTracingAutoConfiguration, \
-  org.sophonhq.sophon.springboot.autoconfig.OpenTelemetryAutoConfiguration, \
-  org.sophonhq.sophon.springboot.autoconfig.SecurityAutoConfiguration
-----
-
-This file maps different configuration classes which a Sophon Spring Boot application will try to apply. So, as per this snippet, Spring Boot will try to apply all the configuration classes, like `SophonAutoConfiguration`, `JpaAutoConfiguration`, …
 
 === Auto configuration with Spring Boot
 
