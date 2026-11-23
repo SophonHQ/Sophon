@@ -20,7 +20,7 @@
 
     <groupId>org.sophonhq.sophon</groupId>
     <artifactId>sophon</artifactId>
-    <version>1.2.2</version>
+    <version>1.2.3-SNAPSHOT</version>
     <modules>
         <module>bom</module>
         <module>disruptor</module>
