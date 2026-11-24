@@ -25,8 +25,7 @@ import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.json.JacksonSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -37,8 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
 @EnableAutoConfiguration(exclude = {
-        DataSourceAutoConfiguration.class,
-        JacksonAutoConfiguration.class
+        DataSourceAutoConfiguration.class
 })
 @TestPropertySource("classpath:application.serializertest.properties")
 class ObjectMapperAutoConfigurationTest {

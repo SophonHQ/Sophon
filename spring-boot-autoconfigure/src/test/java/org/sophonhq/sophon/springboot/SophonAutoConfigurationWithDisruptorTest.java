@@ -38,7 +38,7 @@ import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.spring.stereotype.Aggregate;
 import org.sophonhq.sophon.spring.stereotype.Saga;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
