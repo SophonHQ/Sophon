@@ -41,7 +41,6 @@
         <module>test</module>
         <module>tracing-opentelemetry</module>
         <module>hibernate-6-integrationtests</module>
-        <module>spring-boot-3-integrationtests</module>
         <module>spring-boot-4-integrationtests</module>
     </modules>
     <packaging>pom</packaging>
@@ -650,7 +649,7 @@
                 <configuration>
                     <publishingServerId>central</publishingServerId>
                     <excludeArtifacts>
-                        sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-3-integrationtests,sophon-spring-boot-4-integrationtests
+                        sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-4-integrationtests
                     </excludeArtifacts>
                 </configuration>
             </plugin>
@@ -827,7 +826,7 @@
                             <doclint>none</doclint>
                             <legacyMode>true</legacyMode>
                             <skippedModules>
-                                sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-3-integrationtests,sophon-spring-boot-4-integrationtests
+                                sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-4-integrationtests
                             </skippedModules>
                             <!-- These parameters are in preparation for resolution of this issue: -->
                             <!-- https://bugs.openjdk.java.net/browse/JDK-8068562 -->
