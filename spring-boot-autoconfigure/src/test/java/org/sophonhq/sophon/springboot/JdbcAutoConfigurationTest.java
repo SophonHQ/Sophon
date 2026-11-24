@@ -44,8 +44,8 @@ import org.sophonhq.sophon.modelling.saga.repository.SagaStore;
 import org.sophonhq.sophon.modelling.saga.repository.jdbc.JdbcSagaStore;
 import org.sophonhq.sophon.springboot.util.DeadLetterQueueProviderConfigurerModule;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.data.jpa.autoconfigure.DataJpaRepositoriesAutoConfiguration;
+import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
@@ -228,7 +228,7 @@ public class JdbcAutoConfigurationTest {
 
     @ContextConfiguration
     @EnableAutoConfiguration(exclude = {
-            JpaRepositoriesAutoConfiguration.class,
+            DataJpaRepositoriesAutoConfiguration.class,
             HibernateJpaAutoConfiguration.class
     })
     private static class TestContext {

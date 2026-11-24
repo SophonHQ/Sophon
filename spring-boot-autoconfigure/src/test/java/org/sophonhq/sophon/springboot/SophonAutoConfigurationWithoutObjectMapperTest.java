@@ -23,8 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -35,8 +34,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
 @EnableAutoConfiguration(exclude = {
-        DataSourceAutoConfiguration.class,
-        JacksonAutoConfiguration.class
+        DataSourceAutoConfiguration.class
 })
 @TestPropertySource("classpath:application.serializer-without-jackson.test.properties")
 class SophonAutoConfigurationWithoutObjectMapperTest {

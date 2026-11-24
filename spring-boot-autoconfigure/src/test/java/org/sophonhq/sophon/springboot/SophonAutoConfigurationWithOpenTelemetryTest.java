@@ -35,8 +35,8 @@ import org.sophonhq.sophon.eventhandling.GenericEventMessage;
 import org.sophonhq.sophon.tracing.SpanFactory;
 import org.sophonhq.sophon.tracing.opentelemetry.OpenTelemetrySpanFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
 
