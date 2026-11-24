@@ -21,6 +21,7 @@
         <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.AssociationValueEntry</class>
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry</class>
+        <class>org.sophonhq.sophon.config.DefaultConfigurerTest$StubAggregate</class>
         <properties>
             <property name="hibernate.connection.url" value="jdbc:h2:mem:sophontest;DB_CLOSE_DELAY=-1"/>
             <property name="hibernate.connection.username" value="sa"/>
