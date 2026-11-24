@@ -31,7 +31,6 @@ import org.springframework.context.annotation.Bean;
 @AutoConfiguration
 @AutoConfigureBefore({SophonAutoConfiguration.class, CBORMapperAutoConfiguration.class})
 @AutoConfigureAfter(name = {
-        "org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration",
         "org.springframework.boot.jackson2.autoconfigure.Jackson2AutoConfiguration"
 })
 @ConditionalOnClass(name = "com.fasterxml.jackson.databind.ObjectMapper")
