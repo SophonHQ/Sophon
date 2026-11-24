@@ -108,12 +108,6 @@
             <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
-            <groupId>org.sophonhq.sophon</groupId>
-            <artifactId>sophon-spring-boot-3-integrationtests</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
