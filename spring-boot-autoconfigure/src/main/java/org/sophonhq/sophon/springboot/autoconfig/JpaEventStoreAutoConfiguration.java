@@ -45,7 +45,6 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnBean(EntityManagerFactory.class)
 @ConditionalOnMissingBean({EventStorageEngine.class, EventBus.class, EventStore.class})
 @AutoConfigureAfter(name = {
-    "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration",
     "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration"
 })
 @AutoConfigureBefore(SophonAutoConfiguration.class)

@@ -60,7 +60,6 @@ import javax.sql.DataSource;
         "org.sophonhq.sophon.modelling.saga.repository.jpa",
 })
 @AutoConfigureAfter(name = {
-    "org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration",
     "org.springframework.boot.hibernate.autoconfigure.HibernateJpaAutoConfiguration"
 })
 public class JpaAutoConfiguration {
