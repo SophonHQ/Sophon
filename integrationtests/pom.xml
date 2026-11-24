@@ -32,12 +32,6 @@
         code.
     </description>
 
-    <properties>
-        <spring.version>6.2.19</spring.version>
-        <spring-security.version>6.5.11</spring-security.version>
-        <jakarta.persistence.version>3.1.0</jakarta.persistence.version>
-    </properties>
-
     <dependencies>
         <!-- Sophon Dependencies -->
         <dependency>
