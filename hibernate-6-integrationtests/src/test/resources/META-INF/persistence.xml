@@ -48,6 +48,8 @@
     <persistence-unit name="h6eventstore" transaction-type="RESOURCE_LOCAL">
         <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.DomainEventEntry</class>
         <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry</class>
+        <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.CustomDomainEventEntry</class>
+        <class>org.sophonhq.sophon.eventsourcing.eventstore.jpa.CustomSnapshotEventEntry</class>
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.AssociationValueEntry</class>
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry</class>
         <properties>
