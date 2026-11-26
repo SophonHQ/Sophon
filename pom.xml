@@ -40,7 +40,6 @@
         <module>spring-boot-starter</module>
         <module>test</module>
         <module>tracing-opentelemetry</module>
-        <module>hibernate-6-integrationtests</module>
         <module>spring-boot-4-integrationtests</module>
     </modules>
     <packaging>pom</packaging>
@@ -88,8 +87,6 @@
         <jakarta.el-impl.version>4.0.2</jakarta.el-impl.version>
         <jakarta.inject.version>2.0.1.MR</jakarta.inject.version>
         <jakarta.persistence.version>3.2.0</jakarta.persistence.version><!-- Don't upgrade due to JDK8 -->
-        <jakarta.persistence.with11.version>3.2.0
-        </jakarta.persistence.with11.version><!-- Don't upgrade due to JDK11 -->
         <jakarta.validation.version>3.1.1</jakarta.validation.version>
         <!-- Javax -->
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
@@ -643,7 +640,7 @@
                 <configuration>
                     <publishingServerId>central</publishingServerId>
                     <excludeArtifacts>
-                        sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-4-integrationtests
+                        sophon-integrationtests,sophon-reactorless-test,sophon-spring-boot-4-integrationtests
                     </excludeArtifacts>
                 </configuration>
             </plugin>
@@ -820,7 +817,7 @@
                             <doclint>none</doclint>
                             <legacyMode>true</legacyMode>
                             <skippedModules>
-                                sophon-integrationtests,sophon-reactorless-test,sophon-hibernate-6-integrationtests,sophon-spring-boot-4-integrationtests
+                                sophon-integrationtests,sophon-reactorless-test,sophon-spring-boot-4-integrationtests
                             </skippedModules>
                             <!-- These parameters are in preparation for resolution of this issue: -->
                             <!-- https://bugs.openjdk.java.net/browse/JDK-8068562 -->

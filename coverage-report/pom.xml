@@ -56,12 +56,6 @@
         </dependency>
         <dependency>
             <groupId>org.sophonhq.sophon</groupId>
-            <artifactId>sophon-hibernate-6-integrationtests</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.sophonhq.sophon</groupId>
             <artifactId>sophon-messaging</artifactId>
             <version>${project.version}</version>
             <scope>runtime</scope>
