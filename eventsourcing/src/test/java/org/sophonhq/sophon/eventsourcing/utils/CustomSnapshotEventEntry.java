@@ -15,26 +15,26 @@
  * limitations under the License.
  */
 
-package org.sophonhq.sophon.eventsourcing.eventstore.jpa;
+package org.sophonhq.sophon.eventsourcing.utils;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Index;
-import jakarta.persistence.Table;
-import org.sophonhq.sophon.eventhandling.AbstractSequencedDomainEventEntry;
 import org.sophonhq.sophon.eventhandling.DomainEventMessage;
+import org.sophonhq.sophon.eventsourcing.eventstore.AbstractSnapshotEventEntry;
 import org.sophonhq.sophon.serialization.Serializer;
 
 /**
  * @author Allard Buijze
  */
 @Entity
-@Table(indexes = @Index(columnList = "aggregateIdentifier,sequenceNumber,type", unique = true))
-public class CustomDomainEventEntry extends AbstractSequencedDomainEventEntry<String> {
+public class CustomSnapshotEventEntry extends AbstractSnapshotEventEntry<String> {
 
-    public CustomDomainEventEntry(DomainEventMessage event, Serializer serializer) {
+    public CustomSnapshotEventEntry(DomainEventMessage event, Serializer serializer) {
         super(event, serializer, String.class);
     }
 
-    protected CustomDomainEventEntry() {
+    /**
+     * Default constructor required by JPA
+     */
+    protected CustomSnapshotEventEntry() {
     }
 }

@@ -40,6 +40,8 @@ import org.sophonhq.sophon.eventhandling.TrackedEventData;
 import org.sophonhq.sophon.eventhandling.TrackingEventStream;
 import org.sophonhq.sophon.eventsourcing.eventstore.BatchingEventStorageEngineTest;
 import org.sophonhq.sophon.eventsourcing.eventstore.EmbeddedEventStore;
+import org.sophonhq.sophon.eventsourcing.utils.CustomDomainEventEntry;
+import org.sophonhq.sophon.eventsourcing.utils.CustomSnapshotEventEntry;
 import org.sophonhq.sophon.serialization.Serializer;
 import org.sophonhq.sophon.serialization.UnknownSerializedType;
 import org.sophonhq.sophon.serialization.upcasting.event.NoOpEventUpcaster;
@@ -73,7 +75,7 @@ class JpaEventStorageEngineTest
 
     private JpaEventStorageEngine testSubject;
 
-    private final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("h6eventstore");
+    private final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("eventstore");
     private final EntityManager entityManager = entityManagerFactory.createEntityManager();
     private final EntityManagerProvider entityManagerProvider = new SimpleEntityManagerProvider(entityManager);
     private final TransactionManager transactionManager = spy(new NoOpTransactionManager());
