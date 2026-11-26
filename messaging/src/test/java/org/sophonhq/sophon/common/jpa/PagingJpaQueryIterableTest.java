@@ -42,7 +42,7 @@ class PagingJpaQueryIterableTest {
 
     private final TransactionManager transactionManager = spy(new NoOpTransactionManager());
     // We use te the jpatest which includes the simple TestJpaEntry as entity
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("h6jpatest");
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("jpatest");
     private final EntityManager entityManager = emf.createEntityManager();
     private EntityTransaction transaction;
 
