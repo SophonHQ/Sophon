@@ -9,6 +9,18 @@ application from Axon Framework 4 to Sophon, read [MIGRATING.md](MIGRATING.md) f
 
 * Move your application to Java 21 or newer.
 * Move your application to Spring Boot 4. If you use `sophon-spring` without Spring Boot, move to Spring Framework 7.
+* If your application uses Hibernate ORM, move it to Hibernate ORM 7 while it runs on Sophon 1.2.x. Sophon 2.0
+  runs its tests only on Hibernate ORM 7.
+    * Without `org.hibernate.orm:hibernate-scan-jandex` on the classpath, Hibernate ORM 7 does not scan for entity
+      classes. Spring Boot applications are not affected, because Spring Boot scans Sophon's entity packages itself.
+    * If your persistence unit relies on Hibernate's scan to find Sophon's entity classes, add
+      `hibernate-scan-jandex`. As an alternative, list Sophon's entity classes in `persistence.xml`:
+        * Token store: `org.sophonhq.sophon.eventhandling.tokenstore.jpa.TokenEntry`.
+        * Event store: `org.sophonhq.sophon.eventsourcing.eventstore.jpa.DomainEventEntry` and
+          `org.sophonhq.sophon.eventsourcing.eventstore.jpa.SnapshotEventEntry`.
+        * Saga store: `org.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry` and
+          `org.sophonhq.sophon.modelling.saga.repository.jpa.AssociationValueEntry`.
+        * Dead-letter queue: `org.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEntry`.
 * Upgrade to the latest 1.2.x release first.
 * Compile your application with deprecation warnings enabled (`-Xlint:deprecation`), and replace every deprecated
   Sophon API that it uses. Sophon 2.0 removes every API that 1.x marks as deprecated.
