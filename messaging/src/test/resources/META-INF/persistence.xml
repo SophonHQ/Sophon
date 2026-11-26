@@ -22,7 +22,6 @@
     <persistence-unit name="dlq" transaction-type="RESOURCE_LOCAL">
         <class>org.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEntry</class>
         <class>org.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEventEntry</class>
-        <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
@@ -45,7 +44,6 @@
     </persistence-unit>
     <persistence-unit name="jpatest" transaction-type="RESOURCE_LOCAL">
         <class>org.sophonhq.sophon.common.jpa.TestJpaEntry</class>
-        <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
