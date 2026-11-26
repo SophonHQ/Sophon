@@ -52,7 +52,7 @@ class JpaSagaStoreTest {
 
     private AnnotatedSagaRepository<StubSaga> repository;
 
-    private final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("h6sagastore");
+    private final EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("sagastore");
     private final EntityManager entityManager = entityManagerFactory.createEntityManager();
     private final EntityManagerProvider entityManagerProvider = new SimpleEntityManagerProvider(entityManager);
     private DefaultUnitOfWork<Message<?>> unitOfWork;
