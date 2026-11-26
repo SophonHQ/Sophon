@@ -22,7 +22,6 @@
     <persistence-unit name="sagastore" transaction-type="RESOURCE_LOCAL">
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.AssociationValueEntry</class>
         <class>org.sophonhq.sophon.modelling.saga.repository.jpa.SagaEntry</class>
-        <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>

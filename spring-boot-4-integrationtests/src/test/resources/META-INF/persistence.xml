@@ -40,8 +40,5 @@
         <class>org.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEntry</class>
         <class>org.sophonhq.sophon.eventhandling.deadletter.jpa.DeadLetterEventEntry</class>
         <class>org.sophonhq.sophon.spring.modeling.command.JpaAggregate</class>
-        <properties>
-            <property name="hibernate.archive.autodetection" value="class"/>
-        </properties>
     </persistence-unit>
 </persistence>
