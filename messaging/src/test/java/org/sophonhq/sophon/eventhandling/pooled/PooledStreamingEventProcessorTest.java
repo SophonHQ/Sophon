@@ -149,11 +149,8 @@ class PooledStreamingEventProcessorTest {
 
     @Test
     void retriesWhenTokenInitializationInitiallyFails() {
-        InMemoryTokenStore spy = spy(tokenStore);
-        setTestSubject(createTestSubject(b -> b.tokenStore(spy)));
-
         doThrow(new RuntimeException("Simulated failure")).doCallRealMethod()
-                                                          .when(spy)
+                                                          .when(tokenStore)
                                                           .initializeTokenSegments(any(), anyInt(), any());
 
         List<EventMessage<Integer>> events = IntStream.range(0, 100)
@@ -431,18 +428,16 @@ class PooledStreamingEventProcessorTest {
 
     @Test
     void workPackageIsAbortedWhenExtendingClaimFails() {
-        InMemoryTokenStore spy = spy(tokenStore);
-        setTestSubject(createTestSubject(b -> b.tokenStore(spy)
-                                               .messageSource(new InMemoryStreamableEventSource(true))
+        setTestSubject(createTestSubject(b -> b.messageSource(new InMemoryStreamableEventSource(true))
                                                .claimExtensionThreshold(10)));
 
-        doThrow(new MockException("Simulated failure")).when(spy)
+        doThrow(new MockException("Simulated failure")).when(tokenStore)
                                                        .extendClaim(any(), anyInt());
 
         testSubject.start();
         assertWithin(
                 250, TimeUnit.MILLISECONDS,
-                () -> verify(spy, atLeastOnce()).extendClaim(testSubject.getName(), 0)
+                () -> verify(tokenStore, atLeastOnce()).extendClaim(testSubject.getName(), 0)
         );
         assertWithin(100, TimeUnit.MILLISECONDS, () -> assertThat(testSubject.processingStatus()).isEmpty());
     }

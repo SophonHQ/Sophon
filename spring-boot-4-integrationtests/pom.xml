@@ -296,7 +296,7 @@
                 <version>${maven-surefire.version}</version>
                 <configuration>
                     <!--suppress MavenModelInspection -->
-                    <argLine>-Djava.awt.headless=true ${surefireArgLine}</argLine>
+                    <argLine>-Djava.awt.headless=true ${mockito.agent.argLine} ${surefireArgLine}</argLine>
                 </configuration>
             </plugin>
             <plugin>
