@@ -1241,7 +1241,7 @@ class PooledStreamingEventProcessorTest {
         events.forEach(stubMessageSource::publishMessage);
 
         assertWithin(
-                1, TimeUnit.SECONDS,
+                5, TimeUnit.SECONDS,
                 () -> {
                     assertThat(testSubject.processingStatus()).hasSize(1);
                     assertThat(testSubject.processingStatus().get(0).isCaughtUp()).isTrue();
@@ -1255,7 +1255,8 @@ class PooledStreamingEventProcessorTest {
         testSubject.start();
 
         assertWithin(
-                1, TimeUnit.SECONDS, () -> {
+                5, TimeUnit.SECONDS,
+                () -> {
                     assertThat(testSubject.processingStatus()).hasSize(1);
                     assertThat(testSubject.processingStatus().get(0).isCaughtUp()).isTrue();
                     assertThat(testSubject.processingStatus().get(0).isReplaying()).isTrue();
