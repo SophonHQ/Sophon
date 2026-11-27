@@ -129,7 +129,11 @@
         <awaitility.version>4.3.0</awaitility.version>
         <hamcrest.version>3.0</hamcrest.version>
         <junit.jupiter.version>6.1.3</junit.jupiter.version>
-        <mockito.version>4.11.0</mockito.version>
+        <mockito.agent.argLine>
+            -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+            -Xshare:off
+        </mockito.agent.argLine>
+        <mockito.version>5.25.0</mockito.version>
         <testcontainers.version>2.0.5</testcontainers.version>
         <!-- Validation -->
         <hibernate-validator.version>9.2.0.Final</hibernate-validator.version>
@@ -579,7 +583,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <argLine>-Djava.awt.headless=true</argLine>
+                    <argLine>-Djava.awt.headless=true ${mockito.agent.argLine}</argLine>
                     <systemPropertyVariables>
                         <slf4j.version>${slf4j.version}</slf4j.version>
                         <log4j.version>${log4j.version}</log4j.version>
@@ -601,7 +605,7 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <argLine>-Djava.awt.headless=true</argLine>
+                    <argLine>-Djava.awt.headless=true ${mockito.agent.argLine}</argLine>
                     <includes>
                         <include>**/*IntegrationTest.java</include>
                         <include>**/*IntegrationTests.java</include>
@@ -733,13 +737,13 @@
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
-                            <argLine>-Djava.awt.headless=true @{argLine}</argLine>
+                            <argLine>-Djava.awt.headless=true ${mockito.agent.argLine} @{surefireArgLine}</argLine>
                         </configuration>
                     </plugin>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <configuration>
-                            <argLine>-Djava.awt.headless=true @{argLine}</argLine>
+                            <argLine>-Djava.awt.headless=true ${mockito.agent.argLine} @{failsafeArgLine}</argLine>
                         </configuration>
                     </plugin>
 
